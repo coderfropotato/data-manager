@@ -10,9 +10,13 @@
 </template>
 
 <script>
-  const zerorpc = require('zerorpc')
-  let client = new zerorpc.Client()
+  import zmq from 'zeromq'
+  let sock = zmq.socket('pull')
 
+  function calculate (msg) {
+    let result = document.getElementById('result')
+    result.textContent = msg
+  }
   // 导出
   export default {
     name: 'Index',
@@ -25,37 +29,23 @@
       // 连接后台服务器
       this.connectServer()
       // 初始计算
-      this.calculate()
+      // this.calculate()
     },
     watch: {
       // 观察输入框数据变化
       input () {
         // 计算表达式
-        this.calculate()
+        // this.calculate()
       }
     },
     methods: {
       connectServer () {
-        client.connect('tcp://127.0.0.1:4242')
-
-        client.invoke('echo', 'server ready', (error, res) => {
-          if (error || res !== 'server ready') {
-            console.error(error)
-          } else {
-            console.log('server is ready')
-          }
-        })
-      },
-      calculate () {
-        let formula = this.input
-        let result = document.getElementById('result')
-
-        client.invoke('calc', formula, (error, res) => {
-          if (error) {
-            console.error(error)
-          } else {
-            result.textContent = res
-          }
+        sock.connect('tcp://10.139.17.101:4242')
+        console.log('Worker connected to port 3000')
+        // sock.send('hello')
+        sock.on('message', function (msg) {
+          console.log(msg.toString())
+          calculate(msg.toString())
         })
       }
     }
