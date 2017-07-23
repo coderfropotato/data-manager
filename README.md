@@ -4,7 +4,73 @@
 ## 项目说明
 本项目是[数据管理系统](http://54.223.70.246:9000/WoMang/Data-Manager)的前端部分，基于 Vue，Electron，Element—UI等框架构建而成。使用 `zeromq` 和后台进行数据交互。
 
+## zeromq 交互模式
 
+### req/rep (request/reply)
+
+```javascript
+const baseURL = 'tcp://127.0.0.1'
+const PORT = 3000
+const URL = baseURL + ':' +PORT
+let zmq = require('zeromq')
+// 定义交互方法 req-rep
+let request = zmq.socket('req')
+
+// 监听消息响应
+request.on('message', function (msg) {
+    console.log(msg.toString())
+})
+// 连接服务器
+request.connect(URL)
+request.subscribe('')
+
+let Obj = {
+    name: 'Test',
+    value: 'JSON'
+}
+let jsonText = JSON.stringify(Obj)
+// 发送数据
+request.send(jsonText)
+```
+
+### sub/pub(subscriber/publisher)
+
+```javascript
+const baseURL = 'tcp://127.0.0.1'
+const PORT = 3000
+const URL = baseURL + ':' +PORT
+let zmq = require('zeromq')
+// 定义交互方法 sub-pub
+let request = zmq.socket('sub')
+
+// 监听消息响应
+request.on('message', function (msg) {
+    console.log(msg.toString())
+})
+// 连接服务器
+request.connect(URL)
+// 订阅消息
+request.subscribe('')
+```
+
+### pull/push
+
+
+```javascript
+const baseURL = 'tcp://127.0.0.1'
+const PORT = 3000
+const URL = baseURL + ':' +PORT
+let zmq = require('zeromq')
+// 定义交互方法 pull-push
+let request = zmq.socket('pull')
+
+// 监听消息响应
+request.on('message', function (msg) {
+    console.log(msg.toString())
+})
+// 连接服务器
+request.connect(URL)
+```
 ## 项目结构
 
 ```bash
