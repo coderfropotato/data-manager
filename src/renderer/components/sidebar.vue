@@ -8,5 +8,10 @@
     name: 'Sidebar'
   }
 </script>
-<style>
+<style lang="scss" scoped>
+  $backgroundColor: #F7F9F9;
+  #sidebar-root{
+    background-color: $backgroundColor;
+    height: 100%;
+  }
 </style>
