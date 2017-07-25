@@ -6,7 +6,7 @@ body{
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
+  text-align: left;
   height: 100%;
   width: 100%;
 }
@@ -19,6 +19,14 @@ body{
   box-sizing: border-box;
   text-decoration: none;
 }
+
+.icon {
+  width: 1em; height: 1em;
+  vertical-align: -0.15em;
+  fill: currentColor;
+  overflow: hidden;
+}
+
 .el-row{
   height: 100%;
   .el-col{

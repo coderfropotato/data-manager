@@ -1,6 +1,5 @@
 <template>
   <div id="fileInfo-root">
-    fileInfo
   </div>
 </template>
 <script>
@@ -8,5 +7,9 @@
     name: 'FileInfo'
   }
 </script>
-<style>
+<style lang="scss" scoped>
+  #fileInfo-root {
+    height: 100%;
+    background-color: rgba(242, 242, 242, 0.6);
+  }
 </style>
