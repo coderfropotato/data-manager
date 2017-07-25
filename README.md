@@ -71,6 +71,63 @@ request.on('message', function (msg) {
 // 连接服务器
 request.connect(URL)
 ```
+
+## 使用 Sentry 进行错误监控
+Sentry 是一个开源的实时错误报告工具，支持 web 前后端、移动应用以及游戏，支持 Python、OC、Java、Go、Node、Django、RoR 等主流编程语言和框架 ，还提供了 GitHub、Slack、Trello 等常见开发工具的集成
+
+在本项目中，我们集成了 Sentry 服务，用于上线后监控用户软件出现的错误。
+
+```bash
+npm install raven-js --save
+```
+
+```javascript
+import Vue from 'vue';
+import Raven from 'raven-js';
+import RavenVue from 'raven-js/plugins/vue';
+
+Raven
+    .config('https://f3c58ec9eb8f47b584c42bed2771ea74@sentry.io/195260')
+    .addPlugin(RavenVue, Vue)
+    .install();
+```
+
+### 在源码中使用 Sentry 进行错误处理
+#### 1. try...catch
+
+```javascript
+try {
+    doSomething(a[0])
+} catch(e) {
+    Raven.captureException(e)
+}
+```
+不要抛出字符串，抛出一个正真的 `Error` 对象，如下
+
+```javascript
+throw new Error('broken')  // good
+throw 'broken'  // bad
+```
+
+#### 2. context/wrap
+`Raven.context` 包裹了一个立即执行的函数，在幕后，`Raven` 将代码包裹在 `try...catch` 中，记录异常。
+
+```javascript
+Raven.context(function() {
+    doSomething(a[0])
+})
+```
+
+`Raven.wrap` 和 `Raven.content` 十分类似，不同的是，`Raven.wrap` 返回的是一个函数，而不是执行函数，在回调函数中尤其有用。
+
+```javascript
+var doIt = function() {
+    // doing cool stuff
+}
+
+setTimeout(Raven.wrap(doIt), 1000)
+```
+
 ## 项目结构
 
 ```bash
