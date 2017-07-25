@@ -1,10 +1,5 @@
 <template>
   <div id="app">
-    <el-row class="menu">
-      <el-col :span="24">
-        <div class="grid-content">Electron-Python 连接测试</div>
-      </el-col>
-    </el-row>
     <router-view></router-view>
   </div>
 </template>

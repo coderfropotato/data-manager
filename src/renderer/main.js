@@ -1,11 +1,9 @@
 import Vue from 'vue'
 import axios from 'axios'
-
 import Raven from 'raven-js'
 import RavenVue from 'raven-js/plugins/vue'
 
 import ElementUI from 'element-ui'
-// 样式文件需要单独导入
 import 'element-ui/lib/theme-default/index.css'
 
 import App from './App'
@@ -17,9 +15,9 @@ Vue.http = Vue.prototype.$http = axios
 Vue.config.productionTip = false
 
 Vue.use(ElementUI)
-
+// Sentry 错误报告
 Raven
-    .config('http://840fea76e1374f4c9d6d507a99802a8a@54.223.218.118:9000/8')
+    .config('https://f3c58ec9eb8f47b584c42bed2771ea74@sentry.io/195260')
     .addPlugin(RavenVue, Vue)
     .install()
 
