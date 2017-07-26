@@ -3,7 +3,7 @@
     <div class="nav-menu">
       <el-col :span="24">
         <el-menu class="menu">
-          <el-menu-item index="1">
+          <el-menu-item index="1" @click="showFile()">
             <svg class="icon" aria-hidden="true">
               <use xlink:href="#icon-zhuye"></use>
             </svg>
@@ -37,7 +37,12 @@
 </template>
 <script>
   export default {
-    name: 'Sidebar'
+    name: 'Sidebar',
+    methods: {
+      showFile () {
+        this.$router.push({path: 'allfiles'})
+      }
+    }
   }
 </script>
 <style lang="scss" scoped>
