@@ -21,9 +21,9 @@
 </template>
 
 <script>
-  import Sidebar from './basicLayout/sidebar.vue'
-  import ContentDetail from './basicLayout/content.vue'
-  import FileInfo from './basicLayout/fileInfo.vue'
+  import Sidebar from './Sidebar/sidebar.vue'
+  import ContentDetail from './Content/content.vue'
+  import FileInfo from './FileInfo/fileInfo.vue'
 
   // 导出
   export default {
