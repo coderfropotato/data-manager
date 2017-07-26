@@ -3,14 +3,14 @@
 
 ## 项目说明
 本项目是[数据管理系统](http://54.223.70.246:9000/WoMang/Data-Manager)的前端部分，基于 Vue，Electron，Element—UI等框架构建而成。使用 `zeromq` 和后台进行数据交互。
-
+v
 ## zeromq 交互模式
 
 ### req/rep (request/reply)
 
 ```javascript
 const baseURL = 'tcp://127.0.0.1'
-const PORT = 3000
+const PORT = 3000v
 const URL = baseURL + ':' +PORT
 let zmq = require('zeromq')
 // 定义交互方法 req-rep
@@ -158,7 +158,6 @@ setTimeout(Raven.wrap(doIt), 1000)
 │       └── store # Vue状态管理，模块化
 │           ├── index.js
 │           └── modules
-│               ├── Counter.js
 │               └── index.js
 └── static # 静态资源
 

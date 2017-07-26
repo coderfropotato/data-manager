@@ -1,8 +1,8 @@
 {
   "name": "data-manager-desktop",
   "productName": "data-manager-desktop",
-  "version": "0.0.0",
-  "author": "张浩浩 <hyacinth.hao@foxmail.com>",
+  "version": "0.1.0",
+  "author": "HeMang",
   "description": "An electron-vue project",
   "license": null,
   "main": "./dist/electron/main.js",
