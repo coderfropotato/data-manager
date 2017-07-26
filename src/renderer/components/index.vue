@@ -36,7 +36,7 @@
   }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
   $baseColor-1: #0294FF;
   $back-Color1: #404042;
   $back-Color2: #4E546C;

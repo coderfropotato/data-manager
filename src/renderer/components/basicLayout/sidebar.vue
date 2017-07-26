@@ -54,7 +54,7 @@
   }
 
   .el-menu-item{
-    font-size: 1.1em;
+    font-size: 1em;
     padding-left: 2em !important;
     span{
       margin-left: 0.3em;

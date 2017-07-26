@@ -35,16 +35,17 @@
       height: 3em;
       background-color: #eef1f6;
       button{
-        height: 2.6em;
-        width: 5em;
-        margin: 0.8em 1em;
+        font-size: 16px;
+        height: 1.8em;
+        width: 3.6em;
+        margin: 0.6em 1em;
         background-color: #eef1f6;
-        border-radius: 0.5em;
+        border-radius: 0.2em;
         border: 1px solid #48576a;
         outline: 1px solid #eef1f6;
         cursor: pointer;
         .icon{
-          font-size: 2em;
+          font-size: 1.2em;
         }
       }
     }
