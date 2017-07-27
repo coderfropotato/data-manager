@@ -1,5 +1,4 @@
 import Vue from 'vue'
-import axios from 'axios'
 // import Raven from 'raven-js'
 // import RavenVue from 'raven-js/plugins/vue'
 
@@ -11,7 +10,7 @@ import router from './router'
 import store from './store'
 
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
-Vue.http = Vue.prototype.$http = axios
+// Vue.http = Vue.prototype.$http = axios
 Vue.config.productionTip = false
 
 Vue.use(ElementUI)

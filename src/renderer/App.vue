@@ -5,6 +5,7 @@
 </template>
 
 <script>
+  import './api/database'
   export default {
     name: 'data-manager-desktop',
     data () {
