@@ -1,33 +1,48 @@
 <template>
-  <div id="index-root">
-    <div class="sidebar-wrapper">
+  <div id='index-root'>
+    <div class='sidebar-wrapper'>
       <Sidebar></Sidebar>
     </div>
-    <div class="content">
-      <el-row>
-        <el-col :span="16">
-          <div class="content-wrapper">
-            <ContentDetail></ContentDetail>
-          </div>
-        </el-col>
-        <el-col :span="8">
-          <div class="file-wrapper">
-            <FileInfo></FileInfo>
-          </div>
-        </el-col>
-      </el-row>
+    <div class="splitter-left"></div>
+    <div class="right">
+      <div class='content-wrapper'>
+        <ContentDetail></ContentDetail>
+      </div>
+      <div class='splitter-right'></div>
+      <div class='file-wrapper'>
+        <FileInfo></FileInfo>
+      </div>
     </div>
   </div>
+
 </template>
 
 <script>
   import Sidebar from './Sidebar/sidebar.vue'
   import ContentDetail from './Content/content.vue'
   import FileInfo from './FileInfo/fileInfo.vue'
+  import $ from 'jquery'
+  import 'jquery-resizable-dom/src/jquery-resizable'
 
-  // 导出
   export default {
     name: 'Index',
+    data () {
+      return {}
+    },
+    mounted () {
+      // 挂载可变区域
+      $('.sidebar-wrapper').resizable({
+        handleSelector: '.splitter-left',
+        resizeWidth: true,
+        resizeHeight: false
+      })
+      $('.content-wrapper').resizable({
+        handleSelector: '.splitter-right',
+        resizeWidth: true,
+        resizeHeight: false
+      })
+    },
+    methods: {},
     components: {
       Sidebar,
       ContentDetail,
@@ -36,28 +51,10 @@
   }
 </script>
 
-<style lang="scss" scoped>
+<style lang='scss' scoped>
   $baseColor-1: #0294FF;
   $back-Color1: #404042;
   $back-Color2: #4E546C;
   $sideBarWidth: 14em;
-  #index-root {
-    height: 100%;
-    .sidebar-wrapper,
-    .content-wrapper,
-    .file-wrapper,
-    .content{
-      height: 100%;
-    }
-    .sidebar-wrapper {
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: $sideBarWidth;
-    }
-    .content{
-      margin-left: $sideBarWidth;
-      top: 0;
-    }
-  }
+  @import "../assets/SCSS/resizable";
 </style>

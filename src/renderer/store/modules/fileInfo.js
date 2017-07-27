@@ -8,11 +8,7 @@ const state = {
     type: '',
     createTime: ''
   },
-  dataSource: {
-    type: '',
-    source: ''
-  },
-  referenceGenome: {}
+  attribute: {}
 }
 
 const mutations = {
