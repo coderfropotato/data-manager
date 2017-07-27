@@ -1,0 +1,52 @@
+.classify-bar {
+  position: relative;
+  width: 100%;
+  height: 50px;
+  margin: 0;
+  background-color: #fff;
+  overflow: hidden;
+}
+
+.classify-bar .move-bar {
+  position: relative;
+  transform: translateX(0);
+  width: 150%;
+  height: 50px;
+  top: 0;
+  overflow: hidden;
+}
+
+.classify-bar ul {
+  width: 100%;
+  height: 50px;
+  padding: 10px 0;
+}
+
+.classify-bar .classify {
+  position: relative;
+  text-decoration: none;
+  list-style: none;
+  display: inline-block;
+  margin: 0.3em 0.5em 0 0.5em;
+  padding-bottom: 0.4em;
+  width: auto;
+}
+
+.classify-bar .classify span {
+  font-size: 0.8em;
+  font-weight: 300 !important;
+}
+
+.classify-bar .choose-line {
+  background-color: #fe4070;
+  height: 0.15rem;
+  border-radius: 0.125rem 0.125rem 0 0;
+  display: block;
+  position: absolute;
+  bottom: 0.1em;
+  width: 100%;
+}
+
+.classify-bar .choose-line:not(#first) {
+  display: none;
+}

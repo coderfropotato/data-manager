@@ -40,6 +40,7 @@ export const openFile = () => {
   })
 }
 // 获取所有文件导航的文件树
+// @Param folderName 文件名
 export const getAllFileTree = folderName => {
   let Param = {
     API: 'getAllFileTree',
@@ -57,6 +58,19 @@ export const getTrash = () => {
   let Param = {
     API: 'getTrash',
     params: {}
+  }
+  request.send(Param)
+  request.on('message', function (msg) {
+    return JSON.parse(msg)
+  })
+}
+
+// 获取具体文件的信息
+// @Param param 参数对象
+export const getFileInfo = param => {
+  let Param = {
+    API: 'getFileInfo',
+    params: param
   }
   request.send(Param)
   request.on('message', function (msg) {

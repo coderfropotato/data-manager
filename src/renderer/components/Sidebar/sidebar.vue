@@ -32,7 +32,10 @@
     </div>
     <div class="line"></div>
     <!--根据选择加载视图-->
-    <router-view></router-view>
+    <div class="bottom">
+      <router-view></router-view>
+      <div class="bar"></div>
+    </div>
   </div>
 </template>
 <script>
@@ -47,33 +50,47 @@
 </script>
 <style lang="scss" scoped>
   $backgroundColor: #F7F9F9;
-  #sidebar-root{
+  #sidebar-root {
     background-color: $backgroundColor;
     height: 100%;
-    .nav-menu{
+    .nav-menu {
       overflow: hidden;
-      .el-menu{
+      .el-menu {
         background-color: $backgroundColor;
       }
     }
   }
 
-  .el-menu-item{
+  .el-menu-item {
     font-size: 1em;
     padding-left: 2em !important;
-    span{
+    span {
       margin-left: 0.3em;
     }
-    .icon{
+    .icon {
       position: relative;
       font-size: 1.5em;
       display: inline-block;
     }
   }
-  .line{
+
+  .line {
     height: 1px;
     width: 90%;
     background-color: #48576a;
     margin: 1em auto;
+  }
+
+  .bottom{
+    position: relative;
+    width: 100%;
+    .bar{
+      position: absolute;
+      right: 0.1em;
+      top: 0;
+      width: 8px;
+      height: 5em;
+      background-color: #48576a;
+    }
   }
 </style>
