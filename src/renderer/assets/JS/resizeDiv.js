@@ -44,12 +44,12 @@ function handleResize () {
     // console.log(startWidth, e, startX, element.style.width)
   }
 
-  function doDragRight (e) {
-    let width = startWidth + e.clientX - startX
-    content.style.width = width + 'px'
-    dragAreaRight.style.left = width + 'px'
-    // console.log(startWidth, e, startX, element.style.width)
-  }
+  // function doDragRight (e) {
+  //   let width = startWidth + e.clientX - startX
+  //   content.style.width = width + 'px'
+  //   dragAreaRight.style.left = width + 'px'
+  //   // console.log(startWidth, e, startX, element.style.width)
+  // }
 
   function stopDrag (e) {
     console.log(window)
