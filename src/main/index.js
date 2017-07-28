@@ -25,7 +25,7 @@ function createWindow () {
     width: 1120,
     useContentSize: true
   })
-
+  /* eslint-disable no-new */
   mainWindow.loadURL(winURL)
 
   mainWindow.on('closed', () => {

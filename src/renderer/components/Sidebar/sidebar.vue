@@ -32,9 +32,13 @@
     </div>
     <div class="line"></div>
     <!--根据选择加载视图-->
-    <div class="bottom">
+    <div class="middle">
       <router-view></router-view>
       <!--<div class="bar"></div>-->
+    </div>
+    <div class="bottom">
+      <el-button type="text" class="add">+</el-button>
+      <el-button type="text">...</el-button>
     </div>
   </div>
 </template>
@@ -81,7 +85,7 @@
     margin: 1em auto;
   }
 
-  .bottom{
+  .middle{
     position: relative;
     width: 100%;
     .bar{
@@ -95,6 +99,14 @@
     .wrapper{
       width: 300px;
       height: 300px;
+    }
+  }
+  .bottom{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    .el-button{
+      font-size: 2em;
     }
   }
 </style>
