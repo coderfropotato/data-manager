@@ -9,7 +9,7 @@
             </svg>
             <span>文件</span>
           </el-menu-item>
-          <el-menu-item index="search" @click="">
+          <el-menu-item index="search">
             <svg class="icon" aria-hidden="true">
               <use xlink:href="#icon-sousuo"></use>
             </svg>
@@ -34,7 +34,7 @@
     <!--根据选择加载视图-->
     <div class="bottom">
       <router-view></router-view>
-      <div class="bar"></div>
+      <!--<div class="bar"></div>-->
     </div>
   </div>
 </template>
@@ -91,6 +91,10 @@
       width: 8px;
       height: 5em;
       background-color: #48576a;
+    }
+    .wrapper{
+      width: 300px;
+      height: 300px;
     }
   }
 </style>
