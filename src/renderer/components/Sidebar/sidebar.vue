@@ -3,25 +3,25 @@
     <div class="nav-menu">
       <el-col :span="24">
         <el-menu class="menu" @select="showContent">
-          <el-menu-item index="allfiles">
+          <el-menu-item index="/allfiles">
             <svg class="icon" aria-hidden="true">
               <use xlink:href="#icon-zhuye"></use>
             </svg>
             <span>文件</span>
           </el-menu-item>
-          <el-menu-item index="search">
+          <el-menu-item index="/search">
             <svg class="icon" aria-hidden="true">
               <use xlink:href="#icon-sousuo"></use>
             </svg>
             <span>搜索</span>
           </el-menu-item>
-          <el-menu-item index="recentimport">
+          <el-menu-item index="/recentimport">
             <svg class="icon" aria-hidden="true">
               <use xlink:href="#icon-import"></use>
             </svg>
             <span>最近导入</span>
           </el-menu-item>
-          <el-menu-item index="collection">
+          <el-menu-item index="/collection">
             <svg class="icon" aria-hidden="true">
               <use xlink:href="#icon-shoucang"></use>
             </svg>
@@ -81,23 +81,27 @@
           },
           4: {
             title: '从搜索结果新建分类',
-            url: 'newsortformsearch'
+            url: '/newsortformsearch'
           },
           5: {
             title: '从搜索结果新建智能分类',
-            url: 'newsamrtsortformsearch'
+            url: '/newsamrtsortformsearch'
           }
         }
       }
     },
     methods: {
       showContent (indexPath) {
-        this.$router.push({path: indexPath})
+        let path = indexPath
+        this.$router.push({path: path})
       },
       openNewWindow (indexPath) {
+        // 嵌套路由
+        let url = '/newfile' + indexPath
+        console.log(url)
         ipcRenderer.send('addFile', {
           API: 'open',
-          URL: indexPath,
+          URL: url,
           fileType: ''
         })
       }
