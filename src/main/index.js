@@ -32,12 +32,13 @@ function createWindow () {
 }
 
 ipcMain.on('addFile', (event, arg) => {
-  if (arg === 'open') {
+  if (arg.API === 'open') {
+    let URL = arg.URL
     let newWin = new BrowserWindow({
       height: 400,
       width: 700
     })
-    newWin.loadURL(baseURL + '/addfile')
+    newWin.loadURL(baseURL + URL)
   }
 })
 

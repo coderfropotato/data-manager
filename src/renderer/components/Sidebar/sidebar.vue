@@ -37,7 +37,17 @@
       <!--<div class="bar"></div>-->
     </div>
     <div class="bottom">
-      <el-button type="text" class="add" @click="openNewWindow">+</el-button>
+      <el-popover
+          ref="popoverAdd"
+          placement="right"
+          width="200"
+          trigger="click">
+        <el-menu>
+          <el-menu-item v-for="(item, index) in addList" :key="item" :index="index" @click="openNewWindow">{{item}}
+          </el-menu-item>
+        </el-menu>
+      </el-popover>
+      <el-button type="text" class="add" v-popover:popoverAdd>+</el-button>
       <svg class="icon" aria-hidden="true">
         <use xlink:href="#icon-setting"></use>
       </svg>
@@ -46,14 +56,30 @@
 </template>
 <script>
   import {ipcRenderer} from 'electron'
+
   export default {
     name: 'Sidebar',
+    data () {
+      return {
+        addList: {
+          1: '新增数据目录',
+          2: '新增分类',
+          3: '新增智能分类',
+          4: '从搜索结果新建分类',
+          5: '从搜索结果新建智能分类'
+        }
+      }
+    },
     methods: {
       showContent (indexPath) {
         this.$router.push({path: indexPath})
       },
       openNewWindow () {
-        ipcRenderer.send('addFile', 'open')
+        ipcRenderer.send('addFile', {
+          API: 'open',
+          URL: '/addremotefile',
+          fileType: ''
+        })
       }
     }
   }
@@ -123,11 +149,19 @@
       left: 1em;
       font-size: 2em;
     }
-    .icon{
-      position:absolute;
+    .icon {
+      position: absolute;
       bottom: 1em;
       right: 1em;
       font-size: 1.5em;
+    }
+  }
+
+  .el-popover {
+    padding: 0 !important;
+    .el-menu-item {
+      font-size: 1.2em;
+      padding-left: 1em !important;
     }
   }
 </style>
