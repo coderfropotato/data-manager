@@ -6,6 +6,7 @@
         <el-col :span="4">
           <div class="grid-content">
             <el-dropdown menu-align="start">
+              <!--按钮-->
               <button>
                 <svg class="icon" aria-hidden="true">
                   <use xlink:href="#icon-menu"></use>
@@ -14,6 +15,7 @@
                   <use xlink:href="#icon-xiala"></use>
                 </svg>
               </button>
+              <!--下拉列表-->
               <el-dropdown-menu slot="dropdown" menu-align="end">
                 <el-dropdown-item>
                   <svg class="icon" aria-hidden="true">

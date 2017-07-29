@@ -6,6 +6,8 @@ const state = {
   // 记录当前选择
   currentChoose: '',
   currentFileTree: '',
+  // 记录当前选中的文件夹
+  currentFolder: {},
   // 所有文件，可读，不可变更
   allFiles: {},
   // 分类，用户可以自己建立多层文件夹来分类数据

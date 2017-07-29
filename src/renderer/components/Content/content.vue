@@ -1,16 +1,18 @@
 <template>
   <div id="content-root">
     <FileHeader></FileHeader>
+    <List></List>
   </div>
 </template>
 <script>
   import '../../assets/JS/scrollbar'
   import FileHeader from './fileHeader'
-
+  import List from './list'
   export default {
     name: 'Content',
     components: {
-      FileHeader
+      FileHeader,
+      List
     }
   }
 </script>
@@ -21,10 +23,11 @@
       height: 3em;
       line-height: 3em;
       background-color: #eef1f6;
+      // 按钮样式
       button {
         font-size: 16px;
-        height: 1.8em;
-        width: 3.6em;
+        height: 1.6em;
+        width: 3.2em;
         margin: 0.6em 1em;
         background-color: #eef1f6;
         border-radius: 0.2em;
@@ -37,6 +40,7 @@
       }
     }
   }
+  // 下拉菜单
   .el-dropdown-menu {
     span {
       margin-left: 1em;
@@ -44,5 +48,9 @@
   }
   #column {
     transform: rotate(90deg);
+  }
+  // List 组件
+  #list-root{
+    margin-top: 2em;
   }
 </style>
