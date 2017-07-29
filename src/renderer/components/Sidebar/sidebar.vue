@@ -42,8 +42,11 @@
           placement="right"
           width="200"
           trigger="click">
-        <el-menu>
-          <el-menu-item v-for="(item, index) in addList" :key="item" :index="index" @click="openNewWindow">{{item}}
+        <el-menu @select="openNewWindow">
+          <el-menu-item
+              v-for="(item, index) in newDirList"
+              :key="item.title" :index="item.url">
+            {{item.title}}
           </el-menu-item>
         </el-menu>
       </el-popover>
@@ -63,12 +66,27 @@
     name: 'Sidebar',
     data () {
       return {
-        addList: {
-          1: '新增数据目录',
-          2: '新增分类',
-          3: '新增智能分类',
-          4: '从搜索结果新建分类',
-          5: '从搜索结果新建智能分类'
+        newDirList: {
+          1: {
+            title: '新增数据目录',
+            url: '/newdiskdir'
+          },
+          2: {
+            title: '新增分类',
+            url: '/newsortdir'
+          },
+          3: {
+            title: '新增智能分类',
+            url: '/newsmartsortdir'
+          },
+          4: {
+            title: '从搜索结果新建分类',
+            url: 'newsortformsearch'
+          },
+          5: {
+            title: '从搜索结果新建智能分类',
+            url: 'newsamrtsortformsearch'
+          }
         }
       }
     },
@@ -76,10 +94,10 @@
       showContent (indexPath) {
         this.$router.push({path: indexPath})
       },
-      openNewWindow () {
+      openNewWindow (indexPath) {
         ipcRenderer.send('addFile', {
           API: 'open',
-          URL: '/addremotefile',
+          URL: indexPath,
           fileType: ''
         })
       }
