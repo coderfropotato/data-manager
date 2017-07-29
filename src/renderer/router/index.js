@@ -5,7 +5,7 @@ import AllFiles from '@/components/Sidebar/allFiles'
 import Search from '@/components/Sidebar/search'
 import RecentImport from '@/components/Sidebar/recentImport'
 import Collection from '@/components/Sidebar/collection'
-
+import AddFile from '@/components/AddFile/addFile'
 Vue.use(Router)
 
 export default new Router({
@@ -40,6 +40,11 @@ export default new Router({
     {
       path: '*',
       redirect: '/'
+    },
+    {
+      path: '/addfile',
+      name: 'addFile',
+      component: AddFile
     }
   ]
 })

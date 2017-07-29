@@ -14,13 +14,12 @@
       </div>
     </div>
   </div>
-
 </template>
 
 <script>
-  import Sidebar from './Sidebar/sidebar.vue'
-  import ContentDetail from './Content/content.vue'
-  import FileInfo from './FileInfo/fileInfo.vue'
+  import Sidebar from './Sidebar/sidebar'
+  import ContentDetail from './Content/content'
+  import FileInfo from './FileInfo/fileInfo'
   import $ from 'jquery'
   import 'jquery-resizable-dom/src/jquery-resizable'
 
@@ -30,6 +29,7 @@
       return {}
     },
     mounted () {
+      this.$router.push('index')
       // 挂载可变区域
       $('.sidebar-wrapper').resizable({
         handleSelector: '.splitter-left',

@@ -9,7 +9,7 @@
             </svg>
             <span>文件</span>
           </el-menu-item>
-          <el-menu-item index="search" @click="">
+          <el-menu-item index="search">
             <svg class="icon" aria-hidden="true">
               <use xlink:href="#icon-sousuo"></use>
             </svg>
@@ -32,18 +32,28 @@
     </div>
     <div class="line"></div>
     <!--根据选择加载视图-->
-    <div class="bottom">
+    <div class="middle">
       <router-view></router-view>
-      <div class="bar"></div>
+      <!--<div class="bar"></div>-->
+    </div>
+    <div class="bottom">
+      <el-button type="text" class="add" @click="openNewWindow">+</el-button>
+      <svg class="icon" aria-hidden="true">
+        <use xlink:href="#icon-setting"></use>
+      </svg>
     </div>
   </div>
 </template>
 <script>
+  import {ipcRenderer} from 'electron'
   export default {
     name: 'Sidebar',
     methods: {
       showContent (indexPath) {
         this.$router.push({path: indexPath})
+      },
+      openNewWindow () {
+        ipcRenderer.send('addFile', 'open')
       }
     }
   }
@@ -51,6 +61,7 @@
 <style lang="scss" scoped>
   $backgroundColor: #F7F9F9;
   #sidebar-root {
+    position: relative;
     background-color: $backgroundColor;
     height: 100%;
     .nav-menu {
@@ -81,16 +92,42 @@
     margin: 1em auto;
   }
 
-  .bottom{
+  .middle {
     position: relative;
     width: 100%;
-    .bar{
+    .bar {
       position: absolute;
       right: 0.1em;
       top: 0;
       width: 8px;
       height: 5em;
       background-color: #48576a;
+    }
+    .wrapper {
+      width: 300px;
+      height: 300px;
+    }
+  }
+
+  .bottom {
+    position: absolute;
+    transform: translateY(0.5em);
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 4em;
+    line-height: 4em;
+    .el-button {
+      position: absolute;
+      bottom: 0.4em;
+      left: 1em;
+      font-size: 2em;
+    }
+    .icon{
+      position:absolute;
+      bottom: 1em;
+      right: 1em;
+      font-size: 1.5em;
     }
   }
 </style>

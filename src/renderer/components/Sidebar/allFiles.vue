@@ -6,9 +6,24 @@
         <el-button size="mini" @click="trigShow" data-name="allFiles">{{content.allFiles}}</el-button>
         <el-button size="mini">+</el-button>
       </div>
-      <transition name="fade">
-        <el-tree :data="data" :props="defaultProps" v-show="show.allFiles"></el-tree>
-      </transition>
+      <div class="disks">
+        <div class="disk">
+          <svg class="icon" aria-hidden="true">
+            <use xlink:href="#icon-diannao"></use>
+          </svg>
+          <div class="disk-title">
+            我的电脑
+          </div>
+        </div>
+        <div class="disk">
+          <svg class="icon" aria-hidden="true">
+            <use xlink:href="#icon-harddisk"></use>
+          </svg>
+          <div class="disk-title">
+            HRTLLFLFLKDS
+          </div>
+        </div>
+      </div>
     </div>
     <div class="sortFiles">
       <div class="title">
@@ -18,11 +33,18 @@
         <el-tree :data="data" :props="defaultProps" v-show="show.sortFiles"></el-tree>
       </div>
     </div>
-    <div class="trash">
+    <div class="others">
       <div class="title">
         <span>其他</span>
         <el-button size="mini" @click="trigShow" data-name="others">{{content.others}}</el-button>
-        <el-tree :data="data" :props="defaultProps" v-show="show.others"></el-tree>
+      </div>
+      <div class="trash">
+        <svg class="icon" aria-hidden="true">
+          <use xlink:href="#icon-huishouzhan"></use>
+        </svg>
+        <div class="trash-title">
+          回收站
+        </div>
       </div>
     </div>
   </div>
@@ -147,7 +169,7 @@
     margin: 0 2em 0 1.5em;
   }
   .title {
-    margin: 1em 0;
+    margin: 0.5em 0;
     span {
       font-size: 0.8em;
       margin: 0 1em;
@@ -160,7 +182,21 @@
       width: 4em;
     }
   }
-
+  .disk,
+  .trash{
+    height: 2.4em;
+    line-height: 2.4em;
+    .icon{
+      float: left;
+      font-size: 1.2em;
+      margin: 0.5em 0.5em 0.5em 1.5em;
+    }
+    .disk-title,
+    .trash-title{
+      font-size: 0.9em;
+      float: left;
+    }
+  }
   .el-tree {
     background-color: inherit;
     border: none;

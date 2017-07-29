@@ -1,23 +1,21 @@
 'use strict'
 
-import {app, BrowserWindow} from 'electron'
-/**
- * Set `__static` path to static files in production
- * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
- */
+import {app, BrowserWindow, ipcMain} from 'electron'
+
 if (process.env.NODE_ENV !== 'development') {
   global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\')
 }
 
 let mainWindow
 const winURL = process.env.NODE_ENV === 'development'
-  ? `http://localhost:9080`
+  ? `http://localhost:9080/#`
   : `file://${__dirname}/index.html`
 
+const baseURL = process.env.NODE_ENV === 'development'
+  ? `http://localhost:9080/#`
+  : `file://${__dirname}/index.html#`
+
 function createWindow () {
-  /**
-   * Initial window options
-   */
   mainWindow = new BrowserWindow({
     minHeight: 500,
     minWidth: 800,
@@ -32,6 +30,16 @@ function createWindow () {
     mainWindow = null
   })
 }
+
+ipcMain.on('addFile', (event, arg) => {
+  if (arg === 'open') {
+    let newWin = new BrowserWindow({
+      height: 400,
+      width: 700
+    })
+    newWin.loadURL(baseURL + '/addfile')
+  }
+})
 
 app.on('ready', createWindow)
 
