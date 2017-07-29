@@ -47,7 +47,9 @@
           </el-menu-item>
         </el-menu>
       </el-popover>
+      <!--添加文件按钮 这里IDE可能会显示红色-->
       <el-button type="text" class="add" v-popover:popoverAdd>+</el-button>
+      <!--设置-->
       <svg class="icon" aria-hidden="true">
         <use xlink:href="#icon-setting"></use>
       </svg>
@@ -156,9 +158,7 @@
       font-size: 1.5em;
     }
   }
-
   .el-popover {
-    padding: 0 !important;
     .el-menu-item {
       font-size: 1.2em;
       padding-left: 1em !important;
