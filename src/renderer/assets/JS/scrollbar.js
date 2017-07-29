@@ -3,7 +3,7 @@
  */
 import $ from 'jquery'
 
-$(function () {
+function scrollBar () {
   let startX = 0
   let currentX = 0
   let moveX = 0
@@ -15,11 +15,11 @@ $(function () {
   $('#scrollBar .pathArea').children().each(function () {
     i += $(this).width() + 2// 每个li之间有空隙
   })
-
   i = i < r ? r : i
   $(scrollBar).find('.scrollBar-inner').width(i)
 
   let hiddenWidth = i - $('#scrollBar').width()
+
   function move () {
     currentX += moveX
     if (currentX >= 0) {
@@ -53,6 +53,6 @@ $(function () {
       scrollBar.removeEventListener('mousemove', getMoveX)
     }, false)
   }
-})
+}
 
-export default {}
+export default scrollBar

@@ -6,7 +6,7 @@
         <el-button size="mini" @click="trigShow" data-name="allFiles">{{content.allFiles}}</el-button>
         <el-button size="mini">+</el-button>
       </div>
-      <div class="disks">
+      <div class="disks" v-show="show.allFiles">
         <div class="disk">
           <svg class="icon" aria-hidden="true">
             <use xlink:href="#icon-diannao"></use>
@@ -30,15 +30,15 @@
         <span>分类</span>
         <el-button size="mini" @click="trigShow" data-name="sortFiles">{{content.sortFiles}}</el-button>
         <el-button size="mini">+</el-button>
-        <el-tree :data="data" :props="defaultProps" v-show="show.sortFiles"></el-tree>
       </div>
+      <el-tree :data="data" :props="defaultProps" v-show="show.sortFiles"></el-tree>
     </div>
     <div class="others">
       <div class="title">
         <span>其他</span>
         <el-button size="mini" @click="trigShow" data-name="others">{{content.others}}</el-button>
       </div>
-      <div class="trash">
+      <div class="trash" v-show="show.others">
         <svg class="icon" aria-hidden="true">
           <use xlink:href="#icon-huishouzhan"></use>
         </svg>
@@ -110,7 +110,8 @@
       }
     },
     mounted () {
-      this.travelTree(this.data[1])
+      // this.travelTree(this.data[1])
+      // 在文件名前添加 Icon
       this.insertFileIcon()
     },
     methods: {

@@ -6,12 +6,12 @@
   </div>
 </template>
 <script>
-  import '../../assets/JS/scrollbar'
-
+  import scrollBar from '../../assets/JS/scrollbar'
   export default {
     name: 'Content',
-    mounted () {
-      this.$router.push('/content/diskfile')
+    updated () {
+      // 为 header 面包屑添加滚动条
+      scrollBar()
     }
   }
 </script>
