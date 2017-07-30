@@ -3,7 +3,7 @@
  * sidebar 为默认的路由视图，content 为命名路由视图
  */
 // sidebar 的组件
-import AllFiles from '@/components/Sidebar/allFiles'
+import Files from '@/components/Sidebar/Files'
 import Search from '@/components/Sidebar/search'
 import RecentImport from '@/components/Sidebar/recentImport'
 import Collection from '@/components/Sidebar/collection'
@@ -14,10 +14,10 @@ import List from '@/components/Content/list'
 
 const routes = [
   {
-    path: 'allfiles',
-    name: 'AllFiles',
+    path: 'files',
+    name: 'Files',
     components: {
-      default: AllFiles,
+      default: Files,
       ContentHeader: FileHeader,
       ContentMiddle: sortDirMiddle,
       ContentList: List
@@ -26,7 +26,12 @@ const routes = [
   {
     path: 'search',
     name: 'Search',
-    component: Search
+    components: {
+      default: Search,
+      ContentHeader: FileHeader,
+      ContentMiddle: sortDirMiddle,
+      ContentList: List
+    }
   },
   {
     path: 'recentimport',

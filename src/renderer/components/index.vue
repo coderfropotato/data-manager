@@ -29,7 +29,6 @@
       return {}
     },
     mounted () {
-      this.$router.push('index')
       // 挂载可变区域
       $('.sidebar-wrapper').resizable({
         handleSelector: '.splitter-left',
