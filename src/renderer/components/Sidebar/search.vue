@@ -125,7 +125,7 @@
   .search-title {
     margin: 0.5em 0;
     span {
-      font-size: 1em;
+      font-size: 0.9em;
       margin: 0 2em;
     }
     .el-button {
@@ -142,6 +142,7 @@
     padding-left: 1em;
     width: 100%;
     span {
+      font-size: 0.9em;
       margin: 1em 2em;
       line-height: 2em;
     }
