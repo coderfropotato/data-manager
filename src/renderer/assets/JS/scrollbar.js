@@ -13,7 +13,7 @@ function scrollBar () {
   let r = $('#scrollBar').width()
   // 获取所有选项条的宽度
   $('#scrollBar .pathArea').children().each(function () {
-    i += $(this).width() + 2// 每个li之间有空隙
+    i += $(this).width() + 10
   })
   i = i < r ? r : i
   $(scrollBar).find('.scrollBar-inner').width(i)

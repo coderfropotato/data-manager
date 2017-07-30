@@ -76,12 +76,16 @@
   </div>
 </template>
 <script>
+  import scrollBar from '../../assets/JS/scrollbar'
   export default {
     name: 'FileHeader',
     data () {
       return {
         searchValue: ''
       }
+    },
+    mounted () {
+      scrollBar()
     },
     methods: {
       // 搜索框搜索结果建议
@@ -108,8 +112,8 @@
   }
 
   .pathArea {
+    font-size: 14px;
     display: inline-block;
-    font-size: 0.9em;
     vertical-align: -0.2em;
   }
 </style>

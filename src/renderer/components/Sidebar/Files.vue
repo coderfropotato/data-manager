@@ -76,12 +76,12 @@
     line-height: 2.4em;
     .icon{
       float: left;
-      font-size: 1.2em;
+      font-size: 1em;
       margin: 0.5em 0.5em 0.5em 1.5em;
     }
     .disk-title,
     .trash-title{
-      font-size: 0.9em;
+      font-size: 0.8em;
       float: left;
     }
   }

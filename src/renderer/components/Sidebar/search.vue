@@ -77,6 +77,7 @@
       handleCheckAllLocalChange (event) {
         this.localCheckedSearch = event.target.checked ? localSearchOptions : []
         this.isIndeterminateLocal = false
+        this.checkAll = this.checkAllLocal && this.checkAllWeb
         // 标志全部搜索选框状态
         this.isIndeterminateAll =
           this.localCheckedSearch.length + this.webCheckedSearch.length < this.webSearchEngines.length + this.localSearchEngines.length &&

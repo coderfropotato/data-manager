@@ -6,13 +6,8 @@
   </div>
 </template>
 <script>
-  import scrollBar from '../../assets/JS/scrollbar'
   export default {
-    name: 'Content',
-    updated () {
-      // 为 header 面包屑添加滚动条
-      scrollBar()
-    }
+    name: 'Content'
   }
 </script>
 <style lang="scss">
