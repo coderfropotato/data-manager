@@ -1,6 +1,6 @@
 'use strict'
 
-import {app, BrowserWindow, ipcMain} from 'electron'
+import {app, BrowserWindow, ipcMain, dialog} from 'electron'
 
 if (process.env.NODE_ENV !== 'development') {
   global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\')
@@ -40,6 +40,16 @@ ipcMain.on('addFile', (event, arg) => {
     })
     newWin.loadURL(baseURL + URL)
   }
+})
+
+ipcMain.on('open-file-dialog', function (event) {
+  dialog.showOpenDialog({
+    properties: ['openFile', 'openDirectory']
+  }, function (files) {
+    if (files) {
+      event.sender.send('selected-directory', files)
+    }
+  })
 })
 
 app.on('ready', createWindow)
