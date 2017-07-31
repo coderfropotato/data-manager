@@ -33,7 +33,7 @@ const actions = {
 
   // 获取文件树
   getFileTree ({ commit }, folderName) {
-    let response = API.getAllFileTree(folderName)
+    let response = API.getFileTree(folderName)
     commit(types.GET_FILE_TREE, folderName, response)
   },
 
@@ -41,8 +41,18 @@ const actions = {
   getTrash ({ commit }) {
     let response = API.getTrash()
     commit(types.GET_TRASH, response)
-  }
+  },
+
   // 获取忽略文件
+  getIgnore ({ commit }) {
+    let response = API.getIgnore()
+    commit(types.GET_IGNORE, response)
+  },
+
+  // 设置当前的文件树
+  setCurrentFileTree ({ commit }, fileTree) {
+    commit(types.SET_CURRENT_FILE_TREE, fileTree)
+  }
 
 }
 
@@ -65,8 +75,17 @@ const mutations = {
   // 获取回收站
   [types.GET_TRASH] (state, response) {
     state.trash = response
-  }
+  },
 
+  // 获取忽略文件
+  [types.GET_IGNORE] (state, response) {
+    state.ignore = response
+  },
+
+  // 设置当前的文件树
+  [types.SET_CURRENT_FILE_TREE] (state, fileTree) {
+    state.currentFileTree = fileTree
+  }
 }
 
 export default {
