@@ -1,4 +1,5 @@
 import $ from 'jquery'
+import Tree from '@/components/Sidebar/tree'
 // import fs from 'fs'
 // // 读取文件测试
 // let filePath = '/Users/wuyiqing/Desktop/datas.json'
@@ -41,36 +42,37 @@ export default {
   data () {
     return {
       // 模拟数据
-      data: [
+      treeData: [
         {
-          label: '一级 1',
-          children: [{
-            label: '二级 1-1',
-            children: [{
-              label: '三级 1-1-1'
-            }]
-          }]
-        },
-        {
-          label: '一级 2',
-          children: [{
-            label: '二级 2-1',
-            children: [{
-              label: '三级 2-1-1'
-            }]
-          }, {
-            label: '二级 2-2',
-            children: [{
-              label: '三级 2-2-1'
-            }]
-          }]
+          name: 'My Tree',
+          children: [
+            {name: 'hello'},
+            {name: 'wat'},
+            {
+              name: 'child folder',
+              children: [
+                {
+                  name: 'child folder',
+                  children: [
+                    {name: 'hello'},
+                    {name: 'wat'}
+                  ]
+                },
+                {name: 'hello'},
+                {name: 'wat'},
+                {
+                  name: 'child folder',
+                  children: [
+                    {name: 'hello'},
+                    {name: 'wat'}
+                  ]
+                }
+              ]
+            }
+          ]
         }
       ],
-      defaultProps: {
-        children: 'children',
-        label: 'label'
-      },
-      count: 0,
+      count: 1,
       show: {
         allFiles: true,
         sortFiles: true,
@@ -95,11 +97,9 @@ export default {
       for (let name in obj) {
         // console.log(this.count + ':' + name)
         if (obj[name] instanceof Array) {
-          this.count++
-          for (let i = 0; i < obj[name].length; i++) {
-            this.travelTree(obj[name][i])
-          }
-          this.count--
+          // this.count++
+          this.travelTree(obj[name])
+          // this.count--
         }
       }
     },
@@ -136,5 +136,8 @@ export default {
         this.show[dir] = !this.show[dir]
       }
     }
+  },
+  components: {
+    Tree
   }
 }

@@ -31,7 +31,9 @@
         <el-button size="mini" @click="trigShow" data-name="sortFiles">{{content.sortFiles}}</el-button>
         <el-button size="mini">+</el-button>
       </div>
-      <el-tree :data="data" :props="defaultProps" v-show="show.sortFiles"></el-tree>
+      <div class="fileTree" v-for="data in treeData">
+        <Tree :model="data"></Tree>
+      </div>
     </div>
     <div class="others">
       <div class="title">
