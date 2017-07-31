@@ -1,47 +1,71 @@
 import $ from 'jquery'
-import fs from 'fs'
-// 读取文件测试
-let filePath = '/Users/wuyiqing/Desktop/datas.json'
-let sourcedata = []
-
-function travelTree (obj, data) {
-  for (let name in obj) {
-    // 文件夹
-    if (name === '__info__') {
-      continue
-    }
-    if (Object.keys(obj[name]).length > 1) {
-      let temp = {
-        label: name.toString(),
-        children: []
-      }
-      data.push(temp)
-      travelTree(obj[name], data[data.length - 1].children)
-    } else {
-      let temp = {
-        label: name.toString()
-      }
-      data.push(temp)
-    }
-  }
-}
-
-// 读取文件
-fs.readFile(filePath, {flag: 'r+', encoding: 'utf8'}, function (err, data) {
-  if (err) {
-    console.error(err)
-    return
-  }
-  var Obj = JSON.parse(data)
-  travelTree(Obj, sourcedata)
-})
+// import fs from 'fs'
+// // 读取文件测试
+// let filePath = '/Users/wuyiqing/Desktop/datas.json'
+// let sourcedata = []
+//
+// function travelTree (obj, data) {
+//   for (let name in obj) {
+//     // 文件夹
+//     if (name === '__info__') {
+//       continue
+//     }
+//     if (Object.keys(obj[name]).length > 1) {
+//       let temp = {
+//         label: name.toString(),
+//         children: []
+//       }
+//       data.push(temp)
+//       travelTree(obj[name], data[data.length - 1].children)
+//     } else {
+//       let temp = {
+//         label: name.toString()
+//       }
+//       data.push(temp)
+//     }
+//   }
+// }
+//
+// // 读取文件
+// fs.readFile(filePath, {flag: 'r+', encoding: 'utf8'}, function (err, data) {
+//   if (err) {
+//     console.error(err)
+//     return
+//   }
+//   var Obj = JSON.parse(data)
+//   travelTree(Obj, sourcedata)
+// })
 
 export default {
   name: 'AllFiles',
   data () {
     return {
       // 模拟数据
-      data: [],
+      data: [
+        {
+          label: '一级 1',
+          children: [{
+            label: '二级 1-1',
+            children: [{
+              label: '三级 1-1-1'
+            }]
+          }]
+        },
+        {
+          label: '一级 2',
+          children: [{
+            label: '二级 2-1',
+            children: [{
+              label: '三级 2-1-1'
+            }]
+          }, {
+            label: '二级 2-2',
+            children: [{
+              label: '三级 2-2-1'
+            }]
+          }]
+        }
+      ],
       defaultProps: {
         children: 'children',
         label: 'label'
@@ -62,7 +86,7 @@ export default {
   mounted () {
     // this.travelTree(this.data[1])
     // 在文件名前添加 Icon
-    this.data = sourcedata
+    // this.data = sourcedata
     this.insertFileIcon()
   },
   methods: {
