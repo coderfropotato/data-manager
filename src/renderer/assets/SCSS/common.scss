@@ -20,7 +20,7 @@ body{
   box-sizing: border-box;
   text-decoration: none;
 }
-
+// Icon 公共样式
 .icon {
   width: 1em;
   height: 1em;
@@ -38,4 +38,15 @@ body{
 
 .el-popover {
   padding: 0 !important;
+}
+// 隐藏全选框的 label
+.el-checkbox{
+  .el-checkbox__inner{
+    height: 1em;
+    width: 1em;
+    font-size: 1em;
+  }
+  .el-checkbox__label{
+    display: none !important;
+  }
 }

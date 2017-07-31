@@ -1,19 +1,13 @@
 <template>
   <div id="content-root">
-    <FileHeader></FileHeader>
-    <List></List>
+    <router-view name="ContentHeader"></router-view>
+    <router-view name="ContentMiddle"></router-view>
+    <router-view name="ContentList"></router-view>
   </div>
 </template>
 <script>
-  import '../../assets/JS/scrollbar'
-  import FileHeader from './fileHeader'
-  import List from './list'
   export default {
-    name: 'Content',
-    components: {
-      FileHeader,
-      List
-    }
+    name: 'Content'
   }
 </script>
 <style lang="scss">
@@ -51,6 +45,6 @@
   }
   // List 组件
   #list-root{
-    margin-top: 2em;
+    margin-top: 1em;
   }
 </style>

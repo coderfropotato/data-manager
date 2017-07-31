@@ -1,11 +1,15 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+// 加载根组件
 import Index from '@/components/index'
-import AllFiles from '@/components/Sidebar/allFiles'
-import Search from '@/components/Sidebar/search'
-import RecentImport from '@/components/Sidebar/recentImport'
-import Collection from '@/components/Sidebar/collection'
-import addFile from './addFile'
+// 加载路由模块
+/*
+ * LoadContent 模块管理 sidebar 和 content 的命名路由视图
+ * sidebar 为默认的路由视图，content 为命名路由视图
+ */
+
+import LoadContent from './loadContent'
+import NewFile from './newFile'
 
 Vue.use(Router)
 
@@ -14,36 +18,15 @@ const baseRoutes = [
     path: '/',
     name: 'Index',
     component: Index,
-    children: [
-      {
-        path: 'allfiles',
-        name: 'AllFiles',
-        component: AllFiles
-      },
-      {
-        path: 'search',
-        name: 'Search',
-        component: Search
-      },
-      {
-        path: 'recentimport',
-        name: 'RecentImport',
-        component: RecentImport
-      },
-      {
-        path: 'collection',
-        name: 'Collection',
-        component: Collection
-      }
-    ]
+    children: LoadContent
   },
   {
     path: '*',
     redirect: '/'
   }
 ]
-
-let routes = baseRoutes.concat(addFile)
+// 加入新窗口路由
+let routes = baseRoutes.concat(NewFile)
 
 export default new Router({
   routes

@@ -15,10 +15,11 @@ let request = zmq.socket('req')
 
 // 连接服务器
 request.connect(URL)
-
+// 导出的 API 对象
+let API = {}
 // @return Object
 // 发送应用打开信号，获取文件更改信息
-export const sendOpenSignal = () => {
+API.sendOpenSignal = () => {
   let Param = {
     API: 'sendOpenSignal',
     params: {}
@@ -29,7 +30,8 @@ export const sendOpenSignal = () => {
   })
 }
 // 点击文件导航，获取文件树
-export const openFile = () => {
+API.openFile = () => {
+  console.log('openFile')
   let Param = {
     API: 'openFile',
     params: {}
@@ -41,7 +43,7 @@ export const openFile = () => {
 }
 // 获取所有文件导航的文件树
 // @Param folderName 文件名
-export const getAllFileTree = folderName => {
+API.getAllFileTree = folderName => {
   let Param = {
     API: 'getAllFileTree',
     params: {
@@ -54,7 +56,7 @@ export const getAllFileTree = folderName => {
   })
 }
 // 获取回收站的文件树
-export const getTrash = () => {
+API.getTrash = () => {
   let Param = {
     API: 'getTrash',
     params: {}
@@ -67,7 +69,7 @@ export const getTrash = () => {
 
 // 获取具体文件的信息
 // @Param param 参数对象
-export const getFileInfo = param => {
+API.getFileInfo = param => {
   let Param = {
     API: 'getFileInfo',
     params: param
@@ -77,3 +79,5 @@ export const getFileInfo = param => {
     return JSON.parse(msg)
   })
 }
+
+export default API

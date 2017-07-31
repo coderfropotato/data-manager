@@ -39,12 +39,12 @@
             </el-dropdown>
           </div>
         </el-col>
-        <!--路径-->
+        <!--路径面包屑-->
         <el-col :span="16" id="scrollBar">
           <div class="scrollBar-inner">
             <div class="grid-content">
               <el-breadcrumb separator=">" class="pathArea">
-                <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+                <el-breadcrumb-item :to="{ path: '/allfiles' }">首页</el-breadcrumb-item>
                 <el-breadcrumb-item>活动管理</el-breadcrumb-item>
                 <el-breadcrumb-item>活动列表</el-breadcrumb-item>
                 <el-breadcrumb-item>活动详情</el-breadcrumb-item>
@@ -72,11 +72,11 @@
         <el-col :span="1">
         </el-col>
       </el-row>
-
     </div>
   </div>
 </template>
 <script>
+  import scrollBar from '../../assets/JS/scrollbar'
   export default {
     name: 'FileHeader',
     data () {
@@ -84,15 +84,19 @@
         searchValue: ''
       }
     },
+    mounted () {
+      scrollBar()
+    },
     methods: {
+      // 搜索框搜索结果建议
       querySearch (queryString, cb) {
         let temp = [{
           value: '建议'
         }]
         cb(temp)
       },
+      // 处理选择搜索结果建议
       handleSelect () {
-        // 处理选择
       }
     }
   }
@@ -101,14 +105,15 @@
   #scrollBar {
     position: relative;
     overflow: hidden;
+    margin-right: 1em;
     .scrollBar-inner {
       position: relative;
     }
   }
 
   .pathArea {
+    font-size: 14px;
     display: inline-block;
-    font-size: 0.9em;
     vertical-align: -0.2em;
   }
 </style>
