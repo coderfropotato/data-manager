@@ -34,18 +34,8 @@ $backgroundColor: #F7F9F9;
 .middle {
   position: relative;
   width: 100%;
-  .bar {
-    position: absolute;
-    right: 0.1em;
-    top: 0;
-    width: 8px;
-    height: 5em;
-    background-color: #48576a;
-  }
-  .wrapper {
-    width: 300px;
-    height: 300px;
-  }
+  // overflow-y: scroll;
+  outline: none;
 }
 
 .bottom {

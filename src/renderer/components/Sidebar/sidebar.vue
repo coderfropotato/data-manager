@@ -1,6 +1,6 @@
 <template>
   <div id="sidebar-root">
-    <div class="nav-menu">
+    <div class="nav-menu" ref="navMenu">
       <el-col :span="24">
         <!--router 激活导航，以index为path-->
         <el-menu class="menu" router>
@@ -31,16 +31,16 @@
         </el-menu>
       </el-col>
     </div>
-    <div class="line"></div>
+    <div class="line" ref="line"></div>
 
     <!--根据选择加载视图-->
-    <div class="middle">
-      <router-view></router-view>
-      <!--<div class="bar"></div>-->
+    <div class="middle" ref="middle" @click="updateStyle">
+      <div class="middle-inner" ref="middleInner">
+        <router-view></router-view>
+      </div>
     </div>
 
-    <div class="bottom">
-
+    <div class="bottom" ref="bottom">
       <el-popover
           ref="popoverAdd"
           placement="right"

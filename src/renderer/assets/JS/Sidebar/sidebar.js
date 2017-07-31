@@ -1,5 +1,6 @@
 import {ipcRenderer} from 'electron'
 import API from '@/api/index'
+
 export default {
   name: 'Sidebar',
   data () {
@@ -25,8 +26,18 @@ export default {
           title: '从搜索结果新建智能分类',
           url: '/newsamrtsortformsearch'
         }
-      }
+      },
+      middleHeight: 400
     }
+  },
+  mounted () {
+    // 设置中间文件树区域的高度
+    this.$refs.middle.style.height = this.middleHeight + 'px'
+    // 当窗口大小发生改变时重新设置高度
+    window.addEventListener('resize', () => {
+      this.setMiddleHeight()
+      this.$refs.middle.style.height = this.middleHeight + 'px'
+    }, false)
   },
   methods: {
     openFile () {
@@ -42,6 +53,20 @@ export default {
         URL: url,
         fileType: ''
       })
+    },
+    updateStyle () {
+      if (this.$refs.middleInner.clientHeight > this.middleHeight) {
+        this.$refs.middle.style.overflowY = 'scroll'
+      } else {
+        this.$refs.middle.style.overflowY = 'visible'
+      }
+    },
+    setMiddleHeight () {
+      this.middleHeight = window.innerHeight -
+      this.$refs.navMenu.clientHeight -
+      this.$refs.line.clientHeight -
+      this.$refs.bottom.clientHeight -
+      32
     }
   }
 }

@@ -76,7 +76,7 @@
   </div>
 </template>
 <script>
-  import scrollBar from '../../assets/JS/scrollbar'
+  import scrollBar from '../../assets/JS/headerScrollbar'
   export default {
     name: 'FileHeader',
     data () {
