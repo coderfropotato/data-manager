@@ -20,7 +20,7 @@
             <svg class="icon" aria-hidden="true">
               <use xlink:href="#icon-import"></use>
             </svg>
-            <span>最近导入</span>
+            <span>文件状态</span>
           </el-menu-item>
           <el-menu-item index="/collection">
             <svg class="icon" aria-hidden="true">
