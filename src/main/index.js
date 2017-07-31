@@ -31,6 +31,27 @@ function createWindow () {
   })
 }
 
+ipcMain.on('addFile', (event, arg) => {
+  if (arg.API === 'open') {
+    let URL = arg.URL
+    let newWin = new BrowserWindow({
+      height: 400,
+      width: 700
+    })
+    newWin.loadURL(baseURL + URL)
+  }
+})
+
+ipcMain.on('open-file-dialog', function (event) {
+  dialog.showOpenDialog({
+    properties: ['openFile', 'openDirectory']
+  }, function (files) {
+    if (files) {
+      event.sender.send('selected-directory', files)
+    }
+  })
+})
+
 app.on('ready', createWindow)
 
 app.on('window-all-closed', () => {
@@ -43,24 +64,4 @@ app.on('activate', () => {
   if (mainWindow === null) {
     createWindow()
   }
-})
-// 打开文件窗口
-ipcMain.on('addFile', (event, arg) => {
-  if (arg.API === 'open') {
-    let URL = arg.URL
-    let newWin = new BrowserWindow({
-      height: 400,
-      width: 700
-    })
-    newWin.loadURL(baseURL + URL)
-  }
-})
-
-// 读取本地文件
-ipcMain.on('readLocalFile', (event, arg) => {
-  dialog.showOpenDialog({
-    properties: ['openFile', 'openDirectory']
-  }, function (files) {
-    if (files) event.sender.send('selected-directory', files)
-  })
 })
