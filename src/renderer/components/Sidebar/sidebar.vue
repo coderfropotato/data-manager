@@ -34,7 +34,7 @@
     <div class="line" ref="line"></div>
 
     <!--根据选择加载视图-->
-    <div class="middle" ref="middle" @click="updateStyle">
+    <div class="middle" ref="middle">
       <div class="middle-inner" ref="middleInner">
         <router-view></router-view>
       </div>
@@ -67,6 +67,7 @@
 
 <script>
   import {ipcRenderer} from 'electron'
+
   export default {
     name: 'Sidebar',
     data () {
@@ -97,6 +98,7 @@
       }
     },
     mounted () {
+      this.setMiddleHeight()
       // 设置中间文件树区域的高度
       this.$refs.middle.style.height = this.middleHeight + 'px'
       // 当窗口大小发生改变时重新设置高度
@@ -118,9 +120,11 @@
       },
       updateStyle () {
         if (this.$refs.middleInner.clientHeight > this.middleHeight) {
+          console.log('ff')
           this.$refs.middle.style.overflowY = 'scroll'
         } else {
-          this.$refs.middle.style.overflowY = 'visible'
+          console.log('dd')
+          // this.$refs.middle.style.overflowY = 'visible'
         }
       },
       setMiddleHeight () {

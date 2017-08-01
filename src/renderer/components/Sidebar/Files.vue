@@ -25,9 +25,14 @@
         <el-button size="mini" @click="trigShow" data-name="sortFiles">{{content.sortFiles}}</el-button>
         <el-button size="mini">+</el-button>
       </div>
-      <div class="fileTree" v-for="data in sortFileTree">
-        <Tree :model="data"></Tree>
-      </div>
+      <el-tree
+          :data="sortFileTree"
+          node-key="id"
+          :expand-on-click-node="false"
+          @node-click="loadFileList"
+          v-show="show.sortFiles">
+      </el-tree>
+
     </div>
     <div class="others">
       <div class="title">
@@ -50,6 +55,7 @@
   import $ from 'jquery'
   import Tree from '@/components/Sidebar/tree'
   import {mapState} from 'vuex'
+
   export default {
     name: 'AllFiles',
     data () {
@@ -111,6 +117,10 @@
           }
           this.show[dir] = !this.show[dir]
         }
+      },
+      loadFileList (nodeObj) {
+        let path = nodeObj.id
+        console.log(path)
       }
     },
     components: {
@@ -120,9 +130,10 @@
 </script>
 
 <style lang="scss" scoped>
-  #fileDirectory-root{
+  #fileDirectory-root {
     margin: 0 2em 0 1.5em;
   }
+
   .title {
     margin: 0.5em 0;
     span {
@@ -137,21 +148,23 @@
       width: 4em;
     }
   }
+
   .disk,
-  .trash{
+  .trash {
     height: 2.4em;
     line-height: 2.4em;
-    .icon{
+    .icon {
       float: left;
       font-size: 1em;
       margin: 0.5em 0.5em 0.5em 1.5em;
     }
     .disk-title,
-    .trash-title{
+    .trash-title {
       font-size: 0.8em;
       float: left;
     }
   }
+
   .el-tree {
     background-color: inherit;
     border: none;

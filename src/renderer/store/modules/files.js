@@ -9,11 +9,11 @@ import travelTree from '@/assets/JS/handleRowTreeData'
 
 const state = {
   // 记录当前选择的文件
-  currentChoose: '',
+  currentFile: '',
   // 记录当前的文件树
   currentFileTree: '',
-  // 记录当前选中的文件夹
-  currentFolder: '',
+  // 记录当前选中的文件的路径
+  currentPath: '',
   // 所有文件，可读，不可变更
   allFiles: [],
   // 分类，用户可以自己建立多层文件夹来分类数据
@@ -71,7 +71,7 @@ const mutations = {
     // 对原始的文件树数据进行处理
     state.sortFileTree = []
     for (let name in state.sortDirRowData) {
-      travelTree(state.sortDirRowData[name], state.sortFileTree)
+      travelTree(state.sortDirRowData[name], state.sortFileTree, '')
     }
   },
 
