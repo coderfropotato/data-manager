@@ -46,11 +46,11 @@ API.openFile = () => {
   })
   return Files
 }
-// 获取所有文件导航的文件树
+// 获取文件导航的文件树
 // @Param folderName 文件名
-API.getAllFileTree = folderName => {
+API.getFileTree = folderName => {
   let Param = {
-    API: 'getAllFileTree',
+    API: 'getFileTree',
     params: {
       folderName: folderName
     }
