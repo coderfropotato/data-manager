@@ -10,6 +10,8 @@ import travelTree from '@/assets/JS/handleRowTreeData'
 const state = {
   // 记录当前选择的文件
   currentFile: '',
+  // 记录当前的文件列表
+  currentFileList: [],
   // 记录当前的文件树
   currentFileTree: '',
   // 记录当前选中的文件的路径
@@ -33,7 +35,6 @@ const state = {
 const actions = {
   // 打开文件选项
   openFile ({ commit }) {
-    console.log('openFile')
     let response = API.openFile()
     commit(types.OPEN_FILE, response)
   },
@@ -42,6 +43,12 @@ const actions = {
   getFileTree ({ commit }, folderName) {
     let response = API.getFileTree(folderName)
     commit(types.GET_FILE_TREE, folderName, response)
+  },
+
+  // 获取文件列表
+  getFileList ({commit}, path) {
+    let reponse = API.getFileList(path)
+    commit(types.SET_FILE_LIST, reponse)
   },
 
   // 获取回收站
@@ -60,7 +67,6 @@ const actions = {
   setCurrentFileTree ({ commit }, fileTree) {
     commit(types.SET_CURRENT_FILE_TREE, fileTree)
   }
-
 }
 
 const mutations = {
@@ -84,6 +90,11 @@ const mutations = {
     state.cacheDir.push(temp)
   },
 
+  // 设置文件列表信息
+  [types.SET_FILE_LIST] (state, response) {
+    state.currentFileList = response
+  },
+
   // 获取回收站
   [types.GET_TRASH] (state, response) {
     state.trash = response
@@ -97,6 +108,11 @@ const mutations = {
   // 设置当前的文件树
   [types.SET_CURRENT_FILE_TREE] (state, fileTree) {
     state.currentFileTree = fileTree
+  },
+
+  // 设置当前的路径
+  [types.SET_CURRENT_PATH] (state, currentPath) {
+    state.currentPath = currentPath
   }
 }
 

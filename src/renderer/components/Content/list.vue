@@ -2,70 +2,54 @@
   <div id="list-root">
     <el-table
         :data="tableData"
-        style="width: 100%">
+        highlight-current-row
+        style="width: 100%" @row-click="showFileInfo">
       <el-table-column
-          prop="id"
-          label="ID"
-          width="180">
+          type="index"
+          label="序号"
+          width="80">
       </el-table-column>
       <el-table-column
-          prop="name"
-          label="姓名">
+          property="name"
+          label="文件名">
       </el-table-column>
       <el-table-column
-          prop="amount1"
-          sortable
-          label="数值 1">
+          property="createTime"
+          label="创建时间">
       </el-table-column>
       <el-table-column
-          prop="amount2"
-          sortable
-          label="数值 2">
+          property="size"
+          label="文件大小">
+      </el-table-column>
+      <el-table-column
+          label="操作">
+        <template scope="scope">
+          <el-button type="text">查看</el-button>
+          <el-button type="text">编辑</el-button>
+        </template>
       </el-table-column>
     </el-table>
   </div>
 </template>
 <script>
+  import {mapState} from 'vuex'
   export default {
     data () {
-      return {
-        tableData: [
-          {
-            id: '12987122',
-            name: '王小虎',
-            amount1: '234',
-            amount2: '3.2'
-          },
-          {
-            id: '12987123',
-            name: '王小虎',
-            amount1: '165',
-            amount2: '4.43'
-          },
-          {
-            id: '12987124',
-            name: '王小虎',
-            amount1: '324',
-            amount2: '1.9'
-          },
-          {
-            id: '12987125',
-            name: '王小虎',
-            amount1: '621',
-            amount2: '2.2'
-          },
-          {
-            id: '12987126',
-            name: '王小虎',
-            amount1: '539',
-            amount2: '4.1'
-          }
-        ]
+      return {}
+    },
+    computed: mapState({
+      tableData: state => state.files.currentFileList,
+      currentPath: state => state.files.currentPath
+    }),
+    methods: {
+      showFileInfo (row, event) {
+        let path = this.currentPath + row.name
+        console.log(path)
       }
     }
   }
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
   #list-root {
     .el-table__body-wrapper {
       overflow: hidden;

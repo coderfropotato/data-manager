@@ -5,7 +5,7 @@
  * 500：服务器错误（服务器处理出现问题）
 */
 // 基本配置
-import {Files} from './data'
+import {Files, returnRadomFileList} from './data'
 
 let zmq = require('zeromq')
 const baseURL = 'tcp://127.0.0.1'
@@ -46,6 +46,7 @@ API.openFile = () => {
   })
   return Files
 }
+
 // 获取文件导航的文件树
 // @Param folderName 文件名
 API.getFileTree = folderName => {
@@ -60,6 +61,23 @@ API.getFileTree = folderName => {
     // 进一步处理，是否存入本地数据库
   })
 }
+
+// 获取文件列表
+API.getFileList = path => {
+  let Param = {
+    API: 'getFileList',
+    params: {
+      path: path
+    }
+  }
+  request.send(Param)
+  request.on('message', function (msg) {
+  })
+  // 模拟数据
+  let fileList = returnRadomFileList()
+  return fileList
+}
+
 // 获取回收站的文件树
 API.getTrash = () => {
   let Param = {
@@ -83,6 +101,7 @@ API.getFileInfo = param => {
   request.on('message', function (msg) {
     return JSON.parse(msg)
   })
+  // 返回模拟数据
 }
 
 export default API

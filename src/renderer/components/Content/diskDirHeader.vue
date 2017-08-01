@@ -44,12 +44,9 @@
           <div class="scrollBar-inner">
             <div class="grid-content">
               <el-breadcrumb separator=">" class="pathArea">
-                <el-breadcrumb-item :to="{ path: '/allfiles' }">首页</el-breadcrumb-item>
-                <el-breadcrumb-item>活动管理</el-breadcrumb-item>
-                <el-breadcrumb-item>活动列表</el-breadcrumb-item>
-                <el-breadcrumb-item>活动详情</el-breadcrumb-item>
-                <el-breadcrumb-item>活动详情</el-breadcrumb-item>
-                <el-breadcrumb-item>活动详情</el-breadcrumb-item>
+                <el-breadcrumb-item v-for="item in pathArray" :key="item">
+                  {{item}}
+                </el-breadcrumb-item>
               </el-breadcrumb>
             </div>
           </div>
@@ -77,6 +74,7 @@
 </template>
 <script>
   import scrollBar from '../../assets/JS/headerScrollbar'
+  import {mapState} from 'vuex'
   export default {
     name: 'FileHeader',
     data () {
@@ -87,6 +85,13 @@
     mounted () {
       scrollBar()
     },
+    computed: mapState({
+      pathArray: state => {
+        let rowPath = state.files.currentPath.split('/')
+        rowPath.pop()
+        return rowPath
+      }
+    }),
     methods: {
       // 搜索框搜索结果建议
       querySearch (queryString, cb) {

@@ -188,6 +188,46 @@ export const updateFileTree = [
   }
 ]
 
+export function returnRadomFileList () {
+  let fileInfo = [
+    {
+      name: 'NLFJLDSlsfj',
+      createTime: '2017/8/1',
+      size: '342KB'
+    },
+    {
+      name: '二次文件',
+      createTime: '2017/3/2',
+      size: '42KB'
+    },
+    {
+      name: 'zheshi文件',
+      createTime: '2017/2/2',
+      size: '412KB'
+    },
+    {
+      name: '二次件',
+      createTime: '2017/2/1',
+      size: '452KB'
+    },
+    {
+      name: '二次fads件',
+      createTime: '2017/3/16',
+      size: '442KB'
+    }
+  ]
+  const fileList = []
+  for (let i = 0; i < 10; i++) {
+    let radomIndex = parseInt(Math.random() * 5)
+    let obj = {}
+    for (let attr in fileInfo[radomIndex]) {
+      obj[attr] = fileInfo[radomIndex][attr]
+    }
+    fileList.push(obj)
+  }
+  return fileList
+}
+
 export const Files = {
   allFiles,
   sortDir

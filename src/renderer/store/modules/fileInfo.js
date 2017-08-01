@@ -20,11 +20,10 @@ const state = {
 
 const actions = {
   // 获取文件详情
-  getFileInfo ({ commit }, path, volumeId) {
+  getFileInfo ({commit}, path, volumeId) {
     let detail = API.getFileInfo({path, volumeId})
     commit(types.RECEIVE_FILE_DETAIL, detail)
   }
-
 }
 
 const mutations = {

@@ -55,7 +55,7 @@
   import $ from 'jquery'
   import Tree from '@/components/Sidebar/tree'
   import {mapState} from 'vuex'
-
+  import bus from '@/assets/JS/bus'
   export default {
     name: 'AllFiles',
     data () {
@@ -120,7 +120,12 @@
       },
       loadFileList (nodeObj) {
         let path = nodeObj.id
-        console.log(path)
+        // 设置当前路径
+        this.$store.commit('setCurrentPath', path)
+        // 发送获取文件列表请求
+        this.$store.dispatch('getFileList', path, '18401839')
+        // 通过空的 Vue 实例作为中央时间总线，发送路径更改信息
+        bus.$emit('path-changed', path)
       }
     },
     components: {
