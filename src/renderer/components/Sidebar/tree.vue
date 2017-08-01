@@ -2,8 +2,7 @@
   <div id="tree-root">
     <li>
       <div
-          class="item"
-          @dblclick="changeType">
+          class="item">
         <!--点击下拉图标展开文件夹-->
         <svg class="icon" aria-hidden="true" v-show="hasChildFolder" @click="toggle">
           <!--收起状态-->

@@ -4,17 +4,23 @@
  */
 import API from '@/api'
 import * as types from '@/store/mutation-types'
+// 引入文件树数据处理函数
+import travelTree from '@/assets/JS/handleRowTreeData'
 
 const state = {
-  // 记录当前选择
+  // 记录当前选择的文件
   currentChoose: '',
+  // 记录当前的文件树
   currentFileTree: '',
   // 记录当前选中的文件夹
   currentFolder: '',
   // 所有文件，可读，不可变更
   allFiles: [],
   // 分类，用户可以自己建立多层文件夹来分类数据
-  sortDir: [],
+  // 原始数据
+  sortDirRowData: [],
+  // 处理后的数据
+  sortFileTree: [],
   // 缓存请求的分类
   cacheDir: [],
   // 回收站
@@ -61,7 +67,12 @@ const mutations = {
   // 打开文件选项
   [types.OPEN_FILE] (state, response) {
     state.allFiles = response.allFiles
-    state.sortDir = response.sortDir
+    state.sortDirRowData = response.sortDir
+    // 对原始的文件树数据进行处理
+    state.sortFileTree = []
+    for (let name in state.sortDirRowData) {
+      travelTree(state.sortDirRowData[name], state.sortFileTree)
+    }
   },
 
   // 获取文件树
