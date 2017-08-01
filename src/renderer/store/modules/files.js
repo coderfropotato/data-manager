@@ -27,6 +27,7 @@ const state = {
 const actions = {
   // 打开文件选项
   openFile ({ commit }) {
+    console.log('openFile')
     let response = API.openFile()
     commit(types.OPEN_FILE, response)
   },

@@ -1,83 +1,44 @@
 import $ from 'jquery'
 import Tree from '@/components/Sidebar/tree'
-// import fs from 'fs'
-// // 读取文件测试
-// let filePath = '/Users/wuyiqing/Desktop/datas.json'
-// let sourcedata = []
-//
-// function travelTree (obj, data) {
-//   for (let name in obj) {
-//     // 文件夹
-//     if (name === '__info__') {
-//       continue
-//     }
-//     if (Object.keys(obj[name]).length > 1) {
-//       let temp = {
-//         label: name.toString(),
-//         children: []
-//       }
-//       data.push(temp)
-//       travelTree(obj[name], data[data.length - 1].children)
-//     } else {
-//       let temp = {
-//         label: name.toString()
-//       }
-//       data.push(temp)
-//     }
-//   }
-// }
-//
-// // 读取文件
-// fs.readFile(filePath, {flag: 'r+', encoding: 'utf8'}, function (err, data) {
-//   if (err) {
-//     console.error(err)
-//     return
-//   }
-//   var Obj = JSON.parse(data)
-//   travelTree(Obj, sourcedata)
-// })
+import {mapState} from 'vuex'
+
+// 遍历原始数据，改成能被文件树组件使用的数据格式
+function travelTree (obj, data) {
+  for (let name in obj) {
+    // 文件夹
+    if (name === '__info__') {
+      continue
+    }
+    if (Object.keys(obj[name]).length > 1) {
+      let temp = {
+        label: name.toString(),
+        children: []
+      }
+      data.push(temp)
+      travelTree(obj[name], data[data.length - 1].children)
+    } else {
+      let temp = {
+        label: name.toString()
+      }
+      data.push(temp)
+    }
+  }
+}
 
 export default {
   name: 'AllFiles',
   data () {
     return {
-      // 模拟数据
-      treeData: [
-        {
-          name: 'My Tree',
-          children: [
-            {name: 'hello'},
-            {name: 'wat'},
-            {
-              name: 'child folder',
-              children: [
-                {
-                  name: 'child folder',
-                  children: [
-                    {name: 'hello'},
-                    {name: 'wat'}
-                  ]
-                },
-                {name: 'hello'},
-                {name: 'wat'},
-                {
-                  name: 'child folder',
-                  children: [
-                    {name: 'hello'},
-                    {name: 'wat'}
-                  ]
-                }
-              ]
-            }
-          ]
-        }
-      ],
       count: 1,
+      // 处理完成后的分类文件夹树
+      sortFileTree: [],
+      // 控制面板折叠与展开
       show: {
         allFiles: true,
         sortFiles: true,
         others: true
       },
+      // 折叠或展开按钮的状态
       content: {
         allFiles: '收起',
         sortFiles: '收起',
@@ -86,23 +47,16 @@ export default {
     }
   },
   mounted () {
-    // this.travelTree(this.data[1])
-    // 在文件名前添加 Icon
-    // this.data = sourcedata
     this.insertFileIcon()
+    this.handleRowData()
   },
+  computed: mapState({
+    // 所有文件选项的数据，即管理的磁盘
+    diskDir: state => state.files.allFiles,
+    // 分类的文件夹树，原始数据
+    sortDir: state => state.files.sortDir
+  }),
   methods: {
-    // 遍历树
-    travelTree (obj) {
-      for (let name in obj) {
-        // console.log(this.count + ':' + name)
-        if (obj[name] instanceof Array) {
-          // this.count++
-          this.travelTree(obj[name])
-          // this.count--
-        }
-      }
-    },
     // 插入文件Icon
     insertFileIcon () {
       let Icon = '<svg class="icon" aria-hidden="true">\n' + '<use xlink:href="#icon-wenjian"></use>\n' + '</svg>'
@@ -134,6 +88,13 @@ export default {
           this.content[dir] = '收起'
         }
         this.show[dir] = !this.show[dir]
+      }
+    },
+    // 将后台获取的原始文件树数据转化成能展现的格式
+    handleRowData () {
+      for (let name in this.sortDir) {
+        console.log(this.sortDir[name])
+        travelTree(this.sortDir[name], this.sortFileTree)
       }
     }
   },

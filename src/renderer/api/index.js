@@ -5,6 +5,8 @@
  * 500：服务器错误（服务器处理出现问题）
 */
 // 基本配置
+import {Files} from './data'
+
 let zmq = require('zeromq')
 const baseURL = 'tcp://127.0.0.1'
 const PORT = 3000
@@ -15,8 +17,10 @@ let request = zmq.socket('req')
 
 // 连接服务器
 request.connect(URL)
+
 // 导出的 API 对象
 let API = {}
+
 // @return Object
 // 发送应用打开信号，获取文件更改信息
 API.sendOpenSignal = () => {
@@ -29,9 +33,9 @@ API.sendOpenSignal = () => {
     return JSON.parse(msg)
   })
 }
+
 // 点击文件导航，获取文件树
 API.openFile = () => {
-  console.log('openFile')
   let Param = {
     API: 'openFile',
     params: {}
@@ -40,6 +44,7 @@ API.openFile = () => {
   request.on('message', function (msg) {
     // 进一步处理，是否存入本地数据库
   })
+  return Files
 }
 // 获取所有文件导航的文件树
 // @Param folderName 文件名

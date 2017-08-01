@@ -11,7 +11,7 @@
           <!--展开状态-->
           <use xlink:href="#icon-xiala" v-if="open"></use>
         </svg>
-        <span @click="showChildFile">{{model.name}}</span>
+        <span @click="showChildFile">{{model.label}}</span>
       </div>
       <ul v-show="open" v-if="hasChildFolder">
         <Tree

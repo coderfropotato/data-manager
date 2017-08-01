@@ -35,7 +35,8 @@
   </div>
 </template>
 <script>
-  let localSearchOptions = ['HKFDKUIYER', 'JFLDLKLNKLJ', 'JILFD']
+  import {mapState} from 'vuex'
+  // let localSearchOptions = ['HKFDKUIYER', 'JFLDLKLNKLJ', 'JILFD']
   let webSearchOptions = ['NCIC', 'ABC', 'Easy BCD']
   export default {
     data () {
@@ -51,7 +52,7 @@
         // 已选择的网络搜索引擎
         webCheckedSearch: [],
         // 本地搜索引擎选项
-        localSearchEngines: localSearchOptions,
+        // localSearchEngines: localSearchOptions,
         // 网络搜索引擎选项
         webSearchEngines: webSearchOptions,
         // 所有搜索全选样式，有全选，非全选和全不选
@@ -61,10 +62,13 @@
         isIndeterminateWeb: false
       }
     },
+    computed: mapState({
+      localSearchEngines: state => state.files.allFiles
+    }),
     methods: {
       // 全部搜索全选
       handleCheckAllChange (event) {
-        this.localCheckedSearch = event.target.checked ? localSearchOptions : []
+        this.localCheckedSearch = event.target.checked ? this.localSearchEngines : []
         this.webCheckedSearch = event.target.checked ? webSearchOptions : []
         this.checkAllLocal = event.target.checked
         this.checkAllWeb = event.target.checked
@@ -75,7 +79,7 @@
       },
       // 本地搜索全选
       handleCheckAllLocalChange (event) {
-        this.localCheckedSearch = event.target.checked ? localSearchOptions : []
+        this.localCheckedSearch = event.target.checked ? this.localSearchEngines : []
         this.isIndeterminateLocal = false
         this.checkAll = this.checkAllLocal && this.checkAllWeb
         // 标志全部搜索选框状态

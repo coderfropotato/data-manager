@@ -7,20 +7,14 @@
         <el-button size="mini">+</el-button>
       </div>
       <div class="disks" v-show="show.allFiles">
-        <div class="disk">
+        <!--遍历后台传送的磁盘数组，默认第一个为我的电脑-->
+        <div class="disk" v-for="(disk, index) in diskDir">
           <svg class="icon" aria-hidden="true">
-            <use xlink:href="#icon-diannao"></use>
+            <use xlink:href="#icon-diannao" v-if="!index"></use>
+            <use xlink:href="#icon-harddisk" v-if="index"></use>
           </svg>
           <div class="disk-title">
-            我的电脑
-          </div>
-        </div>
-        <div class="disk">
-          <svg class="icon" aria-hidden="true">
-            <use xlink:href="#icon-harddisk"></use>
-          </svg>
-          <div class="disk-title">
-            HRTLLFLFLKDS
+            {{disk}}
           </div>
         </div>
       </div>
@@ -31,7 +25,7 @@
         <el-button size="mini" @click="trigShow" data-name="sortFiles">{{content.sortFiles}}</el-button>
         <el-button size="mini">+</el-button>
       </div>
-      <div class="fileTree" v-for="data in treeData">
+      <div class="fileTree" v-for="data in sortFileTree">
         <Tree :model="data"></Tree>
       </div>
     </div>

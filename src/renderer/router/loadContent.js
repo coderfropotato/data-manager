@@ -5,7 +5,7 @@
 // sidebar 的组件
 import Files from '@/components/Sidebar/Files'
 import Search from '@/components/Sidebar/search'
-import RecentImport from '@/components/Sidebar/recentImport'
+import FileStatus from '@/components/Sidebar/fileStatus'
 import Collection from '@/components/Sidebar/collection'
 // content 的组件
 import FileHeader from '@/components/Content/diskDirHeader'
@@ -36,7 +36,7 @@ const routes = [
   {
     path: 'recentimport',
     name: 'RecentImport',
-    component: RecentImport
+    component: FileStatus
   },
   {
     path: 'collection',

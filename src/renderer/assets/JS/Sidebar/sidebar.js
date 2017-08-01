@@ -1,5 +1,4 @@
 import {ipcRenderer} from 'electron'
-import API from '@/api/index'
 
 export default {
   name: 'Sidebar',
@@ -42,7 +41,7 @@ export default {
   methods: {
     openFile () {
       // 向后台发送请求，获取文件树
-      API.openFile()
+      this.$store.dispatch('openFile')
     },
     openNewWindow (indexPath) {
       // 嵌套路由
