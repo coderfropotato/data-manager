@@ -251,3 +251,44 @@ export const fileInfo = {
     }
   }
 }
+
+export const modifiedFiles = {
+  '84ABB9FB': {
+    'tmp': {
+      'pycalcdist': {
+        'api': {
+          'test': {
+            '__info__': {
+              'ctime': 1501639393.6212525,
+              'status': -1
+            },
+            'test': {
+              '__info__': {'ctime': 1501639406.4304078, 'status': -1},
+              'test.txt': {'__info__': {'ctime': 1501639413.5577712, 'size': 0, 'status': -1}}
+            },
+            'test.txt': {'__info__': {'ctime': 1501639401.677846, 'size': 0, 'status': -1}}
+          },
+          'zmq': {
+            'hello': {
+              '__info__': {'ctime': 1501639324.373802, 'status': -1},
+              'world.txt': {'__info__': {'ctime': 1501639332.9580536, 'size': 0, 'status': -1}}
+            }
+          }
+        }
+      }
+    }
+  },
+  'B49EC726': {
+    'Xshell 5': {
+      'Theme': {
+        'hello.txt': {
+          '__info__': {
+            'ctime': 1501640748.1903245,
+            'size': 0,
+            'status': 1
+          }
+        }
+      }
+    }
+  }
+}
