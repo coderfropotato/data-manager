@@ -9,9 +9,8 @@ import FileStatus from '@/components/Sidebar/fileStatus'
 import Collection from '@/components/Sidebar/collection'
 // content 的组件
 import FileHeader from '@/components/Content/diskDirHeader'
-import sortDirMiddle from '@/components/Content/sortDirMiddle'
 import List from '@/components/Content/list'
-
+import SearchCondition from '@/components/Content/searchCondition'
 const routes = [
   {
     path: 'files',
@@ -19,7 +18,6 @@ const routes = [
     components: {
       default: Files,
       ContentHeader: FileHeader,
-      ContentMiddle: sortDirMiddle,
       ContentList: List
     }
   },
@@ -29,7 +27,7 @@ const routes = [
     components: {
       default: Search,
       ContentHeader: FileHeader,
-      ContentMiddle: sortDirMiddle,
+      ContentMiddle: SearchCondition,
       ContentList: List
     }
   },
