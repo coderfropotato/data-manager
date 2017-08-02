@@ -11,7 +11,6 @@ import Collection from '@/components/Sidebar/collection'
 import FileHeader from '@/components/Content/diskDirHeader'
 import List from '@/components/Content/list'
 import FileStatusContent from '@/components/Content/fileStatus'
-import SearchCondition from '@/components/Content/searchCondition'
 import SearchHeader from '@/components/Content/searchHeader'
 
 const routes = [

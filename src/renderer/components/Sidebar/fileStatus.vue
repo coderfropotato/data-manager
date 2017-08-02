@@ -5,7 +5,7 @@
 
 <script>
   export default {
-    name: 'fileStatusSidebar',
+    name: 'fileStatusSidebar'
   }
 </script>
 
