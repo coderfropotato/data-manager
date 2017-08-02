@@ -11,6 +11,7 @@ import Collection from '@/components/Sidebar/collection'
 import FileHeader from '@/components/Content/diskDirHeader'
 import List from '@/components/Content/list'
 import SearchCondition from '@/components/Content/searchCondition'
+import SearchHeader from '@/components/Content/searchHeader'
 const routes = [
   {
     path: 'files',
@@ -26,7 +27,7 @@ const routes = [
     name: 'Search',
     components: {
       default: Search,
-      ContentHeader: FileHeader,
+      ContentHeader: SearchHeader,
       ContentMiddle: SearchCondition,
       ContentList: List
     }
