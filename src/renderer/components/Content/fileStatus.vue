@@ -1,19 +1,21 @@
 <template>
     <div id="file-status-root">
-        分类
-        <el-tree :data="modifiedFiles" :expand-on-click-node="false" :render-content="renderContent"></el-tree>
+        所有变更
+        <el-tree :data="modifiedFiles" :expand-on-click-node="false"></el-tree>
     </div>
 </template>
 
 <script>
-  import { mapState } from 'vuex'
+  import { mapState, mapActions } from 'vuex'
   import $ from 'jquery'
 
   export default {
     name: 'fileStatusContent',
 
+    // mounted时加载
     mounted () {
-      this.insertFileIcon()
+      this.getModifiedFiles()   // 获取修改文件
+      this.insertFileIcon()     // 插入文件icon
     },
 
     computed: mapState({
@@ -32,7 +34,12 @@
           .css('font-size', '1.2em')
           .css('margin-right', '0.5em')
           .css('vertical-align', '-0.25em')
-      }
+      },
+
+      // 映射Actions
+      ...mapActions([
+        'getModifiedFiles'  // 获取修改的文件
+      ])
 
 //      // 选中高亮
 //      /* eslint-disable */
