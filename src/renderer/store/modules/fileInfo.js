@@ -6,16 +6,17 @@ import API from '@/api'
 import * as types from '@/store/mutation-types'
 
 const state = {
+  show: false,
   // 基本信息
   basicInfo: {
     name: '',
-    size: 0,
+    size: '',
     type: '',
     createTime: ''
   },
 
   // 其他信息
-  otherInfos: {}
+  otherInfo: {}
 }
 
 const actions = {
@@ -30,7 +31,12 @@ const mutations = {
   // 获取文件信息
   [types.RECEIVE_FILE_DETAIL] (state, detail) {
     state.basicInfo = detail.basicInfo
-    state.otherInfos = detail.otherInfos
+    state.otherInfo = detail.otherInfo
+  },
+
+  // 显示文件信息区
+  [types.SHOW_FILE_INFO] (state) {
+    state.show = true
   }
 }
 

@@ -32,7 +32,7 @@
           .css('font-size', '1.2em')
           .css('margin-right', '0.5em')
           .css('vertical-align', '-0.25em')
-      },
+      }
 
 //      // 选中高亮
 //      /* eslint-disable */

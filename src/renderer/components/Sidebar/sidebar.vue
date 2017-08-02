@@ -67,7 +67,7 @@
 
 <script>
   import {ipcRenderer} from 'electron'
-
+  import bus from '@/assets/JS/bus'
   export default {
     name: 'Sidebar',
     data () {
@@ -94,18 +94,28 @@
             url: '/newsamrtsortformsearch'
           }
         },
+        // TODO：无法使用计算属性，不能响应窗口大小变化，未来可做更深的考虑
         middleHeight: 400
       }
     },
     mounted () {
-      this.setMiddleHeight()
+      this.updateStyle()
       // 设置中间文件树区域的高度
+      this.setMiddleHeight()
       this.$refs.middle.style.height = this.middleHeight + 'px'
+
       // 当窗口大小发生改变时重新设置高度
       window.addEventListener('resize', () => {
         this.setMiddleHeight()
         this.$refs.middle.style.height = this.middleHeight + 'px'
       }, false)
+
+      // 等文件树展开完成后再获取高度
+      bus.$on('tree-height-changed', () => {
+        setTimeout(() => {
+          this.updateStyle()
+        }, 500)
+      })
     },
     methods: {
       openNewWindow (indexPath) {
@@ -118,15 +128,15 @@
           fileType: ''
         })
       },
+      // 更新滚动样式
       updateStyle () {
         if (this.$refs.middleInner.clientHeight > this.middleHeight) {
-          console.log('ff')
-          this.$refs.middle.style.overflowY = 'scroll'
+          this.$refs.middle.style.overflowY = 'overlay'
         } else {
-          console.log('dd')
-          // this.$refs.middle.style.overflowY = 'visible'
+          this.$refs.middle.style.overflowY = 'hidden'
         }
       },
+      // 计算并设置中间区域的高度
       setMiddleHeight () {
         this.middleHeight = window.innerHeight -
           this.$refs.navMenu.clientHeight -
@@ -138,4 +148,79 @@
   }
 </script>
 <!--分离SCSS文件-->
-<style src="../../assets/SCSS/sidebar.scss" lang="scss" scoped></style>
+<style lang="scss" scoped>
+  $backgroundColor: #F7F9F9;
+  #sidebar-root {
+    position: relative;
+    background-color: $backgroundColor;
+    height: 100%;
+    .nav-menu {
+      overflow: hidden;
+      .el-menu {
+        background-color: $backgroundColor;
+      }
+    }
+  }
+
+  .el-menu-item {
+    font-size: 0.9em;
+    padding-left: 2em !important;
+    span {
+      margin-left: 0.3em;
+    }
+    .icon {
+      position: relative;
+      font-size: 1.4em;
+      display: inline-block;
+    }
+  }
+
+  .line {
+    height: 1px;
+    width: 90%;
+    background-color: #48576a;
+    margin: 1em auto;
+  }
+
+  .middle {
+    position: relative;
+    width: 100%;
+    // 避免滚动条影响宽度，只在webkit内核中器作用
+    -webkit-overflow-y: overlay;
+    // 隐藏滚动条
+    /*&::-webkit-scrollbar {*/
+    /*display: none;*/
+    /*}*/
+  }
+
+  .bottom {
+    position: absolute;
+    transform: translateY(0.5em);
+    bottom: 0;
+    left: 0;
+    background-color: inherit;
+    border-top: 1px solid #8c939d;
+    width: 100%;
+    height: 4em;
+    line-height: 4em;
+    .el-button {
+      position: absolute;
+      bottom: 0.4em;
+      left: 1em;
+      font-size: 2em;
+    }
+    .icon {
+      position: absolute;
+      bottom: 1em;
+      right: 1em;
+      font-size: 1.5em;
+    }
+  }
+
+  .el-popover {
+    .el-menu-item {
+      font-size: 1.2em;
+      padding-left: 1em !important;
+    }
+  }
+</style>

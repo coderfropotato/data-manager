@@ -5,7 +5,7 @@
  * 500：服务器错误（服务器处理出现问题）
 */
 // 基本配置
-import {Files, returnRadomFileList} from './data'
+import {Files, returnRadomFileList, fileInfo} from './data'
 
 let zmq = require('zeromq')
 const baseURL = 'tcp://127.0.0.1'
@@ -102,6 +102,7 @@ API.getFileInfo = param => {
     return JSON.parse(msg)
   })
   // 返回模拟数据
+  return fileInfo
 }
 
 export default API

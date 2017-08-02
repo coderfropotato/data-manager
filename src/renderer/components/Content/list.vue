@@ -24,7 +24,6 @@
       <el-table-column
           label="操作">
         <template scope="scope">
-          <el-button type="text">查看</el-button>
           <el-button type="text">编辑</el-button>
         </template>
       </el-table-column>
@@ -44,11 +43,21 @@
     methods: {
       showFileInfo (row, event) {
         let path = this.currentPath + row.name
-        console.log(path)
+
+        // 获取文件的具体信息
+        this.$store.dispatch({
+          type: 'getFileInfo',
+          path: path,
+          volumeId: 1111
+        })
+
+        // 显示文件信息区
+        this.$store.commit('showFileInfo')
       }
     }
   }
 </script>
+
 <style lang="scss" scoped>
   #list-root {
     .el-table__body-wrapper {
