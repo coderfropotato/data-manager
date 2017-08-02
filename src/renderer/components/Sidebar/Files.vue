@@ -13,8 +13,10 @@
             <use xlink:href="#icon-diannao" v-if="!index"></use>
             <use xlink:href="#icon-harddisk" v-if="index"></use>
           </svg>
-          <div class="disk-title">
-            {{disk}}
+          <div class="item-title" @click="diskLoadFileList">
+            <el-button type="text">
+              {{disk}}
+            </el-button>
           </div>
         </div>
       </div>
@@ -29,7 +31,7 @@
           :data="sortFileTree"
           node-key="id"
           :expand-on-click-node="false"
-          @node-click="loadFileList"
+          @node-click="treeLoadFileList"
           @node-expand="treeHeightChanged"
           @node-collapse="treeHeightChanged"
           v-show="show.sortFiles">
@@ -41,12 +43,26 @@
         <span>其他</span>
         <el-button size="mini" @click="trigShow" data-name="others">{{content.others}}</el-button>
       </div>
-      <div class="trash" v-show="show.others">
-        <svg class="icon" aria-hidden="true">
-          <use xlink:href="#icon-huishouzhan"></use>
-        </svg>
-        <div class="trash-title">
-          回收站
+      <div class="other-item" v-show="show.others">
+        <div class="trash">
+          <svg class="icon" aria-hidden="true">
+            <use xlink:href="#icon-huishouzhan"></use>
+          </svg>
+          <div class="item-title" @click="loadTrashContent">
+            <el-button type="text">
+              回收站
+            </el-button>
+          </div>
+        </div>
+        <div class="ignore">
+          <svg class="icon" aria-hidden="true">
+            <use xlink:href="#icon-wenjian1"></use>
+          </svg>
+          <div class="item-title" @click="loadIgnoreContent">
+            <el-button type="text">
+              忽略
+            </el-button>
+          </div>
         </div>
       </div>
     </div>
@@ -120,8 +136,21 @@
           this.show[dir] = !this.show[dir]
         }
       },
-      // 加载文件列表
-      loadFileList (nodeObj) {
+      // 加载忽略的内容
+      loadIgnoreContent () {
+        this.$store.dispatch('getIgnore')
+      },
+      // 加载回收站的内容
+      loadTrashContent () {
+        this.$store.dispatch('getTrash')
+      },
+      // 加载所有文件的文件列表
+      diskLoadFileList (e) {
+        let diskName = e.target.innerText
+        this.$store.dispatch('getFileTree', diskName)
+      },
+      // 加载分类文件列表
+      treeLoadFileList (nodeObj) {
         let path = nodeObj.id
         // 根据用户的选择，设置状态管理中的当前路径
         this.$store.commit('setCurrentPath', path)
@@ -163,7 +192,8 @@
   }
 
   .disk,
-  .trash {
+  .trash,
+  .ignore{
     height: 2.4em;
     line-height: 2.4em;
     .icon {
@@ -171,8 +201,7 @@
       font-size: 1em;
       margin: 0.5em 0.5em 0.5em 1.5em;
     }
-    .disk-title,
-    .trash-title {
+    .item-title{
       font-size: 0.8em;
       float: left;
     }

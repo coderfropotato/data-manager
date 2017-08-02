@@ -16,7 +16,13 @@ const state = {
   },
 
   // 其他信息
-  otherInfo: {}
+  otherInfo: {},
+
+  // 组织分类
+  organization: {
+    // 归属的分类
+    fileSorts: []
+  }
 }
 
 const actions = {
@@ -24,6 +30,12 @@ const actions = {
   getFileInfo ({commit}, path, volumeId) {
     let detail = API.getFileInfo({path, volumeId})
     commit(types.RECEIVE_FILE_DETAIL, detail)
+  },
+
+  // 获取文件的所属分类
+  getFileSort ({commit}, path, volumeId) {
+    let sorts = API.getFileSort({path, volumeId})
+    commit(types.SET_FILE_SORTS, sorts)
   }
 }
 
@@ -37,6 +49,11 @@ const mutations = {
   // 显示文件信息区
   [types.SHOW_FILE_INFO] (state) {
     state.show = true
+  },
+
+  // 设置文件的所属分类
+  [types.SET_FILE_SORTS] (state, sorts) {
+    state.sorts = sorts
   }
 }
 
