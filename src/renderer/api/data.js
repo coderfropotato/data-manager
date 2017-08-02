@@ -232,3 +232,22 @@ export const Files = {
   allFiles,
   sortDir
 }
+
+export const fileInfo = {
+  basicInfo: {
+    name: '这是一个测试文件',
+    type: '类型',
+    createTime: '2015/4/3',
+    size: '32KB'
+  },
+  otherInfo: {
+    sourceData: {
+      type: '网络',
+      name: '谷歌',
+      url: 'www.google.com'
+    },
+    attr: {
+      type: 'name'
+    }
+  }
+}

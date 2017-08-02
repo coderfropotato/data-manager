@@ -110,7 +110,7 @@
         this.$refs.middle.style.height = this.middleHeight + 'px'
       }, false)
 
-      //
+      // 等文件树展开完成后再获取高度
       bus.$on('tree-height-changed', () => {
         setTimeout(() => {
           this.updateStyle()

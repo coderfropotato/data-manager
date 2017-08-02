@@ -131,6 +131,8 @@
       },
       // 当节点展开或关闭时，树的高度会发生变化，需要发出相关事件，通知 sidebar 组件改变scrollbar样式
       treeHeightChanged () {
+        // 会触发MaxListenersExceededWarning 错误
+        // TODO 解决当点击展开与收起次数过多时触发 MaxListenersExceededWarning
         bus.$emit('tree-height-changed')
       }
     },
