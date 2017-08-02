@@ -42,9 +42,12 @@
             </div>
             <div class="sort-tree">
               <el-tree
-                  ref="tree"
+                  node-key="id"
                   :data="popoverTreeData"
-                  :render-content="renderContent">
+                  show-checkbox
+                  ref="sortTree"
+                  check-strictly
+                  @check-change="setSortDir">
               </el-tree>
             </div>
           </div>
@@ -57,7 +60,7 @@
             <el-button size="mini" v-if="!sorts.length" @click="addFileSort" v-popover:addSort>
               添加分类
             </el-button>
-            <el-button size="mini" v-if="sorts.length" v-popover:addSort>
+            <el-button size="mini" v-if="sorts.length" v-popover:addSort @click="setCheckNode">
               +
             </el-button>
           </div>
@@ -68,11 +71,15 @@
 </template>
 <script>
   import {mapState} from 'vuex'
-  // let tempData = ['分类一', '分类一', '我的收藏', '我的喜欢', 'TestObject']
+
+  let tempData = ['1/1.txt/', '1/2.2/3.2/', '1/2.4/3/', '1/2.txt/']
+  let tempSort = []
+
   export default {
     name: 'FileInfo',
     data () {
       return {
+        // 记录分类的数组
         sorts: []
       }
     },
@@ -83,20 +90,34 @@
       popoverTreeData: state => state.files.sortFileTree
       // sorts: state => state.fileInfo.fileSorts
     }),
+    watch: {
+      show () {
+        for (let node in tempData) {
+          let path = tempData[node].split('/')
+          path.pop()
+          tempSort.push(path.join('>'))
+        }
+        this.sorts = tempSort
+      }
+    },
     methods: {
       addFileSort () {
       },
-      getCheckedNode () {
-        let nodes = this.$refs.tree.getCheckedNodes()
-        for (let node in nodes) {
-          let path = nodes[node].id.split('/')
+      setCheckNode () {
+        // node-key 必须是唯一的，否则无法设置节点
+        this.$refs.sortTree.setCheckedKeys(tempData)
+      },
+      // 设置分类的目录
+      setSortDir () {
+        // 清空分类数组
+        this.sorts = []
+        let checkedNodes = this.$refs.sortTree.getCheckedNodes()
+        for (let node in checkedNodes) {
+          let path = checkedNodes[node].id.split('/')
+          path.pop()
           this.sorts.push(path.join('>'))
         }
-      },
-      /* eslint-disable */
-      renderContent (h, {node, data, store}) {
       }
-      /* eslint-enable */
     }
   }
 </script>
@@ -159,7 +180,7 @@
         left: 2em;
         .el-button {
           font-size: 0.8em;
-          margin: 0.2em 0;
+          margin: 0.2em 0.5em 0.5em 0;
         }
       }
     }

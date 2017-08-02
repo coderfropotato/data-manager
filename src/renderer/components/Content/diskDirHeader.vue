@@ -1,46 +1,23 @@
 <template>
   <div id="fileHeader-root">
     <div class="header">
-      <el-row type="flex" class="header-inner">
+      <el-row type="flex" class="header-inner" :gutter="10">
         <!--下拉菜单-->
-        <el-col :span="4">
+        <el-col :span="1"></el-col>
+        <el-col :span="5">
           <div class="grid-content">
-            <el-dropdown menu-align="start">
-              <!--按钮-->
-              <button>
-                <svg class="icon" aria-hidden="true">
-                  <use xlink:href="#icon-menu"></use>
-                </svg>
-                <svg class="icon" aria-hidden="true">
-                  <use xlink:href="#icon-xiala"></use>
-                </svg>
-              </button>
-              <!--下拉列表-->
-              <el-dropdown-menu slot="dropdown" menu-align="end">
-                <el-dropdown-item>
-                  <svg class="icon" aria-hidden="true">
-                    <use xlink:href="#icon-list"></use>
-                  </svg>
-                  <span>List</span>
-                </el-dropdown-item>
-                <el-dropdown-item>
-                  <svg class="icon" aria-hidden="true" id="column">
-                    <use xlink:href="#icon-list"></use>
-                  </svg>
-                  <span>Columns</span>
-                </el-dropdown-item>
-                <el-dropdown-item>
-                  <svg class="icon" aria-hidden="true">
-                    <use xlink:href="#icon-liebiao"></use>
-                  </svg>
-                  <span>Grid</span>
-                </el-dropdown-item>
-              </el-dropdown-menu>
-            </el-dropdown>
+            <el-select v-model="displayStatus">
+              <el-option
+                  v-for="item in options"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+              </el-option>
+            </el-select>
           </div>
         </el-col>
         <!--路径面包屑-->
-        <el-col :span="16" id="scrollBar">
+        <el-col :span="14" id="scrollBar">
           <div class="scrollBar-inner">
             <div class="grid-content">
               <el-breadcrumb separator=">" class="pathArea">
@@ -75,23 +52,49 @@
 <script>
   import scrollBar from '../../assets/JS/headerScrollbar'
   import {mapState} from 'vuex'
+
   export default {
     name: 'FileHeader',
     data () {
       return {
-        searchValue: ''
+        searchValue: '',
+        options: [
+          {
+            value: 'Lists',
+            label: 'List'
+          },
+          {
+            value: 'Columns',
+            label: 'Column'
+          },
+          {
+            value: 'Grid',
+            label: 'Grid'
+          }
+        ]
       }
     },
     mounted () {
       scrollBar()
     },
-    computed: mapState({
-      pathArray: state => {
-        let rowPath = state.files.currentPath.split('/')
-        rowPath.pop()
-        return rowPath
-      }
-    }),
+    computed: {
+      displayStatus: {
+        get: function () {
+          return this.$store.state.showControl.listDisplayStatus
+        },
+        // 提供 setter ，使组件能够设置 displayStatus 的值
+        set: function (value) {
+          this.$store.commit('setFileDisplayStatus', value)
+        }
+      },
+      ...mapState({
+        pathArray: state => {
+          let rowPath = state.files.currentPath.split('/')
+          rowPath.pop()
+          return rowPath
+        }
+      })
+    },
     methods: {
       // 搜索框搜索结果建议
       querySearch (queryString, cb) {

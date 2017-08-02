@@ -74,3 +74,10 @@ body{
     font-size: 15px;
   }
 }
+
+// 设置卡片内边距为 0
+.el-card{
+  .el-card__body{
+    padding: 0;
+  }
+}
