@@ -1,51 +1,80 @@
 <template>
     <div id="file-status-root">
-        所有变更
-        <el-tree :data="modifiedFiles" :expand-on-click-node="false"></el-tree>
+        <el-tree :data="data2" :props="defaultProps" show-checkbox node-key="id" default-expand-all :expand-on-click-node="false" :render-content="renderContent">
+        </el-tree>
     </div>
 </template>
 
 <script>
-  import { mapState, mapActions } from 'vuex'
-  import $ from 'jquery'
+  let id = 1000
 
   export default {
-    name: 'fileStatusContent',
-
-    // mounted时加载
-    mounted () {
-      this.getModifiedFiles()   // 获取修改文件
-      this.insertFileIcon()     // 插入文件icon
+    data () {
+      return {
+        data2: [{
+          id: 1,
+          label: '一级 1',
+          children: [{
+            id: 4,
+            label: '二级 1-1',
+            children: [{
+              id: 9,
+              label: '三级 1-1-1'
+            }, {
+              id: 10,
+              label: '三级 1-1-2'
+            }]
+          }]
+        }, {
+          id: 2,
+          label: '一级 2',
+          children: [{
+            id: 5,
+            label: '二级 2-1'
+          }, {
+            id: 6,
+            label: '二级 2-2'
+          }]
+        }, {
+          id: 3,
+          label: '一级 3',
+          children: [{
+            id: 7,
+            label: '二级 3-1'
+          }, {
+            id: 8,
+            label: '二级 3-2'
+          }]
+        }],
+        defaultProps: {
+          children: 'children',
+          label: 'label'
+        }
+      }
     },
 
-    computed: mapState({
-      // 分类文件夹树
-      modifiedFiles: state => state.modified.modifiedFiles
-
-    }),
-
     methods: {
-      // 插入文件Icon
-      insertFileIcon () {
-        let Icon = '<svg class="icon" aria-hidden="true">\n' + '<use xlink:href="#icon-wenjian"></use>\n' + '</svg>'
-        let downIcon = $('.el-tree-node__expand-icon')
-        $(Icon).insertAfter(downIcon)
-        $('.el-tree-node__content > .icon')
-          .css('font-size', '1.2em')
-          .css('margin-right', '0.5em')
-          .css('vertical-align', '-0.25em')
+      append (store, data) {
+        store.append({ id: id++, label: 'testtest', children: [] }, data)
       },
 
-      // 映射Actions
-      ...mapActions([
-        'getModifiedFiles'  // 获取修改的文件
-      ])
+      remove (store, data) {
+        store.remove(data)
+      },
 
-//      // 选中高亮
-//      /* eslint-disable */
-//      renderContent (h) {
-//        return (<span style="color: red"></span>)
-//      }
+      /* eslint-disable */
+      renderContent (h, { node, data, store }) {
+        return (
+          <span>
+          <span>
+          <span>{node.label}</span>
+        </span>
+        <span style="float: right; margin-right: 20px">
+          <el-button size="mini" on-click={() => this.append(store, data)}>Append</el-button>
+        <el-button size="mini" on-click={() => this.remove(store, data)}>Delete</el-button>
+        </span>
+        </span>)
+      }
     }
   }
 </script>
