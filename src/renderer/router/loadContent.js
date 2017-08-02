@@ -10,7 +10,6 @@ import Collection from '@/components/Sidebar/collection'
 // content 的组件
 import FileHeader from '@/components/Content/diskDirHeader'
 import List from '@/components/Content/list'
-import SearchCondition from '@/components/Content/searchCondition'
 import SearchHeader from '@/components/Content/searchHeader'
 const routes = [
   {
@@ -28,7 +27,6 @@ const routes = [
     components: {
       default: Search,
       ContentHeader: SearchHeader,
-      ContentMiddle: SearchCondition,
       ContentList: List
     }
   },

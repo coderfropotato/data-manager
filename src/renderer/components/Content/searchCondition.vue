@@ -1,5 +1,5 @@
 <template>
-  <div class="search-condition-root">
+  <div class="searchCondition-root">
     搜索条件
   </div>
 </template>
