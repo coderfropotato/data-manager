@@ -1,8 +1,7 @@
 <template>
     <div id="file-status-root">
         所有变更
-        <el-tree :data="modifiedFiles" :expand-on-click-node="false" :render-content="renderContent"></el-tree>
-        <!--<el-tree :data="modi    fiedFiles" :expand-on-click-node="false"></el-tree>-->
+        <el-tree :data="modifiedFiles" :expand-on-click-node="false" :render-content="renderContent" @node-click="handleNodeClick"></el-tree>
     </div>
 </template>
 
@@ -44,38 +43,64 @@
       ]),
 
       // 渲染状态标签
-      /* eslint-disable */
-      renderContent (h, { node, data}) {
-        if (data.status === -1) {
-          return(
-            <span>
-            <span>{node.label}</span>
-            <span><el-tag type="danger">已删除</el-tag></span>
-            </span>
-        )
-        } else if (data.status === 0) {
-          return(
-            <span>
-            <span>{node.label}</span>
-            <el-tag type="grey">已修改</el-tag>
-            </span>
-        )
-        } else if (data.status === 1) {
-          return(
-            <span>
-            <span>{node.label}</span>
-            <el-tag type="success">已新增</el-tag>
-            </span>
-        )
+      renderContent (h, { node, data }) {
+        if (data.status) {
+          let color = null
+          let tag = null
+
+          if (data.status === -1) {
+            color = 'red'
+            tag = '已删除'
+          } else if (data.status === 0) {
+            color = 'gray'
+            tag = '已修改'
+          } else if (data.status === 1) {
+            color = 'green'
+            tag = '已新增'
+          }
+
+          return h(
+            'span',
+            [
+              h('span', node.label),
+              h('el-tag',
+                {style: {
+                  backgroundColor: color
+                }},
+                tag)
+            ]
+          )
         } else {
-          return(
-            <span>
-            <span>{node.label}</span>
-            </span>
-        )
+          return h(
+            'span',
+            [
+              h('span', node.label)
+            ]
+          )
+        }
+      },
+
+      // 处理点击节点事件
+      handleNodeClick (data) {
+        if (data.status) {
+          console.log(data.path)
         }
       }
     }
   }
 
 </script>
+
+<style lang="scss" scoped>
+/*.red-tag {*/
+    /*background-color: red;*/
+/*}*/
+
+/*.gray-tag {*/
+    /*background-color: gray;*/
+/*}*/
+
+/*.grenn-tag {*/
+    /*background-color: green;*/
+/*}*/
+</style>
