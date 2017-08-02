@@ -11,6 +11,7 @@ import Collection from '@/components/Sidebar/collection'
 import FileHeader from '@/components/Content/diskDirHeader'
 import sortDirMiddle from '@/components/Content/sortDirMiddle'
 import List from '@/components/Content/list'
+import FileStatusContent from '@/components/Content/fileStatus'
 
 const routes = [
   {
@@ -36,7 +37,12 @@ const routes = [
   {
     path: 'recentimport',
     name: 'RecentImport',
-    component: FileStatus
+    components: {
+      default: FileStatus,
+      // ContentHeader: FileHeader,
+      // ContentMiddle: sortDirMiddle,
+      ContentList: FileStatusContent
+    }
   },
   {
     path: 'collection',
