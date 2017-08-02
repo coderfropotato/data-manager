@@ -6,7 +6,8 @@ import * as types from '@/store/mutation-types'
 import packup from '@/assets/JS/convertJSON'
 
 const state = {
-  modifiedFiles: [],  // 最近变更的文件(树)
+  modifiedFiles: [],  // 最近变更的文件
+  modifiedFilesTree: {},  // 最近变更文件树
   modifiedNum: 0 // 变更文件的数目
 }
 
@@ -24,6 +25,7 @@ const actions = {
 const mutations = {
   // 获取所有的修改文件并转换成合适的格式
   [types.RECEIVE_MODIFIED_FILES] (state, files) {
+    state.modifiedFilesTree = files
     state.modifiedFiles = []
     packup(files, state.modifiedFiles, '')
   }
