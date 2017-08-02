@@ -2,8 +2,12 @@
   <div id="import-root">
   </div>
 </template>
+
 <script>
-  export default {}
+  export default {
+    name: 'fileStatusSidebar',
+  }
 </script>
+
 <style>
 </style>

@@ -5,7 +5,7 @@
  * 500：服务器错误（服务器处理出现问题）
 */
 // 基本配置
-import {Files, returnRadomFileList, fileInfo} from './data'
+import {Files, returnRadomFileList, fileInfo, modifiedFiles} from './data'
 
 let zmq = require('zeromq')
 const baseURL = 'tcp://127.0.0.1'
@@ -90,6 +90,18 @@ API.getTrash = () => {
   })
 }
 
+// 获取忽略的文件
+API.getIgnore = () => {
+  let Param = {
+    API: 'getIgnore',
+    params: {}
+  }
+  request.send(Param)
+  request.on('message', function (msg) {
+    return JSON.parse(msg)
+  })
+}
+
 // 获取具体文件的信息
 // @Param param 参数对象
 API.getFileInfo = param => {
@@ -105,4 +117,18 @@ API.getFileInfo = param => {
   return fileInfo
 }
 
+// 获取文件的所属分类
+API.getFileSort = param => {
+  let Param = {
+    API: 'getFileSort',
+    params: param
+  }
+  request.send(Param)
+  request.on('message', function (msg) {
+    return JSON.parse(msg)
+  })
+}
+
+// 测试用 获取修改的文件树
+API.getModifiedFiles = () => modifiedFiles
 export default API

@@ -23,7 +23,7 @@ const state = {
   sortDirRowData: [],
   // 处理后的数据
   sortFileTree: [],
-  // 缓存请求的分类
+  // 缓存请求的文件（所有文件选项）
   cacheDir: [],
   // 回收站
   trash: [],
