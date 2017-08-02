@@ -35,8 +35,8 @@ const routes = [
     }
   },
   {
-    path: 'recentimport',
-    name: 'RecentImport',
+    path: 'filestatus',
+    name: 'FileStatus',
     components: {
       default: FileStatus,
       // ContentHeader: FileHeader,
