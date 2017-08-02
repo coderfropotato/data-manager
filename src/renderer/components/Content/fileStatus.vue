@@ -1,7 +1,7 @@
 <template>
     <div id="file-status-root">
         所有变更
-        <el-tree :data="modifiedFiles" :expand-on-click-node="false" :render-content="renderContent" @node-click="handleNodeClick"></el-tree>
+        <el-tree :data="modifiedFiles" :expand-on-click-node="false" :render-content="renderContent" @node-click="handleNodeClick" :default-expand-all="true"></el-tree>
     </div>
 </template>
 
@@ -16,12 +16,13 @@
     mounted () {
       this.getModifiedFiles()   // 获取修改文件
       this.insertFileIcon()     // 插入文件icon
-      // console.log(this.modifiedFiles)
     },
 
     computed: mapState({
-      // 分类文件夹树
-      modifiedFiles: state => state.modified.modifiedFiles
+      // 变更文件
+      modifiedFiles: state => state.modified.modifiedFiles,
+      // 变更文件树
+      modifiedFilesTree: state => state.modified.modifiedFilesTree
 
     }),
 
@@ -44,10 +45,12 @@
 
       // 渲染状态标签
       renderContent (h, { node, data }) {
+        // 带status节点
         if (data.status) {
           let color = null
           let tag = null
 
+          // 判断status
           if (data.status === -1) {
             color = 'red'
             tag = '已删除'
@@ -71,6 +74,7 @@
             ]
           )
         } else {
+          // 不带status节点
           return h(
             'span',
             [
@@ -82,8 +86,17 @@
 
       // 处理点击节点事件
       handleNodeClick (data) {
+        // 是否可选中
         if (data.status) {
-          console.log(data.path)
+          let keys = data.path.split('/')
+          let tempTree = this.modifiedFilesTree
+          // 逐层进入
+          for (let i = 1; i < keys.length; i++) {
+            tempTree = tempTree[keys[i]]
+          }
+          // 结果
+          console.log('ctime', tempTree['__info__']['ctime'])
+          console.log('size', tempTree['__info__']['size'])
         }
       }
     }
@@ -92,15 +105,5 @@
 </script>
 
 <style lang="scss" scoped>
-/*.red-tag {*/
-    /*background-color: red;*/
-/*}*/
 
-/*.gray-tag {*/
-    /*background-color: gray;*/
-/*}*/
-
-/*.grenn-tag {*/
-    /*background-color: green;*/
-/*}*/
 </style>
