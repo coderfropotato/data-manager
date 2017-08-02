@@ -44,6 +44,11 @@
     methods: {
       showFileInfo (row, event) {
         let path = this.currentPath + row.name
+        this.$store.dispatch({
+          type: 'getFileInfo',
+          path: path,
+          volumeId: 1111
+        })
         console.log(path)
       }
     }

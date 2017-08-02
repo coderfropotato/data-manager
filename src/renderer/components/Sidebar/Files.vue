@@ -30,6 +30,8 @@
           node-key="id"
           :expand-on-click-node="false"
           @node-click="loadFileList"
+          @node-expand="treeHeightChanged"
+          @node-collapse="treeHeightChanged"
           v-show="show.sortFiles">
       </el-tree>
 
@@ -118,14 +120,18 @@
           this.show[dir] = !this.show[dir]
         }
       },
+      // 加载文件列表
       loadFileList (nodeObj) {
         let path = nodeObj.id
-        // 设置当前路径
+        // 根据用户的选择，设置状态管理中的当前路径
         this.$store.commit('setCurrentPath', path)
         // 发送获取文件列表请求
         this.$store.dispatch('getFileList', path, '18401839')
         // 通过空的 Vue 实例作为中央时间总线，发送路径更改信息
-        bus.$emit('path-changed', path)
+      },
+      // 当节点展开或关闭时，树的高度会发生变化，需要发出相关事件，通知 sidebar 组件改变scrollbar样式
+      treeHeightChanged () {
+        bus.$emit('tree-height-changed')
       }
     },
     components: {
