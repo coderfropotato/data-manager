@@ -90,6 +90,18 @@ API.getTrash = () => {
   })
 }
 
+// 获取忽略的文件
+API.getIgnore = () => {
+  let Param = {
+    API: 'getIgnore',
+    params: {}
+  }
+  request.send(Param)
+  request.on('message', function (msg) {
+    return JSON.parse(msg)
+  })
+}
+
 // 获取具体文件的信息
 // @Param param 参数对象
 API.getFileInfo = param => {
@@ -103,6 +115,18 @@ API.getFileInfo = param => {
   })
   // 返回模拟数据
   return fileInfo
+}
+
+// 获取文件的所属分类
+API.getFileSort = param => {
+  let Param = {
+    API: 'getFileSort',
+    params: param
+  }
+  request.send(Param)
+  request.on('message', function (msg) {
+    return JSON.parse(msg)
+  })
 }
 
 // 测试用 获取修改的文件树

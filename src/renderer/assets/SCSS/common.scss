@@ -51,3 +51,26 @@ body{
   }
 }
 
+// 设置按钮的文字颜色为黑色
+.el-button,
+.el-button--text{
+  color: #000;
+  &:hover {
+    color: #000;
+  }
+  &:focus{
+    color: #000;
+  }
+}
+
+// 设置添加分类的弹出窗中的选框向右浮动，fileInfo.vue
+.popover-sort-tree{
+  .el-checkbox{
+    float: right;
+    margin-right: 2em;
+    font-size: 15px;
+  }
+  .el-tree-node__label{
+    font-size: 15px;
+  }
+}
