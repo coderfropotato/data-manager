@@ -30,7 +30,6 @@ API.sendOpenSignal = () => {
   }
   request.send(Param)
   request.on('message', function (msg) {
-    return JSON.parse(msg)
   })
 }
 

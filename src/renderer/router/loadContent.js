@@ -13,7 +13,8 @@ import FileHeader from '@/components/Content/diskDirHeader'
 import List from '@/components/Content/list'
 import FileStatusContent from '@/components/Content/fileStatus'
 import SearchHeader from '@/components/Content/searchHeader'
-
+import UploadFile from '@/components/Content/uploadFile'
+import ContentBottom from '@/components/Content/contentBottom'
 const routes = [
   {
     path: 'files',
@@ -21,9 +22,21 @@ const routes = [
     components: {
       default: Files,
       ContentHeader: FileHeader,
-      ContentList: List,
+      ContentBottom: ContentBottom,
       FileInfo: FileInfo
-    }
+    },
+    children: [
+      {
+        path: 'uploadfile',
+        name: 'UploadFile',
+        component: UploadFile
+      },
+      {
+        path: 'list',
+        name: 'List',
+        component: List
+      }
+    ]
   },
   {
     path: 'search',
@@ -31,7 +44,7 @@ const routes = [
     components: {
       default: Search,
       ContentHeader: SearchHeader,
-      ContentList: List
+      ContentBottom: ContentBottom
     }
   },
   {
@@ -39,9 +52,7 @@ const routes = [
     name: 'FileStatus',
     components: {
       default: Files,
-      // ContentHeader: FileHeader,
-      // ContentMiddle: sortDirMiddle,
-      ContentList: FileStatusContent,
+      ContentBottom: FileStatusContent,
       FileInfo: FileStatus
     }
   },

@@ -2,12 +2,14 @@
   <div id="content-root">
     <router-view name="ContentHeader"></router-view>
     <router-view name="ContentMiddle"></router-view>
-    <router-view name="ContentList"></router-view>
+    <router-view name="ContentBottom"></router-view>
   </div>
 </template>
 <script>
   export default {
-    name: 'Content'
+    name: 'Content',
+    mounted () {
+    }
   }
 </script>
 <style lang="scss">
@@ -34,17 +36,20 @@
       }
     }
   }
+
   // 下拉菜单
   .el-dropdown-menu {
     span {
       margin-left: 1em;
     }
   }
+
   #column {
     transform: rotate(90deg);
   }
+
   // List 组件
-  #list-root{
+  #list-root {
     // margin-top: 1em;
   }
 </style>

@@ -4,7 +4,7 @@
       <el-col :span="24">
         <!--router 激活导航，以index为path-->
         <el-menu class="menu" router>
-          <el-menu-item index="/files">
+          <el-menu-item index="/files/list">
             <svg class="icon" aria-hidden="true">
               <use xlink:href="#icon-zhuye"></use>
             </svg>

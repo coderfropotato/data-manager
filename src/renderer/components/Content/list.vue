@@ -74,19 +74,46 @@
         </el-row>
       </div>
     </div>
+    <div class="drag-zone">
+      <div class="drag-inner" v-if="dragFiles">
+        <span>导入文件</span>
+      </div>
+    </div>
   </div>
 </template>
 <script>
   import {mapState} from 'vuex'
+
   export default {
     data () {
-      return {
-      }
+      return {}
+    },
+    mounted () {
+      let count = 0
+      let list = document.getElementById('list-root')
+      list.addEventListener('dragenter', e => {
+        count++
+        e.preventDefault()
+        if (count === 1) {
+          this.$store.commit('toggleDragShow', true)
+        }
+      }, false)
+      list.addEventListener('dragleave', e => {
+        e.preventDefault()
+        count--
+        if (count === 0) {
+          this.$store.commit('toggleDragShow', false)
+        }
+      }, false)
+
+      // 监听拖拽文件
+      this.dragEvent()
     },
     computed: mapState({
       tableData: state => state.files.currentFileList,
       currentPath: state => state.files.currentPath,
-      status: state => state.showControl.listDisplayStatus
+      status: state => state.showControl.listDisplayStatus,
+      dragFiles: state => state.showControl.dragShow
     }),
     methods: {
       showFileInfo (row, event) {
@@ -101,6 +128,25 @@
 
         // 显示文件信息区
         this.$store.commit('showFileInfo')
+      },
+      dropHandler (e) {
+        e.stopPropagation()
+        e.preventDefault()
+        let file = e.dataTransfer.files
+        // 将文件加入到状态管理中的记录导入文件的数组
+        this.$store.commit('addImportFiles', file)
+        // 设置拖拽区域隐藏
+        this.$store.commit('toggleDragShow', false)
+        // 重定向到导入文件页面
+        this.$router.push('/files/uploadfile')
+      },
+      dragEvent () {
+        let dragZone = document.querySelector('.drag-zone')
+        dragZone.addEventListener('dragover', function (e) {
+          e.preventDefault()
+          e.stopPropagation()
+        }, false)
+        dragZone.addEventListener('drop', this.dropHandler, false)
       }
     }
   }
@@ -108,57 +154,86 @@
 
 <style lang="scss" scoped>
   #list-root {
+    position: relative;
     .el-table__body-wrapper {
       overflow: hidden;
     }
   }
-  .lists-display{
-    .list-item{
+
+  .el-upload-dragger {
+    .el-icon-plus {
+      vertical-align: middle;
+      text-align: center;
+      font-size: 48px;
+    }
+  }
+
+  .lists-display {
+    .list-item {
       position: relative;
       width: 100%;
       height: 4em;
       padding: 0 2em;
       overflow: hidden;
-      .file-name{
+      .file-name {
         font-size: 1.1em;
         font-weight: 500;
         margin: 0.25em 0;
       }
       .create-time,
-      .size{
+      .size {
         display: inline-block;
         margin-right: 1em;
       }
-      .edit{
+      .edit {
         position: absolute;
         top: 1em;
         vertical-align: -0.5em;
         right: 2em;
       }
     }
-    .list-item:nth-child(even){
+    .list-item:nth-child(even) {
       background-color: #eef1f6;
     }
   }
 
-  .grid-display{
-    .grid-item{
+  .grid-display {
+    .grid-item {
       margin: 1em;
-      .file-name{
+      .file-name {
         font-size: 1.1em;
         font-weight: 500;
         height: 2em;
       }
       .create-time,
-      .size{
+      .size {
         margin: 1em 0;
       }
     }
   }
 
-  .el-card{
-    .card-inner{
+  .el-card {
+    .card-inner {
       margin: 1em;
     }
+  }
+
+  .drag-zone {
+    .drag-inner {
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      font-size: 2em;
+      font-weight: 600;
+      text-align: center;
+      color: #edf7ff;
+      background-color: rgba(1, 1, 1, 0.5);
+    }
+
   }
 </style>

@@ -28,8 +28,9 @@ const state = {
   // 回收站
   trash: [],
   // 忽略文件
-  ignore: []
-
+  ignore: [],
+  // 导入的文件
+  importFiles: []
 }
 
 const actions = {
@@ -98,6 +99,10 @@ const mutations = {
   // 获取回收站
   [types.GET_TRASH] (state, response) {
     state.trash = response
+  },
+  // 添加导入文件
+  [types.ADD_IMPORT_FILES] (state, file) {
+    state.importFiles.push(file)
   },
 
   // 获取忽略文件
