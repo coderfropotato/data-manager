@@ -11,7 +11,8 @@ const baseURL = 'tcp://10.139.20.203'
 const PORT = 4242
 const URL = baseURL + ':' + PORT
 
-// 导出的 API 对象
+// 设置和服务器的延时
+const outTime = 5000
 let request
 let sendMessage = function (API, params) {
   // 定义交互方法 req-rep
@@ -23,8 +24,17 @@ let sendMessage = function (API, params) {
     params
   }
   request.send(JSON.stringify(Param))
+  let flag = 0
+  setTimeout(function () {
+    if (flag === 0) {
+      console.error('服务器无响应')
+      flag = 0
+    }
+  }, outTime)
+
   return new Promise((resolve, reject) => {
     request.on('message', function (msg) {
+      flag = 1
       let rep = JSON.parse(msg)
       if (rep.status === 200) {
         let data = rep.data

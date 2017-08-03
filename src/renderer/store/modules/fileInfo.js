@@ -2,7 +2,7 @@
  * 管理单个文件的基本信息，用于右侧文件详情显示
  */
 
-import API from '@/api'
+import sendMessage from '@/api'
 import * as types from '@/store/mutation-types'
 
 const state = {
@@ -27,15 +27,21 @@ const state = {
 
 const actions = {
   // 获取文件详情
-  getFileInfo ({commit}, path, volumeId) {
-    let detail = API.getFileInfo({path, volumeId})
-    commit(types.RECEIVE_FILE_DETAIL, detail)
+  getFileInfo ({commit}, payload) {
+    let path = payload.path
+    let serialNumber = payload.serialNumber
+    console.log(payload.path)
+    console.log(payload.serialNumber)
+    sendMessage('getFileInfo', {path, serialNumber}).then(data => {
+      commit(types.RECEIVE_FILE_DETAIL, data)
+    })
   },
 
   // 获取文件的所属分类
   getFileSort ({commit}, path, volumeId) {
-    let sorts = API.getFileSort({path, volumeId})
-    commit(types.SET_FILE_SORTS, sorts)
+    sendMessage('getFileSort', {}).then(data => {
+      commit(types.SET_FILE_SORTS, data)
+    })
   }
 }
 

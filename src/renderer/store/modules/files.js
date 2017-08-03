@@ -14,7 +14,7 @@ const state = {
   currentFileList: [],
   // 记录当前的文件树
   currentFileTree: '',
-  // 记录当前选中的文件的路径
+  // 记录当前选中文件夹的路径
   currentPath: '',
   // 所有文件，可读，不可变更
   allFiles: [],
@@ -41,17 +41,19 @@ const actions = {
     })
   },
 
-  // 获取文件树
-  getFileTree ({commit}, folderName) {
+  // 获取磁盘（包含我的电脑）文件树
+  getDiskFileTree ({commit}, folderName) {
     sendMessage('getFileTree', {folderName}).then(data => {
-      commit(types.GET_FILE_TREE, folderName, data)
+      commit(types.GET_DISK_FILE_TREE, folderName, data)
     })
   },
 
   // 获取文件列表
   getSortFileList ({commit}, path) {
-    sendMessage('getSortFileList', {}).then(data => {
-      commit(types.SET_SORT_FILE_LIST, data)
+    sendMessage('getSortFileList', {path}).then(data => {
+      let fileList = data.fileList
+      console.log(data)
+      commit(types.SET_SORT_FILE_LIST, fileList)
     })
   },
 
@@ -81,13 +83,12 @@ const mutations = {
     state.allFiles = response.allFiles
     state.sortDirRowData = response.sortDir.sort
     // 对原始的文件树数据进行处理
-    console.log(state.sortDirRowData)
     state.sortFileTree = []
     travelTree(state.sortDirRowData, state.sortFileTree, '')
   },
 
   // 获取文件树
-  [types.GET_FILE_TREE] (state, folderName, response) {
+  [types.GET_DISK_FILE_TREE] (state, folderName, response) {
     let temp = {
       folderName: folderName,
       tree: response

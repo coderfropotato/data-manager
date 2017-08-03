@@ -13,7 +13,7 @@
             <use xlink:href="#icon-diannao" v-if="!index"></use>
             <use xlink:href="#icon-harddisk" v-if="index"></use>
           </svg>
-          <div class="item-title" @click="diskLoadFileList">
+          <div class="item-title" @click="loadDiskFileTree">
             <el-button type="text">
               {{disk}}
             </el-button>
@@ -31,7 +31,7 @@
           :data="sortFileTree"
           node-key="id"
           :expand-on-click-node="false"
-          @node-click="treeLoadFileList"
+          @node-click="loadSortFileList"
           @node-expand="treeHeightChanged"
           @node-collapse="treeHeightChanged"
           v-show="show.sortFiles">
@@ -144,18 +144,22 @@
       loadTrashContent () {
         this.$store.dispatch('getTrash')
       },
-      // 加载磁盘文件树
-      diskLoadFileList (e) {
+      // 加载磁盘（包含我的电脑）文件树
+      loadDiskFileTree (e) {
         let diskName = e.target.innerText
-        this.$store.dispatch('getFileTree', diskName)
+        this.$store.dispatch('getDiskFileTree', diskName)
       },
       // 加载分类文件列表
-      treeLoadFileList (nodeObj) {
+      loadSortFileList (nodeObj) {
         let path = nodeObj.id
         // 根据用户的选择，设置状态管理中的当前路径
         this.$store.commit('setCurrentPath', path)
         // 发送获取文件列表请求
-        this.$store.dispatch('getSortFileList', path)
+        // 对路径进行处理，去除路径最后的一个 /
+        let tempPath = path.split('/')
+        tempPath.pop()
+        let lastPath = tempPath.join('/')
+        this.$store.dispatch('getSortFileList', lastPath)
         // 通过空的 Vue 实例作为中央时间总线，发送路径更改信息
       },
       // 当节点展开或关闭时，树的高度会发生变化，需要发出相关事件，通知 sidebar 组件改变scrollbar样式

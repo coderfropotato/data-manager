@@ -3,8 +3,8 @@
  */
 
 export const OPEN_FILE = 'openFile'
-export const SET__SORT_FILE_LIST = 'setSortFileList'
-export const GET_FILE_TREE = 'getFileTree'
+export const SET_SORT_FILE_LIST = 'setSortFileList'
+export const GET_DISK_FILE_TREE = 'getFileTree'
 export const GET_TRASH = 'getTrash'
 export const RECEIVE_FILE_DETAIL = 'receiveFileDetail'
 export const GET_IGNORE = 'getIgnore'

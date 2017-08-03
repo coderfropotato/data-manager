@@ -7,7 +7,7 @@
             {{item.name}}
           </div>
           <div class="create-time">
-            {{item.createTime}}
+            {{item.ctime}}
           </div>
           <div class="size">
             {{item.size}}
@@ -35,7 +35,7 @@
             label="文件名">
         </el-table-column>
         <el-table-column
-            property="createTime"
+            property="ctime"
             label="创建时间">
         </el-table-column>
         <el-table-column
@@ -62,7 +62,7 @@
                     {{item.name}}
                   </div>
                   <div class="create-time">
-                    {{item.createTime}}
+                    {{item.ctime}}
                   </div>
                   <div class="size">
                     {{item.size}}
@@ -110,20 +110,28 @@
       this.dragEvent()
     },
     computed: mapState({
-      tableData: state => state.files.currentFileList,
+      tableData: state => {
+        let rowListData = state.files.currentFileList
+        let tableData = []
+        // TODO 待检验
+        for (let item in rowListData) {
+          tableData.push(Object.assign(rowListData[item].basic, rowListData[item].path))
+        }
+        return tableData
+      },
       currentPath: state => state.files.currentPath,
       status: state => state.showControl.listDisplayStatus,
       dragFiles: state => state.showControl.dragShow
     }),
     methods: {
       showFileInfo (row, event) {
-        let path = this.currentPath + row.name
-
         // 获取文件的具体信息
+        // 待检验
+        let path = row.path
         this.$store.dispatch({
           type: 'getFileInfo',
           path: path,
-          volumeId: 1111
+          serialNumber: 1111
         })
 
         // 显示文件信息区
