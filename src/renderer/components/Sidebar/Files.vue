@@ -94,7 +94,7 @@
       }
     },
     mounted () {
-      this.insertFileIcon()
+      // this.insertFileIcon()
     },
     computed: mapState({
       // 所有文件选项的数据，即管理的磁盘

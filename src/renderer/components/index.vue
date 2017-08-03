@@ -10,7 +10,7 @@
       </div>
       <div class='splitter-right'></div>
       <div class='file-wrapper'>
-        <FileInfo></FileInfo>
+        <FileAside></FileAside>
       </div>
     </div>
   </div>
@@ -19,7 +19,7 @@
 <script>
   import Sidebar from './Sidebar/sidebar'
   import ContentDetail from './Content/content'
-  import FileInfo from './FileInfo/fileInfo'
+  import FileAside from './FileAside/fileAside'
   import $ from 'jquery'
   import 'jquery-resizable-dom/src/jquery-resizable'
 
@@ -45,7 +45,7 @@
     components: {
       Sidebar,
       ContentDetail,
-      FileInfo
+      FileAside
     }
   }
 </script>

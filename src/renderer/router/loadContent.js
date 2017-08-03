@@ -5,7 +5,8 @@
 // sidebar 的组件
 import Files from '@/components/Sidebar/Files'
 import Search from '@/components/Sidebar/search'
-// import FileStatus from '@/components/Sidebar/fileStatus'
+import FileInfo from '@/components/FileAside/fileInfo'
+import FileStatus from '@/components/FileAside/fileStatus'
 import Collection from '@/components/Sidebar/collection'
 // content 的组件
 import FileHeader from '@/components/Content/diskDirHeader'
@@ -20,7 +21,8 @@ const routes = [
     components: {
       default: Files,
       ContentHeader: FileHeader,
-      ContentList: List
+      ContentList: List,
+      FileInfo: FileInfo
     }
   },
   {
@@ -39,7 +41,8 @@ const routes = [
       default: Files,
       // ContentHeader: FileHeader,
       // ContentMiddle: sortDirMiddle,
-      ContentList: FileStatusContent
+      ContentList: FileStatusContent,
+      FileInfo: FileStatus
     }
   },
   {
