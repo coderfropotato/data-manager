@@ -10,13 +10,13 @@
                  :show-checkbox="true"
                  ref="tree"
                  node-key="path"
+                 :highlight-current="true"
         ></el-tree>
     </div>
 </template>
 
 <script>
   import { mapState, mapActions } from 'vuex'
-  import $ from 'jquery'
 
   export default {
     name: 'fileStatusContent',
@@ -24,7 +24,6 @@
     // mounted时加载
     mounted () {
       this.getModifiedFiles()   // 获取修改文件
-      this.insertFileIcon()     // 插入文件icon
     },
 
     computed: mapState({
@@ -40,17 +39,6 @@
     }),
 
     methods: {
-      // 插入文件Icon
-      insertFileIcon () {
-        let Icon = '<svg class="icon" aria-hidden="true">\n' + '<use xlink:href="#icon-wenjian"></use>\n' + '</svg>'
-        let downIcon = $('.el-tree-node__expand-icon')
-        $(Icon).insertAfter(downIcon)
-        $('.el-tree-node__content > .icon')
-          .css('font-size', '1.2em')
-          .css('margin-right', '0.5em')
-          .css('vertical-align', '-0.25em')
-      },
-
       // 映射Actions
       ...mapActions([
         'getModifiedFiles'  // 获取修改的文件
