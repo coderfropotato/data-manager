@@ -59,7 +59,7 @@
       // 渲染状态标签
       renderContent (h, { node, data }) {
         // 带status节点
-        if (data.status) {
+        if (data.status != null) {
           let color = null
           let tag = null
 

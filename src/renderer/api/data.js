@@ -285,7 +285,7 @@ export const modifiedFiles = {
           '__info__': {
             'ctime': 1501640748.1903245,
             'size': 0,
-            'status': 1
+            'status': 0
           }
         }
       }
