@@ -3,42 +3,19 @@
     <div class="header">
       <el-row type="flex" class="header-inner">
         <!--下拉菜单-->
-        <el-col :span="4">
+        <el-col :span="5">
           <div class="grid-content">
-            <el-dropdown menu-align="start">
-              <!--按钮-->
-              <button>
-                <svg class="icon" aria-hidden="true">
-                  <use xlink:href="#icon-menu"></use>
-                </svg>
-                <svg class="icon" aria-hidden="true">
-                  <use xlink:href="#icon-xiala"></use>
-                </svg>
-              </button>
-              <!--下拉列表-->
-              <el-dropdown-menu slot="dropdown" menu-align="end">
-                <el-dropdown-item>
-                  <svg class="icon" aria-hidden="true">
-                    <use xlink:href="#icon-list"></use>
-                  </svg>
-                  <span>List</span>
-                </el-dropdown-item>
-                <el-dropdown-item>
-                  <svg class="icon" aria-hidden="true" id="column">
-                    <use xlink:href="#icon-list"></use>
-                  </svg>
-                  <span>Columns</span>
-                </el-dropdown-item>
-                <el-dropdown-item>
-                  <svg class="icon" aria-hidden="true">
-                    <use xlink:href="#icon-liebiao"></use>
-                  </svg>
-                  <span>Grid</span>
-                </el-dropdown-item>
-              </el-dropdown-menu>
-            </el-dropdown>
+            <el-select v-model="displayStatus">
+              <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
           </div>
         </el-col>
+        <el-col :span="1"></el-col>
         <!--搜索框-->
         <el-col :span="20">
           <div class="grid-content">
@@ -77,27 +54,44 @@
   </div>
 </template>
 <script>
-  import {mapState} from 'vuex'
   import $ from 'jquery'
   export default {
     name: 'FileHeader',
     data () {
       return {
-        searchValue: '',
         show: true,
         condition: ['公共数据', '私有数据', '共享数据', 'FASTA', 'FASTQ', 'BAM', 'SAM', 'VCF'], // 列出的条件
         selectedCondition: [],
         // 用户选择的条件，通过v-for遍历这个集合以显示用户点击的条件。输入框条件的增加删除，也是通过向这个集合添加或者删除元素来实现
-        i: 0
+        i: 0,
+        searchValue: '',
+        options: [
+          {
+            value: 'Lists',
+            label: 'List'
+          },
+          {
+            value: 'Columns',
+            label: 'Column'
+          },
+          {
+            value: 'Grid',
+            label: 'Grid'
+          }
+        ]
       }
     },
-    computed: mapState({
-      pathArray: state => {
-        let rowPath = state.files.currentPath.split('/')
-        rowPath.pop()
-        return rowPath
+    computed: {
+      displayStatus: {
+        get: function () {
+          return this.$store.state.showControl.listDisplayStatus
+        },
+        // 提供 setter ，使组件能够设置 displayStatus 的值
+        set: function (value) {
+          this.$store.commit('setFileDisplayStatus', value)
+        }
       }
-    }),
+    },
     methods: {
       // 搜索框搜索结果建议
       querySearch (queryString, cb) {
@@ -177,16 +171,15 @@
   .header{
     .search-input{
         .el-button {
-          border-radius: 12px;
-          margin-left: 0.3em;
-          font-size: 1em;
+          position: relative;
+          bottom: 0.7em;
+          margin-left: 0.1em;
+          font-size: 0.8em;
         }
-      margin-top: 0.7em;
+      margin-top: 0.5em;
       input{
         position: relative;
         bottom: 0.5em;
-        left: 0.5em;
-        background-color: #eef1f6;
         height: 1.5em;
         outline: none;
         border: none;
@@ -194,8 +187,9 @@
         font-size: 1em;
       }
       height: 2em;
-      border: 1px solid #000;
-      border-radius: 15px;
+      border: 1px solid #bfcbd9;
+      background-color: #fff;
+
     }
   }
 </style>
