@@ -4,7 +4,7 @@
       <el-col :span="24">
         <!--router 激活导航，以index为path-->
         <el-menu class="menu" router>
-          <el-menu-item index="/files/list">
+          <el-menu-item index="/files/list" @click="openFile">
             <svg class="icon" aria-hidden="true">
               <use xlink:href="#icon-zhuye"></use>
             </svg>
@@ -68,6 +68,7 @@
 <script>
   import {ipcRenderer} from 'electron'
   import bus from '@/assets/JS/bus'
+
   export default {
     name: 'Sidebar',
     data () {
@@ -143,6 +144,14 @@
           this.$refs.line.clientHeight -
           this.$refs.bottom.clientHeight -
           32
+      },
+      // 获取文件
+      openFile () {
+        if (this.$store.state.files.allFiles && this.$store.state.files.sortDirRowData) {
+          // 不做任何处理
+        } else {
+          this.$store.dispatch('openFile')
+        }
       }
     }
   }

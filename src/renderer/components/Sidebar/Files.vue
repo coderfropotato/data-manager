@@ -144,7 +144,7 @@
       loadTrashContent () {
         this.$store.dispatch('getTrash')
       },
-      // 加载所有文件的文件列表
+      // 加载磁盘文件树
       diskLoadFileList (e) {
         let diskName = e.target.innerText
         this.$store.dispatch('getFileTree', diskName)
@@ -155,7 +155,7 @@
         // 根据用户的选择，设置状态管理中的当前路径
         this.$store.commit('setCurrentPath', path)
         // 发送获取文件列表请求
-        this.$store.dispatch('getFileList', path, '18401839')
+        this.$store.dispatch('getSortFileList', path)
         // 通过空的 Vue 实例作为中央时间总线，发送路径更改信息
       },
       // 当节点展开或关闭时，树的高度会发生变化，需要发出相关事件，通知 sidebar 组件改变scrollbar样式

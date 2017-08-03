@@ -30,7 +30,6 @@ function createWindow () {
     mainWindow = null
   })
 }
-
 ipcMain.on('addFile', (event, arg) => {
   if (arg.API === 'open') {
     let URL = arg.URL
@@ -49,6 +48,18 @@ ipcMain.on('open-file-dialog', function (event) {
     if (files) {
       event.sender.send('selected-directory', files)
     }
+  })
+})
+
+ipcMain.on('files-modified', function (event) {
+  const options = {
+    type: 'info',
+    title: 'Information',
+    message: '文件有更改，是否查看',
+    buttons: ['是', '否']
+  }
+  dialog.showMessageBox(options, function (index) {
+    event.sender.send('dialog-select', index)
   })
 })
 

@@ -5,129 +5,39 @@
  * 500：服务器错误（服务器处理出现问题）
 */
 // 基本配置
-import {Files, returnRadomFileList, fileInfo, modifiedFiles} from './data'
-
 let zmq = require('zeromq')
-const baseURL = 'tcp://127.0.0.1'
-const PORT = 3000
+// const baseURL = 'tcp://10.139.17.101'
+const baseURL = 'tcp://10.139.20.203'
+const PORT = 4242
 const URL = baseURL + ':' + PORT
 
-// 定义交互方法 req-rep
-let request = zmq.socket('req')
-
-// 连接服务器
-request.connect(URL)
-
 // 导出的 API 对象
-let API = {}
-
-// @return Object
-// 发送应用打开信号，获取文件更改信息
-API.sendOpenSignal = () => {
+let request
+let sendMessage = function (API, params) {
+  // 定义交互方法 req-rep
+  request = zmq.socket('req')
+  // 连接服务器
+  request.connect(URL)
   let Param = {
-    API: 'sendOpenSignal',
-    params: {}
+    API,
+    params
   }
-  request.send(Param)
-  request.on('message', function (msg) {
+  request.send(JSON.stringify(Param))
+  return new Promise((resolve, reject) => {
+    request.on('message', function (msg) {
+      let rep = JSON.parse(msg)
+      if (rep.status === 200) {
+        let data = rep.data
+        resolve(data)
+        request.close()
+      } else if (rep.status === 400) {
+        console.error('参数数目错误')
+      } else if (rep.status === 500) {
+        console.error('服务器错误')
+      } else {
+        console.error('参数格式错误')
+      }
+    })
   })
 }
-
-// 点击文件导航，获取文件树
-API.openFile = () => {
-  let Param = {
-    API: 'openFile',
-    params: {}
-  }
-  request.send(Param)
-  request.on('message', function (msg) {
-    // 进一步处理，是否存入本地数据库
-  })
-  return Files
-}
-
-// 获取文件导航的文件树
-// @Param folderName 文件名
-API.getFileTree = folderName => {
-  let Param = {
-    API: 'getFileTree',
-    params: {
-      folderName: folderName
-    }
-  }
-  request.send(Param)
-  request.on('message', function (msg) {
-    // 进一步处理，是否存入本地数据库
-  })
-}
-
-// 获取文件列表
-API.getFileList = path => {
-  let Param = {
-    API: 'getFileList',
-    params: {
-      path: path
-    }
-  }
-  request.send(Param)
-  request.on('message', function (msg) {
-  })
-  // 模拟数据
-  let fileList = returnRadomFileList()
-  return fileList
-}
-
-// 获取回收站的文件树
-API.getTrash = () => {
-  let Param = {
-    API: 'getTrash',
-    params: {}
-  }
-  request.send(Param)
-  request.on('message', function (msg) {
-    return JSON.parse(msg)
-  })
-}
-
-// 获取忽略的文件
-API.getIgnore = () => {
-  let Param = {
-    API: 'getIgnore',
-    params: {}
-  }
-  request.send(Param)
-  request.on('message', function (msg) {
-    return JSON.parse(msg)
-  })
-}
-
-// 获取具体文件的信息
-// @Param param 参数对象
-API.getFileInfo = param => {
-  let Param = {
-    API: 'getFileInfo',
-    params: param
-  }
-  request.send(Param)
-  request.on('message', function (msg) {
-    return JSON.parse(msg)
-  })
-  // 返回模拟数据
-  return fileInfo
-}
-
-// 获取文件的所属分类
-API.getFileSort = param => {
-  let Param = {
-    API: 'getFileSort',
-    params: param
-  }
-  request.send(Param)
-  request.on('message', function (msg) {
-    return JSON.parse(msg)
-  })
-}
-
-// 测试用 获取修改的文件树
-API.getModifiedFiles = () => modifiedFiles
-export default API
+export default sendMessage

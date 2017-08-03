@@ -2,10 +2,10 @@
  * 管理后台传送的文件分类
  * 即侧边栏的所有文件夹中的文件
  */
-import API from '@/api'
+import sendMessage from '@/api'
 import * as types from '@/store/mutation-types'
 // 引入文件树数据处理函数
-import travelTree from '@/assets/JS/handleRowTreeData'
+import travelTree from '@/assets/JS/handleSortTreeData'
 
 const state = {
   // 记录当前选择的文件
@@ -35,37 +35,42 @@ const state = {
 
 const actions = {
   // 打开文件选项
-  openFile ({ commit }) {
-    let response = API.openFile()
-    commit(types.OPEN_FILE, response)
+  openFile ({commit}) {
+    sendMessage('openFile', {}).then(data => {
+      commit(types.OPEN_FILE, data)
+    })
   },
 
   // 获取文件树
-  getFileTree ({ commit }, folderName) {
-    let response = API.getFileTree(folderName)
-    commit(types.GET_FILE_TREE, folderName, response)
+  getFileTree ({commit}, folderName) {
+    sendMessage('getFileTree', {folderName}).then(data => {
+      commit(types.GET_FILE_TREE, folderName, data)
+    })
   },
 
   // 获取文件列表
-  getFileList ({commit}, path) {
-    let reponse = API.getFileList(path)
-    commit(types.SET_FILE_LIST, reponse)
+  getSortFileList ({commit}, path) {
+    sendMessage('getSortFileList', {}).then(data => {
+      commit(types.SET_SORT_FILE_LIST, data)
+    })
   },
 
   // 获取回收站
-  getTrash ({ commit }) {
-    let response = API.getTrash()
-    commit(types.GET_TRASH, response)
+  getTrash ({commit}) {
+    sendMessage('getTrash', {}).then(data => {
+      commit(types.GET_TRASH, data)
+    })
   },
 
   // 获取忽略文件
-  getIgnore ({ commit }) {
-    let response = API.getIgnore()
-    commit(types.GET_IGNORE, response)
+  getIgnore ({commit}) {
+    sendMessage('getIgnore', {}).then(data => {
+      commit(types.GET_IGNORE, data)
+    })
   },
 
   // 设置当前的文件树
-  setCurrentFileTree ({ commit }, fileTree) {
+  setCurrentFileTree ({commit}, fileTree) {
     commit(types.SET_CURRENT_FILE_TREE, fileTree)
   }
 }
@@ -74,12 +79,11 @@ const mutations = {
   // 打开文件选项
   [types.OPEN_FILE] (state, response) {
     state.allFiles = response.allFiles
-    state.sortDirRowData = response.sortDir
+    state.sortDirRowData = response.sortDir.sort
     // 对原始的文件树数据进行处理
+    console.log(state.sortDirRowData)
     state.sortFileTree = []
-    for (let name in state.sortDirRowData) {
-      travelTree(state.sortDirRowData[name], state.sortFileTree, '')
-    }
+    travelTree(state.sortDirRowData, state.sortFileTree, '')
   },
 
   // 获取文件树
@@ -91,8 +95,8 @@ const mutations = {
     state.cacheDir.push(temp)
   },
 
-  // 设置文件列表信息
-  [types.SET_FILE_LIST] (state, response) {
+  // 设置分类文件列表信息
+  [types.SET_SORT_FILE_LIST] (state, response) {
     state.currentFileList = response
   },
 

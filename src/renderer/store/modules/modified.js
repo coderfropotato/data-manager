@@ -1,9 +1,10 @@
 /*
  * 文件状态功能
  */
-import API from '@/api'
+import sendMessage from '@/api'
 import * as types from '@/store/mutation-types'
 import packup from '@/assets/JS/convertJSON'
+import {ipcRenderer} from 'electron'
 
 const state = {
   modifiedFiles: [],  // 最近变更的文件
@@ -14,12 +15,25 @@ const state = {
 
 const actions = {
   // 获取变更文件
-  getModifiedFiles ({ commit }) {
-    // 未来统一采用getFileTreeAPI
-    // let files = API.getFileTree('modified')
-    // 如今测试用getModifiedFiles
-    let files = API.getModifiedFiles('modified')
-    commit(types.RECEIVE_MODIFIED_FILES, files)
+  getModifiedFiles ({commit}) {
+    // 获取更改文件后返回
+    return new Promise((resolve, reject) => {
+      sendMessage('getModifiedFiles', {}).then((data) => {
+        // 获取更改信息完成，通知执行 then
+        resolve()
+        if (data.isModified) {
+          // 弹出文件信息更改窗口
+          // ipcRenderer.send('files-modified')
+          ipcRenderer.on('dialog-select', function (event, index) {
+            let message = ''
+            if (index === 0) message += '是'
+            else message += '否'
+            console.log(message)
+          })
+          commit(types.RECEIVE_MODIFIED_FILES, data.tree)
+        }
+      })
+    })
   }
 }
 

@@ -5,10 +5,7 @@
 function travelTree (obj, data, Id) {
   for (let name in obj) {
     // 文件夹
-    if (name === '__info__') {
-      continue
-    }
-    if (Object.keys(obj[name]).length > 1) {
+    if (Object.keys(obj[name]).length >= 1) {
       let temp = {
         id: '',
         label: name.toString(),

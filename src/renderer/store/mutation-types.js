@@ -3,7 +3,7 @@
  */
 
 export const OPEN_FILE = 'openFile'
-export const SET_FILE_LIST = 'setFileList'
+export const SET__SORT_FILE_LIST = 'setSortFileList'
 export const GET_FILE_TREE = 'getFileTree'
 export const GET_TRASH = 'getTrash'
 export const RECEIVE_FILE_DETAIL = 'receiveFileDetail'
