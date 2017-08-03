@@ -20,20 +20,6 @@
       line-height: 3em;
       background-color: #eef1f6;
       // 按钮样式
-      button {
-        font-size: 16px;
-        height: 1.6em;
-        width: 3.2em;
-        margin: 0.6em 1em;
-        background-color: #eef1f6;
-        border-radius: 0.2em;
-        border: 1px solid #48576a;
-        outline: 1px solid #eef1f6;
-        cursor: pointer;
-        .icon {
-          font-size: 1.2em;
-        }
-      }
     }
   }
 
