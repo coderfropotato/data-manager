@@ -1,13 +1,22 @@
 <template>
     <div id="file-status-root">
         所有变更
-        <el-tree :data="modifiedFiles" :expand-on-click-node="false" :render-content="renderContent" @node-click="handleNodeClick" :default-expand-all="true"></el-tree>
+        <el-tree :data="modifiedFiles"
+                 :expand-on-click-node="false"
+                 :render-content="renderContent"
+                 @node-click="handleNodeClick"
+                 @check-change="handleCheckChange"
+                 :default-expand-all="true"
+                 :show-checkbox="true"
+                 ref="tree"
+                 node-key="path"
+                 :highlight-current="true"
+        ></el-tree>
     </div>
 </template>
 
 <script>
   import { mapState, mapActions } from 'vuex'
-  import $ from 'jquery'
 
   export default {
     name: 'fileStatusContent',
@@ -15,29 +24,21 @@
     // mounted时加载
     mounted () {
       this.getModifiedFiles()   // 获取修改文件
-      this.insertFileIcon()     // 插入文件icon
     },
 
     computed: mapState({
       // 变更文件
       modifiedFiles: state => state.modified.modifiedFiles,
+
       // 变更文件树
-      modifiedFilesTree: state => state.modified.modifiedFilesTree
+      modifiedFilesTree: state => state.modified.modifiedFilesTree,
+
+      // 当前选中的变更文件集合
+      activeModifiedFilesSet: state => state.modified.activeModifiedFilesSet
 
     }),
 
     methods: {
-      // 插入文件Icon
-      insertFileIcon () {
-        let Icon = '<svg class="icon" aria-hidden="true">\n' + '<use xlink:href="#icon-wenjian"></use>\n' + '</svg>'
-        let downIcon = $('.el-tree-node__expand-icon')
-        $(Icon).insertAfter(downIcon)
-        $('.el-tree-node__content > .icon')
-          .css('font-size', '1.2em')
-          .css('margin-right', '0.5em')
-          .css('vertical-align', '-0.25em')
-      },
-
       // 映射Actions
       ...mapActions([
         'getModifiedFiles'  // 获取修改的文件
@@ -46,7 +47,7 @@
       // 渲染状态标签
       renderContent (h, { node, data }) {
         // 带status节点
-        if (data.status) {
+        if (data.status != null) {
           let color = null
           let tag = null
 
@@ -97,6 +98,16 @@
           // 结果
           console.log('ctime', tempTree['__info__']['ctime'])
           console.log('size', tempTree['__info__']['size'])
+        }
+      },
+
+      // 处理选中节点
+      handleCheckChange () {
+        console.clear()
+        this.activeModifiedFilesSet.clear()
+        this.activeModifiedFilesSet.add(this.$refs.tree.getCheckedKeys())   // 获取选中的变更文件并添加至Set中
+        for (let item of this.activeModifiedFilesSet.values()) {
+          console.log(item)
         }
       }
     }
