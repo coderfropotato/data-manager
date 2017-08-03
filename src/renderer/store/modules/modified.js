@@ -8,6 +8,7 @@ import packup from '@/assets/JS/convertJSON'
 const state = {
   modifiedFiles: [],  // 最近变更的文件
   modifiedFilesTree: {},  // 最近变更文件树
+  activeModifiedFilesSet: new Set(), // 当前选中的变更文件集合
   modifiedNum: 0 // 变更文件的数目
 }
 

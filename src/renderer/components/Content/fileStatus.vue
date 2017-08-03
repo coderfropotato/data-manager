@@ -1,7 +1,16 @@
 <template>
     <div id="file-status-root">
         所有变更
-        <el-tree :data="modifiedFiles" :expand-on-click-node="false" :render-content="renderContent" @node-click="handleNodeClick" :default-expand-all="true"></el-tree>
+        <el-tree :data="modifiedFiles"
+                 :expand-on-click-node="false"
+                 :render-content="renderContent"
+                 @node-click="handleNodeClick"
+                 @check-change="handleCheckChange"
+                 :default-expand-all="true"
+                 :show-checkbox="true"
+                 ref="tree"
+                 node-key="path"
+        ></el-tree>
     </div>
 </template>
 
@@ -21,8 +30,12 @@
     computed: mapState({
       // 变更文件
       modifiedFiles: state => state.modified.modifiedFiles,
+
       // 变更文件树
-      modifiedFilesTree: state => state.modified.modifiedFilesTree
+      modifiedFilesTree: state => state.modified.modifiedFilesTree,
+
+      // 当前选中的变更文件集合
+      activeModifiedFilesSet: state => state.modified.activeModifiedFilesSet
 
     }),
 
@@ -97,6 +110,16 @@
           // 结果
           console.log('ctime', tempTree['__info__']['ctime'])
           console.log('size', tempTree['__info__']['size'])
+        }
+      },
+
+      // 处理选中节点
+      handleCheckChange () {
+        console.clear()
+        this.activeModifiedFilesSet.clear()
+        this.activeModifiedFilesSet.add(this.$refs.tree.getCheckedKeys())   // 获取选中的变更文件并添加至Set中
+        for (let item of this.activeModifiedFilesSet.values()) {
+          console.log(item)
         }
       }
     }
