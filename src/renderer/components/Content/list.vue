@@ -90,8 +90,10 @@
     },
     mounted () {
       let count = 0
+      // 监听列表区拖拽，有拖入则显示导入提示，拖出则隐藏提示
       let list = document.getElementById('list-root')
       list.addEventListener('dragenter', e => {
+        // drag-zone 也有监听拖拽事件，同时监听父子元素会导致拖出事件频繁触发，造成闪烁
         count++
         e.preventDefault()
         if (count === 1) {
@@ -106,7 +108,7 @@
         }
       }, false)
 
-      // 监听拖拽文件
+      // 监听拖拽，对导入的文件进行处理
       this.dragEvent()
     },
     computed: mapState({

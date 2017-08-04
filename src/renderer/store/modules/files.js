@@ -6,7 +6,6 @@ import sendMessage from '@/api'
 import * as types from '@/store/mutation-types'
 // 引入文件树数据处理函数
 import travelTree from '@/assets/JS/handleSortTreeData'
-
 const state = {
   // 记录当前选择的文件
   currentFile: '',
@@ -29,8 +28,8 @@ const state = {
   trash: [],
   // 忽略文件
   ignore: [],
-  // 导入的文件
-  importFiles: []
+  // 导入的文件，防止文件重复
+  importFiles: new Map()
 }
 
 const actions = {
@@ -52,7 +51,7 @@ const actions = {
   getSortFileList ({commit}, path) {
     sendMessage('getSortFileList', {path}).then(data => {
       let fileList = data.fileList
-      console.log(data)
+      // console.log(data)
       commit(types.SET_SORT_FILE_LIST, fileList)
     })
   },
@@ -105,9 +104,13 @@ const mutations = {
   [types.GET_TRASH] (state, response) {
     state.trash = response
   },
+
   // 添加导入文件
-  [types.ADD_IMPORT_FILES] (state, file) {
-    state.importFiles.push(file)
+  [types.ADD_IMPORT_FILES] (state, fileList) {
+    // 不能使用 in 遍历，fileList 包含可枚举的属性length
+    for (let i = 0; i < fileList.length; i++) {
+      state.importFiles.set(fileList[i].path, fileList[i])
+    }
   },
 
   // 获取忽略文件

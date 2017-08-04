@@ -7,7 +7,7 @@ import Files from '@/components/Sidebar/Files'
 import Search from '@/components/Sidebar/search'
 import FileInfo from '@/components/FileAside/fileInfo'
 import FileStatus from '@/components/FileAside/fileStatus'
-import Collection from '@/components/Sidebar/collection'
+// import Collection from '@/components/Sidebar/collection'
 // content 的组件
 import FileHeader from '@/components/Content/diskDirHeader'
 import List from '@/components/Content/list'
@@ -15,6 +15,7 @@ import FileStatusContent from '@/components/Content/fileStatus'
 import SearchHeader from '@/components/Content/searchHeader'
 import UploadFile from '@/components/Content/uploadFile'
 import ContentBottom from '@/components/Content/contentBottom'
+import SmartSort from '@/components/Content/smartSort'
 const routes = [
   {
     path: 'files',
@@ -59,7 +60,9 @@ const routes = [
   {
     path: 'collection',
     name: 'Collection',
-    component: Collection
+    components: {
+      ContentBottom: SmartSort
+    }
   }
 ]
 
