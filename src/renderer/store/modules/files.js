@@ -6,6 +6,7 @@ import sendMessage from '@/api'
 import * as types from '@/store/mutation-types'
 // 引入文件树数据处理函数
 import travelTree from '@/assets/JS/handleSortTreeData'
+
 const state = {
   // 记录当前选择的文件
   currentFile: '',
@@ -70,6 +71,23 @@ const actions = {
     })
   },
 
+  // 确认导入文件，向后台发送导入文件的路径
+  confirmImportFiles ({commit}) {
+    return new Promise((resolve, reject) => {
+      if (state.importFiles.size === 0) {
+        resolve({status: 1, fileAmount: 0})
+      }
+      let pathArray = []
+      let fileAmount = 0
+      for (let directory of state.importFiles.values()) {
+        pathArray.push(directory.path)
+        fileAmount++
+      }
+      // TODO 传送数据
+      resolve({status: 1, fileAmount})
+    })
+  },
+
   // 设置当前的文件树
   setCurrentFileTree ({commit}, fileTree) {
     commit(types.SET_CURRENT_FILE_TREE, fileTree)
@@ -105,9 +123,12 @@ const mutations = {
     state.trash = response
   },
 
-  // 添加导入文件
+  // 添加导入文件夹
   [types.ADD_IMPORT_FILES] (state, fileList) {
     // 不能使用 in 遍历，fileList 包含可枚举的属性length
+    if (!fileList) {
+      console.error('导入文件夹列表信息错误')
+    }
     for (let i = 0; i < fileList.length; i++) {
       state.importFiles.set(fileList[i].path, fileList[i])
     }

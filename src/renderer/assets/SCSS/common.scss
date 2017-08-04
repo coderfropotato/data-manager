@@ -81,3 +81,10 @@ body{
     padding: 0;
   }
 }
+// 表格表头文本居中
+.el-table th{
+  text-align: center;
+}
+.el-table .el-table__row{
+  text-align: center;
+}
