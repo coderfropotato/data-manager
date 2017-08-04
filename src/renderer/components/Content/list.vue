@@ -23,7 +23,7 @@
     <div class="columns-display" v-if="status === 'Columns'">
       <el-table :data="tableData"
                 highlight-current-row
-                style="width: 100%"
+                style="width: 100%;"
                 @row-click="showFileInfo">
         <el-table-column
             type="index"
@@ -86,24 +86,27 @@
 
   export default {
     data () {
-      return {}
+      return {
+        // 记录拖入与拖出的次数
+        count: 0
+      }
     },
     mounted () {
-      let count = 0
       // 监听列表区拖拽，有拖入则显示导入提示，拖出则隐藏提示
       let list = document.getElementById('list-root')
       list.addEventListener('dragenter', e => {
         // drag-zone 也有监听拖拽事件，同时监听父子元素会导致拖出事件频繁触发，造成闪烁
-        count++
+        this.count++
         e.preventDefault()
-        if (count === 1) {
+        if (this.count > 0) {
           this.$store.commit('toggleDragShow', true)
         }
       }, false)
       list.addEventListener('dragleave', e => {
+        console.log('leave')
         e.preventDefault()
-        count--
-        if (count === 0) {
+        this.count--
+        if (this.count <= 0) {
           this.$store.commit('toggleDragShow', false)
         }
       }, false)
@@ -135,26 +138,55 @@
           path: path,
           serialNumber: 1111
         })
-
         // 显示文件信息区
         this.$store.commit('showFileInfo')
       },
+
+      // 处理导入文件夹操作
       dropHandler (e) {
         e.stopPropagation()
         e.preventDefault()
-        let file = e.dataTransfer.files
-        // 将文件加入到状态管理中的记录导入文件的数组
-        this.$store.commit('addImportFiles', file)
-        // 设置拖拽区域隐藏
-        this.$store.commit('toggleDragShow', false)
-        // 重定向到导入文件页面
-        this.$router.push('/files/uploadfile')
+        let importDirectory = e.dataTransfer.files
+        let fileCount = 0
+        // 计算文件的个数， Chrome only
+        if (e.dataTransfer.items && e.dataTransfer.items.length) {
+          for (let item of e.dataTransfer.items) {
+            let entry = item.webkitGetAsEntry()
+            if (entry && entry.isFile) {
+              fileCount++
+              break
+            }
+          }
+        }
+        // fileCount 大于 0，则含有文件，报错，否则传递数据，进行重定向
+        if (fileCount) {
+          // 不能导入文件
+          this.$message({
+            message: '不能导入文件',
+            type: 'error',
+            showClose: true,
+            duration: 4000
+          })
+          this.$store.commit('toggleDragShow', false)
+        } else {
+          // 将文件夹加入到状态管理中的记录导入文件夹的数组
+          this.$store.commit('addImportFiles', importDirectory)
+          // 重定向到导入文件页面
+          // 设置拖拽区域隐藏
+          this.$store.commit('toggleDragShow', false)
+          this.$router.push('/files/uploadfile')
+        }
+        // 放下后，缺少拖出的计数，需重置为 0， 防止下次无法隐藏
+        this.count = 0
       },
+
+      // 拖拽事件监听
       dragEvent () {
         let dragZone = document.querySelector('.drag-zone')
         dragZone.addEventListener('dragover', function (e) {
           e.preventDefault()
           e.stopPropagation()
+          e.dataTransfer.dragEffect = 'copy'
         }, false)
         dragZone.addEventListener('drop', this.dropHandler, false)
       }
@@ -164,6 +196,7 @@
 
 <style lang="scss" scoped>
   #list-root {
+    min-height: 400px;
     position: relative;
     .el-table__body-wrapper {
       overflow: hidden;
@@ -231,6 +264,7 @@
   .drag-zone {
     .drag-inner {
       position: absolute;
+      z-index: 100;
       display: flex;
       flex-direction: column;
       justify-content: center;
