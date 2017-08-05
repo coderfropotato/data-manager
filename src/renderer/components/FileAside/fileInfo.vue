@@ -9,23 +9,14 @@
     <div class="basic-info" v-if="basicInfo">
       <span class="title">基本信息</span>
       <div class="basic-info-items">
-        <span class="item-name">{{basicInfo.name}}</span>
+        <el-tooltip :content="basicInfo.rowName" placement="top">
+          <span class="item-name">{{basicInfo.name}}</span>
+        </el-tooltip>
         <span>文件类型：{{basicInfo.type}}</span>
         <span>文件大小：{{basicInfo.size}}</span>
-        <span>创建时间：{{basicInfo.createTime}}</span>
+        <span>创建时间：{{basicInfo.ctime}}</span>
       </div>
     </div>
-    <!--<div class="DataSource" v-if="otherInfo">-->
-    <!--<span>数据来源</span>-->
-    <!--<span>类别：{{otherInfo.sourceData.type}}</span>-->
-    <!--<span>数据源：{{otherInfo.sourceData.name}}</span>-->
-    <!--<el-button size="mini" @click="otherInfo.sourceData.url">-->
-    <!--<span>访问</span>-->
-    <!--<svg class="icon" aria-hidden="true">-->
-    <!--<use xlink:href="#icon-arrow"></use>-->
-    <!--</svg>-->
-    <!--</el-button>-->
-    <!--</div>-->
     <div class="organization">
       <div class="title">
         组织分类
@@ -74,6 +65,7 @@
 </template>
 <script>
   import {mapState} from 'vuex'
+  import formatFileData from '@/assets/JS/formatFileData'
 
   let tempData = ['1/1.txt/', '1/2.2/3.2/', '1/2.4/3/', '1/2.txt/']
   let tempSort = []
@@ -89,7 +81,9 @@
     },
     computed: mapState({
       show: state => state.fileInfo.show,
-      basicInfo: state => state.fileInfo.basicInfo,
+      basicInfo: state => {
+        return formatFileData(state.fileInfo.basicInfo, 15)
+      },
       otherInfo: state => state.fileInfo.otherInfo,
       popoverTreeData: state => state.files.sortFileTree
       // sorts: state => state.fileInfo.fileSorts

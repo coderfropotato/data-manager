@@ -34,7 +34,7 @@
           <el-row :gutter="20">
             <el-col :span="3"><span>协议</span></el-col>
             <el-col :span="8">
-              <el-select v-model="protocol" size="small">
+              <el-select v-model="remoteServer.protocol" size="small">
                 <el-option
                     v-for="item in protocolOptions"
                     :key="item.value"
@@ -105,8 +105,10 @@
       <div class="show-advanced">
         <el-row>
           <el-col :span="22">
-            <el-button size="small" @click="showAdvanced=!showAdvanced">展开高级选项
-            </el-button>
+            <el-tooltip content="为文件夹添加属性信息" placement="top">
+              <el-button size="small" @click="showAdvanced=!showAdvanced">展开高级选项
+              </el-button>
+            </el-tooltip>
           </el-col>
         </el-row>
       </div>
@@ -115,9 +117,9 @@
         <div>
           <el-row :gutter="20">
             <el-col :span="8">
-              <span>为文件夹添加属性</span>
+              <span>为文件夹添加属性（可不填）</span>
             </el-col>
-            <el-col :span="3">
+            <el-col :span="2">
               <span>模板</span>
             </el-col>
             <el-col :span="8">
@@ -140,18 +142,17 @@
                 <span>{{item.name}}</span>
               </el-col>
               <el-col :span="8">
-                <el-input placeholder="请输入" icon="close" v-model="item.value" :on-icon-click="clearProject"
-                          size="small">
+                <el-input placeholder="请输入" v-model="item.value" size="small">
                 </el-input>
               </el-col>
             </el-row>
           </div>
           <el-button size="small" @click="addCustomOption" v-if="template === 'custom'">+</el-button>
           <div class="custom" v-if="template === 'custom'">
-            <div class="custom-item" v-for="custom in customChoose">
+            <div class="custom-item" v-for="(custom,index) in customChoose" :key="index">
               <el-row :gutter="20">
                 <el-col :span="4">
-                  <el-select v-model="custom.key" size="small" cleara>
+                  <el-select v-model="custom.attr" size="small" cleara>
                     <el-option
                         v-for="item in customOptions"
                         :key="item.value"
@@ -163,10 +164,18 @@
                 <el-col :span="8">
                   <el-input v-model="custom.value" size="small"></el-input>
                 </el-col>
+                <el-col :span="2">
+                  <el-button type="primary" icon="delete" size="small"
+                             @click="deleteCustomChoose(index)"></el-button>
+                </el-col>
               </el-row>
             </div>
           </div>
         </div>
+      </div>
+      <div class="confirm">
+        <el-button @click="closeWindow">取&nbsp;&nbsp;消</el-button>
+        <el-button @click="confirmAddDirectory" type="primary">确&nbsp;&nbsp;认</el-button>
       </div>
     </div>
   </div>
@@ -195,18 +204,6 @@
           value: 'custom',
           label: '自定义文件夹'
         }],
-        projectAttr: [
-          {
-            name: '项目',
-            value: ''
-          }, {
-            name: '年份',
-            value: ''
-          }, {
-            name: '负责人',
-            value: ''
-          }
-        ],
         customOptions: [
           {
             value: '条目一',
@@ -216,38 +213,64 @@
             label: '条目二'
           }
         ],
+        projectAttr: [
+          {
+            name: '项目',
+            attr: 'projectName',
+            value: ''
+          }, {
+            name: '年份',
+            attr: 'year',
+            value: ''
+          }, {
+            name: '负责人',
+            attr: 'owner',
+            value: ''
+          }
+        ],
+        // 记录用户选择的结果
         customChoose: [],
+        // 别名
         alias: '',
+        // 路径
         path: '',
         remoteServer: {
+          protocol: '',
           host: '',
           port: '',
           username: '',
           password: ''
         },
         dataSource: 'localDisk',
-        protocol: 'SSH',
         template: 'project',
         useKey: true,
         showAdvanced: false
       }
     },
     methods: {
-      clearProject (ev) {
-        this.advanced.project = ''
+      clearProject (e) {
+        console.log(e)
       },
       addCustomOption () {
-        this.customChoose.push({
-          key: '',
-          value: ''
-        })
+        let optionLength = this.customOptions.length
+        if (this.customChoose.length < optionLength) {
+          this.customChoose.push({
+            attr: '',
+            value: ''
+          })
+        } else {
+          this.$notify.info({
+            title: '提示',
+            message: '只能添加' + optionLength + '条可选属性！',
+            duration: 3000
+          })
+        }
       },
       showFilename () {
-        ipcRenderer.send('open-file-dialog')
-        let vueThis = this
-        ipcRenderer.on('selected-directory', function (event, path) {
-          console.log(vueThis)
-          vueThis.path = `${path}`
+        ipcRenderer.send('open-file-dialog', 'single')
+        ipcRenderer.on('selected-directory', (event, path) => {
+          // 将返回的 path 数组转化成 string
+          this.path = path.toString()
         })
       },
       noticeAddCustom (e) {
@@ -255,9 +278,49 @@
           this.$notify.info({
             title: '提示',
             message: '请点击下方的加号添加自定义条目',
-            duration: 0
+            duration: 3000
           })
         }
+      },
+      // 删除自定义文件夹条目
+      deleteCustomChoose (index) {
+        this.customChoose.splice(index, 1)
+        console.log(this.customChoose)
+      },
+      closeWindow () {
+        this.$confirm('是否关闭窗口', '警告', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          ipcRenderer.send('addFile', {API: 'close'})
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消'
+          })
+        })
+      },
+      confirmAddDirectory () {
+        // 提取项目信息
+        let projectInfo = []
+        for (let item in this.projectAttr) {
+          projectInfo.push({
+            attr: this.projectInfo[item].attr,
+            value: this.projectInfo[item].value
+          })
+        }
+        console.log(this.projectAttr)
+        // 将所有文件夹信息汇总
+        let directoryInfo = {
+          alias: this.alias,
+          path: this.path,
+          remoteServer: this.remoteServer,
+          dataSource: this.dataSource, // localDisk, remoteServer
+          projectInfo,
+          customAttr: this.customChoose
+        }
+        console.log(directoryInfo)
       }
     }
   }
@@ -266,7 +329,14 @@
   html,
   body {
     height: 100%;
-    overflow: hidden;
+  }
+
+  body {
+    overflow-y: scroll;
+  }
+
+  ::-webkit-scrollbar {
+    display: none;
   }
 
   #newDiskFile-root {
@@ -295,6 +365,18 @@
   .advanced-options {
     i.el-input__icon.el-icon-close {
       margin-right: -4em !important;
+    }
+  }
+
+  .confirm {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin: 2em 0;
+    width: 100%;
+    text-aligin: center;
+    .el-button {
+      margin: 0 3em;
     }
   }
 </style>

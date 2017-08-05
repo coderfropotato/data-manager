@@ -1,5 +1,5 @@
-import NewFile from '@/components/NewFile/newFile'
-import NewDiskDir from '@/components/NewFile/newDiskFile'
+import NewFile from '@/components/NewDirectory/newFile'
+import NewDiskDirectory from '@/components/NewDirectory/newDiskDirectory'
 
 const routes = [
   {
@@ -9,7 +9,7 @@ const routes = [
     children: [
       {
         path: 'newdiskdir',
-        component: NewDiskDir
+        component: NewDiskDirectory
       }
     ]
   }
