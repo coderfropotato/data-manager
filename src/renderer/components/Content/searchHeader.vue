@@ -1,5 +1,6 @@
 <template>
-  <div class="searchHeader-root">
+  <div id="searchHeader-root">
+    <!--搜索栏-->
     <div class="header">
       <el-row type="flex" class="header-inner">
         <el-col :span="1"></el-col>
@@ -8,10 +9,10 @@
           <div class="grid-content">
             <el-select v-model="displayStatus">
               <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
+                  v-for="item in displayOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
               </el-option>
             </el-select>
           </div>
@@ -21,7 +22,8 @@
         <el-col :span="20">
           <div class="grid-content">
             <div class="search-input" @click="focus">
-              <el-button v-for="item in selectedCondition" :key="item" size="mini">{{item}}<i class="el-icon-circle-close" @click="deleteItem"></i></el-button>
+              <el-button v-for="(item,index) in Array.from(selectedCondition)" :key="item" size="mini">{{item}}<i
+                  class="el-icon-circle-close" @click="deleteItem(index)"></i></el-button>
               <input type="text" id="searchInput" @keyup.enter="search" v-model="input">
             </div>
           </div>
@@ -31,42 +33,32 @@
         </el-col>
       </el-row>
     </div>
+    <!--搜索条件-->
     <div class="middle">
-      <span>搜索条件</span>
-      <el-button size="mini" v-on:click="fold">收起</el-button>
-      <div class="searchCondition" v-if="show">
-        <div class="line" ref="line"></div>
-        <div name="类别">
-          <span>类别：</span>
-          <el-button size="mini" @click="showItem" type="text" data-name="类别">公共数据</el-button>
-          <el-button size="mini" @click="showItem" type="text" data-name="类别">私有数据</el-button>
-          <el-button size="mini" @click="showItem" type="text" data-name="类别">共享数据</el-button>
-        </div>
-        <div>
-          <span>文件类型：</span>
-          <el-button size="mini" @click="showItem" type="text" data-name="FASTA">FASTA</el-button>
-          <el-button size="mini" @click="showItem" type="text" data-name="FASTQ">FASTQ</el-button>
-          <el-button size="mini" @click="showItem" type="text" data-name="BAM">BAM</el-button>
-          <el-button size="mini" @click="showItem" type="text" data-name="SAM">SAM</el-button>
-          <el-button size="mini" @click="showItem" type="text" data-name="VCF">VCF</el-button>
+      <div class="search-condition-header">
+        <span class="condition-title">搜索条件</span>
+        <el-button size="small" @click="fold">收起</el-button>
+      </div>
+      <div class="search-condition" v-if="conditionShow">
+        <div class="condition" v-for="(item,index) in searchConditionOptions" :key="index">
+          <span class="item-title">
+            {{item.label}}
+          </span>
+          <el-button @click="showItem(item, optionIndex)" type="text" v-for="(option, optionIndex) in item.options" :key="optionIndex">
+            {{option}}
+          </el-button>
         </div>
       </div>
     </div>
   </div>
 </template>
 <script>
-  import $ from 'jquery'
   export default {
     name: 'FileHeader',
     data () {
       return {
-        show: true,
-        condition: ['公共数据', '私有数据', '共享数据', 'FASTA', 'FASTQ', 'BAM', 'SAM', 'VCF'], // 列出的条件
-        selectedCondition: [],
-        // 用户选择的条件，通过v-for遍历这个集合以显示用户点击的条件。输入框条件的增加删除，也是通过向这个集合添加或者删除元素来实现
-        i: 0,
-        searchValue: '',
-        options: [
+        // 下拉菜单显示的选项
+        displayOptions: [
           {
             value: 'Lists',
             label: 'List'
@@ -80,10 +72,30 @@
             label: 'Grid'
           }
         ],
+        // 搜索条件区域是否显示
+        conditionShow: true,
+        // 所有可选的搜索条件
+        searchConditionOptions: [
+          {
+            label: '数据类别',
+            name: 'dataType',
+            options: ['公共数据', '私有数据', '共享数据']
+          },
+          {
+            label: '文件类型',
+            name: 'fileType',
+            options: ['FASTA', 'FASTQ', 'BAM', 'SAM', 'VCF']
+          }
+        ],
+        selectedCondition: new Map(),
+        // 用户选择的条件，通过v-for遍历这个集合以显示用户点击的条件。输入框条件的增加删除，也是通过向这个集合添加或者删除元素来实现
+        i: 0,
+        searchValue: '',
         input: ''
       }
     },
     computed: {
+      // 获取文件列表显示状态 list/column/grid
       displayStatus: {
         get: function () {
           return this.$store.state.showControl.listDisplayStatus
@@ -95,44 +107,45 @@
       }
     },
     methods: {
+      // 点击收起按钮，折叠搜索条件区域
       fold () {
-        this.show = !this.show
+        this.conditionShow = !this.conditionShow
       },
-      showItem (e) {
-        let text = e.target.innerText
-        let count = 0
-        let length = this.selectedCondition.length
-        // 如果用户还未选择条件，则直接添加
-        if (length === 0) {
-          if (text === '公共数据' || text === '私有数据' || text === '共享数据') {
-            this.selectedCondition.push('类别：' + text)
-          } else {
-            this.selectedCondition.push('文件类型：' + text)
-          }
-        } else { // 如果已经有选择的条件，判断用户点击的条件是否重复
-          for (this.i = 0; this.i < length; this.i++) {
-            if (this.selectedCondition[this.i].indexOf(text) !== -1) {
-              count++
-            }
-          } // 如果没有重复，则向selectedCondition添加元素
-          if (count === 0) {
-            if (text === '公共数据' || text === '私有数据' || text === '共享数据') {
-              this.selectedCondition.push('类别：' + text)
-            } else {
-              this.selectedCondition.push('文件类型：' + text)
-            }
-          }
-        }
+      showItem (item, index) {
+        let option = item.options[index]
+        let text = item.label + '|' + option
+        this.selectedCondition.set(option, text)
+        console.log(this.selectedCondition)
+//        let text = e.target.innerText
+//        let count = 0
+//        let length = this.selectedCondition.length
+//        // 如果用户还未选择条件，则直接添加
+//        if (length === 0) {
+//          if (text === '公共数据' || text === '私有数据' || text === '共享数据') {
+//            this.selectedCondition.push('类别：' + text)
+//          } else {
+//            this.selectedCondition.push('文件类型：' + text)
+//          }
+//        } else { // 如果已经有选择的条件，判断用户点击的条件是否重复
+//          for (this.i = 0; this.i < length; this.i++) {
+//            if (this.selectedCondition[this.i].indexOf(text) !== -1) {
+//              count++
+//            }
+//          } // 如果没有重复，则向selectedCondition添加元素
+//          if (count === 0) {
+//            if (text === '公共数据' || text === '私有数据' || text === '共享数据') {
+//              this.selectedCondition.push('类别：' + text)
+//            } else {
+//              this.selectedCondition.push('文件类型：' + text)
+//            }
+//          }
+//        }
       },
-      deleteItem (e) {
-        let text = $(e.target).parent().parent().text()
-        for (this.i = 0; this.i < this.selectedCondition.length; this.i++) {
-          if (text === this.selectedCondition[this.i]) {
-            var index = this.i
-          }
-        }
+      // 删除所选搜索条件
+      deleteItem (index) {
         this.selectedCondition.splice(index, 1)
       },
+      // 用户点击搜索框，自动聚焦到搜索框
       focus () {
         document.querySelector('#searchInput').focus()
       },
@@ -143,48 +156,56 @@
   }
 </script>
 
-<style lang="scss" scoped>
-  .el-autocomplete {
-    width: 22em;
-  }
-  .middle {
-    font-size: 0.8em;
-    span {
-      margin-left: 1.2em;
-    }
-    >.el-button:nth-child(2) {
-      float: right;
-      margin-right: 1.5em;
-    }
-    .line {
-      height: 1px;
-      width: 95%;
-      background-color: #48576a;
-      margin: 1em auto;
-    }
-  }
-  .header{
-    .search-input{
+<style lang="scss">
+  #searchHeader-root {
+    .header {
+      .search-input {
+        margin-top: 0.5em;
+        height: 2em;
+        border: 1px solid #bfcbd9;
+        background-color: #fff;
         .el-button {
           position: relative;
           bottom: 0.7em;
           margin-left: 0.1em;
           font-size: 0.8em;
         }
-      margin-top: 0.5em;
-      input{
-        position: relative;
-        bottom: 0.5em;
-        height: 1.5em;
-        outline: none;
-        border: none;
-        vertical-align: baseline;
-        font-size: 1em;
+        input {
+          position: relative;
+          bottom: 0.5em;
+          height: 1.5em;
+          outline: none;
+          border: none;
+          vertical-align: baseline;
+          font-size: 1em;
+        }
       }
-      height: 2em;
-      border: 1px solid #bfcbd9;
-      background-color: #fff;
+    }
+    .middle {
+      padding: 1em 1.5em;
+    }
+    // 搜索条件标题样式
+    .search-condition-header {
+      .condition-title {
+        font-size: 1.1em;
+      }
+      .el-button {
+        float: right;
+        margin-right: 1.5em;
+        padding: 4px 7px;
+      }
+    }
 
+    // 搜索条件样式
+    .search-condition {
+      margin: 1em 0;
+      .item-title {
+        font-size: 1em;
+        margin: 1em 1em 1em 0;
+      }
+      span {
+        margin: 0 0.5em;
+      }
     }
   }
 </style>

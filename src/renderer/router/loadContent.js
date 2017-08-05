@@ -45,7 +45,7 @@ const routes = [
     components: {
       default: Search,
       ContentHeader: SearchHeader,
-      ContentBottom: ContentBottom
+      ContentBottom: List
     }
   },
   {

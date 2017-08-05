@@ -30,19 +30,23 @@
         <el-table-column
             type="index"
             label="序号"
-            width="80">
+            width="100"
+            sortable>
         </el-table-column>
         <el-table-column
             property="name"
-            label="文件名">
+            label="文件名"
+            sortable>
         </el-table-column>
         <el-table-column
             property="ctime"
-            label="创建时间">
+            label="创建时间"
+            sortable>
         </el-table-column>
         <el-table-column
             property="size"
-            label="文件大小">
+            label="文件大小"
+            sortable>
         </el-table-column>
         <el-table-column
             label="操作">
