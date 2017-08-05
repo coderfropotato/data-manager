@@ -1,5 +1,3 @@
-import NewFile from '@/components/NewFile/newFile'
-import NewDiskDir from '@/components/NewFile/newDiskFile'
 import NewSmartSortdir from '@/components/NewFile/newSmartSort'
 import NewDialog from '@/components/NewFile/newDialog'
 import NewFile from '@/components/NewDirectory/newFile'
@@ -13,7 +11,7 @@ const routes = [
     children: [
       {
         path: 'newdiskdir',
-        component: NewDiskDir
+        component: NewDiskDirectory
       },
       {
         path: 'newsmartsortdir',
@@ -22,7 +20,6 @@ const routes = [
       {
         path: 'newDialog',
         component: NewDialog
-        component: NewDiskDirectory
       }
     ]
   }
