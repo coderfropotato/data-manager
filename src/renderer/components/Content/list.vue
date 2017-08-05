@@ -2,9 +2,11 @@
   <div id="list-root">
     <div class="lists-display" v-if="status === 'Lists'">
       <div class="list-items">
-        <div class="list-item" v-for="(item,index) in tableData" :key="index">
+        <div class="list-item" v-for="(item,index) in filesData" :key="index" @click="showFileInfo(item)">
           <div class="file-name">
-            {{item.name}}
+            <el-tooltip :content="item.rowName" placement="right-start">
+              <span>{{item.name}}</span>
+            </el-tooltip>
           </div>
           <div class="create-time">
             {{item.ctime}}
@@ -21,7 +23,7 @@
       </div>
     </div>
     <div class="columns-display" v-if="status === 'Columns'">
-      <el-table :data="tableData"
+      <el-table :data="filesData"
                 highlight-current-row
                 style="width: 100%;"
                 @row-click="showFileInfo">
@@ -53,22 +55,17 @@
     <div class="grid-display" v-if="status === 'Grid'">
       <div class="grid-items">
         <el-row :gutter="20">
-          <el-col :span="8" v-for="(item,index) in tableData" :key="index">
+          <el-col :span="6" v-for="(item,index) in filesData" :key="index">
             <!--TODO：添加编辑按钮-->
-            <div class="grid-item">
-              <el-card>
-                <div class="card-inner">
-                  <div class="file-name">
-                    {{item.name}}
-                  </div>
-                  <div class="create-time">
-                    {{item.ctime}}
-                  </div>
-                  <div class="size">
-                    {{item.size}}
-                  </div>
-                </div>
-              </el-card>
+            <div class="grid-item"  @click="showFileInfo(item)">
+              <svg class="icon" aria-hidden="true">
+                <use xlink:href="#icon-file"></use>
+              </svg>
+              <div class="file-name">
+                <el-tooltip :content="item.rowName" placement="top">
+                  <span>{{item.name}}</span>
+                </el-tooltip>
+              </div>
             </div>
           </el-col>
         </el-row>
@@ -83,6 +80,7 @@
 </template>
 <script>
   import {mapState} from 'vuex'
+  import formatFileData from '@/assets/JS/formatFileData'
 
   export default {
     data () {
@@ -91,6 +89,19 @@
         count: 0
       }
     },
+    computed: mapState({
+      // 对列表数据进行处理
+      filesData: state => {
+        // 原始文件信息数据，文件名最大长度
+        return formatFileData(state.files.currentFileList, 10)
+      },
+      // 当前路径， 导航面包屑
+      currentPath: state => state.files.currentPath,
+      // 文件展示状态 list/column/grid
+      status: state => state.showControl.listDisplayStatus,
+      // 是否显示拖拽导入文件提示
+      dragFiles: state => state.showControl.dragShow
+    }),
     mounted () {
       // 监听列表区拖拽，有拖入则显示导入提示，拖出则隐藏提示
       let list = document.getElementById('list-root')
@@ -114,29 +125,13 @@
       // 监听拖拽，对导入的文件进行处理
       this.dragEvent()
     },
-    computed: mapState({
-      tableData: state => {
-        let rowListData = state.files.currentFileList
-        let tableData = []
-        // TODO 待检验
-        for (let item in rowListData) {
-          tableData.push(Object.assign(rowListData[item].basic, rowListData[item].path))
-        }
-        return tableData
-      },
-      currentPath: state => state.files.currentPath,
-      status: state => state.showControl.listDisplayStatus,
-      dragFiles: state => state.showControl.dragShow
-    }),
     methods: {
-      showFileInfo (row, event) {
+      showFileInfo (file) {
         // 获取文件的具体信息
-        // 待检验
-        let path = row.path
         this.$store.dispatch({
           type: 'getFileInfo',
-          path: path,
-          serialNumber: 1111
+          path: file.path,
+          serialNumber: file.serialNumber
         })
         // 显示文件信息区
         this.$store.commit('showFileInfo')
@@ -174,7 +169,7 @@
           // 重定向到导入文件页面
           // 设置拖拽区域隐藏
           this.$store.commit('toggleDragShow', false)
-          this.$router.push('/files/uploadfile')
+          this.$router.push('/files/importfile')
         }
         // 放下后，缺少拖出的计数，需重置为 0， 防止下次无法隐藏
         this.count = 0
@@ -194,12 +189,31 @@
   }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
   #list-root {
     min-height: 400px;
     position: relative;
     .el-table__body-wrapper {
       overflow: hidden;
+    }
+    .drag-zone {
+      .drag-inner {
+        position: absolute;
+        z-index: 100;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        font-size: 2em;
+        font-weight: 600;
+        text-align: center;
+        color: #edf7ff;
+        background-color: rgba(1, 1, 1, 0.5);
+      }
+
     }
   }
 
@@ -218,6 +232,7 @@
       height: 4em;
       padding: 0 2em;
       overflow: hidden;
+      cursor: pointer;
       .file-name {
         font-size: 1.1em;
         font-weight: 500;
@@ -242,42 +257,15 @@
 
   .grid-display {
     .grid-item {
-      margin: 1em;
-      .file-name {
-        font-size: 1.1em;
-        font-weight: 500;
-        height: 2em;
-      }
-      .create-time,
-      .size {
-        margin: 1em 0;
-      }
-    }
-  }
-
-  .el-card {
-    .card-inner {
-      margin: 1em;
-    }
-  }
-
-  .drag-zone {
-    .drag-inner {
-      position: absolute;
-      z-index: 100;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      top: 0;
-      left: 0;
-      height: 100%;
-      width: 100%;
-      font-size: 2em;
-      font-weight: 600;
       text-align: center;
-      color: #edf7ff;
-      background-color: rgba(1, 1, 1, 0.5);
+      margin: 1em;
+      .icon {
+        font-size: 3em;
+      }
+      .file-name {
+        font-size: 0.8em;
+        margin: 1em;
+      }
     }
-
   }
 </style>

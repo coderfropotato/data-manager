@@ -9,7 +9,7 @@ import Index from '@/components/index'
  */
 
 import LoadContent from './loadContent'
-import NewFile from './newFile'
+import NewFile from './newDirectory'
 
 Vue.use(Router)
 
