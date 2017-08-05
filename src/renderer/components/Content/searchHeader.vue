@@ -21,7 +21,7 @@
         <el-col :span="20">
           <div class="grid-content">
             <div class="search-input" @click="focus">
-              <el-button v-for="item in selectedCondition" size="mini">{{item}}<i class="el-icon-circle-close" @click="deleteItem"></i></el-button>
+              <el-button v-for="item in selectedCondition" :key="item" size="mini">{{item}}<i class="el-icon-circle-close" @click="deleteItem"></i></el-button>
               <input type="text" id="searchInput" @keyup.enter="search" v-model="input">
             </div>
           </div>

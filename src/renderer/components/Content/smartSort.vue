@@ -2,21 +2,21 @@
   <div class="smartSort-root">
     <el-row type="flex">
       <el-col :span="7">
-        <el-row v-for="year in years">
+        <el-row v-for="year in years" :key="year">
           <span @click="getAuthors" style="display: inline-block;width: 9.5em">{{year}}</span>
           <i class="el-icon-caret-right" style="float: right"></i>
         </el-row>
       </el-col>
       <el-col :span="1"></el-col>
       <el-col :span="7" v-show="showAuthors">
-        <el-row v-for="author in authors">
+        <el-row v-for="author in authors" :key="author">
           <span @click="getArticles" style="display: inline-block;width: 9.5em">{{author}}</span>
           <i class="el-icon-caret-right" style="float: right"></i>
         </el-row>
       </el-col>
       <el-col :span="1"></el-col>
       <el-col :span="7" v-show="showArticles">
-        <el-row v-for="article in articles">{{article}}</el-row>
+        <el-row v-for="article in articles" :key="article">{{article}}</el-row>
       </el-col>
     </el-row>
   </div>
