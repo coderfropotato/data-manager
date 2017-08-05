@@ -2,6 +2,7 @@
   <div class="searchHeader-root">
     <div class="header">
       <el-row type="flex" class="header-inner">
+        <el-col :span="1"></el-col>
         <!--下拉菜单-->
         <el-col :span="5">
           <div class="grid-content">
@@ -21,7 +22,7 @@
           <div class="grid-content">
             <div class="search-input" @click="focus">
               <el-button v-for="item in selectedCondition" size="mini">{{item}}<i class="el-icon-circle-close" @click="deleteItem"></i></el-button>
-              <input type="text" id="searchInput">
+              <input type="text" id="searchInput" @keyup.enter="search" v-model="input">
             </div>
           </div>
         </el-col>
@@ -78,7 +79,8 @@
             value: 'Grid',
             label: 'Grid'
           }
-        ]
+        ],
+        input: ''
       }
     },
     computed: {
@@ -93,16 +95,6 @@
       }
     },
     methods: {
-      // 搜索框搜索结果建议
-      querySearch (queryString, cb) {
-        let temp = [{
-          value: '建议'
-        }]
-        cb(temp)
-      },
-      // 处理选择搜索结果建议
-      handleSelect () {
-      },
       fold () {
         this.show = !this.show
       },
@@ -143,6 +135,9 @@
       },
       focus () {
         document.querySelector('#searchInput').focus()
+      },
+      search () {
+        console.log(this.input)
       }
     }
   }
