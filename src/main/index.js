@@ -32,22 +32,31 @@ function createWindow () {
 }
 
 // 打开添加文件窗口
+let newAddFileWin
 ipcMain.on('addFile', (event, arg) => {
   if (arg.API === 'open') {
     let URL = arg.URL
-    let newWin = new BrowserWindow({
+    newAddFileWin = new BrowserWindow({
       height: 500,
       width: 800
     })
-    newWin.loadURL(baseURL + URL)
+    newAddFileWin.loadURL(baseURL + URL)
+  }
+  if (arg.API === 'close') {
+    newAddFileWin.close()
   }
 })
 
 // 打开浏览本地文件的窗口
-ipcMain.on('open-file-dialog', function (event) {
+ipcMain.on('open-file-dialog', function (event, type) {
+  // 默认只能打开单个文件夹
+  let properties = ['openFile', 'openDirectory']
+  if (type !== 'single') {
+    properties.push('multiSelections')
+  }
   dialog.showOpenDialog({
     // 只打开文件夹
-    properties: ['openFile', 'openDirectory', 'multiSelections']
+    properties
   }, function (files) {
     if (files) {
       event.sender.send('selected-directory', files)
