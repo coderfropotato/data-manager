@@ -1,5 +1,7 @@
 import NewFile from '@/components/NewFile/newFile'
 import NewDiskDir from '@/components/NewFile/newDiskFile'
+import NewSmartSortdir from '@/components/NewFile/newSmartSort'
+import NewDialog from '@/components/NewFile/newDialog'
 
 const routes = [
   {
@@ -10,6 +12,14 @@ const routes = [
       {
         path: 'newdiskdir',
         component: NewDiskDir
+      },
+      {
+        path: 'newsmartsortdir',
+        component: NewSmartSortdir
+      },
+      {
+        path: 'newDialog',
+        component: NewDialog
       }
     ]
   }

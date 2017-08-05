@@ -42,6 +42,14 @@ ipcMain.on('addFile', (event, arg) => {
     newWin.loadURL(baseURL + URL)
   }
 })
+ipcMain.on('openDialog', (event, arg) => {
+  let URL = arg.URL
+  let newWin = new BrowserWindow({
+    height: 200,
+    width: 400
+  })
+  newWin.loadURL(baseURL + URL)
+})
 
 // 打开浏览本地文件的窗口
 ipcMain.on('open-file-dialog', function (event) {
