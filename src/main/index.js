@@ -30,20 +30,24 @@ function createWindow () {
     mainWindow = null
   })
 }
+
+// 打开添加文件窗口
 ipcMain.on('addFile', (event, arg) => {
   if (arg.API === 'open') {
     let URL = arg.URL
     let newWin = new BrowserWindow({
-      height: 400,
-      width: 700
+      height: 500,
+      width: 800
     })
     newWin.loadURL(baseURL + URL)
   }
 })
 
+// 打开浏览本地文件的窗口
 ipcMain.on('open-file-dialog', function (event) {
   dialog.showOpenDialog({
-    properties: ['openFile', 'openDirectory']
+    // 只打开文件夹
+    properties: ['openFile', 'openDirectory', 'multiSelections']
   }, function (files) {
     if (files) {
       event.sender.send('selected-directory', files)
@@ -51,6 +55,7 @@ ipcMain.on('open-file-dialog', function (event) {
   })
 })
 
+// 监听渲染进程发送的文件更改消息，弹出通知窗口
 ipcMain.on('files-modified', function (event) {
   const options = {
     type: 'info',

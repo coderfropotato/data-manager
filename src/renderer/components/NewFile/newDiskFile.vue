@@ -1,96 +1,170 @@
 <template>
   <div id="newDiskFile-root">
-    <div class="top">
-      <span>别名</span>
-      <el-input  v-model="alias" size="mini">
-      </el-input>
-      <span>数据源</span>
-      <el-select v-model="dataSource"  size="mini" clearable>
-        <el-option
-          v-for="item in options"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value">
-        </el-option>
-      </el-select>
-    </div>
-    <div class="area" v-if="dataSource=='远程服务器'">
-      <span>协议</span>
-      <el-select v-model="protocol" size="mini">
-        <el-option
-          v-for="item in options2"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value">
-        </el-option>
-      </el-select>
-      <div class="Host">
-        <span>主机</span>
-        <el-input  v-model="remoteServer.host" size="mini">
-        </el-input>
-        <span>端口号</span>
-        <el-input  v-model="remoteServer.port" size="mini">
-        </el-input>
-      </div>
-      <div class="username">
-        <span style="margin-right: 0em">用户名</span>
-        <el-input  v-model="remoteServer.username" size="mini">
-        </el-input>
-        <span style="margin-right: 2em">密码</span>
-        <el-input  v-model="remoteServer.password" size="mini">
-        </el-input>
-        <el-checkbox v-model="checked" style="margin-left: 1em">使用密钥</el-checkbox>
-      </div>
-    </div>
-    <div class="path">
-      <span>路径</span>
-      <el-input  v-model="path" size="mini">
-      </el-input>
-      <el-button size="mini" v-on:click="showFilename" style="width: 4em">浏览</el-button>
-    </div>
-    <el-button size="mini" style="margin-left: 33em;margin-top: 1em;" v-on:click="showAdvanced=!showAdvanced">展开高级选项</el-button>
-    <div v-if="showAdvanced">
-      <div class="line"></div>
-      <div class="advancedOptions">
-        <div>
-          <span style="margin-right: 4em">为文件夹添加属性</span>
-          <span>模板</span>
-          <el-select v-model="model"  size="mini" clearable style="width: 8em">
-            <el-option
-              v-for="item in options3"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
-          </el-select>
+    <div class="newDiskFile-inner">
+      <!--基本设置-->
+      <div class="basic-settings">
+        <!--从本地磁盘添加文件目录-->
+        <div class="localDisk">
+          <el-row :gutter="20">
+            <el-col :span="3">
+              <span>别名</span>
+            </el-col>
+            <el-col :span="8">
+              <el-input v-model="alias" size="small">
+              </el-input>
+            </el-col>
+            <el-col :span="3">
+              <span>数据源</span>
+            </el-col>
+            <el-col :span="8">
+              <el-select v-model="dataSource" size="small" clearable>
+                <el-option
+                    v-for="item in dataSourceOptions"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                </el-option>
+              </el-select>
+            </el-col>
+          </el-row>
         </div>
-        <div class="property">
-          <div class="projectName">
-            <span>项目</span>
-            <el-input placeholder="请输入" icon="close"  v-model="advanced.project" :on-icon-click="clearProject" size="mini">
-            </el-input>
+
+        <!--从远程服务器添加文件目录-->
+        <div class="area" v-if="dataSource=='remoteServer'">
+          <el-row :gutter="20">
+            <el-col :span="3"><span>协议</span></el-col>
+            <el-col :span="8">
+              <el-select v-model="protocol" size="small">
+                <el-option
+                    v-for="item in protocolOptions"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                </el-option>
+              </el-select>
+            </el-col>
+          </el-row>
+          <div class="Host">
+            <el-row :gutter="20">
+              <el-col :span="3">
+                <span>主机</span>
+              </el-col>
+              <el-col :span="8">
+                <el-input v-model="remoteServer.host" size="small">
+                </el-input>
+              </el-col>
+              <el-col :span="3">
+                <span>端口号</span>
+              </el-col>
+              <el-col :span="6">
+                <el-input v-model="remoteServer.port" size="small">
+                </el-input>
+              </el-col>
+            </el-row>
           </div>
-          <div class="year">
-            <span>年份</span>
-            <el-input placeholder="请输入" icon="close" v-model="advanced.year" :on-icon-click="clearYear" size="mini">
-            </el-input>
+          <div class="username">
+            <el-row :gutter="20">
+              <el-col :span="3">
+                <span>用户名</span>
+              </el-col>
+              <el-col :span="8">
+                <el-input v-model="remoteServer.username" size="small">
+                </el-input>
+              </el-col>
+              <el-col :span="3">
+                <span>密码</span>
+              </el-col>
+              <el-col :span="6">
+                <el-input v-model="remoteServer.password" size="small">
+                </el-input>
+              </el-col>
+              <el-col :span="2">
+                <el-checkbox v-model="useKey">使用密钥</el-checkbox>
+              </el-col>
+            </el-row>
           </div>
-          <div class="principal">
-            <span style="margin-right: 0em">负责人</span>
-            <el-input placeholder="请输入" icon="close" v-model="advanced.principal" :on-icon-click="clearPrincipal" size="mini">
-            </el-input>
+        </div>
+        <!--文件目录路径-->
+        <div class="path">
+          <el-row :gutter="20">
+            <el-col :span="3">
+              <span>路径</span>
+            </el-col>
+            <el-col :span="17">
+              <el-input v-model="path" size="small">
+              </el-input>
+            </el-col>
+            <el-col :span="2">
+              <el-button size="small" @click="showFilename">浏览</el-button>
+            </el-col>
+          </el-row>
+
+        </div>
+      </div>
+      <!--展开高级选项按钮-->
+      <div class="show-advanced">
+        <el-row>
+          <el-col :span="22">
+            <el-button size="small" @click="showAdvanced=!showAdvanced">展开高级选项
+            </el-button>
+          </el-col>
+        </el-row>
+      </div>
+      <!--高级选项-->
+      <div class="advanced-options" v-if="showAdvanced">
+        <div>
+          <el-row :gutter="20">
+            <el-col :span="8">
+              <span>为文件夹添加属性</span>
+            </el-col>
+            <el-col :span="3">
+              <span>模板</span>
+            </el-col>
+            <el-col :span="8">
+              <!--当用户选择后，通知用户添加自定义条目-->
+              <el-select v-model="template" size="small" clearable @change="noticeAddCustom">
+                <el-option
+                    v-for="item in templateOptions"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                </el-option>
+              </el-select>
+            </el-col>
+          </el-row>
+        </div>
+        <div class="project-attr">
+          <div class="attr-item" v-for="item in projectAttr">
+            <el-row :gutter="20">
+              <el-col :span="3">
+                <span>{{item.name}}</span>
+              </el-col>
+              <el-col :span="8">
+                <el-input placeholder="请输入" icon="close" v-model="item.value" :on-icon-click="clearProject"
+                          size="small">
+                </el-input>
+              </el-col>
+            </el-row>
           </div>
-          <el-button size="mini" style="width: 3em;margin: 1.5em 0 0 2em" v-on:click="add">+</el-button>
-          <div class="item" v-if="showItem">
-            <el-select v-model="items"  size="mini" clearable style="width: 5.5em">
-              <el-option
-                v-for="item in options4"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
-            <el-input  v-model="input8" size="mini"></el-input>
+          <el-button size="small" @click="addCustomOption" v-if="template === 'custom'">+</el-button>
+          <div class="custom" v-if="template === 'custom'">
+            <div class="custom-item" v-for="custom in customChoose">
+              <el-row :gutter="20">
+                <el-col :span="4">
+                  <el-select v-model="custom.key" size="small" cleara>
+                    <el-option
+                        v-for="item in customOptions"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                    </el-option>
+                  </el-select>
+                </el-col>
+                <el-col :span="8">
+                  <el-input v-model="custom.value" size="small"></el-input>
+                </el-col>
+              </el-row>
+            </div>
           </div>
         </div>
       </div>
@@ -99,34 +173,50 @@
 </template>
 <script>
   import {ipcRenderer} from 'electron'
+
   export default {
     data () {
       return {
-        options: [{
-          value: '本地磁盘或外接设备',
+        dataSourceOptions: [{
+          value: 'localDisk',
           label: '本地磁盘或外接设备'
         }, {
-          value: '远程服务器',
+          value: 'remoteServer',
           label: '远程服务器'
         }],
-        options2: [{
+        protocolOptions: [{
           value: 'SSH',
           label: 'SSH'
         }],
-        options3: [{
-          value: '项目文件夹',
+        templateOptions: [{
+          value: 'project',
           label: '项目文件夹'
         }, {
-          value: '自定义文件夹',
+          value: 'custom',
           label: '自定义文件夹'
         }],
-        options4: [{
-          value: '条目一',
-          label: '条目一'
-        }, {
-          value: '条目二',
-          label: '条目二'
-        }],
+        projectAttr: [
+          {
+            name: '项目',
+            value: ''
+          }, {
+            name: '年份',
+            value: ''
+          }, {
+            name: '负责人',
+            value: ''
+          }
+        ],
+        customOptions: [
+          {
+            value: '条目一',
+            label: '条目一'
+          }, {
+            value: '条目二',
+            label: '条目二'
+          }
+        ],
+        customChoose: [],
         alias: '',
         path: '',
         remoteServer: {
@@ -135,17 +225,10 @@
           username: '',
           password: ''
         },
-        advanced: {
-          project: '',
-          year: '',
-          principal: ''
-        },
-        dataSource: '本地磁盘或外接设备',
+        dataSource: 'localDisk',
         protocol: 'SSH',
-        model: '项目文件夹',
-        items: '条目一',
-        checked: true,
-        showItem: false,
+        template: 'project',
+        useKey: true,
         showAdvanced: false
       }
     },
@@ -153,15 +236,11 @@
       clearProject (ev) {
         this.advanced.project = ''
       },
-      clearYear () {
-        this.advanced.year = ''
-      },
-      clearPrincipal () {
-        this.advanced.principal = ''
-      },
-      add () {
-        this.model = '自定义文件夹'
-        this.showItem = !this.showItem
+      addCustomOption () {
+        this.customChoose.push({
+          key: '',
+          value: ''
+        })
       },
       showFilename () {
         ipcRenderer.send('open-file-dialog')
@@ -170,62 +249,52 @@
           console.log(vueThis)
           vueThis.path = `${path}`
         })
+      },
+      noticeAddCustom (e) {
+        if (e === 'custom') {
+          this.$notify.info({
+            title: '提示',
+            message: '请点击下方的加号添加自定义条目',
+            duration: 0
+          })
+        }
       }
     }
   }
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
+  html,
+  body {
+    height: 100%;
+    overflow: hidden;
+  }
+
   #newDiskFile-root {
-    font-size: 15px;
-    span {
-      margin: 1em 1em 1em 1.5em;
-    }
-    .top {
-      margin-top: 1em;
-      .el-input {
-        width: 12em;
-        }
-    }
-    .path {
-      margin-top: 2em;
-      .el-input {
-        width: 25em;
-      }
-    }
-    .area {
-      margin-top: 1.5em;
-      .username {
-        margin-top: 1.5em;
-      }
-      .Host {
-        margin-top: 1.5em;
-      }
-    }
+    height: 100%;
+    width: 100%;
+  }
+
+  .newDiskFile-inner {
+    width: 80%;
+    margin: 2em auto;
     .el-input {
-      width: 12em;
+      display: inline-block;
     }
-    .line {
-      height: 1px;
-      width: 90%;
-      background-color: #48576a;
-      margin: 1em auto;
+  }
+
+  .el-col {
+    margin: 1em 0;
+  }
+
+  .show-advanced {
+    .el-button {
+      float: right;
     }
-    .projectName {
-      margin-top: 1em;
-    }
-    .year {
-      margin-top: 1em;
-    }
-    .principal {
-      margin-top: 1em;
-    }
-    .item {
-      margin: 1em 0 0 1.5em;
-    }
-    .property {
-      .el-input {
-        width: 12em;
-      }
+  }
+
+  .advanced-options {
+    i.el-input__icon.el-icon-close {
+      margin-right: -4em !important;
     }
   }
 </style>
