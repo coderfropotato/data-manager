@@ -52,7 +52,6 @@ const actions = {
   getSortFileList ({commit}, path) {
     sendMessage('getSortFileList', {path}).then(data => {
       let fileList = data.fileList
-      // console.log(data)
       commit(types.SET_SORT_FILE_LIST, fileList)
     })
   },
