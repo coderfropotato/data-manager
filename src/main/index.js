@@ -85,6 +85,11 @@ ipcMain.on('files-modified', function (event) {
   })
 })
 
+// 中间转发数据
+ipcMain.on('change-data', (event, data) => {
+  mainWindow.webContents.send('change-data', data)
+})
+
 app.on('ready', createWindow)
 
 app.on('window-all-closed', () => {

@@ -306,11 +306,10 @@
         let projectInfo = []
         for (let item in this.projectAttr) {
           projectInfo.push({
-            attr: this.projectInfo[item].attr,
-            value: this.projectInfo[item].value
+            attr: this.projectAttr[item].attr,
+            value: this.projectAttr[item].value
           })
         }
-        console.log(this.projectAttr)
         // 将所有文件夹信息汇总
         let directoryInfo = {
           alias: this.alias,
@@ -320,7 +319,7 @@
           projectInfo,
           customAttr: this.customChoose
         }
-        console.log(directoryInfo)
+        ipcRenderer.send('change-data', directoryInfo)
       }
     }
   }
