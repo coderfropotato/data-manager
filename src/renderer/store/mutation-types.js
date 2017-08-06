@@ -27,3 +27,6 @@ export const SET_NEW_DISK_DIR_INFO = 'setNewDiskDirInfo'
 export const SET_NEW_SORT_DIR_INFO = 'setNewSortDirInfo'
 // 临时用来显示智能视图信息
 export const ADD_SMART_SORT = 'addSmartSort'
+export const CHANGE_MODIFIED_FILES_TREE_NODE = 'changeModifiedFilesTreeNode'
+export const SET_NODE_DATA = 'setNodeData'
+export const RENEW_NODE_DATA = 'renewNodeData'

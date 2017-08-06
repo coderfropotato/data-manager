@@ -43,7 +43,10 @@
     data () {
       return {
         // 是否显示commit
-        showCommitOrIgnore: false
+        showCommitOrIgnore: false,
+
+        // 所有选中的文件或文件夹路径，此时已准备提交，有可能多于已打好标签的文件
+        selectedModifiedFiles: []
       }
     },
 
@@ -74,6 +77,7 @@
       ...mapActions([
         'getModifiedFiles',  // 获取修改的文件
         'getFileInfo', // 获取文件/文件夹信息
+        'setNodeData', // 设置当前点击节点的数据
         'showModifiedFileInfo'  // 右侧显示修改文件的信息
       ]),
 
@@ -87,13 +91,16 @@
           // 判断status
           if (data.status === -1) {
             color = 'red'
-            tag = '已删除'
+            tag = '最近删除'
           } else if (data.status === 0) {
             color = 'gray'
-            tag = '已修改'
+            tag = '最近修改'
           } else if (data.status === 1) {
             color = 'green'
-            tag = '已新增'
+            tag = '最近新增'
+          } else if (data.status.indexOf('tagged') !== -1) {
+            color = 'orange'
+            tag = '已打标签'
           }
 
           return h(
@@ -125,7 +132,13 @@
         // 获取该节点的基本信息
         let serialNumber = data.path.split('/')[0]
         let path = data.path.split(serialNumber)[1]
-        let status = data.status ? data.status : 1  // 用户选中的是某个上级文件夹，则status为1
+
+        let status
+        if (data.status) {
+          status = data.status > 0 ? 0 : 1    // 新增文件传status=0，删除修改传status=1
+        } else {
+          status = 1  // 点选没有修改信息的文件夹传status=1
+        }
 
         // 生成payload
         let payload = {serialNumber: serialNumber, path: path, status: status}
@@ -135,6 +148,9 @@
 
         // 右侧展示文件信息
         this.showModifiedFileInfo()
+
+        // 设置节点信息
+        this.setNodeData(data)
       },
 
       // 处理选中节点
@@ -149,13 +165,15 @@
 
       // 提交选中的修改文件
       commitSelectedFiles () {
-
+        this.selectedModifiedFiles = this.$refs.tree.getCheckedKeys()
+        console.log(this.selectedModifiedFiles)
       },
 
       // 忽略选中的文件
       ignoreSelectedFiles () {
 
       }
+
     }
   }
 
