@@ -48,10 +48,10 @@ function formatFileData (data, maxLength) {
     fileInfo.serialNumber = isArray ? rowListData[item].serial_number : ''
     // 格式化创建时间
     fileInfo.ctime = formatDate(fileInfo.ctime)
-    fileInfo.rowName = fileInfo.name
+    fileInfo.rowName = fileInfo.filename
     // 格式化文件名，如果文件名大于某个长度，则做截断处理
-    if (fileInfo.name.length > maxLength) {
-      fileInfo.name = fileInfo.name.substring(0, maxLength - 1) + '...'
+    if (fileInfo.filename.length > maxLength) {
+      fileInfo.filename = fileInfo.filename.substring(0, maxLength - 1) + '...'
     }
     // 格式化文件大小
     let size = fileInfo.size
