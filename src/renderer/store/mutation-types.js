@@ -16,6 +16,8 @@ export const SET_FILE_SORTS = 'setFileSorts'
 export const SET_LIST_DISPLAY_STATUS = 'setFileDisplayStatus'
 export const TOGGLE_DRAG_SHOW = 'toggleDragShow'
 export const ADD_IMPORT_FILES = 'addImportFiles'
+export const SHOW_MODIFIED_FILE_INFO = 'showModifiedFileInfo'
+export const ADD_TAGGED_MODIFIED_FILE = 'addTaggedModifiedFile'
 export const GET_AUTHORS = 'getAuthors'
 // 设置新增智能视图信息
 export const SET_NEW_SMART_SORT_INFO = 'setNewSmartSortInfo'

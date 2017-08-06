@@ -1,17 +1,30 @@
 <template>
     <div id="file-status-root">
-        所有变更
-        <el-tree :data="modifiedFiles"
-                 :expand-on-click-node="false"
-                 :render-content="renderContent"
-                 @node-click="handleNodeClick"
-                 @check-change="handleCheckChange"
-                 :default-expand-all="true"
-                 :show-checkbox="true"
-                 ref="tree"
-                 node-key="path"
-                 :highlight-current="true"
-        ></el-tree>
+        <!--标题-->
+        <div id="file-status-title">
+            所有变更
+        </div>
+        <!--文件树-->
+        <div id="file-status-tree">
+            <el-tree :data="modifiedFiles"
+                     :expand-on-click-node="false"
+                     :render-content="renderContent"
+                     @node-click="handleNodeClick"
+                     @check-change="handleCheckChange"
+                     :default-expand-all="true"
+                     :show-checkbox="true"
+                     ref="tree"
+                     node-key="path"
+                     :highlight-current="true"
+            ></el-tree>
+        </div>
+        <!--提交按钮-->
+        <div id="file-status-commit">
+            <span id="commit-buttons" v-if="showCommitOrIgnore">
+                <el-button type="primary" size="small" @click="commitSelectedFiles">提交选中的文件</el-button>
+                <el-button size="small" @click="ignoreSelectedFiles">忽略选中的文件</el-button>
+            </span>
+        </div>
     </div>
 </template>
 
@@ -23,7 +36,15 @@
 
     // mounted时加载
     mounted () {
-      this.getModifiedFiles()   // 获取修改文件
+      this.getModifiedFiles()  // 获取修改文件
+      this.showFileInfo = false // 刚刚打开时不显示右侧文件信息
+    },
+
+    data () {
+      return {
+        // 是否显示commit
+        showCommitOrIgnore: false
+      }
     },
 
     computed: mapState({
@@ -33,19 +54,31 @@
       // 变更文件树
       modifiedFilesTree: state => state.modified.modifiedFilesTree,
 
-      // 当前选中的变更文件集合
-      activeModifiedFilesSet: state => state.modified.activeModifiedFilesSet
+      // 当前选中文件/文件夹的基本信息
+      basicInfo: state => state.fileInfo.basicInfo,
+
+      // 所有打好标记的文件
+      taggedModifiedFiles: state => state.modified.taggedModifiedFiles
 
     }),
+
+    watch: {
+      // 观察所有打好标记的文件，若有新增或删除，重新渲染文件树的样式
+      taggedModifiedFiles () {
+
+      }
+    },
 
     methods: {
       // 映射Actions
       ...mapActions([
-        'getModifiedFiles'  // 获取修改的文件
+        'getModifiedFiles',  // 获取修改的文件
+        'getFileInfo', // 获取文件/文件夹信息
+        'showModifiedFileInfo'  // 右侧显示修改文件的信息
       ]),
 
       // 渲染状态标签
-      renderContent (h, { node, data }) {
+      renderContent (h, {node, data}) {
         // 带status节点
         if (data.status != null) {
           let color = null
@@ -68,9 +101,11 @@
             [
               h('span', node.label),
               h('el-tag',
-                {style: {
-                  backgroundColor: color
-                }},
+                {
+                  style: {
+                    backgroundColor: color
+                  }
+                },
                 tag)
             ]
           )
@@ -87,28 +122,39 @@
 
       // 处理点击节点事件
       handleNodeClick (data) {
-        // 是否可选中
-        if (data.status) {
-          let keys = data.path.split('/')
-          let tempTree = this.modifiedFilesTree
-          // 逐层进入
-          for (let i = 1; i < keys.length; i++) {
-            tempTree = tempTree[keys[i]]
-          }
-          // 结果
-          console.log('ctime', tempTree['__info__']['ctime'])
-          console.log('size', tempTree['__info__']['size'])
-        }
+        // 获取该节点的基本信息
+        let serialNumber = data.path.split('/')[0]
+        let path = data.path.split(serialNumber)[1]
+        let status = data.status ? data.status : 1  // 用户选中的是某个上级文件夹，则status为1
+
+        // 生成payload
+        let payload = {serialNumber: serialNumber, path: path, status: status}
+
+        // 发送请求
+        this.getFileInfo(payload)
+
+        // 右侧展示文件信息
+        this.showModifiedFileInfo()
       },
 
       // 处理选中节点
       handleCheckChange () {
-        console.clear()
-        this.activeModifiedFilesSet.clear()
-        this.activeModifiedFilesSet.add(this.$refs.tree.getCheckedKeys())   // 获取选中的变更文件并添加至Set中
-        for (let item of this.activeModifiedFilesSet.values()) {
-          console.log(item)
+        // 如果选中多个文件显示提交或忽略的按钮
+        if (this.$refs.tree.getCheckedNodes().length > 0) {
+          this.showCommitOrIgnore = true
+        } else {    // 否则不显示按钮
+          this.showCommitOrIgnore = false
         }
+      },
+
+      // 提交选中的修改文件
+      commitSelectedFiles () {
+
+      },
+
+      // 忽略选中的文件
+      ignoreSelectedFiles () {
+
       }
     }
   }
