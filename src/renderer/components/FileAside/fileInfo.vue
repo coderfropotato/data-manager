@@ -10,7 +10,7 @@
       <span class="title">基本信息</span>
       <div class="basic-info-items">
         <el-tooltip :content="basicInfo.rowName" placement="top">
-          <span class="item-name">{{basicInfo.name}}</span>
+          <span class="item-name">{{basicInfo.filename}}</span>
         </el-tooltip>
         <span>文件类型：{{basicInfo.type}}</span>
         <span>文件大小：{{basicInfo.size}}</span>

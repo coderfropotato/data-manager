@@ -94,6 +94,9 @@
       }
     },
     mounted () {
+      // 重置列表数据，防止和搜索组件数据混合
+      this.$store.commit('setFileList', [])
+      // 插入文件小图标
       this.insertFileIcon()
     },
     computed: mapState({

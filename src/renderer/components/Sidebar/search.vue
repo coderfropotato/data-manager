@@ -5,7 +5,6 @@
         <span class="title">搜索引擎</span>
         <el-checkbox :indeterminate="isIndeterminateAll" v-model="checkAll"
                      @change="handleCheckAllChange"></el-checkbox>
-        <!--<el-button size="mini" @click="trigShow" data-name="allFiles"></el-button>-->
         <!--全选按钮-->
       </div>
       <div class="local-data">
@@ -40,7 +39,7 @@
   import {mapState} from 'vuex'
 
   let localSearchOptions = ['HKFDKUIYER', 'JFLDLKLNKLJ', 'JILFD']
-  let webSearchOptions = ['NCIC', 'ABC', 'Easy BCD']
+  let webSearchOptions = []
   export default {
     data () {
       return {
@@ -68,11 +67,15 @@
     computed: mapState({
       // localSearchEngines: state => state.files.allFiles
     }),
+    mounted () {
+      this.checkAllWeb = this.webSearchEngines.length === 0
+      this.checkAllLocal = this.localSearchEngines.length === 0
+    },
     methods: {
       // 全部搜索全选
       handleCheckAllChange (event) {
         this.localCheckedSearch = event.target.checked ? this.localSearchEngines : []
-        this.webCheckedSearch = event.target.checked ? webSearchOptions : []
+        this.webCheckedSearch = event.target.checked ? this.webSearchEngines : []
         this.checkAllLocal = event.target.checked
         this.checkAllWeb = event.target.checked
         // 设置选框状态
@@ -123,10 +126,10 @@
 </script>
 <style lang="scss">
   #search-root {
-    .search-engines{
+    .search-engines {
       margin: 0 1em;
     }
-    .el-checkbox{
+    .el-checkbox {
       float: right;
       margin-right: 2em;
     }
@@ -149,7 +152,7 @@
       .disk {
         padding: 0.3em 0em 0.3em 1em;
       }
-      .website{
+      .website {
         margin: 0.3em 0;
       }
     }

@@ -6,7 +6,7 @@ import * as types from '@/store/mutation-types'
 import packUpModified from '@/assets/JS/convertJSON'
 
 // 给node底下的所有子节点都打上标签
-function tagYouAll(node) {
+function tagYouAll (node) {
   node.status = node.status + '*' + 'tagged'
   if (node.hasOwnProperty('children')) {
     for (let childNode in node.children) {
