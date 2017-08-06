@@ -6,8 +6,13 @@ import * as types from '@/store/mutation-types'
 import packUpModified from '@/assets/JS/convertJSON'
 
 // 给node底下的所有子节点都打上标签
-function tagYouAll (node) {
+function tagYouAll (node, func, serialNumber, newAttributes) {
+  // console.log(func, serialNumber, newAttributes)
   node.status = node.status + '*' + 'tagged'
+  if (node.hasOwnProperty('path')) {
+    // func({path: serialNumber + node.path, newAttributes: newAttributes})
+    func()
+  }
   if (node.hasOwnProperty('children')) {
     for (let childNode in node.children) {
       tagYouAll(node.children[childNode])
@@ -64,8 +69,8 @@ const actions = {
   },
 
   // 更新当前节点的数据
-  renewNodeData ({ commit }, newData) {
-    commit(types.RENEW_NODE_DATA, newData)
+  renewNodeData ({ commit }, payload) {
+    commit(types.RENEW_NODE_DATA, payload)
   }
 }
 
@@ -94,9 +99,10 @@ const mutations = {
   },
 
   // 更新当前节点及子节点数据
-  [types.RENEW_NODE_DATA] (state, newData) {
+  [types.RENEW_NODE_DATA] (state, payload) {
     // 打标签啊打标签
-    tagYouAll(state.nodeData)
+    // console.log(payload)
+    tagYouAll(state.nodeData, payload.func, payload.serialNumber, payload.newAttributes)
   }
 }
 
