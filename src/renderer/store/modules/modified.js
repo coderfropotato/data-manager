@@ -4,7 +4,7 @@
 import sendMessage from '@/api'
 import * as types from '@/store/mutation-types'
 import packUpModified from '@/assets/JS/convertJSON'
-import {ipcRenderer} from 'electron'
+// import {ipcRenderer} from 'electron'
 
 const state = {
   modifiedFiles: [],  // 最近变更的文件，供Element-UI渲染

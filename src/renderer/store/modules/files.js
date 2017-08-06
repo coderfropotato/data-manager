@@ -52,7 +52,7 @@ const actions = {
   getSortFileList ({commit}, path) {
     sendMessage('getSortFileList', {path}).then(data => {
       let fileList = data.fileList
-      commit(types.SET_SORT_FILE_LIST, fileList)
+      commit(types.SET_FILE_LIST, fileList)
     })
   },
 
@@ -118,8 +118,8 @@ const mutations = {
     state.sortFileTree.push(temp)
   },
 
-  // 设置分类文件列表信息
-  [types.SET_SORT_FILE_LIST] (state, response) {
+  // 设置文件列表信息
+  [types.SET_FILE_LIST] (state, response) {
     state.currentFileList = response
   },
 

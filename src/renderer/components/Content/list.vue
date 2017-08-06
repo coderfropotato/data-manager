@@ -5,7 +5,7 @@
         <div class="list-item" v-for="(item,index) in filesData" :key="index" @click="showFileInfo(item)">
           <div class="file-name">
             <el-tooltip :content="item.rowName" placement="right-start">
-              <span>{{item.name}}</span>
+              <span>{{item.filename}}</span>
             </el-tooltip>
           </div>
           <div class="create-time">
@@ -34,7 +34,7 @@
             sortable>
         </el-table-column>
         <el-table-column
-            property="name"
+            property="filename"
             label="文件名"
             sortable>
         </el-table-column>
@@ -67,7 +67,7 @@
               </svg>
               <div class="file-name">
                 <el-tooltip :content="item.rowName" placement="top">
-                  <span>{{item.name}}</span>
+                  <span>{{item.filename}}</span>
                 </el-tooltip>
               </div>
             </div>

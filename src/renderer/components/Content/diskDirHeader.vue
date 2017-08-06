@@ -17,7 +17,7 @@
           </div>
         </el-col>
         <!--路径面包屑-->
-        <el-col :span="14" id="scrollBar">
+        <el-col :span="12" id="scrollBar">
           <div class="scrollBar-inner">
             <div class="grid-content">
               <el-breadcrumb separator=">" class="pathArea">
@@ -29,7 +29,7 @@
           </div>
         </el-col>
         <!--搜索框-->
-        <el-col :span="6">
+        <el-col :span="8">
           <div class="grid-content">
             <el-autocomplete
                 class="inline-input"
