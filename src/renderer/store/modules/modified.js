@@ -99,10 +99,8 @@ const mutations = {
 
   // 更新当前节点及子节点数据
   [types.RENEW_NODE_DATA] (state, newAttributes) {
-    // console.log(state.nodeData)
     // 打标签啊打标签
     tagYouAll(state, state.nodeData, newAttributes)
-    console.log(state.taggedModifiedFiles)
   }
 }
 

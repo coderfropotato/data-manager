@@ -209,9 +209,6 @@
       addNewTaggedFile () {
         // 添加打好标签的文件
         let newAttributes = {attribute1: this.attribute1, attribute2: this.attribute2}
-//        let payload = {path: this.serialNumber + this.basicInfo.path, newAttributes: newAttributes}
-//        this.addTaggedModifiedFile(payload)
-
         // 更改中间的状态提示
         this.renewNodeData(newAttributes)
       }
