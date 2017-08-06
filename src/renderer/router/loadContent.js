@@ -6,7 +6,7 @@
 import Files from '@/components/Sidebar/Files'
 import Search from '@/components/Sidebar/search'
 import FileInfo from '@/components/FileAside/fileInfo'
-import FileStatus from '@/components/FileAside/fileStatus'
+import fileStatusAside from '@/components/FileAside/fileStatusAside'
 // import Collection from '@/components/Sidebar/collection'
 // content 的组件
 import FileHeader from '@/components/Content/diskDirHeader'
@@ -54,7 +54,7 @@ const routes = [
     components: {
       default: Files,
       ContentBottom: FileStatusContent,
-      FileInfo: FileStatus
+      FileInfo: fileStatusAside
     }
   },
   {

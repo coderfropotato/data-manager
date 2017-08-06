@@ -1,11 +1,10 @@
 <template>
-  <div id="file-status--sidebar-root" v-if="show">
+  <div id="file-status-info-root" v-if="show">
+    <!--标题-->
     <div class="info-title">
-      <span>文件状态</span>
-      <router-link to="/filestatus">
-        <el-button size="mini">编辑</el-button>
-      </router-link>
+      <span>文件详情</span>
     </div>
+    <!--基本信息-->
     <div class="basic-info" v-if="basicInfo">
       <span class="title">基本信息</span>
       <div class="basic-info-items">
@@ -15,6 +14,17 @@
         <span>创建时间：{{basicInfo.createTime}}</span>
       </div>
     </div>
+    <!--<div class="DataSource" v-if="otherInfo">-->
+    <!--<span>数据来源</span>-->
+    <!--<span>类别：{{otherInfo.sourceData.type}}</span>-->
+    <!--<span>数据源：{{otherInfo.sourceData.name}}</span>-->
+    <!--<el-button size="mini" @click="otherInfo.sourceData.url">-->
+    <!--<span>访问</span>-->
+    <!--<svg class="icon" aria-hidden="true">-->
+    <!--<use xlink:href="#icon-arrow"></use>-->
+    <!--</svg>-->
+    <!--</el-button>-->
+    <!--</div>-->
     <div class="organization">
       <div class="title">
         组织分类
@@ -59,10 +69,50 @@
         </div>
       </div>
     </div>
+    <!--各种可以更改的属性-->
+    <div id="file-status-aside-modified-attributes">
+      <el-select
+              v-model="attribute1"
+              filterable
+              allow-create
+              placeholder="你TM选啊还是写啊">
+        <el-option
+                v-for="item in options1"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+        </el-option>
+      </el-select>
+
+      <el-select
+              v-model="attribute2"
+              filterable
+              allow-create
+              placeholder="你TM选啊还是写啊">
+        <el-option
+                v-for="item in options1"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+        </el-option>
+      </el-select>
+    </div>
+    <!--底部各种按钮-->
+    <div id="file-status-aside-buttons">
+      <div>hhh</div>
+      <div>hhh</div>
+      <div>hhh</div>
+      <div>hhh</div>
+      <el-button type="primary" size="small" @click="addNewTaggedFile">更改属性</el-button>
+      <el-button size="small">自动识别</el-button>
+      <el-button size="small">忽略此文件</el-button>
+      <el-button size="small">放弃修改</el-button>
+    </div>
   </div>
 </template>
+
 <script>
-  import {mapState} from 'vuex'
+  import {mapState, mapActions} from 'vuex'
 
   let tempData = ['1/1.txt/', '1/2.2/3.2/', '1/2.4/3/', '1/2.txt/']
   let tempSort = []
@@ -73,16 +123,31 @@
       return {
         // 记录分类的数组
         sorts: [],
-        tempData
+        tempData,
+        attribute1: '',
+        attribute2: '',
+        options1: [
+          {
+            value: '1',
+            label: '1'
+          },
+          {
+            value: '2',
+            label: '2'
+          }
+        ]
       }
     },
+
     computed: mapState({
-      show: state => state.fileInfo.show,
+      show: state => state.modified.showFileInfo,
       basicInfo: state => state.fileInfo.basicInfo,
       otherInfo: state => state.fileInfo.otherInfo,
-      popoverTreeData: state => state.files.sortFileTree
+      popoverTreeData: state => state.files.sortFileTree,
+      taggedModifiedFiles: state => state.modified.taggedModifiedFiles
       // sorts: state => state.fileInfo.fileSorts
     }),
+
     watch: {
       show () {
         for (let node in tempData) {
@@ -93,13 +158,20 @@
         this.sorts = tempSort
       }
     },
+
     methods: {
+      ...mapActions([
+        'addTaggedModifiedFile' // 增加该打好标签的文件
+      ]),
+
       addFileSort () {
       },
+
       setCheckNode () {
         // node-key 必须是唯一的，否则无法设置节点
         this.$refs.sortTree.setCheckedKeys(tempData)
       },
+
       // 设置分类的目录
       setSortDir () {
         // 清空分类数组
@@ -110,12 +182,21 @@
           path.pop()
           this.sorts.push(path.join('>'))
         }
+      },
+
+      // 添加打好标签的选中文件/文件夹
+      addNewTaggedFile () {
+        let newAttributes = {attribute1: this.attribute1, attribute2: this.attribute2}
+        let payload = {path: '/', newAttributes: newAttributes}
+        this.addTaggedModifiedFile(payload)
+        console.log(this.taggedModifiedFiles.get('/'))
       }
     }
   }
 </script>
+
 <style lang="scss" scoped>
-  #fileInfo-root {
+  #file-status-info-root {
     height: 100%;
     width: 100%;
     background-color: rgba(242, 242, 242, 0.6);

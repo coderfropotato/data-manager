@@ -30,8 +30,6 @@ const actions = {
   getFileInfo ({commit}, payload) {
     let path = payload.path
     let serialNumber = payload.serialNumber
-    console.log(payload.path)
-    console.log(payload.serialNumber)
     sendMessage('getFileInfo', {path, serialNumber}).then(data => {
       commit(types.RECEIVE_FILE_DETAIL, data)
     })
@@ -48,8 +46,10 @@ const actions = {
 const mutations = {
   // 获取文件信息
   [types.RECEIVE_FILE_DETAIL] (state, detail) {
-    state.basicInfo = detail.basicInfo
-    state.otherInfo = detail.otherInfo
+    // console.log(detail.info.basic)
+    state.basicInfo = detail.info.basic
+    state.otherInfo = detail.info.otherInfo
+    console.log(state.detail)
   },
 
   // 显示文件信息区
