@@ -8,15 +8,13 @@ import * as types from '@/store/mutation-types'
 const state = {
   show: false,
   // 基本信息
-  basicInfo: {
-    name: '',
-    size: '',
-    type: '',
-    createTime: ''
-  },
+  basicInfo: {},
 
-  // 其他信息
-  otherInfo: {},
+  // 自定义信息
+  customize: {},
+
+  // 文件属性
+  fileAttr: {},
 
   // 组织分类
   organization: {
@@ -31,7 +29,7 @@ const actions = {
     let path = payload.path
     let serialNumber = payload.serialNumber
     sendMessage('getFileInfo', {path, serialNumber}).then(data => {
-      commit(types.RECEIVE_FILE_DETAIL, data)
+      commit(types.RECEIVE_FILE_DETAIL, data.info)
     })
   },
 
@@ -46,10 +44,9 @@ const actions = {
 const mutations = {
   // 获取文件信息
   [types.RECEIVE_FILE_DETAIL] (state, detail) {
-    // console.log(detail.info.basic)
-    state.basicInfo = detail.info.basic
-    state.otherInfo = detail.info.otherInfo
-    console.log(state.detail)
+    state.basicInfo = detail.basic
+    state.customize = detail.customize
+    state.fileAttr = detail.fileattr
   },
 
   // 显示文件信息区

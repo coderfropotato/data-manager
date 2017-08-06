@@ -28,18 +28,12 @@ const actions = {
     // 获取更改文件后返回
     return new Promise((resolve, reject) => {
       sendMessage('getModifiedFiles', {}).then((data) => {
-        // 获取更改信息完成，通知执行 then
-        resolve()
         if (data.isModified) {
-          // 弹出文件信息更改窗口
-          // ipcRenderer.send('files-modified')
-          ipcRenderer.on('dialog-select', function (event, index) {
-            let message = ''
-            if (index === 0) message += '是'
-            else message += '否'
-            console.log(message)
-          })
+          resolve(true)
           commit(types.RECEIVE_MODIFIED_FILES, data.tree)
+        } else {
+          // 获取更改信息完成，通知执行 then
+          resolve(false)
         }
       })
     })

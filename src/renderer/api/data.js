@@ -156,7 +156,7 @@ const sortDir = [
   //   }
   // }
 ]
-
+export const authors = ['Klaus', 'Mate', 'Mike', 'Stefan']
 export const updateFileTree = [
   {
     name: 'My Tree',
@@ -292,3 +292,4 @@ export const modifiedFiles = {
     }
   }
 }
+export default authors

@@ -18,3 +18,12 @@ export const TOGGLE_DRAG_SHOW = 'toggleDragShow'
 export const ADD_IMPORT_FILES = 'addImportFiles'
 export const SHOW_MODIFIED_FILE_INFO = 'showModifiedFileInfo'
 export const ADD_TAGGED_MODIFIED_FILE = 'addTaggedModifiedFile'
+export const GET_AUTHORS = 'getAuthors'
+// 设置新增智能视图信息
+export const SET_SMART_SORT_DIR_INFO = 'setNewSmartSortInfo'
+// 设置新增磁盘信息
+export const SET_NEW_DISK_DIR_INFO = 'setNewDiskDirInfo'
+// 设置新增分类文件夹信息
+export const SET_NEW_SORT_DIR_INFO = 'setNewSortDirInfo'
+// 临时用来显示智能视图信息
+export const ADD_SMART_SORT = 'addSmartSort'

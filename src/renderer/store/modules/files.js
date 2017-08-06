@@ -52,7 +52,6 @@ const actions = {
   getSortFileList ({commit}, path) {
     sendMessage('getSortFileList', {path}).then(data => {
       let fileList = data.fileList
-      // console.log(data)
       commit(types.SET_SORT_FILE_LIST, fileList)
     })
   },
@@ -111,6 +110,12 @@ const mutations = {
       tree: response
     }
     state.cacheDir.push(temp)
+  },
+
+  // TODO 临时用，后删除
+  // 临时新增智能视图
+  [types.ADD_SMART_SORT] (state, temp) {
+    state.sortFileTree.push(temp)
   },
 
   // 设置分类文件列表信息

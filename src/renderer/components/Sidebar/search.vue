@@ -2,16 +2,18 @@
   <div id="search-root">
     <div class="search-engines">
       <div class="search-title">
-        <span>搜索引擎</span>
+        <span class="title">搜索引擎</span>
+        <el-checkbox :indeterminate="isIndeterminateAll" v-model="checkAll"
+                     @change="handleCheckAllChange"></el-checkbox>
         <!--<el-button size="mini" @click="trigShow" data-name="allFiles"></el-button>-->
         <!--全选按钮-->
-        <el-checkbox :indeterminate="isIndeterminateAll" v-model="checkAll" @change="handleCheckAllChange"></el-checkbox>
       </div>
       <div class="local-data">
         <div class="data-title">
           <span>本地数据</span>
+          <el-checkbox :indeterminate="isIndeterminateLocal" v-model="checkAllLocal"
+                       @change="handleCheckAllLocalChange"></el-checkbox>
           <!--全选按钮-->
-          <el-checkbox :indeterminate="isIndeterminateLocal" v-model="checkAllLocal" @change="handleCheckAllLocalChange"></el-checkbox>
         </div>
         <el-checkbox-group v-model="localCheckedSearch" @change="handleLocalCheckedSearchChange">
           <div class="disk" v-for="search in localSearchEngines" :key="search">
@@ -26,8 +28,8 @@
       <div class="web-data">
         <el-checkbox-group v-model="webCheckedSearch" @change="handleWebCheckedSearchChange">
           <div class="website" v-for="web in webSearchEngines" :key="web">
-              <span>{{web}}</span>
-              <el-checkbox :label="web"></el-checkbox>
+            <span>{{web}}</span>
+            <el-checkbox :label="web"></el-checkbox>
           </div>
         </el-checkbox-group>
       </div>
@@ -36,7 +38,8 @@
 </template>
 <script>
   import {mapState} from 'vuex'
-  // let localSearchOptions = ['HKFDKUIYER', 'JFLDLKLNKLJ', 'JILFD']
+
+  let localSearchOptions = ['HKFDKUIYER', 'JFLDLKLNKLJ', 'JILFD']
   let webSearchOptions = ['NCIC', 'ABC', 'Easy BCD']
   export default {
     data () {
@@ -52,7 +55,7 @@
         // 已选择的网络搜索引擎
         webCheckedSearch: [],
         // 本地搜索引擎选项
-        // localSearchEngines: localSearchOptions,
+        localSearchEngines: localSearchOptions,
         // 网络搜索引擎选项
         webSearchEngines: webSearchOptions,
         // 所有搜索全选样式，有全选，非全选和全不选
@@ -63,7 +66,7 @@
       }
     },
     computed: mapState({
-      localSearchEngines: state => state.files.allFiles
+      // localSearchEngines: state => state.files.allFiles
     }),
     methods: {
       // 全部搜索全选
@@ -118,40 +121,37 @@
     }
   }
 </script>
-<style lang="scss" scoped>
-  .search-engines {
-    .el-checkbox {
+<style lang="scss">
+  #search-root {
+    .search-engines{
+      margin: 0 1em;
+    }
+    .el-checkbox{
       float: right;
       margin-right: 2em;
     }
-  }
+    .el-checkbox__label {
+      display: none;
+    }
+    .search-title {
+      .title {
+        margin: 1em;
+        font-size: 1.1em;
+        font-weight: 500;
+      }
+    }
 
-  .search-title {
-    margin: 0.5em 0;
-    span {
-      font-size: 0.9em;
-      margin: 0 2em;
-    }
-    .el-button {
-      float: right;
-      margin: 0 0.5em;
-    }
-    .el-button:nth-child(2) {
-      width: 4em;
-    }
-  }
-
-  .local-data,
-  .web-data {
-    padding-left: 1em;
-    width: 100%;
-    span {
-      font-size: 0.9em;
-      margin: 1em 2em;
-      line-height: 2em;
-    }
-    .disk {
-      padding: 0.3em 0em 0.3em 1em;
+    .local-data,
+    .web-data {
+      padding-left: 1em;
+      margin: 1em 0;
+      width: 100%;
+      .disk {
+        padding: 0.3em 0em 0.3em 1em;
+      }
+      .website{
+        margin: 0.3em 0;
+      }
     }
   }
 </style>
