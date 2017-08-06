@@ -319,7 +319,11 @@
           projectInfo,
           customAttr: this.customChoose
         }
-        ipcRenderer.send('change-data', directoryInfo)
+        let call = {
+          mode: 'mutation',
+          API: 'setNewDiskDirInfo'
+        }
+        ipcRenderer.send('change-data', call, directoryInfo)
       }
     }
   }

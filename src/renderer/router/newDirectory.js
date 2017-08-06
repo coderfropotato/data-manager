@@ -1,5 +1,5 @@
-import NewSmartSortdir from '@/components/NewFile/newSmartSort'
-import NewDialog from '@/components/NewFile/newDialog'
+import NewSmartSortdir from '@/components/NewDirectory/newSmartSort'
+import NewDialog from '@/components/NewDirectory/newDialog'
 import NewFile from '@/components/NewDirectory/newFile'
 import NewDiskDirectory from '@/components/NewDirectory/newDiskDirectory'
 

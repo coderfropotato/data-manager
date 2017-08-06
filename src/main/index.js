@@ -31,6 +31,15 @@ function createWindow () {
   })
 }
 
+/*
+ * 在主窗口和新打开的窗口之间传递数据
+ * @call{mode: '', API: ''} mode: 'action'/'mutation' API: action/mutation 中的方法
+ * @data 数据
+ */
+ipcMain.on('change-data', (event, call, data) => {
+  mainWindow.webContents.send('change-data', call, data)
+})
+
 // 打开添加文件窗口
 let newAddFileWin
 ipcMain.on('addFile', (event, arg) => {
@@ -46,6 +55,7 @@ ipcMain.on('addFile', (event, arg) => {
     newAddFileWin.close()
   }
 })
+
 ipcMain.on('openDialog', (event, arg) => {
   let URL = arg.URL
   let newWin = new BrowserWindow({
@@ -70,24 +80,6 @@ ipcMain.on('open-file-dialog', function (event, type) {
       event.sender.send('selected-directory', files)
     }
   })
-})
-
-// 监听渲染进程发送的文件更改消息，弹出通知窗口
-ipcMain.on('files-modified', function (event) {
-  const options = {
-    type: 'info',
-    title: 'Information',
-    message: '文件有更改，是否查看',
-    buttons: ['是', '否']
-  }
-  dialog.showMessageBox(options, function (index) {
-    event.sender.send('dialog-select', index)
-  })
-})
-
-// 中间转发数据
-ipcMain.on('change-data', (event, data) => {
-  mainWindow.webContents.send('change-data', data)
 })
 
 app.on('ready', createWindow)

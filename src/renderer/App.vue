@@ -7,18 +7,36 @@
 <script>
   import './api/database'
   import {ipcRenderer} from 'electron'
+
   export default {
     name: 'data-manager-desktop',
     mounted () {
       // 获取更改文件信息
-      this.$store.dispatch('getModifiedFiles').then(() => {
+      this.$store.dispatch('getModifiedFiles').then(isModified => {
         // 应用加载后，发送获取文件树的请求，提前对文件树进行处理，优化加载速度
+        if (isModified) {
+          this.$notify.info({
+            title: '通知',
+            message: '有文件状态发生改变'
+          })
+        }
         this.$store.dispatch('openFile')
       })
 
-      // 渲染进程之间进行通信
-      ipcRenderer.on('change-data', (event, data) => {
-        this.$store.commit('setProjectInfo', data)
+      /*
+       * 通过主进程在窗口之间传递数据
+       * @state 说明 action/mutation 调用方式和接口
+       * @data 窗口传递的数据
+       */
+      ipcRenderer.on('change-data', (event, call, data) => {
+        // 调用action
+        if (call.mode === 'action') {
+          this.$store.commit(call.API, data)
+        }
+        // 调用mutation
+        if (call.mode === 'mutation') {
+          this.$store.dispatch(call, data)
+        }
       })
 
       // 禁用浏览器拖拽事件

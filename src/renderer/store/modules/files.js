@@ -90,11 +90,6 @@ const actions = {
   // 设置当前的文件树
   setCurrentFileTree ({commit}, fileTree) {
     commit(types.SET_CURRENT_FILE_TREE, fileTree)
-  },
-
-  // 新增智能视图
-  addSmartSort ({commit}, temp) {
-    commit(types.ADD_SMART_SORT, temp)
   }
 }
 
@@ -117,11 +112,10 @@ const mutations = {
     state.cacheDir.push(temp)
   },
 
+  // TODO 临时用，后删除
+  // 临时新增智能视图
   [types.ADD_SMART_SORT] (state, temp) {
     state.sortFileTree.push(temp)
-    console.log(temp)
-    console.log('hahaha')
-    console.log(state.sortFileTree)
   },
 
   // 设置分类文件列表信息
