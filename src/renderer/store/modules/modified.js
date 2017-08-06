@@ -5,6 +5,16 @@ import sendMessage from '@/api'
 import * as types from '@/store/mutation-types'
 import packUpModified from '@/assets/JS/convertJSON'
 
+// 给node底下的所有子节点都打上标签
+function tagYouAll(node) {
+  node.status = node.status + '*' + 'tagged'
+  if (node.hasOwnProperty('children')) {
+    for (let childNode in node.children) {
+      tagYouAll(node.children[childNode])
+    }
+  }
+}
+
 const state = {
   modifiedFiles: [],  // 最近变更的文件，供Element-UI渲染
 
@@ -16,7 +26,7 @@ const state = {
 
   modifiedNum: 0, // 变更文件的数目
 
-  nodeData: {}, // 当前选中节点的信息
+  nodeData: {}, // 当前选中节点的信息，以便打标签
 
   activeModifiedFile: '' // 当前正在进行编辑的文件路径
 }
@@ -83,10 +93,10 @@ const mutations = {
     state.nodeData = nodeData
   },
 
-  // 更新当前节点数据
+  // 更新当前节点及子节点数据
   [types.RENEW_NODE_DATA] (state, newData) {
-    state.nodeData.status = state.nodeData.status + '*' + newData.status
-    console.log(state.nodeData.status)
+    // 打标签啊打标签
+    tagYouAll(state.nodeData)
   }
 }
 
