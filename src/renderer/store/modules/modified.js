@@ -4,6 +4,22 @@
 import sendMessage from '@/api'
 import * as types from '@/store/mutation-types'
 import packUpModified from '@/assets/JS/convertJSON'
+
+// 给node底下的所有子节点都打上标签
+function tagYouAll (node, func, serialNumber, newAttributes) {
+  // console.log(func, serialNumber, newAttributes)
+  node.status = node.status + '*' + 'tagged'
+  if (node.hasOwnProperty('path')) {
+    // func({path: serialNumber + node.path, newAttributes: newAttributes})
+    func()
+  }
+  if (node.hasOwnProperty('children')) {
+    for (let childNode in node.children) {
+      tagYouAll(node.children[childNode])
+    }
+  }
+}
+
 const state = {
   modifiedFiles: [],  // 最近变更的文件，供Element-UI渲染
 
@@ -15,7 +31,7 @@ const state = {
 
   modifiedNum: 0, // 变更文件的数目
 
-  nodeData: {}, // 当前选中节点的信息
+  nodeData: {}, // 当前选中节点的信息，以便打标签
 
   activeModifiedFile: '' // 当前正在进行编辑的文件路径
 }
@@ -53,8 +69,8 @@ const actions = {
   },
 
   // 更新当前节点的数据
-  renewNodeData ({ commit }, newData) {
-    commit(types.RENEW_NODE_DATA, newData)
+  renewNodeData ({ commit }, payload) {
+    commit(types.RENEW_NODE_DATA, payload)
   }
 }
 
@@ -82,10 +98,11 @@ const mutations = {
     state.nodeData = nodeData
   },
 
-  // 更新当前节点数据
-  [types.RENEW_NODE_DATA] (state, newData) {
-    state.nodeData.status = state.nodeData.status + '*' + newData.status
-    console.log(state.nodeData.status)
+  // 更新当前节点及子节点数据
+  [types.RENEW_NODE_DATA] (state, payload) {
+    // 打标签啊打标签
+    // console.log(payload)
+    tagYouAll(state.nodeData, payload.func, payload.serialNumber, payload.newAttributes)
   }
 }
 

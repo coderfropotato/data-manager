@@ -208,12 +208,13 @@
       // 添加打好标签的选中文件/文件夹
       addNewTaggedFile () {
         // 添加打好标签的文件
-        let newAttributes = {attribute1: this.attribute1, attribute2: this.attribute2}
-        let payload = {path: this.serialNumber + this.basicInfo.path, newAttributes: newAttributes}
-        this.addTaggedModifiedFile(payload)
+//        let newAttributes = {attribute1: this.attribute1, attribute2: this.attribute2}
+        // let payload = {path: this.serialNumber + this.basicInfo.path, newAttributes: newAttributes}
+//        this.addTaggedModifiedFile(payload)
 
         // 更改中间的状态提示
-        this.renewNodeData({status: 'tagged'})
+        // this.renewNodeData({func: this.addTaggedModifiedFile(), serialNumber: this.serialNumber, newAttributes: newAttributes})
+        this.renewNodeData({func: () => (console.log('fuck')), serialNumber: '1111', newAttributes: {hh: 1}})
       }
     }
   }
