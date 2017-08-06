@@ -19,6 +19,20 @@ function tagYouAll (state, node, newAttributes) {
   }
 }
 
+// 给node底下的所有子节点都去掉标签
+function removeYouAll (state, node) {
+  if (node.hasOwnProperty('status')) {
+    node.status = parseInt(node.status.split('*')[0])
+    console.log(node)
+    state.taggedModifiedFiles.delete(node.path)
+  }
+  if (node.hasOwnProperty('children')) {
+    for (let childNode in node.children) {
+      removeYouAll(state, node.children[childNode])
+    }
+  }
+}
+
 const state = {
   modifiedFiles: [],  // 最近变更的文件，供Element-UI渲染
 
@@ -62,6 +76,11 @@ const actions = {
     commit(types.ADD_TAGGED_MODIFIED_FILE, payload)
   },
 
+  // 删除某个打好标签的文件/文件夹
+  removeTaggedFile ({ commit }, path) {
+    commit(types.REMOVE_TAGGED_FILE, path)
+  },
+
   // 设置当前节点的数据
   setNodeData ({commit}, nodeData) {
     commit(types.SET_NODE_DATA, nodeData)
@@ -101,6 +120,13 @@ const mutations = {
   [types.RENEW_NODE_DATA] (state, newAttributes) {
     // 打标签啊打标签
     tagYouAll(state, state.nodeData, newAttributes)
+    console.log(state.taggedModifiedFiles)
+  },
+
+  // 放弃修改某个打好标签的文件夹/文件的新属性
+  removeTaggedFile (state, path) {
+    removeYouAll(state, state.nodeData)
+    console.log(state.taggedModifiedFiles)
   }
 }
 
