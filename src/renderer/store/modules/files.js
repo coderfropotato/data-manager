@@ -37,14 +37,15 @@ const actions = {
   // 打开文件选项
   openFile ({commit}) {
     sendMessage('openFile', {}).then(data => {
+      console.log(data)
       commit(types.OPEN_FILE, data)
     })
   },
 
   // 获取磁盘（包含我的电脑）文件树
-  getDiskFileTree ({commit}, folderName) {
-    sendMessage('getFileTree', {folderName}).then(data => {
-      commit(types.GET_DISK_FILE_TREE, folderName, data)
+  getDiskFileTree ({commit}, diskName) {
+    sendMessage('getFileTree', {diskName}).then(data => {
+      commit(types.GET_DISK_FILE_TREE, diskName, data)
     })
   },
 
@@ -60,6 +61,7 @@ const actions = {
   getTrash ({commit}) {
     sendMessage('getTrash', {}).then(data => {
       commit(types.GET_TRASH, data)
+      console.log(data)
     })
   },
 

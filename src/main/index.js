@@ -36,23 +36,29 @@ function createWindow () {
  * @call{mode: '', API: ''} mode: 'action'/'mutation' API: action/mutation 中的方法
  * @data 数据
  */
+let newWin
 ipcMain.on('change-data', (event, call, data) => {
   mainWindow.webContents.send('change-data', call, data)
 })
 
+ipcMain.on('send-data-to-newWin', (event, data) => {
+  setTimeout(function () {
+    newWin.webContents.send('send-data-to-newWin', data)
+  }, 1000)
+})
 // 打开添加文件窗口
-let newAddFileWin
+
 ipcMain.on('addFile', (event, arg) => {
   if (arg.API === 'open') {
     let URL = arg.URL
-    newAddFileWin = new BrowserWindow({
+    newWin = new BrowserWindow({
       height: 500,
       width: 800
     })
-    newAddFileWin.loadURL(baseURL + URL)
+    newWin.loadURL(baseURL + URL)
   }
   if (arg.API === 'close') {
-    newAddFileWin.close()
+    newWin.close()
   }
 })
 

@@ -4,8 +4,6 @@
 import sendMessage from '@/api'
 import * as types from '@/store/mutation-types'
 import packUpModified from '@/assets/JS/convertJSON'
-
-
 const state = {
   modifiedFiles: [],  // 最近变更的文件，供Element-UI渲染
 
