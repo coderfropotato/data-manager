@@ -94,7 +94,7 @@
               <el-input v-model="path" size="small">
               </el-input>
             </el-col>
-            <el-col :span="2">
+            <el-col :span="3">
               <el-button size="small" @click="showFilename">浏览</el-button>
             </el-col>
           </el-row>
@@ -116,7 +116,7 @@
       <div class="advanced-options" v-if="showAdvanced">
         <div>
           <el-row :gutter="20">
-            <el-col :span="8">
+            <el-col :span="10">
               <span>为文件夹添加属性（可不填）</span>
             </el-col>
             <el-col :span="2">
@@ -333,11 +333,10 @@
   body {
     height: 100%;
   }
-
   body {
     overflow-y: scroll;
   }
-
+  // 隐藏滚动条
   ::-webkit-scrollbar {
     display: none;
   }
@@ -346,7 +345,7 @@
     height: 100%;
     width: 100%;
   }
-
+  // 内间距
   .newDiskFile-inner {
     width: 80%;
     margin: 2em auto;
@@ -354,14 +353,15 @@
       display: inline-block;
     }
   }
-
+  // 行间距
   .el-col {
     margin: 1em 0;
   }
-
+  // 显示高级选项按钮
   .show-advanced {
     .el-button {
       float: right;
+      margin-right: -0.8em;
     }
   }
 
@@ -370,7 +370,7 @@
       margin-right: -4em !important;
     }
   }
-
+  // 确认与取消按钮
   .confirm {
     display: flex;
     flex-direction: row;

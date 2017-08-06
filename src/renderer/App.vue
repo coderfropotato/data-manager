@@ -38,7 +38,6 @@
           this.$store.dispatch(call, data)
         }
       })
-
       // 禁用浏览器拖拽事件
       document.addEventListener('drop', e => {
         e.preventDefault()

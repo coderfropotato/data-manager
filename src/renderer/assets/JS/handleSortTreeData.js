@@ -4,6 +4,9 @@
 // 遍历原始数据，改成能被文件树组件使用的数据格式
 function travelTree (obj, data, Id) {
   for (let name in obj) {
+    if (name === '__info__') {
+      continue
+    }
     // 文件夹
     if (Object.keys(obj[name]).length >= 1) {
       let temp = {

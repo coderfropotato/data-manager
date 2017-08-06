@@ -137,10 +137,8 @@
         let text = item.label + '|' + option
 
         // 放入最终的搜索条件中
-        let condition = {
-          key: item.name,
-          value: option
-        }
+        let condition = {}
+        condition[item.label] = option
         this.searchCondition.push(condition)
 
         // 转化成 Set，保证数据唯一性
@@ -163,11 +161,10 @@
       search () {
         if (this.searchInput !== '') {
           this.searchCondition.push({
-            key: 'custom',
-            value: this.searchInput
+            'custom': this.searchInput
           })
         }
-        console.log(this.searchCondition)
+        this.$store.dispatch('getSearchResult', this.searchCondition)
       }
     }
   }
