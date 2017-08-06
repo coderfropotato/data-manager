@@ -4,7 +4,7 @@
 import sendMessage from '@/api'
 import * as types from '@/store/mutation-types'
 import packUpModified from '@/assets/JS/convertJSON'
-// import {ipcRenderer} from 'electron'
+
 
 const state = {
   modifiedFiles: [],  // 最近变更的文件，供Element-UI渲染
@@ -15,11 +15,11 @@ const state = {
 
   taggedModifiedFiles: new Map(),  // 所有已标记好的变更文件
 
-  selectedModifiedFiles: [], // 所有选中的文件或文件夹，此时已准备提交，一般是上一个属性的子集
-
   modifiedNum: 0, // 变更文件的数目
 
-  activeModifiedFile: {} // 当前正在进行编辑的文件及其信息
+  nodeData: {}, // 当前选中节点的信息
+
+  activeModifiedFile: '' // 当前正在进行编辑的文件路径
 }
 
 const actions = {
@@ -47,6 +47,16 @@ const actions = {
   // 增加了一个修改好属性的文件
   addTaggedModifiedFile ({ commit }, payload) {
     commit(types.ADD_TAGGED_MODIFIED_FILE, payload)
+  },
+
+  // 设置当前节点的数据
+  setNodeData ({ commit }, nodeData) {
+    commit(types.SET_NODE_DATA, nodeData)
+  },
+
+  // 更新当前节点的数据
+  renewNodeData ({ commit }, newData) {
+    commit(types.RENEW_NODE_DATA, newData)
   }
 }
 
@@ -67,6 +77,17 @@ const mutations = {
   // 增加了一个修改好属性的文件
   [types.ADD_TAGGED_MODIFIED_FILE] (state, payload) {
     state.taggedModifiedFiles.set(payload.path, payload.newAttributes)
+  },
+
+  // 设置当前节点的数据
+  [types.SET_NODE_DATA] (state, nodeData) {
+    state.nodeData = nodeData
+  },
+
+  // 更新当前节点数据
+  [types.RENEW_NODE_DATA] (state, newData) {
+    state.nodeData.status = state.nodeData.status + '*' + newData.status
+    console.log(state.nodeData.status)
   }
 }
 
