@@ -94,6 +94,7 @@
       }
     },
     mounted () {
+      console.log(this.sortFileTree)
       this.insertFileIcon()
     },
     computed: mapState({
