@@ -22,7 +22,7 @@
         <el-col :span="20">
           <div class="grid-content">
             <div class="search-input" @click="focus">
-              <el-button v-for="(item,index) in Array.from(selectedCondition)" :key="item" size="mini">{{item}}<i
+              <el-button v-for="(item,index) in selectedCondition" :key="item" size="mini">{{item}}<i
                   class="el-icon-circle-close" @click="deleteItem(index)"></i></el-button>
               <input type="text" id="searchInput" @keyup.enter="search" v-model="input">
             </div>
@@ -44,7 +44,8 @@
           <span class="item-title">
             {{item.label}}
           </span>
-          <el-button @click="showItem(item, optionIndex)" type="text" v-for="(option, optionIndex) in item.options" :key="optionIndex">
+          <el-button @click="showItem(item, optionIndex)" type="text" v-for="(option, optionIndex) in item.options"
+                     :key="optionIndex">
             {{option}}
           </el-button>
         </div>
@@ -87,7 +88,8 @@
             options: ['FASTA', 'FASTQ', 'BAM', 'SAM', 'VCF']
           }
         ],
-        selectedCondition: new Map(),
+        // v-for 暂不支持迭代 map，需要转化成一个数组
+        selectedCondition: [],
         // 用户选择的条件，通过v-for遍历这个集合以显示用户点击的条件。输入框条件的增加删除，也是通过向这个集合添加或者删除元素来实现
         i: 0,
         searchValue: '',
@@ -111,35 +113,18 @@
       fold () {
         this.conditionShow = !this.conditionShow
       },
+      // @item 类型
+      // @index 序号（从左到右）
       showItem (item, index) {
+        // 转化成 Set，保证数据唯一性
+        let set = new Set(this.selectedCondition)
         let option = item.options[index]
         let text = item.label + '|' + option
-        this.selectedCondition.set(option, text)
-        console.log(this.selectedCondition)
-//        let text = e.target.innerText
-//        let count = 0
-//        let length = this.selectedCondition.length
-//        // 如果用户还未选择条件，则直接添加
-//        if (length === 0) {
-//          if (text === '公共数据' || text === '私有数据' || text === '共享数据') {
-//            this.selectedCondition.push('类别：' + text)
-//          } else {
-//            this.selectedCondition.push('文件类型：' + text)
-//          }
-//        } else { // 如果已经有选择的条件，判断用户点击的条件是否重复
-//          for (this.i = 0; this.i < length; this.i++) {
-//            if (this.selectedCondition[this.i].indexOf(text) !== -1) {
-//              count++
-//            }
-//          } // 如果没有重复，则向selectedCondition添加元素
-//          if (count === 0) {
-//            if (text === '公共数据' || text === '私有数据' || text === '共享数据') {
-//              this.selectedCondition.push('类别：' + text)
-//            } else {
-//              this.selectedCondition.push('文件类型：' + text)
-//            }
-//          }
-//        }
+        set.add(text)
+        this.selectedCondition = []
+        for (let item in Array.from(set.values())) {
+          this.selectedCondition.push(Array.from(set.values())[item])
+        }
       },
       // 删除所选搜索条件
       deleteItem (index) {

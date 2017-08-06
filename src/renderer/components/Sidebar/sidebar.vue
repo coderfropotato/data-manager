@@ -20,7 +20,10 @@
             <svg class="icon" aria-hidden="true">
               <use xlink:href="#icon-import"></use>
             </svg>
-            <span>文件状态</span>
+            <!--角标，提醒文件更改数量-->
+            <el-badge :value="modifiedFiles" :max="99" class="item">
+              <span>文件状态</span>
+            </el-badge>
           </el-menu-item>
           <el-menu-item index="/collection">
             <svg class="icon" aria-hidden="true">
@@ -68,6 +71,7 @@
 <script>
   import {ipcRenderer} from 'electron'
   import bus from '@/assets/JS/bus'
+  import {mapState} from 'vuex'
 
   export default {
     name: 'Sidebar',
@@ -99,6 +103,9 @@
         middleHeight: 400
       }
     },
+    computed: mapState({
+      modifiedFiles: state => state.modified.modifiedNum
+    }),
     mounted () {
       this.updateStyle()
       // 设置中间文件树区域的高度
@@ -157,7 +164,7 @@
   }
 </script>
 <!--分离SCSS文件-->
-<style lang="scss" scoped>
+<style lang="scss">
   $backgroundColor: #F7F9F9;
   #sidebar-root {
     position: relative;
@@ -169,67 +176,71 @@
         background-color: $backgroundColor;
       }
     }
-  }
-
-  .el-menu-item {
-    font-size: 0.9em;
-    padding-left: 2em !important;
-    span {
-      margin-left: 0.3em;
-    }
-    .icon {
-      position: relative;
-      font-size: 1.4em;
-      display: inline-block;
-    }
-  }
-
-  .line {
-    height: 1px;
-    width: 90%;
-    background-color: #48576a;
-    margin: 1em auto;
-  }
-
-  .middle {
-    position: relative;
-    width: 100%;
-    // 避免滚动条影响宽度，只在webkit内核中器作用
-    -webkit-overflow-y: overlay;
-    // 隐藏滚动条
-    /*&::-webkit-scrollbar {*/
-    /*display: none;*/
-    /*}*/
-  }
-
-  .bottom {
-    position: absolute;
-    transform: translateY(0.5em);
-    bottom: 0;
-    left: 0;
-    background-color: inherit;
-    border-top: 1px solid #8c939d;
-    width: 100%;
-    height: 4em;
-    line-height: 4em;
-    .el-button {
-      position: absolute;
-      bottom: 0.4em;
-      left: 1em;
-      font-size: 2em;
-    }
-    .icon {
-      position: absolute;
-      bottom: 1em;
-      right: 1em;
-      font-size: 1.5em;
-    }
-  }
-
-  .el-popover {
     .el-menu-item {
-      font-size: 1.2em;
-      padding-left: 1em !important;
+      font-size: 0.9em;
+      padding-left: 2em !important;
+      span {
+        margin-left: 0.3em;
+      }
+      .icon {
+        position: relative;
+        font-size: 1.4em;
+        display: inline-block;
+      }
+    }
+
+    .line {
+      height: 1px;
+      width: 90%;
+      background-color: #48576a;
+      margin: 1em auto;
+    }
+
+    .middle {
+      position: relative;
+      width: 100%;
+      // 避免滚动条影响宽度，只在webkit内核中器作用
+      -webkit-overflow-y: overlay;
+      // 隐藏滚动条
+      /*&::-webkit-scrollbar {*/
+      /*display: none;*/
+      /*}*/
+    }
+
+    .bottom {
+      position: absolute;
+      transform: translateY(0.5em);
+      bottom: 0;
+      left: 0;
+      background-color: inherit;
+      border-top: 1px solid #8c939d;
+      width: 100%;
+      height: 4em;
+      line-height: 4em;
+      .el-button {
+        position: absolute;
+        bottom: 0.4em;
+        left: 1em;
+        font-size: 2em;
+      }
+      .icon {
+        position: absolute;
+        bottom: 1em;
+        right: 1em;
+        font-size: 1.5em;
+      }
+    }
+
+    .el-popover {
+      .el-menu-item {
+        font-size: 1.2em;
+        padding-left: 1em !important;
+      }
+    }
+    // 文件更改状态角标样式
+    .el-badge__content{
+      top: 1em;
+      right: 4px;
     }
   }
 </style>
