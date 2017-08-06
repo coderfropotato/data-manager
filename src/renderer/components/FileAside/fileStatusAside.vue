@@ -212,6 +212,7 @@
         let newAttributes = {attribute1: this.attribute1, attribute2: this.attribute2}
         // 更改中间的状态提示
         this.renewNodeData(newAttributes)
+        console.log(this.taggedModifiedFiles)
       },
 
       // 忽略当前文件/文件夹的属性信息
