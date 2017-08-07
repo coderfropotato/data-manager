@@ -86,8 +86,8 @@
   import {mapState} from 'vuex'
   import bus from '@/assets/JS/bus'
   // 测试用
-  import travelTree from '@/assets/JS/handleSortTreeData'
-  import fs from 'fs'
+//  import travelTree from '@/assets/JS/handleSortTreeData'
+//  import fs from 'fs'
 
   export default {
     name: 'AllFiles',
@@ -113,18 +113,18 @@
       }
     },
     mounted () {
-      let tree = []
-      fs.readFile('/Users/wuyiqing/Desktop/datas.json', {flag: 'r+', encoding: 'utf8'}, (err, data) => {
-        if (err) {
-          console.error(err)
-        }
-        travelTree(JSON.parse(data), tree, '')
-        this.sortFileTree = tree
-        // 临时用
-        this.$store.commit('addSmartSort', tree[0])
-      })
-      // 重置列表数据，防止和搜索组件数据混合
-      this.$store.commit('setFileList', [])
+//      let tree = []
+//      fs.readFile('/Users/wuyiqing/Desktop/datas.json', {flag: 'r+', encoding: 'utf8'}, (err, data) => {
+//        if (err) {
+//          console.error(err)
+//        }
+//        travelTree(JSON.parse(data), tree, '')
+//        this.sortFileTree = tree
+//        // 临时用
+//        this.$store.commit('addSmartSort', tree[0])
+//      })
+//      // 重置列表数据，防止和搜索组件数据混合
+//      this.$store.commit('setFileList', [])
       // 插入文件小图标
       this.insertFileIcon()
     },
