@@ -114,12 +114,6 @@
           API: 'setNewSmartSort'
         }
         ipcRenderer.send('change-data', call, temp)
-//        this.$store.dispatch('setNewSmartSort', {
-//          name: '智能视图' + this.amount,
-//          limitedCondition: this.value,
-//          selectedCondition: this.selectedCondition
-//        })
-//        this.$store.dispatch('setNewSmartSort')
         this.$alert('创建成功', {
           confirmButtonText: '确定'
         })

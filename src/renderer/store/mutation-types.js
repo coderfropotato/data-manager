@@ -28,6 +28,8 @@ export const SET_NEW_DISK_DIR_INFO = 'setNewDiskDirInfo'
 export const SET_NEW_SORT_DIR_INFO = 'setNewSortDirInfo'
 // 临时用来显示智能视图信息
 export const ADD_SMART_SORT = 'addSmartSort'
+// 显示所有的智能视图
+export const SHOW_SMART_SORT_LIST = 'showSmartSortList'
 // 设置搜索位置
 export const SET_SEARCH_POSITION = 'setSearchPosition'
 export const CHANGE_MODIFIED_FILES_TREE_NODE = 'changeModifiedFilesTreeNode'

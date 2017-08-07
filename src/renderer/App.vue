@@ -21,6 +21,7 @@
 //          })
 //        }
         this.$store.dispatch('openFile')
+        this.$store.dispatch('showSmartSortList')
       })
 
       /*
@@ -38,7 +39,6 @@
           this.$store.dispatch(call, data)
         }
       })
-//      this.$store.dispatch('newSmartSortInfo').then()
 
       // 禁用浏览器拖拽事件
       document.addEventListener('drop', e => {
