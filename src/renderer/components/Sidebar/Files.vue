@@ -86,8 +86,8 @@
   import {mapState} from 'vuex'
   import bus from '@/assets/JS/bus'
   // 测试用
-  import travelTree from '@/assets/JS/handleSortTreeData'
-  import fs from 'fs'
+//  import travelTree from '@/assets/JS/handleSortTreeData'
+//  import fs from 'fs'
 
   export default {
     name: 'AllFiles',
@@ -113,18 +113,18 @@
       }
     },
     mounted () {
-      let tree = []
-      fs.readFile('/Users/wuyiqing/Desktop/datas.json', {flag: 'r+', encoding: 'utf8'}, (err, data) => {
-        if (err) {
-          console.error(err)
-        }
-        travelTree(JSON.parse(data), tree, '')
-        this.sortFileTree = tree
-        // 临时用
-        this.$store.commit('addSmartSort', tree[0])
-      })
-      // 重置列表数据，防止和搜索组件数据混合
-      this.$store.commit('setFileList', [])
+//      let tree = []
+//      fs.readFile('/Users/wuyiqing/Desktop/datas.json', {flag: 'r+', encoding: 'utf8'}, (err, data) => {
+//        if (err) {
+//          console.error(err)
+//        }
+//        travelTree(JSON.parse(data), tree, '')
+//        this.sortFileTree = tree
+//        // 临时用
+//        this.$store.commit('addSmartSort', tree[0])
+//      })
+//      // 重置列表数据，防止和搜索组件数据混合
+//      this.$store.commit('setFileList', [])
       // 插入文件小图标
       this.insertFileIcon()
     },
@@ -233,16 +233,14 @@
             h('span', node.label),
             h(
               'span',
-              [
-                h(
-                  'i',
-                  {
-                    attrs: {
-                      class: 'el-icon-delete'
-                    }
+              h(
+                'i',
+                {
+                  attr: {
+                    class: 'el-icon-delete'
                   }
-                )
-              ]
+                }
+              )
             )
           ])
       }
@@ -291,15 +289,6 @@
       background-color: inherit;
       border: none;
       margin: 0.3em 1em;
-      .el-icon-delete{
-        float: right;
-        margin-right: 0.5em;
-        line-height: 36px;
-        // display: none;
-        &:hover{
-          display: inline-block;
-        }
-      }
     }
 
     .el-button--text {
