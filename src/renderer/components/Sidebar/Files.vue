@@ -89,8 +89,8 @@
   import {mapState} from 'vuex'
   import bus from '@/assets/JS/bus'
   // 测试用
-//  import travelTree from '@/assets/JS/handleSortTreeData'
-//  import fs from 'fs'
+  import travelTree from '@/assets/JS/handleSortTreeData'
+  import fs from 'fs'
 
   export default {
     name: 'AllFiles',
@@ -112,34 +112,35 @@
         sortFileTree: [],
         // 记录当前选中的高亮节点，用于添加新节点时定位父节点
         currentNode: {},
-        newSortDirName: ''
+        newSortDirName: '',
+        rowFileTree: []
       }
-    },
-    mounted () {
-//      let tree = []
-//      fs.readFile('/Users/wuyiqing/Desktop/datas.json', {flag: 'r+', encoding: 'utf8'}, (err, data) => {
-//        if (err) {
-//          console.error(err)
-//        }
-//        travelTree(JSON.parse(data), tree, '')
-//        this.sortFileTree = tree
-//        // 临时用
-//        this.$store.commit('addSmartSort', tree[0])
-//      })
-//      // 重置列表数据，防止和搜索组件数据混合
-//      this.$store.commit('setFileList', [])
-      // 插入文件小图标
-      this.insertFileIcon()
     },
     computed: mapState({
       // 所有文件选项的数据，即管理的磁盘
       diskDir: state => state.files.allFiles,
-      // 分类文件夹树
-      // sortFileTree: state => state.files.sortFileTree,
       // 智能分类列表
       smartSortList: state => state.newDirectory.smartSortList
+      // 分类文件夹树
       // sortFileTree: state => state.files.sortFileTree
     }),
+    mounted () {
+      let tree = []
+      fs.readFile('/Users/wuyiqing/Desktop/datas.json', {flag: 'r+', encoding: 'utf8'}, (err, data) => {
+        if (err) {
+          console.error(err)
+        }
+        this.rowFileTree = data
+        travelTree(JSON.parse(data), tree, '')
+        this.sortFileTree = tree
+        // 临时用
+        this.$store.commit('addSmartSort', tree[0])
+      })
+      // 重置列表数据，防止和搜索组件数据混合
+      this.$store.commit('setFileList', [])
+      // 插入文件小图标
+      this.insertFileIcon()
+    },
     methods: {
       // 插入文件Icon
       insertFileIcon () {
@@ -210,45 +211,116 @@
         // TODO 解决当点击展开与收起次数过多时触发 MaxListenersExceededWarning
         bus.$emit('tree-height-changed')
       },
+
       // 在当前选中节点下添加新的节点，如果没有选中，则新建一个分类树
       appendNode () {
         // 父节点信息
         let node = this.currentNode.node
         let nodeObj = this.currentNode.nodeObj
-        // 如果父节点存在，即有选中节点
+        // 判断父节点是否存在，即是否选中节点
         if (node) {
-          // 新建节点的 ID，即路径
+          // 判断文件夹名是否重复
+          let set = new Set(nodeObj.children)
+          if (set.size < nodeObj.children.length) {
+            console.log('文件名重复')
+            return
+          }
+          // 获取新建节点的 ID，即路径
           let nodeId = nodeObj.id + this.newSortDirName + '/'
-          node.store.append({
+          let data = {
             label: this.newSortDirName,
             id: nodeId,
             children: []
-          }, nodeObj)
+          }
+          // 调用源代码中的方法增加节点，单是不会更新源数据（非API）
+          node.store.append(data, nodeObj)
+          console.log(node.store.root)
         } else {
-          this.sortFileTree.push({
+          // 直接在源数据中添加新节点
+          let data = {
             label: this.newSortDirName,
             id: this.newSortDirName,
             children: []
-          })
+          }
+          this.sortFileTree.push(data)
         }
       },
-      renderContent (h, { node, data, store }) {
+
+      // 删除节点
+      removeNode (node, data) {
+        // 调用源代码中的方法删除节点，单是不会更新源数据（非API）
+        node.store.remove(data)
+      },
+
+      // 编辑节点
+      editNode (node, data) {
+      },
+
+      // 树节点渲染函数 vue-render
+      renderContent (h, {node, data, store}) {
         return h(
           'span',
           [
             h('span', node.label),
+            // 删除按钮
             h(
               'span',
-              h(
-                'i',
-                {
-                  attr: {
-                    class: 'el-icon-delete'
+              {
+                attrs: {
+                  class: 'icon-wrapper'
+                },
+                on: {
+                  click: (e) => {
+                    e.preventDefault()
+                    this.removeNode(node, data)
                   }
                 }
-              )
+              },
+              [
+                h(
+                  'i',
+                  {
+                    attrs: {
+                      class: 'el-icon-delete'
+                    }
+                  }
+                )
+              ]
+            ),
+            // 编辑按钮
+            h(
+              'span',
+              {
+                attrs: {
+                  class: 'icon-wrapper'
+                },
+                on: {
+                  click: (e) => {
+                    e.preventDefault()
+                    this.editNode(node, data)
+                  }
+                }
+              },
+              [
+                h(
+                  'i',
+                  {
+                    attrs: {
+                      class: 'el-icon-edit'
+                    }
+                  }
+                )
+              ]
             )
           ])
+//          <el-popover
+//        ref="addSortPop"
+//        placement="top-start"
+//        width="200"
+//        trigger="click">
+//          <el-input placeholder="请输入文件夹名称" v-model="newSortDirName"></el-input>
+//          <el-button type="primary" @click="appendNode">添加</el-button>
+//          </el-popover>
       }
     },
     components: {
@@ -295,6 +367,19 @@
       background-color: inherit;
       border: none;
       margin: 0.3em 1em;
+      // 删除小图标
+      .icon-wrapper {
+        display: inline-block;
+        float: right;
+        width: 2em;
+        height: 2em;
+        opacity: 0;
+        line-height: 36px;
+        cursor: pointer;
+        &:hover {
+          opacity: 1;
+        }
+      }
     }
 
     .el-button--text {

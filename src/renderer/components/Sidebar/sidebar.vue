@@ -136,7 +136,6 @@
           fileType: ''
         })
         console.log(this.$store.state.files.sortFileTree)
-        ipcRenderer.send('send-data-to-newWin', this.$store.state.files.sortFileTree)
       },
       // 更新滚动样式
       updateStyle () {
