@@ -31,13 +31,14 @@
       ipcRenderer.on('change-data', (event, call, data) => {
         // 调用action
         if (call.mode === 'action') {
-          this.$store.commit(call.API, data)
+          this.$store.dispatch(call.API, data)
         }
         // 调用mutation
         if (call.mode === 'mutation') {
           this.$store.dispatch(call, data)
         }
       })
+//      this.$store.dispatch('newSmartSortInfo').then()
 
       // 禁用浏览器拖拽事件
       document.addEventListener('drop', e => {

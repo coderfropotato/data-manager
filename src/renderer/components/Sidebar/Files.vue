@@ -27,6 +27,9 @@
         <el-button size="mini" @click="trigShow" data-name="sortFiles">{{content.sortFiles}}</el-button>
         <el-button size="mini" class="button-inner-plus">+</el-button>
       </div>
+      <div v-for="(item,index) in smartSortList" :key="item" class="smartSortList">
+        <el-button size="small">{{item}}</el-button>
+      </div>
       <el-tree
           :data="sortFileTree"
           node-key="id"
@@ -100,7 +103,9 @@
       // 所有文件选项的数据，即管理的磁盘
       diskDir: state => state.files.allFiles,
       // 分类文件夹树
-      sortFileTree: state => state.files.sortFileTree
+      sortFileTree: state => state.files.sortFileTree,
+      // 智能分类列表
+      smartSortList: state => state.newDirectory.smartSortList
     }),
     methods: {
       // 插入文件Icon
@@ -228,6 +233,11 @@
     .button-inner-plus{
       span{
         margin: 0 0.2em;
+      }
+    }
+    .smartSortList {
+      .el-button {
+        margin: 1em 0 0 4em;
       }
     }
   }

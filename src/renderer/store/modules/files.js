@@ -112,12 +112,6 @@ const mutations = {
     state.cacheDir.push(temp)
   },
 
-  // TODO 临时用，后删除
-  // 临时新增智能视图
-  [types.ADD_SMART_SORT] (state, temp) {
-    state.sortFileTree.push(temp)
-  },
-
   // 设置分类文件列表信息
   [types.SET_SORT_FILE_LIST] (state, response) {
     state.currentFileList = response

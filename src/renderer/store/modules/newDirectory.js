@@ -4,15 +4,26 @@
 
 // import sendMessage from '@/api'
 import * as types from '@/store/mutation-types'
+import * as object from '@/api/data'
 
 const state = {
   newDiskDirInfo: [],
   newSortDirInfo: [],
-  newSmartSortInfo: []
+  smartSortList: []
 }
 
 const actions = {
   // 获取文件详情
+  // setNewSmartSort ({commit}, payload) {
+  //   sendMessage('setNewSmartSort', {payload}).then(data => {
+  //     // SmartSortList是要展示的智能视图名称列表
+  //     let SmartSortList = data
+  //     commit(types.SET_NEW_SMART_SORT_INFO, SmartSortList)
+  //   })
+  // }
+  setNewSmartSort ({commit}, data) {
+    commit(types.SET_NEW_SMART_SORT_INFO, data)
+  }
 }
 
 const mutations = {
@@ -27,8 +38,9 @@ const mutations = {
   },
 
   // 新增智能视图
-  [types.SET_NEW_SMART_SORT_INFO] (state, newDirInfo) {
-    state.newSmartSortInfo.push(newDirInfo)
+  [types.SET_NEW_SMART_SORT_INFO] (state, data) {
+    state.smartSortList = object.smartSortList
+    state.smartSortList.push(data.name)
   }
 }
 
