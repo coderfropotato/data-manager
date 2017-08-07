@@ -4,7 +4,6 @@
 
 // import sendMessage from '@/api'
 import * as types from '@/store/mutation-types'
-import * as object from '@/api/data'
 
 const state = {
   newDiskDirInfo: [],
@@ -21,8 +20,23 @@ const actions = {
   //     commit(types.SET_NEW_SMART_SORT_INFO, SmartSortList)
   //   })
   // }
-  setNewSmartSort ({commit}, data) {
-    commit(types.SET_NEW_SMART_SORT_INFO, data)
+
+  // 将新添加的智能视图添加到智能视图列表中去
+  // temp 包含着名称，限制条件，选择条件
+  setNewSmartSort ({commit}, temp) {
+    // 这里应该返回一个状态码
+    // sendMessage('setNewSmartSort').then(data => {
+    //   commit(types.SET_NEW_SMART_SORT_INFO, data, temp)
+    // })
+    commit(types.ADD_SMART_SORT, temp)
+  },
+
+  // 获取智能视图列表显示在文件树上面
+  showSmartSortList ({commit}) {
+    // 这里返回的data应该是所有智能视图的名字的数组
+    // sendMessage('showSmartSortList').then(data => {
+    //   commit(types.SHOW_SMART_SORT_LIST, data)
+    // })
   }
 }
 
@@ -38,9 +52,13 @@ const mutations = {
   },
 
   // 新增智能视图
-  [types.SET_NEW_SMART_SORT_INFO] (state, data) {
-    state.smartSortList = object.smartSortList
-    state.smartSortList.push(data.name)
+  [types.ADD_SMART_SORT] (state, newSmartSort) {
+    state.smartSortList.push(newSmartSort.name)
+  },
+
+  // 在sidebar展示所有的智能视图
+  [types.SHOW_SMART_SORT_LIST] (state, smartSortList) {
+    state.smartSortList = smartSortList
   }
 }
 

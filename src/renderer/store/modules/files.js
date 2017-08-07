@@ -117,12 +117,6 @@ const mutations = {
   [types.SET_SORT_FILE_LIST] (state, response) {
   },
 
-  // TODO 临时用，后删除
-  // 临时新增智能视图
-  [types.ADD_SMART_SORT] (state, temp) {
-    state.sortFileTree.push(temp)
-  },
-
   // 设置文件列表信息
   [types.SET_FILE_LIST] (state, response) {
     state.currentFileList = response
