@@ -157,6 +157,14 @@ const sortDir = [
   // }
 ]
 export const authors = ['Klaus', 'Mate', 'Mike', 'Stefan']
+export const smartSortList = ['智能视图一', '智能视图二']
+// export const newSmartSort = [
+//   {
+//     label: '智能视图一'
+//
+//   },
+//
+// ]
 export const updateFileTree = [
   {
     name: 'My Tree',
@@ -292,4 +300,7 @@ export const modifiedFiles = {
     }
   }
 }
-export default authors
+export default {
+  authors,
+  smartSortList
+}

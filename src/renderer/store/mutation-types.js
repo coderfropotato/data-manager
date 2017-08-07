@@ -19,6 +19,7 @@ export const ADD_IMPORT_FILES = 'addImportFiles'
 export const SHOW_MODIFIED_FILE_INFO = 'showModifiedFileInfo'
 export const ADD_TAGGED_MODIFIED_FILE = 'addTaggedModifiedFile'
 export const GET_AUTHORS = 'getAuthors'
+export const SET_SORT_FILE_LIST = 'setSortFileList'
 // 设置新增智能视图信息
 export const SET_NEW_SMART_SORT_INFO = 'setNewSmartSortInfo'
 // 设置新增磁盘信息

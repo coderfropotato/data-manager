@@ -36,6 +36,9 @@
         </el-popover>
         <el-button size="mini" class="button-inner-plus" v-popover:addSortPop>+</el-button>
       </div>
+      <div v-for="(item,index) in smartSortList" :key="item" class="smartSortList">
+        <el-button size="small">{{item}}</el-button>
+      </div>
       <el-tree
           :data="sortFileTree"
           node-key="id"
@@ -130,8 +133,11 @@
     },
     computed: mapState({
       // 所有文件选项的数据，即管理的磁盘
-      diskDir: state => state.files.allFiles
+      diskDir: state => state.files.allFiles,
       // 分类文件夹树
+      sortFileTree: state => state.files.sortFileTree,
+      // 智能分类列表
+      smartSortList: state => state.newDirectory.smartSortList
       // sortFileTree: state => state.files.sortFileTree
     }),
     methods: {
@@ -304,6 +310,11 @@
     .button-inner-plus {
       span {
         margin: 0 0.2em;
+      }
+    }
+    .smartSortList {
+      .el-button {
+        margin: 1em 0 0 4em;
       }
     }
   }
