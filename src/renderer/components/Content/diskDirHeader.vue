@@ -90,6 +90,7 @@
       ...mapState({
         pathArray: state => {
           let rowPath = state.files.currentPath.split('/')
+          console.log(rowPath)
           rowPath.pop()
           return rowPath
         }

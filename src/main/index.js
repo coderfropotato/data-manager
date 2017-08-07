@@ -41,11 +41,6 @@ ipcMain.on('change-data', (event, call, data) => {
   mainWindow.webContents.send('change-data', call, data)
 })
 
-ipcMain.on('send-data-to-newWin', (event, data) => {
-  setTimeout(function () {
-    newWin.webContents.send('send-data-to-newWin', data)
-  }, 1000)
-})
 // 打开添加文件窗口
 
 ipcMain.on('addFile', (event, arg) => {

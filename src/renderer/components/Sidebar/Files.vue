@@ -25,7 +25,16 @@
       <div class="title">
         <span>分类</span>
         <el-button size="mini" @click="trigShow" data-name="sortFiles">{{content.sortFiles}}</el-button>
-        <el-button size="mini" class="button-inner-plus">+</el-button>
+        <!--输入新建分类的文件名-->
+        <el-popover
+            ref="addSortPop"
+            placement="top-start"
+            width="200"
+            trigger="click">
+          <el-input placeholder="请输入文件夹名称" v-model="newSortDirName"></el-input>
+          <el-button type="primary" @click="appendNode">添加</el-button>
+        </el-popover>
+        <el-button size="mini" class="button-inner-plus" v-popover:addSortPop>+</el-button>
       </div>
       <div v-for="(item,index) in smartSortList" :key="item" class="smartSortList">
         <el-button size="small">{{item}}</el-button>
@@ -33,11 +42,13 @@
       <el-tree
           :data="sortFileTree"
           node-key="id"
+          highlight-current
           :expand-on-click-node="false"
           @node-click="loadSortFileList"
           @node-expand="treeHeightChanged"
           @node-collapse="treeHeightChanged"
-          v-show="show.sortFiles">
+          v-show="show.sortFiles"
+          :render-content="renderContent">
       </el-tree>
 
     </div>
@@ -78,8 +89,8 @@
   import {mapState} from 'vuex'
   import bus from '@/assets/JS/bus'
   // 测试用
-  import travelTree from '@/assets/JS/handleSortTreeData'
-  import fs from 'fs'
+//  import travelTree from '@/assets/JS/handleSortTreeData'
+//  import fs from 'fs'
 
   export default {
     name: 'AllFiles',
@@ -98,22 +109,25 @@
           sortFiles: '收起',
           others: '收起'
         },
-        sortFileTree: []
+        sortFileTree: [],
+        // 记录当前选中的高亮节点，用于添加新节点时定位父节点
+        currentNode: {},
+        newSortDirName: ''
       }
     },
     mounted () {
-      let tree = []
-      fs.readFile('/Users/wuyiqing/Desktop/datas.json', {flag: 'r+', encoding: 'utf8'}, (err, data) => {
-        if (err) {
-          console.error(err)
-        }
-        travelTree(JSON.parse(data), tree, '')
-        this.sortFileTree = tree
-        // 临时用
-        this.$store.commit('addSmartSort', tree[0])
-      })
-      // 重置列表数据，防止和搜索组件数据混合
-      this.$store.commit('setFileList', [])
+//      let tree = []
+//      fs.readFile('/Users/wuyiqing/Desktop/datas.json', {flag: 'r+', encoding: 'utf8'}, (err, data) => {
+//        if (err) {
+//          console.error(err)
+//        }
+//        travelTree(JSON.parse(data), tree, '')
+//        this.sortFileTree = tree
+//        // 临时用
+//        this.$store.commit('addSmartSort', tree[0])
+//      })
+//      // 重置列表数据，防止和搜索组件数据混合
+//      this.$store.commit('setFileList', [])
       // 插入文件小图标
       this.insertFileIcon()
     },
@@ -176,6 +190,10 @@
       // 加载分类文件列表
       loadSortFileList (nodeObj, node, component) {
         let path = nodeObj.id
+        this.currentNode = {
+          nodeObj,
+          node
+        }
         // 根据用户的选择，设置状态管理中的当前路径
         this.$store.commit('setCurrentPath', path)
         // 发送获取文件列表请求
@@ -191,6 +209,46 @@
         // 会触发MaxListenersExceededWarning 错误
         // TODO 解决当点击展开与收起次数过多时触发 MaxListenersExceededWarning
         bus.$emit('tree-height-changed')
+      },
+      // 在当前选中节点下添加新的节点，如果没有选中，则新建一个分类树
+      appendNode () {
+        // 父节点信息
+        let node = this.currentNode.node
+        let nodeObj = this.currentNode.nodeObj
+        // 如果父节点存在，即有选中节点
+        if (node) {
+          // 新建节点的 ID，即路径
+          let nodeId = nodeObj.id + this.newSortDirName + '/'
+          node.store.append({
+            label: this.newSortDirName,
+            id: nodeId,
+            children: []
+          }, nodeObj)
+        } else {
+          this.sortFileTree.push({
+            label: this.newSortDirName,
+            id: this.newSortDirName,
+            children: []
+          })
+        }
+      },
+      renderContent (h, { node, data, store }) {
+        return h(
+          'span',
+          [
+            h('span', node.label),
+            h(
+              'span',
+              h(
+                'i',
+                {
+                  attr: {
+                    class: 'el-icon-delete'
+                  }
+                }
+              )
+            )
+          ])
       }
     },
     components: {
@@ -258,6 +316,19 @@
       .el-button {
         margin: 1em 0 0 4em;
       }
+    }
+  }
+
+  // 新建文件夹弹窗
+  .el-popover {
+    width: 15em;
+    .el-button {
+      width: 4em;
+      float: right;
+    }
+    .el-input {
+      float: left;
+      width: 10em;
     }
   }
 </style>
