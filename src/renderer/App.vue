@@ -14,12 +14,12 @@
       // 获取更改文件信息
       this.$store.dispatch('getModifiedFiles').then(isModified => {
         // 应用加载后，发送获取文件树的请求，提前对文件树进行处理，优化加载速度
-        if (isModified) {
-          this.$notify.info({
-            title: '通知',
-            message: '有文件状态发生改变'
-          })
-        }
+//        if (isModified) {
+//          this.$notify.info({
+//            title: '通知',
+//            message: '有文件状态发生改变'
+//          })
+//        }
         this.$store.dispatch('openFile')
       })
 

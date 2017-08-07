@@ -37,14 +37,15 @@ const actions = {
   // 打开文件选项
   openFile ({commit}) {
     sendMessage('openFile', {}).then(data => {
+      console.log(data)
       commit(types.OPEN_FILE, data)
     })
   },
 
   // 获取磁盘（包含我的电脑）文件树
-  getDiskFileTree ({commit}, folderName) {
-    sendMessage('getFileTree', {folderName}).then(data => {
-      commit(types.GET_DISK_FILE_TREE, folderName, data)
+  getDiskFileTree ({commit}, diskName) {
+    sendMessage('getFileTree', {diskName}).then(data => {
+      commit(types.GET_DISK_FILE_TREE, diskName, data)
     })
   },
 
@@ -52,7 +53,7 @@ const actions = {
   getSortFileList ({commit}, path) {
     sendMessage('getSortFileList', {path}).then(data => {
       let fileList = data.fileList
-      commit(types.SET_SORT_FILE_LIST, fileList)
+      commit(types.SET_FILE_LIST, fileList)
     })
   },
 
@@ -60,6 +61,7 @@ const actions = {
   getTrash ({commit}) {
     sendMessage('getTrash', {}).then(data => {
       commit(types.GET_TRASH, data)
+      console.log(data)
     })
   },
 
@@ -111,9 +113,18 @@ const mutations = {
     }
     state.cacheDir.push(temp)
   },
-
   // 设置分类文件列表信息
   [types.SET_SORT_FILE_LIST] (state, response) {
+  },
+
+  // TODO 临时用，后删除
+  // 临时新增智能视图
+  [types.ADD_SMART_SORT] (state, temp) {
+    state.sortFileTree.push(temp)
+  },
+
+  // 设置文件列表信息
+  [types.SET_FILE_LIST] (state, response) {
     state.currentFileList = response
   },
 

@@ -77,6 +77,10 @@
   import Tree from '@/components/Sidebar/tree'
   import {mapState} from 'vuex'
   import bus from '@/assets/JS/bus'
+  // 测试用
+  import travelTree from '@/assets/JS/handleSortTreeData'
+  import fs from 'fs'
+
   export default {
     name: 'AllFiles',
     data () {
@@ -93,10 +97,24 @@
           allFiles: '收起',
           sortFiles: '收起',
           others: '收起'
-        }
+        },
+        sortFileTree: []
       }
     },
     mounted () {
+      let tree = []
+      fs.readFile('/Users/wuyiqing/Desktop/datas.json', {flag: 'r+', encoding: 'utf8'}, (err, data) => {
+        if (err) {
+          console.error(err)
+        }
+        travelTree(JSON.parse(data), tree, '')
+        this.sortFileTree = tree
+        // 临时用
+        this.$store.commit('addSmartSort', tree[0])
+      })
+      // 重置列表数据，防止和搜索组件数据混合
+      this.$store.commit('setFileList', [])
+      // 插入文件小图标
       this.insertFileIcon()
     },
     computed: mapState({
@@ -106,6 +124,7 @@
       sortFileTree: state => state.files.sortFileTree,
       // 智能分类列表
       smartSortList: state => state.newDirectory.smartSortList
+      // sortFileTree: state => state.files.sortFileTree
     }),
     methods: {
       // 插入文件Icon
@@ -155,7 +174,7 @@
         this.$store.dispatch('getDiskFileTree', diskName)
       },
       // 加载分类文件列表
-      loadSortFileList (nodeObj) {
+      loadSortFileList (nodeObj, node, component) {
         let path = nodeObj.id
         // 根据用户的选择，设置状态管理中的当前路径
         this.$store.commit('setCurrentPath', path)
@@ -200,7 +219,7 @@
 
     .disk,
     .trash,
-    .ignore{
+    .ignore {
       height: 2.4em;
       line-height: 2.4em;
       .icon {
@@ -208,7 +227,7 @@
         font-size: 1em;
         margin: 0.5em 0.5em 0.5em 1.5em;
       }
-      .item-title{
+      .item-title {
         font-size: 0.8em;
         float: left;
       }
@@ -220,18 +239,18 @@
       margin: 0.3em 1em;
     }
 
-    .el-button--text{
+    .el-button--text {
       color: #000;
     }
     //按钮中字体大小
-    .el-button{
-      span{
+    .el-button {
+      span {
         font-size: 1em;
         margin: 0.6em;
       }
     }
-    .button-inner-plus{
-      span{
+    .button-inner-plus {
+      span {
         margin: 0 0.2em;
       }
     }

@@ -5,7 +5,7 @@
       <el-row type="flex" class="header-inner">
         <el-col :span="1"></el-col>
         <!--下拉菜单-->
-        <el-col :span="5">
+        <el-col :span="4">
           <div class="grid-content">
             <el-select v-model="displayStatus">
               <el-option
@@ -17,19 +17,21 @@
             </el-select>
           </div>
         </el-col>
-        <el-col :span="1"></el-col>
         <!--搜索框-->
-        <el-col :span="20">
+        <el-col :span="17">
           <div class="grid-content">
-            <div class="search-input" @click="focus">
-              <el-button v-for="(item,index) in selectedCondition" :key="item" size="mini">{{item}}<i
-                  class="el-icon-circle-close" @click="deleteItem(index)"></i></el-button>
-              <input type="text" id="searchInput" @keyup.enter="search" v-model="input">
+            <div class="search-input" id="scrollBar">
+              <div class="scrollBar-inner">
+                <el-button v-for="(item,index) in selectedCondition" :key="item" size="mini">{{item}}
+                  <i class="el-icon-circle-close" @click="deleteItem(index)"></i>
+                </el-button>
+                <input v-model="searchInput" @click="focus" id="searchInput">
+              </div>
             </div>
           </div>
         </el-col>
-        <!--左间距-->
-        <el-col :span="1">
+        <el-col :span="2">
+          <i class="el-icon-search" @click="search"></i>
         </el-col>
       </el-row>
     </div>
@@ -54,6 +56,8 @@
   </div>
 </template>
 <script>
+  import scrollBar from '../../assets/JS/searchScrollbar'
+
   export default {
     name: 'FileHeader',
     data () {
@@ -88,12 +92,12 @@
             options: ['FASTA', 'FASTQ', 'BAM', 'SAM', 'VCF']
           }
         ],
-        // v-for 暂不支持迭代 map，需要转化成一个数组
+        // 用户选择的搜索条件
         selectedCondition: [],
-        // 用户选择的条件，通过v-for遍历这个集合以显示用户点击的条件。输入框条件的增加删除，也是通过向这个集合添加或者删除元素来实现
-        i: 0,
-        searchValue: '',
-        input: ''
+        // 最后的搜索条件合集
+        searchCondition: [],
+        // 用户输入的搜索条件
+        searchInput: ''
       }
     },
     computed: {
@@ -108,6 +112,19 @@
         }
       }
     },
+    watch: {
+      // DOM刷新，重新计算滚动区宽度
+      selectedCondition () {
+        this.$nextTick(function () {
+          scrollBar()
+        })
+      }
+    },
+    mounted () {
+      scrollBar()
+      // 重置列表数据，防止和文件组件数据混合
+      this.$store.commit('setFileList', [])
+    },
     methods: {
       // 点击收起按钮，折叠搜索条件区域
       fold () {
@@ -116,10 +133,16 @@
       // @item 类型
       // @index 序号（从左到右）
       showItem (item, index) {
-        // 转化成 Set，保证数据唯一性
-        let set = new Set(this.selectedCondition)
         let option = item.options[index]
         let text = item.label + '|' + option
+
+        // 放入最终的搜索条件中
+        let condition = {}
+        condition[item.label] = option
+        this.searchCondition.push(condition)
+
+        // 转化成 Set，保证数据唯一性
+        let set = new Set(this.selectedCondition)
         set.add(text)
         this.selectedCondition = []
         for (let item in Array.from(set.values())) {
@@ -128,6 +151,7 @@
       },
       // 删除所选搜索条件
       deleteItem (index) {
+        this.searchCondition.splice(index, 1)
         this.selectedCondition.splice(index, 1)
       },
       // 用户点击搜索框，自动聚焦到搜索框
@@ -135,7 +159,12 @@
         document.querySelector('#searchInput').focus()
       },
       search () {
-        console.log(this.input)
+        if (this.searchInput !== '') {
+          this.searchCondition.push({
+            'custom': this.searchInput
+          })
+        }
+        this.$store.dispatch('getSearchResult', this.searchCondition)
       }
     }
   }
@@ -145,30 +174,44 @@
   #searchHeader-root {
     .header {
       .search-input {
-        margin-top: 0.5em;
+        margin: 0.5em 1em 0.5em 1em;
         height: 2em;
         border: 1px solid #bfcbd9;
         background-color: #fff;
         .el-button {
           position: relative;
-          bottom: 0.7em;
+          top: -0.9em;
+          height: 2em;
           margin-left: 0.1em;
           font-size: 0.8em;
         }
         input {
-          position: relative;
-          bottom: 0.5em;
-          height: 1.5em;
-          outline: none;
-          border: none;
-          vertical-align: baseline;
+          width: 300px;
+          height: 3em;
           font-size: 1em;
+          position: relative;
+          top: -0.55em;
+          left: 0.5em;
+          border: none;
+          outline: none;
         }
+      }
+      .el-icon-search {
+        cursor: pointer;
+      }
+    }
+    #scrollBar {
+      position: relative;
+      overflow: hidden;
+      .scrollBar-inner {
+        position: relative;
+        height: 2em;
       }
     }
     .middle {
       padding: 1em 1.5em;
     }
+
     // 搜索条件标题样式
     .search-condition-header {
       .condition-title {

@@ -1,124 +1,125 @@
 <template>
-  <div id="file-status-info-root" v-if="show">
-    <!--标题-->
-    <div class="info-title">
-      <span>文件详情</span>
-    </div>
-    <!--基本信息-->
-    <div class="basic-info" v-if="basicInfo">
-      <span class="title">基本信息</span>
-      <div class="basic-info-items">
-        <span class="item-name">{{basicInfo.name}}</span>
-        <span>文件类型：{{basicInfo.type}}</span>
-        <span>文件大小：{{basicInfo.size}}</span>
-        <span>创建时间：{{basicInfo.createTime}}</span>
-      </div>
-    </div>
-    <!--<div class="DataSource" v-if="otherInfo">-->
-    <!--<span>数据来源</span>-->
-    <!--<span>类别：{{otherInfo.sourceData.type}}</span>-->
-    <!--<span>数据源：{{otherInfo.sourceData.name}}</span>-->
-    <!--<el-button size="mini" @click="otherInfo.sourceData.url">-->
-    <!--<span>访问</span>-->
-    <!--<svg class="icon" aria-hidden="true">-->
-    <!--<use xlink:href="#icon-arrow"></use>-->
-    <!--</svg>-->
-    <!--</el-button>-->
-    <!--</div>-->
-    <div class="organization">
-      <div class="title">
-        组织分类
-      </div>
-      <div class="sort">
-        <svg class="icon" aria-hidden="true">
-          <use xlink:href="#icon-wenjian"></use>
-        </svg>
-        <el-popover
-                ref="addSort"
-                placement="left-end"
-                width="260">
-          <div class="popover-sort-tree">
-            <div class="popover-title">
-              分类
-            </div>
-            <div class="sort-tree">
-              <el-tree
-                      node-key="id"
-                      :data="popoverTreeData"
-                      show-checkbox
-                      ref="sortTree"
-                      check-strictly
-                      :default-expanded-keys="tempData"
-                      @check-change="setSortDir">
-              </el-tree>
-            </div>
-          </div>
-        </el-popover>
-        <!--当分类条目较多时，条目和按钮为一个整体，计算样式-->
-        <div class="item-wrapper">
-          <!--分类的条目-->
-          <div class="sort-items">
-            <el-button size="mini" v-for="item in sorts" :key="item">{{item}}</el-button>
-            <el-button size="mini" v-if="!sorts.length" @click="addFileSort" v-popover:addSort>
-              添加分类
-            </el-button>
-            <el-button size="mini" v-if="sorts.length" v-popover:addSort @click="setCheckNode">
-              +
-            </el-button>
-          </div>
+    <div id="file-status-info-root" v-if="show">
+        <!--标题-->
+        <div class="info-title">
+            <span>文件详情</span>
         </div>
-      </div>
-    </div>
-    <!--各种可以更改的属性-->
-    <div id="file-status-aside-modified-attributes">
-      <el-select
-              v-model="attribute1"
-              filterable
-              allow-create
-              placeholder="你TM选啊还是写啊">
-        <el-option
-                v-for="item in options1"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-        </el-option>
-      </el-select>
+        <!--基本信息-->
+        <div class="basic-info" v-if="basicInfo">
+            <span class="title">基本信息</span>
+            <div class="basic-info-items">
+                <span class="item-name">{{basicInfo.filename}}</span>
+                <span>文件类型：{{basicInfo.type}}</span>
+                <span>文件大小：{{basicInfo.size}}</span>
+                <span>创建时间：{{basicInfo.cTime}}</span>
+            </div>
+        </div>
+        <!--<div class="DataSource" v-if="otherInfo">-->
+        <!--<span>数据来源</span>-->
+        <!--<span>类别：{{otherInfo.sourceData.type}}</span>-->
+        <!--<span>数据源：{{otherInfo.sourceData.name}}</span>-->
+        <!--<el-button size="mini" @click="otherInfo.sourceData.url">-->
+        <!--<span>访问</span>-->
+        <!--<svg class="icon" aria-hidden="true">-->
+        <!--<use xlink:href="#icon-arrow"></use>-->
+        <!--</svg>-->
+        <!--</el-button>-->
+        <!--</div>-->
+        <div class="organization">
+            <div class="title">
+                组织分类
+            </div>
+            <div class="sort">
+                <svg class="icon" aria-hidden="true">
+                    <use xlink:href="#icon-wenjian"></use>
+                </svg>
+                <el-popover
+                        ref="addSort"
+                        placement="left-end"
+                        width="260">
+                    <div class="popover-sort-tree">
+                        <div class="popover-title">
+                            分类
+                        </div>
+                        <div class="sort-tree">
+                            <el-tree
+                                    node-key="id"
+                                    :data="popoverTreeData"
+                                    show-checkbox
+                                    ref="sortTree"
+                                    check-strictly
+                                    :default-expanded-keys="tempData"
+                                    @check-change="setSortDir">
+                            </el-tree>
+                        </div>
+                    </div>
+                </el-popover>
+                <!--当分类条目较多时，条目和按钮为一个整体，计算样式-->
+                <div class="item-wrapper">
+                    <!--分类的条目-->
+                    <div class="sort-items">
+                        <el-button size="mini" v-for="item in sorts" :key="item">{{item}}</el-button>
+                        <el-button size="mini" v-if="!sorts.length" @click="addFileSort" v-popover:addSort>
+                            添加分类
+                        </el-button>
+                        <el-button size="mini" v-if="sorts.length" v-popover:addSort @click="setCheckNode">
+                            +
+                        </el-button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--各种可以更改的属性-->
+        <div id="file-status-aside-modified-attributes">
+            <el-select
+                    v-model="attribute1"
+                    filterable
+                    allow-create
+                    placeholder="你TM选啊还是写啊">
+                <el-option
+                        v-for="item in options1"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                </el-option>
+            </el-select>
 
-      <el-select
-              v-model="attribute2"
-              filterable
-              allow-create
-              placeholder="你TM选啊还是写啊">
-        <el-option
-                v-for="item in options1"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-        </el-option>
-      </el-select>
+            <el-select
+                    v-model="attribute2"
+                    filterable
+                    allow-create
+                    placeholder="你TM选啊还是写啊">
+                <el-option
+                        v-for="item in options1"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                </el-option>
+            </el-select>
+        </div>
+        <!--底部各种按钮-->
+        <div id="file-status-aside-buttons">
+            <div>hhh</div>
+            <div>hhh</div>
+            <div>hhh</div>
+            <div>hhh</div>
+            <el-button type="primary" size="small" @click="addNewTaggedFile">更改属性</el-button>
+            <el-button size="small">自动识别</el-button>
+            <el-button size="small">忽略此文件</el-button>
+            <el-button size="small" @click="ignoreNewAttribute">放弃修改</el-button>
+        </div>
     </div>
-    <!--底部各种按钮-->
-    <div id="file-status-aside-buttons">
-      <div>hhh</div>
-      <div>hhh</div>
-      <div>hhh</div>
-      <div>hhh</div>
-      <el-button type="primary" size="small" @click="addNewTaggedFile">更改属性</el-button>
-      <el-button size="small">自动识别</el-button>
-      <el-button size="small">忽略此文件</el-button>
-      <el-button size="small">放弃修改</el-button>
-    </div>
-  </div>
 </template>
 
 <script>
-  import {mapState, mapActions} from 'vuex'
+  import { mapState, mapActions } from 'vuex'
 
   let tempData = ['1/1.txt/', '1/2.2/3.2/', '1/2.4/3/', '1/2.txt/']
   let tempSort = []
 
   export default {
-    name: 'FileInfo',
+    name: 'FileStatusAside',
+
     data () {
       return {
         // 记录分类的数组
@@ -139,14 +140,19 @@
       }
     },
 
-    computed: mapState({
-      show: state => state.modified.showFileInfo,
-      basicInfo: state => state.fileInfo.basicInfo,
-      otherInfo: state => state.fileInfo.otherInfo,
-      popoverTreeData: state => state.files.sortFileTree,
-      taggedModifiedFiles: state => state.modified.taggedModifiedFiles
-      // sorts: state => state.fileInfo.fileSorts
-    }),
+    computed: {
+      ...mapState({
+        show: state => state.modified.showFileInfo,
+        basicInfo: state => state.fileInfo.basicInfo,
+        otherInfo: state => state.fileInfo.otherInfo,
+        popoverTreeData: state => state.files.sortFileTree,
+        taggedModifiedFiles: state => state.modified.taggedModifiedFiles,
+        serialNumber: state => state.fileInfo.serialNumber,
+        modifiedFilesTree: state => state.modified.modifiedFilesTree,
+        nodeData: state => state.modified.nodeData
+        // sorts: state => state.fileInfo.fileSorts
+      })
+    },
 
     watch: {
       show () {
@@ -156,11 +162,27 @@
           tempSort.push(path.join('>'))
         }
         this.sorts = tempSort
+      },
+
+      // 通过观察basicInfo的变更来判断是否切换了不同的文件/文件夹
+      basicInfo () {
+        // 如果文件已打好标签，直接获取显示
+        if (this.taggedModifiedFiles.get(this.serialNumber + this.basicInfo.path)) {
+          let attributes = this.taggedModifiedFiles.get(this.serialNumber + this.basicInfo.path)
+          this.attribute1 = attributes.attribute1
+          this.attribute2 = attributes.attribute2
+        } else {    // 不存在的话显示空
+          this.attribute1 = ''
+          this.attribute2 = ''
+        }
       }
     },
 
     methods: {
       ...mapActions([
+        'setNodeData', // 设置当前节点信息
+        'renewNodeData',    // 更新当前节点数据
+        'removeTaggedFile', // 放弃修改文件/文件夹的属性
         'addTaggedModifiedFile' // 增加该打好标签的文件
       ]),
 
@@ -186,90 +208,100 @@
 
       // 添加打好标签的选中文件/文件夹
       addNewTaggedFile () {
+        // 添加打好标签的文件
         let newAttributes = {attribute1: this.attribute1, attribute2: this.attribute2}
-        let payload = {path: '/', newAttributes: newAttributes}
-        this.addTaggedModifiedFile(payload)
-        console.log(this.taggedModifiedFiles.get('/'))
+        // 更改中间的状态提示
+        this.renewNodeData(newAttributes)
+        console.log(this.taggedModifiedFiles)
+      },
+
+      // 忽略当前文件/文件夹的属性信息
+      ignoreNewAttribute () {
+        // store中删除
+        this.removeTaggedFile()
+        // 界面不显示
+        this.attribute1 = ''
+        this.attribute2 = ''
       }
     }
   }
 </script>
 
 <style lang="scss" scoped>
-  #file-status-info-root {
-    height: 100%;
-    width: 100%;
-    background-color: rgba(242, 242, 242, 0.6);
-    padding: 0.5em 1em;
-  }
-
-  // 所有子标题的公共样式
-  .title {
-    margin-top: 1em;
-    font-size: 1.1em;
-    font-weight: 500;
-  }
-
-  .info-title {
-    margin: 1em 0;
-    font-weight: 500;
-    span {
-      font-size: 1.2em;
+    #file-status-info-root {
+        height: 100%;
+        width: 100%;
+        background-color: rgba(242, 242, 242, 0.6);
+        padding: 0.5em 1em;
     }
-    .el-button {
-      float: right;
-      margin-right: 1em;
-      margin-top: 0.2em;
-      width: 3.5em;
-    }
-  }
 
-  .basic-info {
-    .basic-info-items {
-      margin: 0.5em 0 0 1em;
-      span {
-        display: block;
-        font-size: 0.8em;
-        margin: 0.5em 0;
-      }
-      .item-name {
-        font-size: 0.9em;
+    // 所有子标题的公共样式
+    .title {
+        margin-top: 1em;
+        font-size: 1.1em;
         font-weight: 500;
+    }
+
+    .info-title {
         margin: 1em 0;
-      }
-    }
-  }
-
-  .organization {
-    .sort {
-      position: relative;
-      margin: 1em;
-      .icon {
-        float: left;
-        font-size: 1.4em;
-      }
-      .item-wrapper {
-        position: absolute;
-        top: 0;
-        left: 2em;
-        .el-button {
-          font-size: 0.8em;
-          margin: 0.2em 0.5em 0.5em 0;
+        font-weight: 500;
+        span {
+            font-size: 1.2em;
         }
-      }
+        .el-button {
+            float: right;
+            margin-right: 1em;
+            margin-top: 0.2em;
+            width: 3.5em;
+        }
     }
-  }
 
-  .popover-sort-tree {
-    .popover-title {
-      margin: 0.5em 0;
-      text-align: center;
-      letter-spacing: 1.5em;
-      font-size: 1.2em;
-      font-weight: 600;
+    .basic-info {
+        .basic-info-items {
+            margin: 0.5em 0 0 1em;
+            span {
+                display: block;
+                font-size: 0.8em;
+                margin: 0.5em 0;
+            }
+            .item-name {
+                font-size: 0.9em;
+                font-weight: 500;
+                margin: 1em 0;
+            }
+        }
     }
-    .el-checkbox {
-      float: right;
+
+    .organization {
+        .sort {
+            position: relative;
+            margin: 1em;
+            .icon {
+                float: left;
+                font-size: 1.4em;
+            }
+            .item-wrapper {
+                position: absolute;
+                top: 0;
+                left: 2em;
+                .el-button {
+                    font-size: 0.8em;
+                    margin: 0.2em 0.5em 0.5em 0;
+                }
+            }
+        }
     }
-  }
+
+    .popover-sort-tree {
+        .popover-title {
+            margin: 0.5em 0;
+            text-align: center;
+            letter-spacing: 1.5em;
+            font-size: 1.2em;
+            font-weight: 600;
+        }
+        .el-checkbox {
+            float: right;
+        }
+    }
 </style>
