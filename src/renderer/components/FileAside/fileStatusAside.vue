@@ -106,7 +106,7 @@
             <el-button type="primary" size="small" @click="addNewTaggedFile">更改属性</el-button>
             <el-button size="small">自动识别</el-button>
             <el-button size="small">忽略此文件</el-button>
-            <el-button size="small">放弃修改</el-button>
+            <el-button size="small" @click="ignoreNewAttribute">放弃修改</el-button>
         </div>
     </div>
 </template>
@@ -182,6 +182,7 @@
       ...mapActions([
         'setNodeData', // 设置当前节点信息
         'renewNodeData',    // 更新当前节点数据
+        'removeTaggedFile', // 放弃修改文件/文件夹的属性
         'addTaggedModifiedFile' // 增加该打好标签的文件
       ]),
 
@@ -208,13 +209,19 @@
       // 添加打好标签的选中文件/文件夹
       addNewTaggedFile () {
         // 添加打好标签的文件
-//        let newAttributes = {attribute1: this.attribute1, attribute2: this.attribute2}
-        // let payload = {path: this.serialNumber + this.basicInfo.path, newAttributes: newAttributes}
-//        this.addTaggedModifiedFile(payload)
-
+        let newAttributes = {attribute1: this.attribute1, attribute2: this.attribute2}
         // 更改中间的状态提示
-        // this.renewNodeData({func: this.addTaggedModifiedFile(), serialNumber: this.serialNumber, newAttributes: newAttributes})
-        this.renewNodeData({func: () => (console.log('fuck')), serialNumber: '1111', newAttributes: {hh: 1}})
+        this.renewNodeData(newAttributes)
+        console.log(this.taggedModifiedFiles)
+      },
+
+      // 忽略当前文件/文件夹的属性信息
+      ignoreNewAttribute () {
+        // store中删除
+        this.removeTaggedFile()
+        // 界面不显示
+        this.attribute1 = ''
+        this.attribute2 = ''
       }
     }
   }

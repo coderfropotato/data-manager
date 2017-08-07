@@ -166,7 +166,14 @@
       // 提交选中的修改文件
       commitSelectedFiles () {
         this.selectedModifiedFiles = this.$refs.tree.getCheckedKeys()
-        console.log(this.selectedModifiedFiles)
+        // console.log(this.selectedModifiedFiles)
+        let res = []
+        for (let i in this.selectedModifiedFiles) {
+          if (this.taggedModifiedFiles.get(this.selectedModifiedFiles[i])) {
+            res.push(this.selectedModifiedFiles[i])
+          }
+        }
+        console.log(res)
       },
 
       // 忽略选中的文件
