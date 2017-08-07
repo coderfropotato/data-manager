@@ -135,7 +135,7 @@
       // 所有文件选项的数据，即管理的磁盘
       diskDir: state => state.files.allFiles,
       // 分类文件夹树
-      sortFileTree: state => state.files.sortFileTree,
+      // sortFileTree: state => state.files.sortFileTree,
       // 智能分类列表
       smartSortList: state => state.newDirectory.smartSortList
       // sortFileTree: state => state.files.sortFileTree
