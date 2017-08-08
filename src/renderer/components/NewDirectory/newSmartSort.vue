@@ -6,14 +6,14 @@
     </div>
     <div>
       <span>添加限制条件</span>
-      <el-select v-model="value" placeholder="请选择" size="small" @change="show">
-        <el-option
-          v-for="item in options"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value">
-        </el-option>
-      </el-select>
+      <div class="searchConditon">
+        <el-button v-for="(item,index) in limitedConditions" :key="item" size="mini" :index="index">{{item}}<i
+          class="el-icon-circle-close" @click="deleteLimitedCondition(index)"></i></el-button>
+        </el-button>
+      </div>
+      <div v-for="item in searchConditions">{{item.title}}
+        <el-button v-for="it in item.attribute" :key="it" @click="addLimitedCondition">{{it}}</el-button>
+      </div>
     </div>
     <div class="search-input">
       <el-button v-for="(item,index) in selectedCondition" :key="item" size="mini">{{item}}<i
@@ -41,11 +41,12 @@
 </template>
 <script>
   import {ipcRenderer} from 'electron'
-
+  import {mapState} from 'vuex'
   export default {
     data () {
       return {
         selectedCondition: [],
+        limitedConditions: [],
         newDirList: [
           {
             title: '负责人'
@@ -59,29 +60,56 @@
           {
             title: '文件类型'
           }],
-        options: [{
-          value: '负责人',
-          label: '负责人'
-        }, {
-          value: '年份',
-          label: '年份'
-        }, {
-          value: '项目',
-          label: '项目'
-        }, {
-          value: '文件类型',
-          label: '文件类型'
-        }],
-        value: '',
+//        options: [{
+//          value: '负责人',
+//          label: '负责人'
+//        }, {
+//          value: '年份',
+//          label: '年份'
+//        }, {
+//          value: '项目',
+//          label: '项目'
+//        }, {
+//          value: '文件类型',
+//          label: '文件类型'
+//        }],
+//        value: '',
         i: 0,
         // amount是新建智能视图的数量
         amount: 1,
-        name: ''
+        name: '',
+        // 存储限制条件的对象
+        limitedObject: []
       }
     },
+    computed: mapState({
+      searchConditions: state => state.newDirectory.searchConditions
+    }),
     mounted () {
     },
     methods: {
+      addLimitedCondition (e) {
+        console.log(e.target.innerText)
+        let text = e.target.innerText
+        let count = 0
+        let length = this.limitedConditions.length
+        // 如果用户还未选择条件，则直接添加
+        if (length === 0) {
+          this.limitedConditions.push(text)
+        } else { // 如果已经有选择的条件，判断用户点击的条件是否重复
+          for (this.i = 0; this.i < length; this.i++) {
+            if (this.limitedConditions[this.i].indexOf(text) !== -1) {
+              count++
+            }
+          } // 如果没有重复，则向selectedCondition添加元素
+          if (count === 0) {
+            this.limitedConditions.push(text)
+          }
+        }
+      },
+      deleteLimitedCondition (index) {
+        this.limitedConditions.splice(index, 1)
+      },
       showItem (index) {
         let text = index
         let count = 0
@@ -153,13 +181,17 @@
     >div {
       margin: 1em;
     }
+    .searchConditon,
     .search-input {
-      float: left;
       width: 20em;
-      margin: 1.2em 0 0 1em;
+      margin: 1em 0;
       height: 1.7em;
       border: 1px solid #bfcbd9;
       background-color: #fff;
+    }
+    .search-input {
+      float: left;
+      margin-left: 1em;
     }
     > .el-button {
       margin-top: 1.5em;
