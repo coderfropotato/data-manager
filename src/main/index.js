@@ -42,7 +42,6 @@ ipcMain.on('change-data', (event, call, data) => {
 })
 
 // 打开添加文件窗口
-
 ipcMain.on('addFile', (event, arg) => {
   if (arg.API === 'open') {
     let URL = arg.URL

@@ -4,16 +4,17 @@
       <div class="title">
         <span>所有文件</span>
         <el-button size="mini" @click="trigShow" data-name="allFiles">{{content.allFiles}}</el-button>
-        <el-button size="mini" class="button-inner-plus">+</el-button>
+        <el-button size="mini" class="button-inner-plus" @click="openNewDirWin">+</el-button>
       </div>
       <div class="disks" v-show="show.allFiles">
         <!--遍历后台传送的磁盘数组，默认第一个为我的电脑-->
         <div class="disk" v-for="(disk, index) in diskDir">
+          <!--根据index设置不同的 Icon-->
           <svg class="icon" aria-hidden="true">
             <use xlink:href="#icon-diannao" v-if="!index"></use>
             <use xlink:href="#icon-harddisk" v-if="index"></use>
           </svg>
-          <div class="item-title" @click="loadDiskFileTree">
+          <div class="item-title" @click="loadDiskFileTree(index)">
             <el-button type="text">
               {{disk}}
             </el-button>
@@ -37,7 +38,7 @@
         <el-button size="mini" class="button-inner-plus" v-popover:addSortPop>+</el-button>
       </div>
       <!--<div v-for="(item,index) in smartSortList" :key="item" class="smartSortList">-->
-        <!--<el-button size="small">{{item}}</el-button>-->
+      <!--<el-button size="small">{{item}}</el-button>-->
       <!--</div>-->
       <el-tree
           :data="sortFileTree"
@@ -88,9 +89,7 @@
   import Tree from '@/components/Sidebar/tree'
   import {mapState} from 'vuex'
   import bus from '@/assets/JS/bus'
-  // 测试用
-  import travelTree from '@/assets/JS/handleSortTreeData'
-  import fs from 'fs'
+  import {ipcRenderer} from 'electron'
 
   export default {
     name: 'AllFiles',
@@ -109,7 +108,6 @@
           sortFiles: '收起',
           others: '收起'
         },
-        sortFileTree: [],
         // 记录当前选中的高亮节点，用于添加新节点时定位父节点
         currentNode: {},
         newSortDirName: '新建分类',
@@ -120,26 +118,15 @@
       // 所有文件选项的数据，即管理的磁盘
       diskDir: state => state.files.allFiles,
       // 智能分类列表
-      smartSortList: state => state.newDirectory.smartSortList
+      smartSortList: state => state.newDirectory.smartSortList,
       // 分类文件夹树
-      // sortFileTree: state => state.files.sortFileTree
+      sortFileTree: state => state.files.sortFileTree
     }),
     mounted () {
       // 重置列表数据，防止和搜索组件数据混合
       this.$store.commit('setFileList', [])
-      let tree = []
-      fs.readFile('/Users/wuyiqing/Desktop/datas.json', {flag: 'r+', encoding: 'utf8'}, (err, data) => {
-        if (err) {
-          console.error(err)
-        }
-        this.rowFileTree = data
-        travelTree(JSON.parse(data), tree, '')
-        this.sortFileTree = tree
-        // 临时用
-        this.$store.commit('addSmartSort', tree[0])
-      })
       // 插入文件小图标
-      this.insertFileIcon()
+      // this.insertFileIcon()
       // 接受 sidebar 加弹窗的新建分类
       bus.$on('newSort', () => {
         this.appendNode()
@@ -192,9 +179,13 @@
         this.$store.commit('setFileList', [])
       },
       // 加载磁盘（包含我的电脑）文件树
-      loadDiskFileTree (e) {
-        let diskName = e.target.innerText
-        this.$store.dispatch('getDiskFileTree', diskName)
+      loadDiskFileTree (index) {
+        let serialNumber
+        if (index === 0) {
+          serialNumber = 'myComputer'
+        }
+        this.$store.dispatch('getDiskFileTree', serialNumber)
+        this.$router.push('/files/diskdirectory')
       },
       // 加载分类文件列表
       loadSortFileList (nodeObj, node, component) {
@@ -218,6 +209,14 @@
         // 会触发MaxListenersExceededWarning 错误
         // TODO 解决当点击展开与收起次数过多时触发 MaxListenersExceededWarning
         bus.$emit('tree-height-changed')
+      },
+
+      // 打开新建目录窗口
+      openNewDirWin () {
+        ipcRenderer.send('addFile', {
+          API: 'open',
+          URL: '/newfile/newdiskdir'
+        })
       },
 
       // 在当前选中节点下添加新的节点，如果没有选中，则新建一个分类树
@@ -448,11 +447,11 @@
   }
 
   // 节点问题
-  .el-tree-node{
-    .el-input{
+  .el-tree-node {
+    .el-input {
       display: none;
       width: 80%;
-      input{
+      input {
         border: none;
         // background-color: inherit;
         padding: 0;

@@ -219,56 +219,56 @@
       }
 
     }
-  }
 
-  .el-upload-dragger {
-    .el-icon-plus {
-      vertical-align: middle;
-      text-align: center;
-      font-size: 48px;
-    }
-  }
-
-  .lists-display {
-    .list-item {
-      position: relative;
-      width: 100%;
-      height: 4em;
-      padding: 0 2em;
-      overflow: hidden;
-      cursor: pointer;
-      .file-name {
-        font-size: 1.1em;
-        font-weight: 500;
-        margin: 0.25em 0;
-      }
-      .create-time,
-      .size {
-        display: inline-block;
-        margin-right: 1em;
-      }
-      .edit {
-        position: absolute;
-        top: 1em;
-        vertical-align: -0.5em;
-        right: 2em;
+    .el-upload-dragger {
+      .el-icon-plus {
+        vertical-align: middle;
+        text-align: center;
+        font-size: 48px;
       }
     }
-    .list-item:nth-child(even) {
-      background-color: #eef1f6;
-    }
-  }
 
-  .grid-display {
-    .grid-item {
-      text-align: center;
-      margin: 1em;
-      .icon {
-        font-size: 3em;
+    .lists-display {
+      .list-item {
+        position: relative;
+        width: 100%;
+        height: 4em;
+        padding: 0 2em;
+        overflow: hidden;
+        cursor: pointer;
+        .file-name {
+          font-size: 1.1em;
+          font-weight: 500;
+          margin: 0.25em 0;
+        }
+        .create-time,
+        .size {
+          display: inline-block;
+          margin-right: 1em;
+        }
+        .edit {
+          position: absolute;
+          top: 1em;
+          vertical-align: -0.5em;
+          right: 2em;
+        }
       }
-      .file-name {
-        font-size: 0.8em;
+      .list-item:nth-child(even) {
+        background-color: #eef1f6;
+      }
+    }
+
+    .grid-display {
+      .grid-item {
+        text-align: center;
         margin: 1em;
+        .icon {
+          font-size: 3em;
+        }
+        .file-name {
+          font-size: 0.8em;
+          margin: 1em;
+        }
       }
     }
   }
