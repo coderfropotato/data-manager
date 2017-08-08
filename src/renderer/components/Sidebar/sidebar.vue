@@ -43,6 +43,7 @@
       </div>
     </div>
 
+    <!--添加目录-->
     <div class="bottom" ref="bottom">
       <el-popover
           ref="popoverAdd"
@@ -61,7 +62,7 @@
       <el-button type="text" class="add" v-popover:popoverAdd>+</el-button>
 
       <!--设置-->
-      <svg class="icon" aria-hidden="true">
+      <svg class="icon" aria-hidden="true" style="display: none;">
         <use xlink:href="#icon-setting"></use>
       </svg>
     </div>
@@ -89,15 +90,16 @@
           3: {
             title: '新增智能分类',
             url: '/newsmartsortdir'
-          },
-          4: {
-            title: '从搜索结果新建分类',
-            url: '/newsortformsearch'
-          },
-          5: {
-            title: '从搜索结果新建智能分类',
-            url: '/newsamrtsortformsearch'
           }
+          // TODO 未实现功能
+//          4: {
+//            title: '从搜索结果新建分类',
+//            url: '/newsortformsearch'
+//          },
+//          5: {
+//            title: '从搜索结果新建智能分类',
+//            url: '/newsamrtsortformsearch'
+//          }
         },
         // TODO：无法使用计算属性，不能响应窗口大小变化，未来可做更深的考虑
         middleHeight: 400
@@ -127,16 +129,17 @@
     },
     methods: {
       openNewWindow (indexPath) {
-        // 嵌套路由
-        let url = '/newfile' + indexPath
-        console.log(url)
-        ipcRenderer.send('addFile', {
-          API: 'open',
-          URL: url,
-          fileType: ''
-        })
-        console.log(this.$store.state.files.sortFileTree)
-        ipcRenderer.send('send-data-to-newWin', this.$store.state.files.sortFileTree)
+        // 新建分类选项
+        if (indexPath === '/newsortdir') {
+          bus.$emit('newSort')
+        } else {
+          // 嵌套路由
+          let url = '/newfile' + indexPath
+          ipcRenderer.send('addFile', {
+            API: 'open',
+            URL: url
+          })
+        }
       },
       // 更新滚动样式
       updateStyle () {
@@ -240,7 +243,7 @@
       }
     }
     // 文件更改状态角标样式
-    .el-badge__content{
+    .el-badge__content {
       top: 1em;
       right: 4px;
     }

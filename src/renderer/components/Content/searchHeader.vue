@@ -39,7 +39,7 @@
     <div class="middle">
       <div class="search-condition-header">
         <span class="condition-title">搜索条件</span>
-        <el-button size="small" @click="fold">收起</el-button>
+        <el-button size="small" @click="fold">{{conditionShowName}}</el-button>
       </div>
       <div class="search-condition" v-if="conditionShow">
         <div class="condition" v-for="(item,index) in searchConditionOptions" :key="index">
@@ -78,17 +78,22 @@
           }
         ],
         // 搜索条件区域是否显示
-        conditionShow: true,
+        conditionShow: false,
+        conditionShowName: '展开',
         // 所有可选的搜索条件
         searchConditionOptions: [
           {
             label: '数据类别',
-            name: 'dataType',
+            name: 'type',
+            // 映射英文名
+            value: ['public', 'private', 'share'],
             options: ['公共数据', '私有数据', '共享数据']
           },
           {
             label: '文件类型',
-            name: 'fileType',
+            name: 'filetype',
+            // 映射英文名
+            value: ['FASTA', 'FASTQ', 'BAM', 'SAM', 'VCF'],
             options: ['FASTA', 'FASTQ', 'BAM', 'SAM', 'VCF']
           }
         ],
@@ -129,6 +134,11 @@
       // 点击收起按钮，折叠搜索条件区域
       fold () {
         this.conditionShow = !this.conditionShow
+        if (this.conditionShow === true) {
+          this.conditionShowName = '收起'
+        } else {
+          this.conditionShowName = '展开'
+        }
       },
       // @item 类型
       // @index 序号（从左到右）
@@ -138,7 +148,7 @@
 
         // 放入最终的搜索条件中
         let condition = {}
-        condition[item.label] = option
+        condition[item.name] = item.value
         this.searchCondition.push(condition)
 
         // 转化成 Set，保证数据唯一性
@@ -158,13 +168,17 @@
       focus () {
         document.querySelector('#searchInput').focus()
       },
+      // 向后台发送搜索条件，获取搜索结果
       search () {
-        if (this.searchInput !== '') {
-          this.searchCondition.push({
-            'custom': this.searchInput
-          })
+        // 合并自定义输入数据选择搜索条件
+        let conditions = {
+          'customize': {
+            'customize': this.searchInput
+          },
+          'options': this.searchCondition
         }
-        this.$store.dispatch('getSearchResult', this.searchCondition)
+        // 调用方法，获取数据
+        this.$store.dispatch('getSearchResult', conditions)
       }
     }
   }

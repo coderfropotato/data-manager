@@ -10,7 +10,7 @@ const state = {
 }
 
 const mutations = {
-  [types.SET_LIST_DISPLAY_STATUS] (state, status) {
+  [types.SET_FILE_DISPLAY_STATUS] (state, status) {
     state.listDisplayStatus = status
   },
   [types.TOGGLE_DRAG_SHOW] (state, status) {

@@ -4,16 +4,17 @@
       <div class="title">
         <span>所有文件</span>
         <el-button size="mini" @click="trigShow" data-name="allFiles">{{content.allFiles}}</el-button>
-        <el-button size="mini" class="button-inner-plus">+</el-button>
+        <el-button size="mini" class="button-inner-plus" @click="openNewDirWin">+</el-button>
       </div>
       <div class="disks" v-show="show.allFiles">
         <!--遍历后台传送的磁盘数组，默认第一个为我的电脑-->
         <div class="disk" v-for="(disk, index) in diskDir">
+          <!--根据index设置不同的 Icon-->
           <svg class="icon" aria-hidden="true">
             <use xlink:href="#icon-diannao" v-if="!index"></use>
             <use xlink:href="#icon-harddisk" v-if="index"></use>
           </svg>
-          <div class="item-title" @click="loadDiskFileTree">
+          <div class="item-title" @click="loadDiskFileTree(index)">
             <el-button type="text">
               {{disk}}
             </el-button>
@@ -39,6 +40,9 @@
       <div v-for="(item,index) in smartSortList" :key="item" class="smartSortList">
         <el-button size="small" @click="showSmartSort">{{item}}</el-button>
       </div>
+      <!--<div v-for="(item,index) in smartSortList" :key="item" class="smartSortList">-->
+      <!--<el-button size="small">{{item}}</el-button>-->
+      <!--</div>-->
       <el-tree
           :data="sortFileTree"
           node-key="id"
@@ -88,9 +92,7 @@
   import Tree from '@/components/Sidebar/tree'
   import {mapState} from 'vuex'
   import bus from '@/assets/JS/bus'
-  // 测试用
-//  import travelTree from '@/assets/JS/handleSortTreeData'
-//  import fs from 'fs'
+  import {ipcRenderer} from 'electron'
 
   export default {
     name: 'AllFiles',
@@ -109,37 +111,30 @@
           sortFiles: '收起',
           others: '收起'
         },
-        sortFileTree: [],
         // 记录当前选中的高亮节点，用于添加新节点时定位父节点
         currentNode: {},
-        newSortDirName: ''
+        newSortDirName: '新建分类',
+        rowFileTree: []
       }
-    },
-    mounted () {
-//      let tree = []
-//      fs.readFile('/Users/wuyiqing/Desktop/datas.json', {flag: 'r+', encoding: 'utf8'}, (err, data) => {
-//        if (err) {
-//          console.error(err)
-//        }
-//        travelTree(JSON.parse(data), tree, '')
-//        this.sortFileTree = tree
-//        // 临时用
-//        this.$store.commit('addSmartSort', tree[0])
-//      })
-//      // 重置列表数据，防止和搜索组件数据混合
-//      this.$store.commit('setFileList', [])
-      // 插入文件小图标
-      this.insertFileIcon()
     },
     computed: mapState({
       // 所有文件选项的数据，即管理的磁盘
       diskDir: state => state.files.allFiles,
-      // 分类文件夹树
-      // sortFileTree: state => state.files.sortFileTree,
       // 智能分类列表
-      smartSortList: state => state.newDirectory.smartSortList
-      // sortFileTree: state => state.files.sortFileTree
+      smartSortList: state => state.newDirectory.smartSortList,
+      // 分类文件夹树
+      sortFileTree: state => state.files.sortFileTree
     }),
+    mounted () {
+      // 重置列表数据，防止和搜索组件数据混合
+      this.$store.commit('setFileList', [])
+      // 插入文件小图标
+      // this.insertFileIcon()
+      // 接受 sidebar 加弹窗的新建分类
+      bus.$on('newSort', () => {
+        this.appendNode()
+      })
+    },
     methods: {
       // 插入文件Icon
       insertFileIcon () {
@@ -177,15 +172,23 @@
       // 加载忽略的内容
       loadIgnoreContent () {
         this.$store.dispatch('getIgnore')
+        // 重置列表数据，防止和搜索组件数据混合
+        this.$store.commit('setFileList', [])
       },
       // 加载回收站的内容
       loadTrashContent () {
         this.$store.dispatch('getTrash')
+        // 重置列表数据，防止和搜索组件数据混合
+        this.$store.commit('setFileList', [])
       },
       // 加载磁盘（包含我的电脑）文件树
-      loadDiskFileTree (e) {
-        let diskName = e.target.innerText
-        this.$store.dispatch('getDiskFileTree', diskName)
+      loadDiskFileTree (index) {
+        let serialNumber
+        if (index === 0) {
+          serialNumber = 'myComputer'
+        }
+        this.$store.dispatch('getDiskFileTree', serialNumber)
+        this.$router.push('/files/diskdirectory')
       },
       // 加载分类文件列表
       loadSortFileList (nodeObj, node, component) {
@@ -210,43 +213,144 @@
         // TODO 解决当点击展开与收起次数过多时触发 MaxListenersExceededWarning
         bus.$emit('tree-height-changed')
       },
+
+      // 打开新建目录窗口
+      openNewDirWin () {
+        ipcRenderer.send('addFile', {
+          API: 'open',
+          URL: '/newfile/newdiskdir'
+        })
+      },
+
       // 在当前选中节点下添加新的节点，如果没有选中，则新建一个分类树
       appendNode () {
         // 父节点信息
         let node = this.currentNode.node
         let nodeObj = this.currentNode.nodeObj
-        // 如果父节点存在，即有选中节点
+        // 判断父节点是否存在，即是否选中节点
         if (node) {
-          // 新建节点的 ID，即路径
+          // 判断文件夹名是否重复
+          let set = new Set(nodeObj.children)
+          if (set.size < nodeObj.children.length) {
+            console.log('文件名重复')
+            return
+          }
+          // 获取新建节点的 ID，即路径
           let nodeId = nodeObj.id + this.newSortDirName + '/'
-          node.store.append({
+          let data = {
             label: this.newSortDirName,
             id: nodeId,
             children: []
-          }, nodeObj)
+          }
+          // 调用源代码中的方法增加节点，单是不会更新源数据（非API）
+          node.store.append(data, nodeObj)
+          console.log(node.store.root)
         } else {
-          this.sortFileTree.push({
+          // 直接在源数据中添加新节点
+          let data = {
             label: this.newSortDirName,
             id: this.newSortDirName,
             children: []
-          })
+          }
+          this.sortFileTree.push(data)
         }
       },
-      renderContent (h, { node, data, store }) {
+
+      // 删除节点
+      removeNode (node, data) {
+        // 调用源代码中的方法删除节点，单是不会更新源数据（非API）
+        node.store.remove(data)
+      },
+
+      // 确认编辑节点的结果
+      confirmEditNode (node, data) {
+        console.log(node.data.label)
+      },
+
+      // 树节点渲染函数 vue-render
+      renderContent (h, {node, data, store}) {
         return h(
           'span',
           [
-            h('span', node.label),
             h(
               'span',
-              h(
-                'i',
-                {
-                  attr: {
-                    class: 'el-icon-delete'
+              {
+                style: {
+                  display: data.labelShow
+                }
+              },
+              [node.label]
+            ),
+            // 删除按钮
+            h(
+              'span',
+              {
+                attrs: {
+                  class: 'icon-wrapper'
+                },
+                on: {
+                  click: (e) => {
+                    e.preventDefault()
+                    this.removeNode(node, data)
                   }
                 }
-              )
+              },
+              [
+                h(
+                  'i',
+                  {
+                    attrs: {
+                      class: 'el-icon-delete'
+                    }
+                  }
+                )
+              ]
+            ),
+            // 编辑按钮
+            h(
+              'span',
+              {
+                attrs: {
+                  class: 'icon-wrapper'
+                },
+                on: {
+                  click: (e) => {
+                    e.preventDefault()
+                    data.labelShow = 'none'
+                    data.inputShow = 'inline-block'
+                    this.editNode(node, data)
+                  }
+                }
+              },
+              [
+                h(
+                  'i',
+                  {
+                    attrs: {
+                      class: 'el-icon-edit'
+                    }
+                  }
+                )
+              ]
+            ),
+            h(
+              'el-input',
+              {
+                style: {
+                  display: data.inputShow
+                },
+                on: {
+                  blur: e => {
+                    data.labelShow = 'inline-block'
+                    data.inputShow = 'none'
+                    data.label = e.target.value
+                    this.confirmEditNode(node, data)
+                  }
+                },
+                attrs: {
+                  value: data.label
+                }
+              }
             )
           ])
       },
@@ -300,6 +404,19 @@
       background-color: inherit;
       border: none;
       margin: 0.3em 1em;
+      // 删除小图标
+      .icon-wrapper {
+        display: inline-block;
+        float: right;
+        width: 2em;
+        height: 2em;
+        opacity: 0;
+        line-height: 36px;
+        cursor: pointer;
+        &:hover {
+          opacity: 1;
+        }
+      }
     }
 
     .el-button--text {
@@ -335,6 +452,20 @@
     .el-input {
       float: left;
       width: 10em;
+    }
+  }
+
+  // 节点问题
+  .el-tree-node {
+    .el-input {
+      display: none;
+      width: 80%;
+      input {
+        border: none;
+        // background-color: inherit;
+        padding: 0;
+        font-size: 1.1em;
+      }
     }
   }
 </style>

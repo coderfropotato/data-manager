@@ -47,6 +47,12 @@
         </el-col>
       </el-row>
     </div>
+    <!--导入文件按钮-->
+    <div class="import-button">
+      <router-link to="/files/importfile">
+        <el-button type="primary" icon="plus"></el-button>
+      </router-link>
+    </div>
   </div>
 </template>
 <script>
@@ -109,19 +115,38 @@
     }
   }
 </script>
-<style lang="scss" scoped>
-  #scrollBar {
-    position: relative;
-    overflow: hidden;
-    margin-right: 1em;
-    .scrollBar-inner {
+<style lang="scss">
+  #fileHeader-root {
+    // 上级组件content.vue position 设置为relative
+    #scrollBar {
       position: relative;
+      overflow: hidden;
+      margin-right: 1em;
+      .scrollBar-inner {
+        position: relative;
+      }
     }
-  }
+    // 导航路径面包屑
+    .pathArea {
+      font-size: 14px;
+      display: inline-block;
+      vertical-align: -0.2em;
+    }
 
-  .pathArea {
-    font-size: 14px;
-    display: inline-block;
-    vertical-align: -0.2em;
+    // 导入文件按钮
+    .import-button {
+      position: absolute;
+      bottom: 2em;
+      right: 2em;
+      .el-button{
+        height: 3em;
+        width: 3em;
+        border-radius: 4em;
+        box-shadow: 0 4px 4px 0 rgba(0,0,0,.12), 0 0 6px 0 rgba(0,0,0,.2);
+      }
+      .el-icon-plus{
+        margin-left: -0.1em;
+      }
+    }
   }
 </style>

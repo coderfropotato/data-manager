@@ -57,6 +57,7 @@
 </template>
 <script>
   import {ipcRenderer} from 'electron'
+  import {mapState} from 'vuex'
   import fs from 'fs'
 
   export default {
@@ -66,7 +67,18 @@
         importFiles: []
       }
     },
+    computed: mapState({
+      importFilesMap: state => state.files.importFilesMap,
+      path: state => state.files.currentPath
+    }),
     mounted () {
+      if (this.path === '') {
+        this.$message({
+          message: '请选择分类或磁盘',
+          type: 'error',
+          showClose: true
+        })
+      }
       // 遍历Map，获取文件列表
       this.getImportFileList()
       this.dragEvent()
@@ -171,7 +183,6 @@
           // 重定向到导入文件页面
           // 设置拖拽区域隐藏
           this.$store.commit('toggleDragShow', false)
-          this.$router.push('/files/uploadfile')
         }
         // 遍历Map，获取文件列表
         this.getImportFileList()
@@ -192,7 +203,7 @@
         // 将 Map 转换成数组
         let fileList = []
         // Map
-        let files = this.$store.state.files.importFiles
+        let files = this.importFilesMap
         for (let file of files.values()) {
           let tempObj = {
             name: file.name,
@@ -211,7 +222,7 @@
         // 文件夹的路径是文件夹的唯一标志 key
         // 从 Map 中删除文件
         let filePath = this.importFiles[index].path
-        let importFilesMap = this.$store.state.files.importFiles
+        let importFilesMap = this.importFilesMap
         if (importFilesMap.has(filePath)) {
           importFilesMap.delete(filePath)
         }
@@ -221,6 +232,14 @@
 
       // 确认导入文件
       confirmImportFiles () {
+        if (this.path === '') {
+          this.$message({
+            message: '请选择分类磁盘',
+            type: 'error',
+            showClose: true
+          })
+          return
+        }
         this.$store.dispatch('confirmImportFiles').then(({status, fileAmount}) => {
           // 导入文件夹的数量为0，则报错提醒
           if (fileAmount === 0) {

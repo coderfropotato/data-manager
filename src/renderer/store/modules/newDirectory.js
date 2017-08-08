@@ -2,7 +2,7 @@
  * 管理单个文件的基本信息，用于右侧文件详情显示
  */
 
-// import sendMessage from '@/api'
+import sendMessage from '@/api'
 import * as types from '@/store/mutation-types'
 import * as object from '@/api/data'
 const state = {
@@ -14,6 +14,18 @@ const state = {
 }
 
 const actions = {
+  sendNewSortInfo ({commit}, {path}) {
+    sendMessage('', path).then(status => {
+    })
+  },
+  // 获取文件详情
+  // setNewSmartSort ({commit}, payload) {
+  //   sendMessage('setNewSmartSort', {payload}).then(data => {
+  //     // SmartSortList是要展示的智能视图名称列表
+  //     let SmartSortList = data
+  //     commit(types.SET_NEW_SMART_SORT_INFO, SmartSortList)
+  //   })
+  // }
 
   // 将新添加的智能视图添加到智能视图列表中去
   // temp 包含着名称，限制条件，选择条件 (选择条件是一个数组）

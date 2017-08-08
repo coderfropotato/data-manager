@@ -11,6 +11,8 @@ function travelTree (obj, data, Id) {
     if (Object.keys(obj[name]).length >= 1) {
       let temp = {
         id: '',
+        inputShow: 'none',
+        labelShow: 'inline-block',
         label: name.toString(),
         children: []
       }
@@ -21,6 +23,8 @@ function travelTree (obj, data, Id) {
     } else {
       let temp = {
         id: [],
+        inputShow: 'none',
+        labelShow: 'inline-block',
         label: name.toString()
       }
       temp.id = Id

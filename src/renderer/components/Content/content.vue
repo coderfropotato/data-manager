@@ -3,6 +3,7 @@
     <router-view name="ContentHeader"></router-view>
     <router-view name="ContentMiddle"></router-view>
     <router-view name="ContentBottom"></router-view>
+
   </div>
 </template>
 <script>
@@ -14,6 +15,7 @@
 </script>
 <style lang="scss">
   #content-root {
+    position: relative;
     height: 100%;
     .header {
       height: 3em;
