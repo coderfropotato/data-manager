@@ -39,7 +39,7 @@
     <div class="middle">
       <div class="search-condition-header">
         <span class="condition-title">搜索条件</span>
-        <el-button size="small" @click="fold">收起</el-button>
+        <el-button size="small" @click="fold">{{conditionShowName}}</el-button>
       </div>
       <div class="search-condition" v-if="conditionShow">
         <div class="condition" v-for="(item,index) in searchConditionOptions" :key="index">
@@ -78,7 +78,8 @@
           }
         ],
         // 搜索条件区域是否显示
-        conditionShow: true,
+        conditionShow: false,
+        conditionShowName: '展开',
         // 所有可选的搜索条件
         searchConditionOptions: [
           {
@@ -133,6 +134,11 @@
       // 点击收起按钮，折叠搜索条件区域
       fold () {
         this.conditionShow = !this.conditionShow
+        if (this.conditionShow === true) {
+          this.conditionShowName = '收起'
+        } else {
+          this.conditionShowName = '展开'
+        }
       },
       // @item 类型
       // @index 序号（从左到右）

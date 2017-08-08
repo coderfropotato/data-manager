@@ -2,7 +2,7 @@
  * 管理单个文件的基本信息，用于右侧文件详情显示
  */
 
-// import sendMessage from '@/api'
+import sendMessage from '@/api'
 import * as types from '@/store/mutation-types'
 
 const state = {
@@ -12,6 +12,10 @@ const state = {
 }
 
 const actions = {
+  sendNewSortInfo ({commit}, {path}) {
+    sendMessage('', path).then(status => {
+    })
+  },
   // 获取文件详情
   // setNewSmartSort ({commit}, payload) {
   //   sendMessage('setNewSmartSort', {payload}).then(data => {

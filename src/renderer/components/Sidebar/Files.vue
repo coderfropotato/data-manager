@@ -125,6 +125,8 @@
       // sortFileTree: state => state.files.sortFileTree
     }),
     mounted () {
+      // 重置列表数据，防止和搜索组件数据混合
+      this.$store.commit('setFileList', [])
       let tree = []
       fs.readFile('/Users/wuyiqing/Desktop/datas.json', {flag: 'r+', encoding: 'utf8'}, (err, data) => {
         if (err) {
@@ -136,8 +138,6 @@
         // 临时用
         this.$store.commit('addSmartSort', tree[0])
       })
-      // 重置列表数据，防止和搜索组件数据混合
-      this.$store.commit('setFileList', [])
       // 插入文件小图标
       this.insertFileIcon()
       // 接受 sidebar 加弹窗的新建分类
@@ -182,10 +182,14 @@
       // 加载忽略的内容
       loadIgnoreContent () {
         this.$store.dispatch('getIgnore')
+        // 重置列表数据，防止和搜索组件数据混合
+        this.$store.commit('setFileList', [])
       },
       // 加载回收站的内容
       loadTrashContent () {
         this.$store.dispatch('getTrash')
+        // 重置列表数据，防止和搜索组件数据混合
+        this.$store.commit('setFileList', [])
       },
       // 加载磁盘（包含我的电脑）文件树
       loadDiskFileTree (e) {

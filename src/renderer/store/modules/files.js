@@ -30,7 +30,7 @@ const state = {
   // 忽略文件
   ignore: [],
   // 导入的文件，防止文件重复
-  importFiles: new Map()
+  importFilesMap: new Map()
 }
 
 const actions = {
@@ -75,12 +75,12 @@ const actions = {
   // 确认导入文件，向后台发送导入文件的路径
   confirmImportFiles ({commit}) {
     return new Promise((resolve, reject) => {
-      if (state.importFiles.size === 0) {
+      if (state.importFilesMap.size === 0) {
         resolve({status: 1, fileAmount: 0})
       }
       let pathArray = []
       let fileAmount = 0
-      for (let directory of state.importFiles.values()) {
+      for (let directory of state.importFilesMap.values()) {
         pathArray.push(directory.path)
         fileAmount++
       }
@@ -134,7 +134,7 @@ const mutations = {
       console.error('导入文件夹列表信息错误')
     }
     for (let i = 0; i < fileList.length; i++) {
-      state.importFiles.set(fileList[i].path, fileList[i])
+      state.importFilesMap.set(fileList[i].path, fileList[i])
     }
   },
 

@@ -28,11 +28,13 @@ const routes = [
     },
     children: [
       {
+        // 导入文件
         path: 'importfile',
         name: 'ImportFile',
         component: ImportFile
       },
       {
+        // 文件列表
         path: 'list',
         name: 'List',
         component: List
