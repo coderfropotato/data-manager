@@ -37,7 +37,7 @@
         <el-button size="mini" class="button-inner-plus" v-popover:addSortPop>+</el-button>
       </div>
       <div v-for="(item,index) in smartSortList" :key="item" class="smartSortList">
-        <el-button size="small">{{item}}</el-button>
+        <el-button size="small" @click="showSmartSort">{{item}}</el-button>
       </div>
       <el-tree
           :data="sortFileTree"
@@ -249,6 +249,11 @@
               )
             )
           ])
+      },
+      showSmartSort (e) {
+        let smartSortName = e.target.innerText
+        console.log(smartSortName)
+        this.$store.dispatch('showSmartSort', smartSortName)
       }
     },
     components: {
@@ -315,6 +320,7 @@
     .smartSortList {
       .el-button {
         margin: 1em 0 0 4em;
+        width: 10em;
       }
     }
   }
