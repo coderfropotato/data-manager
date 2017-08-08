@@ -49,7 +49,9 @@
     </div>
     <!--导入文件按钮-->
     <div class="import-button">
-      <el-button type="primary" icon="plus"></el-button>
+      <router-link to="/files/importfile">
+        <el-button type="primary" icon="plus"></el-button>
+      </router-link>
     </div>
   </div>
 </template>
