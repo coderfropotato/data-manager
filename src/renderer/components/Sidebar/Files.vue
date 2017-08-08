@@ -36,9 +36,9 @@
         </el-popover>
         <el-button size="mini" class="button-inner-plus" v-popover:addSortPop>+</el-button>
       </div>
-      <div v-for="(item,index) in smartSortList" :key="item" class="smartSortList">
-        <el-button size="small">{{item}}</el-button>
-      </div>
+      <!--<div v-for="(item,index) in smartSortList" :key="item" class="smartSortList">-->
+        <!--<el-button size="small">{{item}}</el-button>-->
+      <!--</div>-->
       <el-tree
           :data="sortFileTree"
           node-key="id"
@@ -112,7 +112,7 @@
         sortFileTree: [],
         // 记录当前选中的高亮节点，用于添加新节点时定位父节点
         currentNode: {},
-        newSortDirName: '',
+        newSortDirName: '新建分类',
         rowFileTree: []
       }
     },
@@ -140,6 +140,10 @@
       this.$store.commit('setFileList', [])
       // 插入文件小图标
       this.insertFileIcon()
+      // 接受 sidebar 加弹窗的新建分类
+      bus.$on('newSort', () => {
+        this.appendNode()
+      })
     },
     methods: {
       // 插入文件Icon
@@ -252,8 +256,9 @@
         node.store.remove(data)
       },
 
-      // 编辑节点
-      editNode (node, data) {
+      // 确认编辑节点的结果
+      confirmEditNode (node, data) {
+        console.log(node.data.label)
       },
 
       // 树节点渲染函数 vue-render
@@ -261,7 +266,15 @@
         return h(
           'span',
           [
-            h('span', node.label),
+            h(
+              'span',
+              {
+                style: {
+                  display: data.labelShow
+                }
+              },
+              [node.label]
+            ),
             // 删除按钮
             h(
               'span',
@@ -297,6 +310,8 @@
                 on: {
                   click: (e) => {
                     e.preventDefault()
+                    data.labelShow = 'none'
+                    data.inputShow = 'inline-block'
                     this.editNode(node, data)
                   }
                 }
@@ -311,16 +326,27 @@
                   }
                 )
               ]
+            ),
+            h(
+              'el-input',
+              {
+                style: {
+                  display: data.inputShow
+                },
+                on: {
+                  blur: e => {
+                    data.labelShow = 'inline-block'
+                    data.inputShow = 'none'
+                    data.label = e.target.value
+                    this.confirmEditNode(node, data)
+                  }
+                },
+                attrs: {
+                  value: data.label
+                }
+              }
             )
           ])
-//          <el-popover
-//        ref="addSortPop"
-//        placement="top-start"
-//        width="200"
-//        trigger="click">
-//          <el-input placeholder="请输入文件夹名称" v-model="newSortDirName"></el-input>
-//          <el-button type="primary" @click="appendNode">添加</el-button>
-//          </el-popover>
       }
     },
     components: {
@@ -414,6 +440,20 @@
     .el-input {
       float: left;
       width: 10em;
+    }
+  }
+
+  // 节点问题
+  .el-tree-node{
+    .el-input{
+      display: none;
+      width: 80%;
+      input{
+        border: none;
+        // background-color: inherit;
+        padding: 0;
+        font-size: 1.1em;
+      }
     }
   }
 </style>

@@ -127,15 +127,18 @@
     },
     methods: {
       openNewWindow (indexPath) {
-        // 嵌套路由
-        let url = '/newfile' + indexPath
-        console.log(url)
-        ipcRenderer.send('addFile', {
-          API: 'open',
-          URL: url,
-          fileType: ''
-        })
-        console.log(this.$store.state.files.sortFileTree)
+        // 新建分类选项
+        if (indexPath === '/newsortdir') {
+          bus.$emit('newSort')
+        } else {
+          // 嵌套路由
+          let url = '/newfile' + indexPath
+          ipcRenderer.send('addFile', {
+            API: 'open',
+            URL: url,
+            fileType: ''
+          })
+        }
       },
       // 更新滚动样式
       updateStyle () {
@@ -239,7 +242,7 @@
       }
     }
     // 文件更改状态角标样式
-    .el-badge__content{
+    .el-badge__content {
       top: 1em;
       right: 4px;
     }

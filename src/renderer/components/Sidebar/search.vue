@@ -67,6 +67,14 @@
     computed: mapState({
       // localSearchEngines: state => state.files.allFiles
     }),
+    watch: {
+      webCheckedSearch () {
+        this.setCheckedOptions()
+      },
+      localCheckedSearch () {
+        this.setCheckedOptions()
+      }
+    },
     mounted () {
       this.checkAllWeb = this.webSearchEngines.length === 0
       this.checkAllLocal = this.localSearchEngines.length === 0
@@ -120,6 +128,11 @@
         this.isIndeterminateAll =
           this.localCheckedSearch.length + this.webCheckedSearch.length < this.webSearchEngines.length + this.localSearchEngines.length &&
           this.localCheckedSearch.length + this.webCheckedSearch.length > 0
+      },
+      // 设置状态管理搜索范围
+      setCheckedOptions () {
+        let options = this.localCheckedSearch.concat(this.webCheckedSearch)
+        this.$store.commit('setSearchRange', options)
       }
     }
   }

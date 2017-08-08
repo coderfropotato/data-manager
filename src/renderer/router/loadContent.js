@@ -9,7 +9,7 @@ import FileInfo from '@/components/FileAside/fileInfo'
 import fileStatusAside from '@/components/FileAside/fileStatusAside'
 // import Collection from '@/components/Sidebar/collection'
 // content 的组件
-import FileHeader from '@/components/Content/diskDirHeader'
+import FileHeader from '@/components/Content/fileListHeader'
 import List from '@/components/Content/list'
 import FileStatusContent from '@/components/Content/fileStatus'
 import SearchHeader from '@/components/Content/searchHeader'
