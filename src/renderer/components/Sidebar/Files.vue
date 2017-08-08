@@ -168,12 +168,20 @@
       },
       // 加载忽略的内容
       loadIgnoreContent () {
+        let routerPath = this.$router.currentRoute.fullPath
+        if (routerPath !== '/files/list') {
+          this.$router.push('/files/list')
+        }
         this.$store.dispatch('getIgnore')
         // 重置列表数据，防止和搜索组件数据混合
         this.$store.commit('setFileList', [])
       },
       // 加载回收站的内容
       loadTrashContent () {
+        let routerPath = this.$router.currentRoute.fullPath
+        if (routerPath !== '/files/list') {
+          this.$router.push('/files/list')
+        }
         this.$store.dispatch('getTrash')
         // 重置列表数据，防止和搜索组件数据混合
         this.$store.commit('setFileList', [])
@@ -181,14 +189,20 @@
       // 加载磁盘（包含我的电脑）文件树
       loadDiskFileTree (index) {
         let serialNumber
+        let path = this.diskDir[index] + '/'
         if (index === 0) {
           serialNumber = 'myComputer'
         }
         this.$store.dispatch('getDiskFileTree', serialNumber)
         this.$router.push('/files/diskdirectory')
+        this.$store.commit('setCurrentPath', path)
       },
       // 加载分类文件列表
       loadSortFileList (nodeObj, node, component) {
+        let routerPath = this.$router.currentRoute.fullPath
+        if (routerPath !== '/files/list') {
+          this.$router.push('/files/list')
+        }
         let path = nodeObj.id
         this.currentNode = {
           nodeObj,

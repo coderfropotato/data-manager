@@ -37,6 +37,7 @@ const actions = {
   // 打开文件选项
   openFile ({commit}) {
     sendMessage('openFile', {}).then(data => {
+      console.log(data)
       commit(types.OPEN_FILE, data)
     })
   },
