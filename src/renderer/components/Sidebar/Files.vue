@@ -115,7 +115,7 @@
         currentNode: {},
         newSortDirName: '新建分类',
         rowFileTree: [],
-        fullScreenLoading: true
+        fullScreenLoading: false
       }
     },
     computed: mapState({
@@ -127,6 +127,7 @@
       sortFileTree: state => state.files.sortFileTree
     }),
     mounted () {
+      this.fullScreenLoading = false
       // 重置列表数据，防止和搜索组件数据混合
       this.$store.commit('setFileList', [])
       // 插入文件小图标
@@ -138,7 +139,6 @@
     },
     watch: {
       diskDir () {
-        this.fullScreenLoading = false
       }
     },
     filters: {
