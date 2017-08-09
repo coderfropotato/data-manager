@@ -24,10 +24,11 @@
         </div>
       </div>
       <div class="columns-display" v-if="status === 'Columns'">
-        <el-table :data="filesData"
-                  highlight-current-row
-                  style="width: 100%;"
-                  @row-click="showFileInfo">
+        <el-table
+            :data="filesData"
+            highlight-current-row
+            style="width: 100%;"
+            @row-click="showFileInfo">
           <el-table-column
               type="index"
               label="序号"
@@ -143,6 +144,11 @@
     },
     watch: {
       filesData () {
+        this.$nextTick(() => {
+          setTimeout(() => {
+            bus.$emit('loading-end')
+          }, 1000)
+        })
         // 如果列表容器高度为0，则获取列表容器的高度
         if (!this.listRootHeight) {
           this.listRootHeight = document.getElementById('list-root').clientHeight

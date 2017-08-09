@@ -5,13 +5,13 @@
  * 500：服务器错误（服务器处理出现问题）
 */
 // 基本配置
+import bus from '@/assets/JS/bus'
 let zmq = require('zeromq')
-// const baseURL = 'tcp://10.139.17.101'
-const baseURL = 'tcp://10.139.47.111'
+const baseURL = 'tcp://10.139.17.101'
+// const baseURL = 'tcp://10.139.47.111'
 // const baseURL = 'tcp://10.139.20.203'
 const PORT = 4242
 const URL = baseURL + ':' + PORT
-
 // 设置和服务器的延时
 const outTime = 5000
 let request
@@ -42,10 +42,13 @@ let sendMessage = function (API, params) {
         resolve(data)
         request.close()
       } else if (rep.status === 400) {
+        bus.$emit('error')
         console.error('参数数目错误')
       } else if (rep.status === 500) {
+        bus.$emit('error')
         console.error('服务器错误')
       } else {
+        bus.$emit('error')
         console.error('参数格式错误')
       }
     })

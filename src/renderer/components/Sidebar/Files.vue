@@ -37,11 +37,8 @@
         </el-popover>
         <el-button size="mini" class="button-inner-plus" v-popover:addSortPop>+</el-button>
       </div>
-      <div v-for="(item,index) in smartSortList" :key="item" class="smartSortList">
-        <el-button size="small" @click="showSmartSort" type="text">{{item}}</el-button>
-      </div>
       <!--<div v-for="(item,index) in smartSortList" :key="item" class="smartSortList">-->
-      <!--<el-button size="small">{{item}}</el-button>-->
+        <!--<el-button size="small" @click="showSmartSort" type="text">{{item}}</el-button>-->
       <!--</div>-->
       <el-tree
           :data="sortFileTree"
@@ -197,10 +194,7 @@
       },
       // 加载忽略的内容
       loadIgnoreContent () {
-        let routerPath = this.$router.currentRoute.fullPath
-        if (routerPath !== '/files/list') {
-          this.$router.push('/files/list')
-        }
+        this.$router.push('/files/ignore')
         this.$store.dispatch('getIgnore')
         // 重置列表数据，防止和搜索组件数据混合
         this.$store.commit('setFileList', [])

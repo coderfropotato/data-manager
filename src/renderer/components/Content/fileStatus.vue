@@ -6,16 +6,17 @@
     </div>
     <!--文件树-->
     <div id="file-status-tree">
-      <el-tree :data="modifiedFiles"
-               :expand-on-click-node="false"
-               :render-content="renderContent"
-               @node-click="handleNodeClick"
-               @check-change="handleCheckChange"
-               :default-expand-all="true"
-               :show-checkbox="true"
-               ref="tree"
-               node-key="path"
-               :highlight-current="true"
+      <el-tree
+          :data="modifiedFiles"
+          :expand-on-click-node="false"
+          :render-content="renderContent"
+          @node-click="handleNodeClick"
+          @check-change="handleCheckChange"
+          :default-expand-all="true"
+          :show-checkbox="true"
+          ref="tree"
+          node-key="path"
+          :highlight-current="true"
       ></el-tree>
     </div>
     <!--提交按钮-->

@@ -76,15 +76,14 @@ const actions = {
   // 获取回收站
   getTrash ({commit}) {
     sendMessage('getTrash', {}).then(data => {
-      commit(types.GET_TRASH, data)
-      console.log(data)
+      commit(types.GET_TRASH, data.trash)
     })
   },
 
   // 获取忽略文件
   getIgnore ({commit}) {
     sendMessage('getIgnore', {}).then(data => {
-      commit(types.GET_IGNORE, data)
+      commit(types.GET_IGNORE, data.ignore)
     })
   },
 
@@ -160,7 +159,6 @@ const mutations = {
   // 获取忽略文件
   [types.GET_IGNORE] (state, response) {
     state.ignore = response
-    state.currentFileList = response
   },
 
   // 设置当前的文件树

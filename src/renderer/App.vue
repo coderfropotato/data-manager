@@ -6,7 +6,8 @@
 
 <script>
   import './api/database'
-  import { ipcRenderer } from 'electron'
+  import {ipcRenderer} from 'electron'
+  import bus from '@/assets/JS/bus'
 
   export default {
     name: 'data-manager-desktop',
@@ -26,6 +27,14 @@
             // 向后台请求创建智能视图的限制条件
             this.$store.dispatch('getSearchConditions')
           })
+        })
+      })
+      bus.$on('error', () => {
+        bus.$emit('loading-end')
+        this.$notify({
+          type: 'error',
+          message: '数据读取错误，请重试或尝试重启软件',
+          duration: 0
         })
       })
       /*
