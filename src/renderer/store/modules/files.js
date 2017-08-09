@@ -57,11 +57,19 @@ const actions = {
   },
 
   // 获取文件列表
-  getSortFileList ({commit}, path) {
-    sendMessage('getSortFileList', {path}).then(data => {
-      console.log(data)
-      let fileList = data.fileList
-      commit(types.SET_FILE_LIST, fileList)
+  getSortFileList ({commit}, payload) {
+    return new Promise((resolve, reject) => {
+      sendMessage('getSortFileList', {
+        path: payload.lastPath,
+        page: payload.page,
+        size: payload.size
+      }).then(data => {
+        let fileList = data.fileList
+        if (fileList.length !== 0) {
+          commit(types.SET_FILE_LIST, fileList)
+        }
+        resolve(data.isLastPage)
+      })
     })
   },
 
@@ -117,13 +125,19 @@ const mutations = {
     state.cacheDir.push(temp)
     state.currentDiskDirTree = payload.data.tree
   },
+
   // 设置分类文件列表信息
   [types.SET_SORT_FILE_LIST] (state, response) {
   },
 
   // 设置文件列表信息
   [types.SET_FILE_LIST] (state, response) {
-    state.currentFileList = response
+    // 如果传进的response数组为 0，则设置文件列表为空，否则将新获取的文件加入原数组
+    if (response.length === 0) {
+      state.currentFileList = []
+    } else {
+      state.currentFileList = state.currentFileList.concat(response)
+    }
   },
 
   // 获取回收站
