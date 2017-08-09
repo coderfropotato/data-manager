@@ -26,10 +26,14 @@ export const SET_NEW_SMART_SORT_INFO = 'setNewSmartSortInfo'
 export const SET_NEW_DISK_DIR_INFO = 'setNewDiskDirInfo'
 // 设置新增分类文件夹信息
 export const SET_NEW_SORT_DIR_INFO = 'setNewSortDirInfo'
-// 临时用来显示智能视图信息
+// 向后台请求搜索条件
+export const GET_SEARCH_CONDITIONS = 'getSearchConditions'
+// 临时用来显示添加的智能视图
 export const ADD_SMART_SORT = 'addSmartSort'
 // 显示所有的智能视图
 export const SHOW_SMART_SORT_LIST = 'showSmartSortList'
+// 显示单个具体的智能视图样式
+export const SHOW_SMART_SORT = 'showSmartSort'
 // 处理后台返回的搜索条件
 export const HANDLE_SEARCH_CONDITION_MAP = 'handleConditionMap'
 // 设置搜索位置

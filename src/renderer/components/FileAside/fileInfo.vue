@@ -9,12 +9,12 @@
     <div class="basic-info" v-if="basicInfo">
       <span class="title">基本信息</span>
       <div class="basic-info-items">
-        <el-tooltip :content="basicInfo.rowName" placement="top">
-          <span class="item-name">{{basicInfo.filename}}</span>
+        <el-tooltip :content="basicInfo.filename" placement="top">
+          <span class="item-name">{{basicInfo.filename | formatName(10)}}</span>
         </el-tooltip>
         <span>文件类型：{{basicInfo.type}}</span>
-        <span>文件大小：{{basicInfo.size}}</span>
-        <span>创建时间：{{basicInfo.ctime}}</span>
+        <span>文件大小：{{basicInfo.size | formatSize}}</span>
+        <span>创建时间：{{basicInfo.ctime | formatDate}}</span>
       </div>
     </div>
     <div class="organization">
@@ -65,7 +65,6 @@
 </template>
 <script>
   import {mapState} from 'vuex'
-  import formatFileData from '@/assets/JS/formatFileData'
 
   let tempData = ['1/1.txt/', '1/2.2/3.2/', '1/2.4/3/', '1/2.txt/']
   let tempSort = []
@@ -81,9 +80,7 @@
     },
     computed: mapState({
       show: state => state.fileInfo.show,
-      basicInfo: state => {
-        return formatFileData(state.fileInfo.basicInfo, 15)
-      },
+      basicInfo: state => state.fileInfo.basicInfo,
       otherInfo: state => state.fileInfo.otherInfo,
       popoverTreeData: state => state.files.sortFileTree
       // sorts: state => state.fileInfo.fileSorts
@@ -96,6 +93,33 @@
           tempSort.push(path.join('>'))
         }
         this.sorts = tempSort
+      }
+    },
+    filters: {
+      // 格式化文件名，如果文件名大于某个长度，则做截断处理
+      formatName (name, maxLength) {
+        if (name !== undefined) {
+          return name.length > maxLength ? name.substr(0, maxLength - 1) + '...' : name
+        }
+      },
+      // 格式化文件大小，将
+      formatSize (size) {
+        if (size <= 0) {
+          return '0 bytes'
+        }
+        const abbreviations = ['bytes', 'kB', 'MB', 'GB']
+        const index = Math.floor(Math.log(size) / Math.log(1024))
+        return `${+(size / Math.pow(1024, index)).toPrecision(3)} ${abbreviations[index]}`
+      },
+      // 格式化时间，将秒转化成 XXXX/XX/XX 形式
+      formatDate (date) {
+        let d = new Date(date * 1000)
+        let month = '' + (d.getMonth() + 1)
+        let day = '' + d.getDate()
+        let year = d.getFullYear()
+        if (month.length < 2) month = '0' + month
+        if (day.length < 2) day = '0' + day
+        return [year, month, day].join('/')
       }
     },
     methods: {

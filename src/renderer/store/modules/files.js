@@ -13,7 +13,7 @@ const state = {
   // 记录当前的文件列表
   currentFileList: [],
   // 记录当前的文件树
-  currentFileTree: '',
+  currentDiskDirTree: '',
   // 记录当前选中文件夹的路径
   currentPath: '',
   // 所有文件，可读，不可变更
@@ -43,9 +43,14 @@ const actions = {
   },
 
   // 获取磁盘（包含我的电脑）文件树
-  getDiskFileTree ({commit}, diskName) {
-    sendMessage('getFileTree', {diskName}).then(data => {
-      commit(types.GET_DISK_FILE_TREE, diskName, data)
+  getDiskFileTree ({commit}, serialNumber) {
+    sendMessage('getFileTree', {serialNumber}).then(data => {
+      console.log(data)
+      commit({
+        type: types.GET_DISK_FILE_TREE,
+        serialNumber,
+        data
+      })
     })
   },
 
@@ -87,11 +92,6 @@ const actions = {
       // TODO 传送数据
       resolve({status: 1, fileAmount})
     })
-  },
-
-  // 设置当前的文件树
-  setCurrentFileTree ({commit}, fileTree) {
-    commit(types.SET_CURRENT_FILE_TREE, fileTree)
   }
 }
 
@@ -106,12 +106,13 @@ const mutations = {
   },
 
   // 获取文件树
-  [types.GET_DISK_FILE_TREE] (state, folderName, response) {
+  [types.GET_DISK_FILE_TREE] (state, payload) {
     let temp = {
-      folderName: folderName,
-      tree: response
+      serialNumber: payload.serialNumber,
+      tree: payload.data.tree
     }
     state.cacheDir.push(temp)
+    state.currentDiskDirTree = payload.data.tree
   },
   // 设置分类文件列表信息
   [types.SET_SORT_FILE_LIST] (state, response) {
@@ -125,6 +126,7 @@ const mutations = {
   // 获取回收站
   [types.GET_TRASH] (state, response) {
     state.trash = response
+    state.currentFileList = response
   },
 
   // 添加导入文件夹
@@ -141,11 +143,12 @@ const mutations = {
   // 获取忽略文件
   [types.GET_IGNORE] (state, response) {
     state.ignore = response
+    state.currentFileList = response
   },
 
   // 设置当前的文件树
   [types.SET_CURRENT_FILE_TREE] (state, fileTree) {
-    state.currentFileTree = fileTree
+    state.currentDiskDirTree = fileTree
   },
 
   // 设置当前的路径

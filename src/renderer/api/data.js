@@ -156,8 +156,21 @@ const sortDir = [
   //   }
   // }
 ]
-export const authors = ['Klaus', 'Mate', 'Mike', 'Stefan']
-export const smartSortList = ['智能视图一', '智能视图二']
+export const searchConditions = [
+  {
+    'title': '性别',
+    'attribute': ['雌性', '雄性']
+  },
+  {
+    'title': '年龄',
+    'attribute': ['16-20', '30-50', '60-80']
+  },
+  {
+    'title': '品种',
+    'attribute': ['高茎', '低茎']
+  }
+]
+export const smartSort = [['Klaus', 'Mate', 'Mike', 'Stefan'], ['haha', 'xixi', 'huhu', 'dada'], ['uzi', 'mlxg', 'korol', 'xiaohu']]
 // export const newSmartSort = [
 //   {
 //     label: '智能视图一'
@@ -301,6 +314,6 @@ export const modifiedFiles = {
   }
 }
 export default {
-  authors,
-  smartSortList
+  smartSort,
+  searchConditions
 }

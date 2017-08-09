@@ -2,6 +2,7 @@ import NewSmartSortdir from '@/components/NewDirectory/newSmartSort'
 import NewFile from '@/components/NewDirectory/newFile'
 import NewDiskDirectory from '@/components/NewDirectory/newDiskDirectory'
 import NewSortDirectory from '@/components/NewDirectory/newSortDirectory'
+import ExcelImport from '@/components/NewDirectory/excelImport'
 const routes = [
   {
     path: '/newfile',
@@ -19,6 +20,10 @@ const routes = [
       {
         path: 'newsortdir',
         component: NewSortDirectory
+      },
+      {
+        path: 'excelImport',
+        component: ExcelImport
       }
     ]
   }

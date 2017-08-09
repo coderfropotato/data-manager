@@ -30,6 +30,7 @@ const conditionMap = {
   'selection': '模版类型',
   'layout': '单/双端'
 }
+
 const state = {
   searchConditions: [],
   searchPositions: []

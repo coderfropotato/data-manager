@@ -5,14 +5,14 @@
         <div class="list-item" v-for="(item,index) in filesData" :key="index" @click="showFileInfo(item)">
           <div class="file-name">
             <el-tooltip :content="item.rowName" placement="right-start">
-              <span>{{item.filename}}</span>
+              <span>{{item.basic.filename | formatName(10)}}</span>
             </el-tooltip>
           </div>
           <div class="create-time">
-            {{item.ctime}}
+            {{item.basic.ctime | formatDate}}
           </div>
           <div class="size">
-            {{item.size}}
+            {{item.basic.size | formatSize}}
           </div>
           <div class="edit">
             <el-button type="text">
@@ -34,19 +34,27 @@
             sortable>
         </el-table-column>
         <el-table-column
-            property="filename"
             label="文件名"
             sortable>
+          <template scope="scope">
+            <el-tooltip :content="scope.row.filename" placement="right-start">
+              <span>{{scope.row.basic.filename | formatName(10)}}</span>
+            </el-tooltip>
+          </template>
         </el-table-column>
         <el-table-column
-            property="ctime"
             label="创建时间"
             sortable>
+          <template scope="scope">
+            <span>{{ scope.row.basic.ctime | formatDate}}</span>
+          </template>
         </el-table-column>
         <el-table-column
-            property="size"
             label="文件大小"
             sortable>
+          <template scope="scope">
+            <span>{{ scope.row.basic.size | formatSize}}</span>
+          </template>
         </el-table-column>
         <el-table-column
             label="操作">
@@ -61,13 +69,13 @@
         <el-row :gutter="20">
           <el-col :span="6" v-for="(item,index) in filesData" :key="index">
             <!--TODO：添加编辑按钮-->
-            <div class="grid-item"  @click="showFileInfo(item)">
+            <div class="grid-item" @click="showFileInfo(item)">
               <svg class="icon" aria-hidden="true">
                 <use xlink:href="#icon-file"></use>
               </svg>
               <div class="file-name">
-                <el-tooltip :content="item.rowName" placement="top">
-                  <span>{{item.filename}}</span>
+                <el-tooltip :content="item.basic.filename" placement="top">
+                  <span>{{item.basic.filename | formatName(10)}}</span>
                 </el-tooltip>
               </div>
             </div>
@@ -84,7 +92,6 @@
 </template>
 <script>
   import {mapState} from 'vuex'
-  import formatFileData from '@/assets/JS/formatFileData'
 
   export default {
     data () {
@@ -94,11 +101,7 @@
       }
     },
     computed: mapState({
-      // 对列表数据进行处理
-      filesData: state => {
-        // 原始文件信息数据，文件名最大长度
-        return formatFileData(state.files.currentFileList, 10)
-      },
+      filesData: state => state.files.currentFileList,
       // 当前路径， 导航面包屑
       currentPath: state => state.files.currentPath,
       // 文件展示状态 list/column/grid
@@ -129,13 +132,40 @@
       // 监听拖拽，对导入的文件进行处理
       this.dragEvent()
     },
+    filters: {
+      // 格式化文件名，如果文件名大于某个长度，则做截断处理
+      formatName (name, maxLength) {
+        if (name !== undefined) {
+          return name.length > maxLength ? name.substr(0, maxLength - 1) + '...' : name
+        }
+      },
+      // 格式化文件大小，将
+      formatSize (size) {
+        if (size <= 0) {
+          return '0 bytes'
+        }
+        const abbreviations = ['bytes', 'kB', 'MB', 'GB']
+        const index = Math.floor(Math.log(size) / Math.log(1024))
+        return `${+(size / Math.pow(1024, index)).toPrecision(3)} ${abbreviations[index]}`
+      },
+      // 格式化时间，将秒转化成 XXXX/XX/XX 形式
+      formatDate (date) {
+        let d = new Date(date * 1000)
+        let month = '' + (d.getMonth() + 1)
+        let day = '' + d.getDate()
+        let year = d.getFullYear()
+        if (month.length < 2) month = '0' + month
+        if (day.length < 2) day = '0' + day
+        return [year, month, day].join('/')
+      }
+    },
     methods: {
       showFileInfo (file) {
         // 获取文件的具体信息
         this.$store.dispatch({
           type: 'getFileInfo',
-          path: file.path,
-          serialNumber: file.serialNumber
+          path: file.basic.path,
+          serialNumber: file.serial_number
         })
         // 显示文件信息区
         this.$store.commit('showFileInfo')
@@ -219,56 +249,56 @@
       }
 
     }
-  }
 
-  .el-upload-dragger {
-    .el-icon-plus {
-      vertical-align: middle;
-      text-align: center;
-      font-size: 48px;
-    }
-  }
-
-  .lists-display {
-    .list-item {
-      position: relative;
-      width: 100%;
-      height: 4em;
-      padding: 0 2em;
-      overflow: hidden;
-      cursor: pointer;
-      .file-name {
-        font-size: 1.1em;
-        font-weight: 500;
-        margin: 0.25em 0;
-      }
-      .create-time,
-      .size {
-        display: inline-block;
-        margin-right: 1em;
-      }
-      .edit {
-        position: absolute;
-        top: 1em;
-        vertical-align: -0.5em;
-        right: 2em;
+    .el-upload-dragger {
+      .el-icon-plus {
+        vertical-align: middle;
+        text-align: center;
+        font-size: 48px;
       }
     }
-    .list-item:nth-child(even) {
-      background-color: #eef1f6;
-    }
-  }
 
-  .grid-display {
-    .grid-item {
-      text-align: center;
-      margin: 1em;
-      .icon {
-        font-size: 3em;
+    .lists-display {
+      .list-item {
+        position: relative;
+        width: 100%;
+        height: 4em;
+        padding: 0 2em;
+        overflow: hidden;
+        cursor: pointer;
+        .file-name {
+          font-size: 1.1em;
+          font-weight: 500;
+          margin: 0.25em 0;
+        }
+        .create-time,
+        .size {
+          display: inline-block;
+          margin-right: 1em;
+        }
+        .edit {
+          position: absolute;
+          top: 1em;
+          vertical-align: -0.5em;
+          right: 2em;
+        }
       }
-      .file-name {
-        font-size: 0.8em;
+      .list-item:nth-child(even) {
+        background-color: #eef1f6;
+      }
+    }
+
+    .grid-display {
+      .grid-item {
+        text-align: center;
         margin: 1em;
+        .icon {
+          font-size: 3em;
+        }
+        .file-name {
+          font-size: 0.8em;
+          margin: 1em;
+        }
       }
     }
   }

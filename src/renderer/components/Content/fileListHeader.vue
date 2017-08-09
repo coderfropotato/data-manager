@@ -21,7 +21,7 @@
           <div class="scrollBar-inner">
             <div class="grid-content">
               <el-breadcrumb separator=">" class="pathArea">
-                <el-breadcrumb-item v-for="item in pathArray" :key="item">
+                <el-breadcrumb-item v-for="(item, index) in pathArray" :key="item" @click.native="setPath(index)">
                   {{item}}
                 </el-breadcrumb-item>
               </el-breadcrumb>
@@ -111,6 +111,12 @@
       },
       // 处理选择搜索结果建议
       handleSelect () {
+      },
+      // 点击路径面包屑后设置路径
+      setPath (index) {
+        this.pathArray.splice(index + 1)
+        let path = this.pathArray.join('/') + '/'
+        this.$store.commit('setCurrentPath', path)
       }
     }
   }
@@ -138,13 +144,13 @@
       position: absolute;
       bottom: 2em;
       right: 2em;
-      .el-button{
+      .el-button {
         height: 3em;
         width: 3em;
         border-radius: 4em;
-        box-shadow: 0 4px 4px 0 rgba(0,0,0,.12), 0 0 6px 0 rgba(0,0,0,.2);
+        box-shadow: 0 4px 4px 0 rgba(0, 0, 0, .12), 0 0 6px 0 rgba(0, 0, 0, .2);
       }
-      .el-icon-plus{
+      .el-icon-plus {
         margin-left: -0.1em;
       }
     }
