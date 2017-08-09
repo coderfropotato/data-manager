@@ -49,10 +49,21 @@ const state = {
 
   selectedModifiedFiles: [],    // 所有选中的文件或文件夹路径，此时已准备提交，有可能多于已打好标签的文件
 
+  selectedFilesNum: 0, // 选中的文件/文件夹的数目
+
+  showMode: '', // 是否是展示文件信息，true时展示文件/文件夹属性，false展示选中了多少文件等属性
+
   activeModifiedFile: '' // 当前正在进行编辑的文件路径
 }
 
 const actions = {
+  // 更新文件信息
+  updateFileInfo ({commit}, payload) {
+    console.log(payload)
+    sendMessage('updateFileInfo', {payload}).then(data => {
+    })
+  },
+
   // 获取变更文件
   getModifiedFiles ({commit}) {
     // 获取更改文件后返回
@@ -87,6 +98,16 @@ const actions = {
   // 设置当前节点的数据
   setNodeData ({commit}, nodeData) {
     commit(types.SET_NODE_DATA, nodeData)
+  },
+
+  // 设置右侧显示模式
+  setShowMode ({commit}, status) {
+    commit(types.SET_SHOW_MODE, status)
+  },
+
+  //
+  setSelectedFilesNum ({commit}, num) {
+    commit(types.SET_SELECTED_FILES_NUM, num)
   },
 
   // 更新当前节点的数据
@@ -124,6 +145,14 @@ const mutations = {
     // 打标签啊打标签
     tagYouAll(state, state.nodeData, newAttributes)
     // console.log(state.taggedModifiedFiles)
+  },
+
+  [types.SET_SHOW_MODE] (state, status) {
+    state.showMode = status
+  },
+
+  [types.SET_SELECTED_FILES_NUM] (state, num) {
+    state.selectedFilesNum = num
   },
 
   // 放弃修改某个打好标签的文件夹/文件的新属性

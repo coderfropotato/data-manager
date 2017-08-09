@@ -15,6 +15,7 @@
 </script>
 <style lang="scss">
   #content-root {
+    overflow: scroll;
     position: relative;
     height: 100%;
     .header {
