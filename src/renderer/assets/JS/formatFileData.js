@@ -19,7 +19,7 @@ export const formatDate = function (date) {
 * @return 处理完成的文件数组
 * 需要根据传入的数据类型（数组或对象）做不同处理
 */
-function formatFileData (data, maxLength) {
+function formatFileData (data) {
   let rowListData = []
   let filesData = []
   let isArray = true
@@ -49,23 +49,7 @@ function formatFileData (data, maxLength) {
     // 格式化创建时间
     fileInfo.ctime = formatDate(fileInfo.ctime)
     fileInfo.rowName = fileInfo.filename
-    // 格式化文件名，如果文件名大于某个长度，则做截断处理
-    if (fileInfo.filename.length > maxLength) {
-      fileInfo.filename = fileInfo.filename.substring(0, maxLength - 1) + '...'
-    }
     // 格式化文件大小
-    let size = fileInfo.size
-    if (size < 1024) {
-      size = size + 'B'
-    } else if (size >= 1024 && size < 1024 * 1024) {
-      size = parseInt(size / 1024) + 'KB'
-    } else if (size >= 1024 * 1024 && size < Math.pow(1024, 3)) {
-      size = parseInt(size / 1024 / 1024) + 'M'
-    } else {
-      size = parseInt(size / Math.pow(1024, 3)) + 'G'
-    }
-    fileInfo.size = size
-    // 将
     filesData.push(fileInfo)
   }
   if (!isArray) {

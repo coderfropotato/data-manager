@@ -12,7 +12,7 @@
               </svg>
               <div class="file-name">
                 <el-tooltip :content="item.name" placement="top">
-                  <span>{{item.name | formatName}}</span>
+                  <span>{{item.name | formatName(10)}}</span>
                 </el-tooltip>
               </div>
             </div>
@@ -25,7 +25,6 @@
 <script>
   import {mapState} from 'vuex'
   import scrollBar from '../../assets/JS/headerScrollbar'
-  // import bus from '@/assets/JS/bus'
 
   export default {
     name: 'DiskDirectory',
@@ -44,6 +43,7 @@
     }),
     watch: {
       rowDirData () {
+        // 当原始数据发生变化时，重新刷新计算（第一次请求加载数据）
         this.displayData = []
 
         // 去除磁盘层，记录磁盘序列号
@@ -92,8 +92,10 @@
       }
     },
     filters: {
-      formatName (name) {
-        return name.length > 10 ? name.slice(0, 9) + '...' : name
+      formatName (name, maxLength) {
+        if (name !== undefined) {
+          return name.length > maxLength ? name.substr(0, maxLength - 1) + '...' : name
+        }
       }
     },
     methods: {
