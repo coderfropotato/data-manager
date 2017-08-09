@@ -38,13 +38,15 @@ function packUpModified (modified) {
     res.push({ label: diskAlias, serialNumber: serialNumber, path: serialNumber + '/' + serialNumber, disabled: true, children: [] })
     // 获取顶层文件信息
     for (let folder in modified[disk]) {
-      let folderAlias = folder.split('*')[0]
-      let rootPath = serialNumber + folder.split('*')[1]
+      // let folderAlias = folder.split('*')[0]
+      // let rootPath = serialNumber + folder.split('*')[1]
+      let rootPath = folder
+      let folderAlias = modified[disk][folder]['__info__']['alias']
       // 添加顶层文件信息
       // disable该节点
-      res[res.length - 1].children.push({ label: folderAlias, path: rootPath, disabled: true, children: [] })
+      res[res.length - 1].children.push({ label: folderAlias, path: serialNumber + rootPath, disabled: true, children: [] })
       // 递归添加该文件树信息
-      packup(modified[disk][folder], res[res.length - 1].children[res[res.length - 1].children.length - 1].children, rootPath, countObj)
+      packup(modified[disk][folder], res[res.length - 1].children[res[res.length - 1].children.length - 1].children, serialNumber + rootPath, countObj)
     }
   }
   return { res: res, count: countObj.count }
