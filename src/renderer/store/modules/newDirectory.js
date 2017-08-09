@@ -40,7 +40,8 @@ const state = {
   smartSortList: [],
   smartSort: [[]],
   searchConditions: [],
-  sortOrder: []
+  sortOrder: [],
+  tableName: ''
 }
 
 const actions = {
@@ -116,6 +117,7 @@ const mutations = {
   // 在sidebar展示所有的智能视图
   [types.SHOW_SMART_SORT_LIST] (state, smartSortList) {
     state.smartSortList = smartSortList.allSmartView
+    console.log(smartSortList.allSmartView)
   },
 
   [types.SHOW_SMART_SORT] (state, response) {
@@ -123,6 +125,8 @@ const mutations = {
     let smartView = response.smartView
     state.smartSort.push(smartView.data)
     state.sortOrder = smartView.tabs
+    state.tableName = smartView.table
+    console.log(state.tableName)
     // console.log(object.smartSort)
     console.log(response)
     // console.log(state.smartSort)

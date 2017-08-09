@@ -6,7 +6,7 @@
 
 <script>
   import './api/database'
-  import {ipcRenderer} from 'electron'
+  import { ipcRenderer } from 'electron'
 
   export default {
     name: 'data-manager-desktop',
@@ -20,12 +20,13 @@
 //            message: '有文件状态发生改变'
 //          })
 //        }
-        this.$store.dispatch('openFile')
-      })
-      // 向后台请求用户创建的所有智能视图
-      this.$store.dispatch('showSmartSortList').then(() => {
-        // 向后台请求创建智能视图的限制条件
-        this.$store.dispatch('getSearchConditions')
+        this.$store.dispatch('openFile').then(() => {
+          // 向后台请求用户创建的所有智能视图
+          this.$store.dispatch('showSmartSortList').then(() => {
+            // 向后台请求创建智能视图的限制条件
+            this.$store.dispatch('getSearchConditions')
+          })
+        })
       })
       /*
        * 通过主进程在窗口之间传递数据
