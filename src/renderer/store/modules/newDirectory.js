@@ -62,8 +62,11 @@ const actions = {
   // 获取智能视图列表显示在文件树上面
   showSmartSortList ({commit}) {
     // 这里返回的data应该是所有智能视图的名字的数组
-    sendMessage('showSmartSortList', {}).then(data => {
-      commit(types.SHOW_SMART_SORT_LIST, data)
+    return new Promise((resolve, reject) => {
+      sendMessage('showSmartSortList', {}).then(data => {
+        resolve()
+        commit(types.SHOW_SMART_SORT_LIST, data)
+      })
     })
   },
 
