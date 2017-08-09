@@ -1,35 +1,35 @@
 <template>
-    <div id="file-status-root">
-        <!--标题-->
-        <div id="file-status-title">
-            <h1>所有变更</h1>
-        </div>
-        <!--文件树-->
-        <div id="file-status-tree">
-            <el-tree :data="modifiedFiles"
-                     :expand-on-click-node="false"
-                     :render-content="renderContent"
-                     @node-click="handleNodeClick"
-                     @check-change="handleCheckChange"
-                     :default-expand-all="true"
-                     :show-checkbox="true"
-                     ref="tree"
-                     node-key="path"
-                     :highlight-current="true"
-            ></el-tree>
-        </div>
-        <!--提交按钮-->
-        <div id="file-status-commit">
+  <div id="file-status-root">
+    <!--标题-->
+    <div id="file-status-title">
+      <h1>所有变更</h1>
+    </div>
+    <!--文件树-->
+    <div id="file-status-tree">
+      <el-tree :data="modifiedFiles"
+               :expand-on-click-node="false"
+               :render-content="renderContent"
+               @node-click="handleNodeClick"
+               @check-change="handleCheckChange"
+               :default-expand-all="true"
+               :show-checkbox="true"
+               ref="tree"
+               node-key="path"
+               :highlight-current="true"
+      ></el-tree>
+    </div>
+    <!--提交按钮-->
+    <div id="file-status-commit">
             <span id="commit-buttons" v-if="showCommitOrIgnore">
                 <el-button type="primary" size="small" @click="commitSelectedFiles">提交选中的文件</el-button>
                 <el-button size="small" @click="ignoreSelectedFiles">忽略选中的文件</el-button>
             </span>
-        </div>
     </div>
+  </div>
 </template>
 
 <script>
-  import { mapState, mapActions } from 'vuex'
+  import {mapState, mapActions} from 'vuex'
 
   export default {
     name: 'fileStatusContent',
@@ -196,6 +196,10 @@
 
 </script>
 
-<style lang="scss" scoped>
-
+<style lang="scss">
+  #file-status-root {
+    height: 100%;
+    -webkit-overflow-y: overlay;
+    overflow-x: hidden;
+  }
 </style>

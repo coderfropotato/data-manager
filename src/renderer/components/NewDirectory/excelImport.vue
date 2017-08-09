@@ -62,6 +62,9 @@
           </el-col>
         </el-row>
       </div>
+      <div class="import-result">
+        
+      </div>
     </div>
   </div>
 </template>
@@ -114,13 +117,14 @@
               type: 'success',
               title: '成功',
               message: 'Excel 模板生成成功，点击打开！',
-              duration: 3000,
+              duration: 0,
               onClick: this.openFile(path)
             })
             // 切换到导入模板状态
             this.placeholder = '请选择模板'
             this.generateTemplate = false
-            this.path = ''
+            // 设置路径模板生成路径
+            this.path = path
           } else {
             this.$notify({
               type: 'error',

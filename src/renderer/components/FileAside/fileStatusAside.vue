@@ -1,109 +1,109 @@
 <template>
-    <div id="file-status-info-root" v-if="showFileStatusAside">
-        <!-- 当点击文件/文件夹，显示对应信息 -->
-        <div class="side-content" v-if="showMode">
-            <!--组件标题-->
-            <div class="header">
-                <h1>文件详情</h1>
+  <div id="file-status-info-root" v-if="showFileStatusAside">
+    <!-- 当点击文件/文件夹，显示对应信息 -->
+    <div class="side-content" v-if="showMode">
+      <!--组件标题-->
+      <div class="header">
+        <h1>文件详情</h1>
+      </div>
+      <!--基本信息-->
+      <div class="basic-info">
+        <h2>基本信息
+          <el-button type="primary" v-if="showBasicInfo" @click="showBasicInfo = !showBasicInfo">收起
+          </el-button>
+          <el-button type="primary" v-if="!showBasicInfo" @click="showBasicInfo = !showBasicInfo">展开
+          </el-button>
+        </h2>
+        <ul class="basic-info" v-if="showBasicInfo">
+          <li>文件名: {{ basicInfo.filename }}</li>
+          <!--文件夹不显示文件大小-->
+          <li v-if="basicInfo.size">文件大小：{{ basicInfo.size }}</li>
+          <li>创建时间：{{ basicInfo.ctime }}</li>
+        </ul>
+      </div>
+      <!-- 来源信息 -->
+      <div class="source-info">
+        <h2>来源信息
+          <el-button type="primary" v-if="showSourceInfo" @click="showSourceInfo = !showSourceInfo">收起
+          </el-button>
+          <el-button type="primary" v-if="!showSourceInfo" @click="showSourceInfo = !showSourceInfo">展开
+          </el-button>
+        </h2>
+        <ul v-if="showSourceInfo">
+          <li>类别:
+            <el-select v-model="currentSourceInfo.type" filterable placeholder="选择来源">
+              <el-option v-for="option in sourceTypeOptions" :key="option.value" :label="option.label"
+                         :value="option.value">
+              </el-option>
+            </el-select>
+          </li>
+          <!-- 若是私有数据，显示如下内容  -->
+          <div class="private-source" v-if="currentSourceInfo.type === 'private'">
+            <li>项目名：
+              <el-input v-model="currentSourceInfo.project" placeholder="请输入项目名"></el-input>
+            </li>
+            <li>项目负责人：
+              <el-input v-model="currentSourceInfo.principle" placeholder="请输入项目负责人"></el-input>
+            </li>
+          </div>
+          <!-- 若是公有数据，显示如下内容 -->
+          <div class="public-source" v-if="currentSourceInfo.type === 'public'">
+            <li>数据来源网址：
+              <el-input v-model="currentSourceInfo.websites" placeholder="请输入数据来源网址"></el-input>
+            </li>
+          </div>
+        </ul>
+      </div>
+      <!-- 文件属性 -->
+      <div class="file-info">
+        <h2>文件属性
+          <el-button type="primary" v-if="showFileInfo" @click="showFileInfo = !showFileInfo">收起</el-button>
+          <el-button type="primary" v-if="!showFileInfo" @click="showFileInfo = !showFileInfo">展开</el-button>
+        </h2>
+        <div class="fileattr" v-if="showFileInfo">
+          <ul>
+            <li>文件类型：
+              <!--这个地方要抽离出来currentFiletype，不能直接用currentFileattr.filetype,否则会死循环到怀疑人生-->
+              <el-select v-model="currentFiletype" @change="getTemplate" placeholder="请选择文件类型">
+                <el-option
+                    v-for="item in filetypeOptions"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                </el-option>
+              </el-select>
+            </li>
+            <!-- 根据不同文件类型，自动显示不同的属性 -->
+            <div class="root-attributes" v-for="(rootAttribute, key) in currentFileattr"
+                 v-if="key != 'filetype'">
+              <h3>{{ getChineseName(key) }}</h3>
+              <div class="child-attributes" v-for="(childAttribute, key) in rootAttribute">
+                {{ getChineseName(key) }}
+                <!--这个地方只能用rootAttribute[key]，不能用childAttribute，who tm knows-->
+                <el-input v-model="rootAttribute[key]" placeholder="请输入内容"></el-input>
+              </div>
             </div>
-            <!--基本信息-->
-            <div class="basic-info">
-                <h2>基本信息
-                    <el-button type="primary" v-if="showBasicInfo" @click="showBasicInfo = !showBasicInfo">收起
-                    </el-button>
-                    <el-button type="primary" v-if="!showBasicInfo" @click="showBasicInfo = !showBasicInfo">展开
-                    </el-button>
-                </h2>
-                <ul class="basic-info" v-if="showBasicInfo">
-                    <li>文件名: {{ basicInfo.filename }}</li>
-                    <!--文件夹不显示文件大小-->
-                    <li v-if="basicInfo.size">文件大小：{{ basicInfo.size }}</li>
-                    <li>创建时间：{{ basicInfo.ctime }}</li>
-                </ul>
-            </div>
-            <!-- 来源信息 -->
-            <div class="source-info">
-                <h2>来源信息
-                    <el-button type="primary" v-if="showSourceInfo" @click="showSourceInfo = !showSourceInfo">收起
-                    </el-button>
-                    <el-button type="primary" v-if="!showSourceInfo" @click="showSourceInfo = !showSourceInfo">展开
-                    </el-button>
-                </h2>
-                <ul v-if="showSourceInfo">
-                    <li>类别:
-                        <el-select v-model="currentSourceInfo.type" filterable placeholder="选择来源">
-                            <el-option v-for="option in sourceTypeOptions" :key="option.value" :label="option.label"
-                                       :value="option.value">
-                            </el-option>
-                        </el-select>
-                    </li>
-                    <!-- 若是私有数据，显示如下内容  -->
-                    <div class="private-source" v-if="currentSourceInfo.type === 'private'">
-                        <li>项目名：
-                            <el-input v-model="currentSourceInfo.project" placeholder="请输入项目名"></el-input>
-                        </li>
-                        <li>项目负责人：
-                            <el-input v-model="currentSourceInfo.principle" placeholder="请输入项目负责人"></el-input>
-                        </li>
-                    </div>
-                    <!-- 若是公有数据，显示如下内容 -->
-                    <div class="public-source" v-if="currentSourceInfo.type === 'public'">
-                        <li>数据来源网址：
-                            <el-input v-model="currentSourceInfo.websites" placeholder="请输入数据来源网址"></el-input>
-                        </li>
-                    </div>
-                </ul>
-            </div>
-            <!-- 文件属性 -->
-            <div class="file-info">
-                <h2>文件属性
-                    <el-button type="primary" v-if="showFileInfo" @click="showFileInfo = !showFileInfo">收起</el-button>
-                    <el-button type="primary" v-if="!showFileInfo" @click="showFileInfo = !showFileInfo">展开</el-button>
-                </h2>
-                <div class="fileattr" v-if="showFileInfo">
-                    <ul>
-                        <li>文件类型：
-                            <!--这个地方要抽离出来currentFiletype，不能直接用currentFileattr.filetype,否则会死循环到怀疑人生-->
-                            <el-select v-model="currentFiletype" @change="getTemplate" placeholder="请选择文件类型">
-                                <el-option
-                                        v-for="item in filetypeOptions"
-                                        :key="item.value"
-                                        :label="item.label"
-                                        :value="item.value">
-                                </el-option>
-                            </el-select>
-                        </li>
-                        <!-- 根据不同文件类型，自动显示不同的属性 -->
-                        <div class="root-attributes" v-for="(rootAttribute, key) in currentFileattr"
-                             v-if="key != 'filetype'">
-                            <h3>{{ getChineseName(key) }}</h3>
-                            <div class="child-attributes" v-for="(childAttribute, key) in rootAttribute">
-                                {{ getChineseName(key) }}
-                                <!--这个地方只能用rootAttribute[key]，不能用childAttribute，who tm knows-->
-                                <el-input v-model="rootAttribute[key]" placeholder="请输入内容"></el-input>
-                            </div>
-                        </div>
-                    </ul>
-                </div>
-            </div>
-            <!-- 底部按钮 -->
-            <div class="footer">
-                <el-button type="primary" size="small" @click="addNewTaggedFile">更改属性</el-button>
-                <el-button size="small">自动识别</el-button>
-                <el-button size="small">忽略此文件</el-button>
-                <el-button size="small" @click="ignoreNewAttribute">放弃修改</el-button>
-            </div>
+          </ul>
         </div>
-        <!-- 当勾选要提交的文件时，显示对应信息 -->
-        <div class="side-content" v-if="!showMode">
-            您选中了{{ selectedFilesNum }}个文件
-        </div>
+      </div>
+      <!-- 底部按钮 -->
+      <div class="footer">
+        <el-button type="primary" size="small" @click="addNewTaggedFile">更改属性</el-button>
+        <el-button size="small">自动识别</el-button>
+        <el-button size="small">忽略此文件</el-button>
+        <el-button size="small" @click="ignoreNewAttribute">放弃修改</el-button>
+      </div>
     </div>
+    <!-- 当勾选要提交的文件时，显示对应信息 -->
+    <div class="side-content" v-if="!showMode">
+      您选中了{{ selectedFilesNum }}个文件
+    </div>
+  </div>
 
 </template>
 
 <script>
-  import { mapState, mapActions } from 'vuex'
+  import {mapState, mapActions} from 'vuex'
 
   export default {
     name: 'FileStatusAside',
@@ -373,7 +373,8 @@
 </script>
 
 <style lang="scss" scoped>
-    #file-status-info-root {
-        overflow: scroll;
-    }
+  #file-status-info-root {
+    overflow-y: scroll;
+    width: 100%;
+  }
 </style>
