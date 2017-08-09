@@ -2,7 +2,7 @@
   <div class="smartSort-root">
     <el-button v-for="item in sortOrder" :key="item" type='text' class="sort">{{item}}</el-button>
     <el-row type="flex">
-      <el-col :span="3" v-for="(item,index) in smartSort" :key="index">
+      <el-col :span="8" v-for="(item,index) in smartSort" :key="index">
         <el-row v-for="list in item" :key="list">
           <el-button type="text" @click="addSelect(index, list)">{{list}}</el-button>
         </el-row>
@@ -36,11 +36,11 @@
     computed: mapState({
       // 所有文件选项的数据，即管理的磁盘
       smartSort: state => state.newDirectory.smartSort,
-      sortOrder: state => state.newDirectory.sortOrder
+      sortOrder: state => state.newDirectory.sortOrder,
+      tableName: state => state.newDirectory.tableName
     }),
     methods: {
       addSelect (index, list) {
-        let tableName =
         console.log(index)
         console.log(list)
         let name = this.sortOrder[index - 1]
@@ -48,8 +48,8 @@
         let select = {}
         select[name] = list
         console.log(select)
-        this.dispatch('showSmartSort', {
-          'tableName': tableName,
+        this.$store.dispatch('showSmartSort', {
+          'tableName': this.tableName,
           'select': select
         })
       }

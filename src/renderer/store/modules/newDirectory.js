@@ -117,6 +117,7 @@ const mutations = {
   // 在sidebar展示所有的智能视图
   [types.SHOW_SMART_SORT_LIST] (state, smartSortList) {
     state.smartSortList = smartSortList.allSmartView
+    console.log(smartSortList.allSmartView)
   },
 
   [types.SHOW_SMART_SORT] (state, response) {
