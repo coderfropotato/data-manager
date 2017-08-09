@@ -10,7 +10,8 @@ function tagYouAll (state, node, newAttributes) {
   // console.log(node)
   if (node.hasOwnProperty('status')) {
     node.status = node.status + '*' + 'tagged'
-    state.taggedModifiedFiles.set(node.path, newAttributes)
+    // 这里要复制一个新的newAttributes对象，否则给不同文件/文件夹打标签会混乱
+    state.taggedModifiedFiles.set(node.path, JSON.parse(JSON.stringify(newAttributes)))
   }
   if (node.hasOwnProperty('children')) {
     for (let childNode in node.children) {
@@ -38,7 +39,7 @@ const state = {
 
   modifiedFilesTree: {},  // 最近变更文件树，供遍历路径
 
-  showFileInfo: false,  // 是否展示右边侧栏的文件信息
+  showFileStatusAside: false,  // 是否展示右边侧栏的文件信息
 
   taggedModifiedFiles: new Map(),  // 所有已标记好的变更文件
 
@@ -46,10 +47,23 @@ const state = {
 
   nodeData: {}, // 当前选中节点的信息，以便打标签
 
+  selectedModifiedFiles: [],    // 所有选中的文件或文件夹路径，此时已准备提交，有可能多于已打好标签的文件
+
+  selectedFilesNum: 0, // 选中的文件/文件夹的数目
+
+  showMode: '', // 是否是展示文件信息，true时展示文件/文件夹属性，false展示选中了多少文件等属性
+
   activeModifiedFile: '' // 当前正在进行编辑的文件路径
 }
 
 const actions = {
+  // 更新文件信息
+  updateFileInfo ({commit}, payload) {
+    console.log(payload)
+    sendMessage('updateFileInfo', {payload}).then(data => {
+    })
+  },
+
   // 获取变更文件
   getModifiedFiles ({commit}) {
     // 获取更改文件后返回
@@ -67,8 +81,8 @@ const actions = {
   },
 
   // 右侧展示修改文件的信息
-  showModifiedFileInfo ({commit}) {
-    commit(types.SHOW_MODIFIED_FILE_INFO)
+  toggleShowFileStatusAside ({commit}, status) {
+    commit(types.SHOW_MODIFIED_FILE_INFO, status)
   },
 
   // 增加了一个修改好属性的文件
@@ -86,6 +100,16 @@ const actions = {
     commit(types.SET_NODE_DATA, nodeData)
   },
 
+  // 设置右侧显示模式
+  setShowMode ({commit}, status) {
+    commit(types.SET_SHOW_MODE, status)
+  },
+
+  //
+  setSelectedFilesNum ({commit}, num) {
+    commit(types.SET_SELECTED_FILES_NUM, num)
+  },
+
   // 更新当前节点的数据
   renewNodeData ({commit}, newAttributes) {
     commit(types.RENEW_NODE_DATA, newAttributes)
@@ -101,9 +125,9 @@ const mutations = {
     state.modifiedNum = result.count
   },
 
-  // 右侧展示修改文件的信息
-  [types.SHOW_MODIFIED_FILE_INFO] (state) {
-    state.showFileInfo = true
+  // 切换右侧是否展示修改文件的信息
+  [types.SHOW_MODIFIED_FILE_INFO] (state, status) {
+    state.showFileStatusAside = status
   },
 
   // 增加了一个修改好属性的文件
@@ -120,13 +144,21 @@ const mutations = {
   [types.RENEW_NODE_DATA] (state, newAttributes) {
     // 打标签啊打标签
     tagYouAll(state, state.nodeData, newAttributes)
-    console.log(state.taggedModifiedFiles)
+    // console.log(state.taggedModifiedFiles)
+  },
+
+  [types.SET_SHOW_MODE] (state, status) {
+    state.showMode = status
+  },
+
+  [types.SET_SELECTED_FILES_NUM] (state, num) {
+    state.selectedFilesNum = num
   },
 
   // 放弃修改某个打好标签的文件夹/文件的新属性
   removeTaggedFile (state, path) {
     removeYouAll(state, state.nodeData)
-    console.log(state.taggedModifiedFiles)
+    // console.log(state.taggedModifiedFiles)
   }
 }
 

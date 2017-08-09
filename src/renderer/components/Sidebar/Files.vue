@@ -1,5 +1,5 @@
 <template>
-  <div id="fileDirectory-root">
+  <div id="fileDirectory-root" v-loading.fullscreen.lock="fullScreenLoading">
     <div class="allFiles">
       <div class="title">
         <span>所有文件</span>
@@ -16,7 +16,7 @@
           </svg>
           <div class="item-title" @click="loadDiskFileTree(index)">
             <el-button type="text">
-              {{disk}}
+              {{disk | formatDiskName}}
             </el-button>
           </div>
         </div>
@@ -114,7 +114,8 @@
         // 记录当前选中的高亮节点，用于添加新节点时定位父节点
         currentNode: {},
         newSortDirName: '新建分类',
-        rowFileTree: []
+        rowFileTree: [],
+        fullScreenLoading: false
       }
     },
     computed: mapState({
@@ -126,6 +127,7 @@
       sortFileTree: state => state.files.sortFileTree
     }),
     mounted () {
+      this.fullScreenLoading = false
       // 重置列表数据，防止和搜索组件数据混合
       this.$store.commit('setFileList', [])
       // 插入文件小图标
@@ -134,6 +136,22 @@
       bus.$on('newSort', () => {
         this.appendNode()
       })
+    },
+    watch: {
+      diskDir () {
+      }
+    },
+    filters: {
+      formatDiskName (name) {
+        if (name !== undefined) {
+          let index = name.indexOf('*')
+          if (index > -1) {
+            return name.substr(0, index)
+          } else {
+            return name
+          }
+        }
+      }
     },
     methods: {
       // 插入文件Icon
@@ -178,6 +196,8 @@
         this.$store.dispatch('getIgnore')
         // 重置列表数据，防止和搜索组件数据混合
         this.$store.commit('setFileList', [])
+        // 加载动画
+        bus.$emit('loading-content')
       },
       // 加载回收站的内容
       loadTrashContent () {
@@ -188,17 +208,30 @@
         this.$store.dispatch('getTrash')
         // 重置列表数据，防止和搜索组件数据混合
         this.$store.commit('setFileList', [])
+        // 加载动画
+        bus.$emit('loading-content')
       },
       // 加载磁盘（包含我的电脑）文件树
       loadDiskFileTree (index) {
         let serialNumber
-        let path = this.diskDir[index] + '/'
+        // 获取路径，去除磁盘path中的 * 和序列号
+        let path = this.diskDir[index]
+        if (path.indexOf('*') > -1) {
+          let tempPath = path.split('*')
+          path = tempPath[0]
+        }
+        path = path + '/'
+
         if (index === 0) {
           serialNumber = 'myComputer'
+        } else {
+          serialNumber = this.diskDir[index].split('*').pop()
         }
         this.$store.dispatch('getDiskFileTree', serialNumber)
         this.$router.push('/files/diskdirectory')
         this.$store.commit('setCurrentPath', path)
+        // 加载动画
+        bus.$emit('loading-content')
       },
       // 加载分类文件列表
       loadSortFileList (nodeObj, node, component) {
@@ -219,6 +252,9 @@
         tempPath.pop()
         let lastPath = tempPath.join('/')
         this.$store.dispatch('getSortFileList', lastPath)
+        // 加载动画
+        console.log('loading-content')
+        bus.$emit('loading-content')
         // 通过空的 Vue 实例作为中央时间总线，发送路径更改信息
       },
       // 当节点展开或关闭时，树的高度会发生变化，需要发出相关事件，通知 sidebar 组件改变scrollbar样式

@@ -44,8 +44,8 @@ const state = {
 }
 
 const actions = {
-  sendNewSortInfo ({commit}, {path}) {
-    sendMessage('', path).then(status => {
+  sendNewSortInfo ({commit}, path) {
+    sendMessage('', {path}).then(status => {
     })
   },
 

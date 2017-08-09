@@ -1,181 +1,293 @@
 <template>
-    <div id="file-status-info-root" v-if="show">
-        <!--标题-->
-        <div class="info-title">
-            <span>文件详情</span>
-        </div>
-        <!--基本信息-->
-        <div class="basic-info" v-if="basicInfo">
-            <span class="title">基本信息</span>
-            <div class="basic-info-items">
-                <span class="item-name">{{basicInfo.filename}}</span>
-                <span>文件类型：{{basicInfo.type}}</span>
-                <span>文件大小：{{basicInfo.size}}</span>
-                <span>创建时间：{{basicInfo.cTime}}</span>
+    <div id="file-status-info-root" v-if="showFileStatusAside">
+        <!-- 当点击文件/文件夹，显示对应信息 -->
+        <div class="side-content" v-if="showMode">
+            <!--组件标题-->
+            <div class="header">
+                <h1>文件详情</h1>
             </div>
-        </div>
-        <!--<div class="DataSource" v-if="otherInfo">-->
-        <!--<span>数据来源</span>-->
-        <!--<span>类别：{{otherInfo.sourceData.type}}</span>-->
-        <!--<span>数据源：{{otherInfo.sourceData.name}}</span>-->
-        <!--<el-button size="mini" @click="otherInfo.sourceData.url">-->
-        <!--<span>访问</span>-->
-        <!--<svg class="icon" aria-hidden="true">-->
-        <!--<use xlink:href="#icon-arrow"></use>-->
-        <!--</svg>-->
-        <!--</el-button>-->
-        <!--</div>-->
-        <div class="organization">
-            <div class="title">
-                组织分类
+            <!--基本信息-->
+            <div class="basic-info">
+                <h2>基本信息
+                    <el-button type="primary" v-if="showBasicInfo" @click="showBasicInfo = !showBasicInfo">收起
+                    </el-button>
+                    <el-button type="primary" v-if="!showBasicInfo" @click="showBasicInfo = !showBasicInfo">展开
+                    </el-button>
+                </h2>
+                <ul class="basic-info" v-if="showBasicInfo">
+                    <li>文件名: {{ basicInfo.filename }}</li>
+                    <!--文件夹不显示文件大小-->
+                    <li v-if="basicInfo.size">文件大小：{{ basicInfo.size }}</li>
+                    <li>创建时间：{{ basicInfo.ctime }}</li>
+                </ul>
             </div>
-            <div class="sort">
-                <svg class="icon" aria-hidden="true">
-                    <use xlink:href="#icon-wenjian"></use>
-                </svg>
-                <el-popover
-                        ref="addSort"
-                        placement="left-end"
-                        width="260">
-                    <div class="popover-sort-tree">
-                        <div class="popover-title">
-                            分类
-                        </div>
-                        <div class="sort-tree">
-                            <el-tree
-                                    node-key="id"
-                                    :data="popoverTreeData"
-                                    show-checkbox
-                                    ref="sortTree"
-                                    check-strictly
-                                    :default-expanded-keys="tempData"
-                                    @check-change="setSortDir">
-                            </el-tree>
-                        </div>
+            <!-- 来源信息 -->
+            <div class="source-info">
+                <h2>来源信息
+                    <el-button type="primary" v-if="showSourceInfo" @click="showSourceInfo = !showSourceInfo">收起
+                    </el-button>
+                    <el-button type="primary" v-if="!showSourceInfo" @click="showSourceInfo = !showSourceInfo">展开
+                    </el-button>
+                </h2>
+                <ul v-if="showSourceInfo">
+                    <li>类别:
+                        <el-select v-model="currentSourceInfo.type" filterable placeholder="选择来源">
+                            <el-option v-for="option in sourceTypeOptions" :key="option.value" :label="option.label"
+                                       :value="option.value">
+                            </el-option>
+                        </el-select>
+                    </li>
+                    <!-- 若是私有数据，显示如下内容  -->
+                    <div class="private-source" v-if="currentSourceInfo.type === 'private'">
+                        <li>项目名：
+                            <el-input v-model="currentSourceInfo.project" placeholder="请输入项目名"></el-input>
+                        </li>
+                        <li>项目负责人：
+                            <el-input v-model="currentSourceInfo.principle" placeholder="请输入项目负责人"></el-input>
+                        </li>
                     </div>
-                </el-popover>
-                <!--当分类条目较多时，条目和按钮为一个整体，计算样式-->
-                <div class="item-wrapper">
-                    <!--分类的条目-->
-                    <div class="sort-items">
-                        <el-button size="mini" v-for="item in sorts" :key="item">{{item}}</el-button>
-                        <el-button size="mini" v-if="!sorts.length" @click="addFileSort" v-popover:addSort>
-                            添加分类
-                        </el-button>
-                        <el-button size="mini" v-if="sorts.length" v-popover:addSort @click="setCheckNode">
-                            +
-                        </el-button>
+                    <!-- 若是公有数据，显示如下内容 -->
+                    <div class="public-source" v-if="currentSourceInfo.type === 'public'">
+                        <li>数据来源网址：
+                            <el-input v-model="currentSourceInfo.websites" placeholder="请输入数据来源网址"></el-input>
+                        </li>
                     </div>
+                </ul>
+            </div>
+            <!-- 文件属性 -->
+            <div class="file-info">
+                <h2>文件属性
+                    <el-button type="primary" v-if="showFileInfo" @click="showFileInfo = !showFileInfo">收起</el-button>
+                    <el-button type="primary" v-if="!showFileInfo" @click="showFileInfo = !showFileInfo">展开</el-button>
+                </h2>
+                <div class="fileattr" v-if="showFileInfo">
+                    <ul>
+                        <li>文件类型：
+                            <!--这个地方要抽离出来currentFiletype，不能直接用currentFileattr.filetype,否则会死循环到怀疑人生-->
+                            <el-select v-model="currentFiletype" @change="getTemplate" placeholder="请选择文件类型">
+                                <el-option
+                                        v-for="item in filetypeOptions"
+                                        :key="item.value"
+                                        :label="item.label"
+                                        :value="item.value">
+                                </el-option>
+                            </el-select>
+                        </li>
+                        <!-- 根据不同文件类型，自动显示不同的属性 -->
+                        <div class="root-attributes" v-for="(rootAttribute, key) in currentFileattr"
+                             v-if="key != 'filetype'">
+                            <h3>{{ getChineseName(key) }}</h3>
+                            <div class="child-attributes" v-for="(childAttribute, key) in rootAttribute">
+                                {{ getChineseName(key) }}
+                                <!--这个地方只能用rootAttribute[key]，不能用childAttribute，who tm knows-->
+                                <el-input v-model="rootAttribute[key]" placeholder="请输入内容"></el-input>
+                            </div>
+                        </div>
+                    </ul>
                 </div>
             </div>
+            <!-- 底部按钮 -->
+            <div class="footer">
+                <el-button type="primary" size="small" @click="addNewTaggedFile">更改属性</el-button>
+                <el-button size="small">自动识别</el-button>
+                <el-button size="small">忽略此文件</el-button>
+                <el-button size="small" @click="ignoreNewAttribute">放弃修改</el-button>
+            </div>
         </div>
-        <!--各种可以更改的属性-->
-        <div id="file-status-aside-modified-attributes">
-            <el-select
-                    v-model="attribute1"
-                    filterable
-                    allow-create
-                    placeholder="你TM选啊还是写啊">
-                <el-option
-                        v-for="item in options1"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                </el-option>
-            </el-select>
-
-            <el-select
-                    v-model="attribute2"
-                    filterable
-                    allow-create
-                    placeholder="你TM选啊还是写啊">
-                <el-option
-                        v-for="item in options1"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                </el-option>
-            </el-select>
-        </div>
-        <!--底部各种按钮-->
-        <div id="file-status-aside-buttons">
-            <div>hhh</div>
-            <div>hhh</div>
-            <div>hhh</div>
-            <div>hhh</div>
-            <el-button type="primary" size="small" @click="addNewTaggedFile">更改属性</el-button>
-            <el-button size="small">自动识别</el-button>
-            <el-button size="small">忽略此文件</el-button>
-            <el-button size="small" @click="ignoreNewAttribute">放弃修改</el-button>
+        <!-- 当勾选要提交的文件时，显示对应信息 -->
+        <div class="side-content" v-if="!showMode">
+            您选中了{{ selectedFilesNum }}个文件
         </div>
     </div>
+
 </template>
 
 <script>
   import { mapState, mapActions } from 'vuex'
-
-  let tempData = ['1/1.txt/', '1/2.2/3.2/', '1/2.4/3/', '1/2.txt/']
-  let tempSort = []
 
   export default {
     name: 'FileStatusAside',
 
     data () {
       return {
-        // 记录分类的数组
-        sorts: [],
-        tempData,
-        attribute1: '',
-        attribute2: '',
-        options1: [
+        // 控制是否显示
+        showBasicInfo: true,    // 是否展示基本信息
+        showSourceInfo: true,   // 是否展示来源信息
+        showFileInfo: true,     // 是否展示文件属性
+
+        // 来源类型下拉框选项
+        sourceTypeOptions: [
           {
-            value: '1',
-            label: '1'
+            value: 'public',
+            label: '公有数据'
           },
           {
-            value: '2',
-            label: '2'
+            value: 'private',
+            label: '私有数据'
           }
-        ]
+        ],
+
+        filetypeOptions: [
+          {
+            value: 'fastq',
+            label: 'fastq'
+          },
+          {
+            value: 'wtf',
+            label: 'wtf'
+          }
+        ],
+
+        // 前端临时保存的数据
+        // 来源信息下拉框的值
+        currentSourceInfo: {},
+
+        // 当前准备填写的文件类型
+        currentFiletype: '',
+
+        // 文件属性的值
+        currentFileattr: {},
+
+        // 英文key与中文翻译对应表
+        nameMap: {
+          'sample': '样本',
+          'library': '图书馆',
+          'fastq': '法斯特球',
+          'attr1': '哎呦',
+          'attr2': '不错哟',
+          'id': '样本编号',
+          'name': '样本名',
+          'organism': '物种',
+          'strain': '品种',
+          'tissue': '组织',
+          'sex': '性别',
+          'age': '年龄',
+          'development_stage': '发育阶段',
+          'breeding_history': '育种史',
+          'biomaterial_provider': '材料提供者',
+          'geographic_location': '地理位置',
+          'treatment': '处理方式',
+          'replicate': '生物学重复',
+          'generation': '世代',
+          'instrument': '测序平台',
+          'strategy': '建库策略',
+          'read_length': '读长',
+          'source': '组学分类',
+          'selection': '模版类型',
+          'layout': '单/双端',
+          'sequence_counts': '序列数',
+          'qualities_options': '质量信息编码方式',
+          'some': '你丫',
+          'thing': '还',
+          'oh': '真是个',
+          'interesting': '人才'
+        },
+
+        fastqTemplate: {
+          'filetype': 'fastq',
+          'sample': {
+            'id': '',
+            'name': '',
+            'organism': '',
+            'strain': '',
+            'tissue': '',
+            'sex': '',
+            'age': '',
+            'development_stage': '',
+            'breeding_history': '',
+            'biomaterial_provider': '',
+            'geographic_location': '',
+            'treatment': '',
+            'replicate': '',
+            'generation': ''
+          },
+          'library': {
+            'instrument': '',
+            'strategy': '',
+            'read_length': '',
+            'source': '',
+            'selection': '',
+            'layout': ''
+          },
+          'fastq': {
+            'sequence_counts': '',
+            'qualities_options': ''
+          }
+        },
+
+        wtfTemplate: {
+          'filetype': 'wtf',
+          'attr1': {
+            'some': '',
+            'thing': ''
+          },
+          'attr2': {
+            'oh': '',
+            'interesting': ''
+          }
+        }
+      }
+    },
+
+    watch: {
+      // 观察basicInfo来判断是否点击了不同的文件/文件夹 不要观察nodeData 因为有可能nodeData改变了但是文件属性还没获取到
+      basicInfo () {
+        // step1 二话不说，我觉得你根本就没有信息
+        // 文件属性部分
+        this.currentFileattr = {
+          filetype: ''
+        }
+        this.currentFiletype = ''
+        // 文件来源部分
+        this.currentSourceInfo = {
+          type: '',
+          project: '',
+          principle: '',
+          websites: ''
+        }
+        console.log('i am gonna set it')
+        // step2 如果文件已打好标签，直接获取显示
+        if (this.taggedModifiedFiles.get(this.nodeData.path)) {
+//          console.log('1')
+          let infos = this.taggedModifiedFiles.get(this.nodeData.path)
+          // 填充文件属性部分
+          this.currentFileattr = infos.fileattr
+          this.currentFiletype = infos.fileattr.filetype
+
+          // 填充文件来源部分
+          this.currentSourceInfo = infos.source
+        } else if (this.fileAttr.filetype || this.sourceInfo.type) {    // step3 如果后台存在数据，说明该文件存在过，要把原来的信息展示出来，此时把后台存有的数据存到this.currentFileattr中
+//          console.log('2')
+          // 填充文件属性部分
+          if (this.fileAttr.filetype) {
+            this.currentFileattr = this.fileAttr
+            this.currentFiletype = this.currentFileattr.filetype
+            console.log('after clicked setting', this.currentFiletype)
+          }
+          // 填充文件来源部分
+          if (this.sourceInfo.type) {
+            this.currentSourceInfo = this.sourceInfo
+          }
+        }
+//        console.log('i am done setting it')
+//        console.log('result', '|', this.currentFileattr, '|', this.currentFiletype, '|', this.currentSourceInfo)
       }
     },
 
     computed: {
       ...mapState({
-        show: state => state.modified.showFileInfo,
-        basicInfo: state => state.fileInfo.basicInfo,
-        otherInfo: state => state.fileInfo.otherInfo,
-        popoverTreeData: state => state.files.sortFileTree,
-        taggedModifiedFiles: state => state.modified.taggedModifiedFiles,
-        serialNumber: state => state.fileInfo.serialNumber,
-        modifiedFilesTree: state => state.modified.modifiedFilesTree,
-        nodeData: state => state.modified.nodeData
-        // sorts: state => state.fileInfo.fileSorts
+        selectedFilesNum: state => state.modified.selectedFilesNum, // 中间选中的文件数目
+        showMode: state => state.modified.showMode, // 是否是展示文件信息，true时展示文件/文件夹属性，false展示选中了多少文件等属性
+        showFileStatusAside: state => state.modified.showFileStatusAside,    // 是否展示右侧文件详情栏
+        basicInfo: state => state.fileInfo.basicInfo,  // 文件基本信息
+        sourceInfo: state => state.fileInfo.sourceInfo, // 文件来源信息
+        fileAttr: state => state.fileInfo.fileAttr,  // 文件详细信息
+        filetype: state => state.fileInfo.fileAttr.filetype,   // 即fileattr.filetype 文件类型
+        taggedModifiedFiles: state => state.modified.taggedModifiedFiles,   // 已打好标签的文件列表
+        serialNumber: state => state.fileInfo.serialNumber,     // 点选文件/文件夹的磁盘序列号
+        modifiedFilesTree: state => state.modified.modifiedFilesTree,   // 变更文件的文件树，直接从后台获取
+        nodeData: state => state.modified.nodeData  // 当前点选的文件/文件夹对应的Tree组件中的Node对象
       })
-    },
-
-    watch: {
-      show () {
-        for (let node in tempData) {
-          let path = tempData[node].split('/')
-          path.pop()
-          tempSort.push(path.join('>'))
-        }
-        this.sorts = tempSort
-      },
-
-      // 通过观察basicInfo的变更来判断是否切换了不同的文件/文件夹
-      basicInfo () {
-        // 如果文件已打好标签，直接获取显示
-        if (this.taggedModifiedFiles.get(this.serialNumber + this.basicInfo.path)) {
-          let attributes = this.taggedModifiedFiles.get(this.serialNumber + this.basicInfo.path)
-          this.attribute1 = attributes.attribute1
-          this.attribute2 = attributes.attribute2
-        } else {    // 不存在的话显示空
-          this.attribute1 = ''
-          this.attribute2 = ''
-        }
-      }
     },
 
     methods: {
@@ -186,42 +298,75 @@
         'addTaggedModifiedFile' // 增加该打好标签的文件
       ]),
 
-      addFileSort () {
+      // 根据属性json里的英文key，获得对应中文翻译
+      getChineseName (eng) {
+        return this.nameMap[eng]
       },
 
-      setCheckNode () {
-        // node-key 必须是唯一的，否则无法设置节点
-        this.$refs.sortTree.setCheckedKeys(tempData)
-      },
-
-      // 设置分类的目录
-      setSortDir () {
-        // 清空分类数组
-        this.sorts = []
-        let checkedNodes = this.$refs.sortTree.getCheckedNodes()
-        for (let node in checkedNodes) {
-          let path = checkedNodes[node].id.split('/')
-          path.pop()
-          this.sorts.push(path.join('>'))
+      // 用户选择不同的文件类型时，下面展示不同的属性编辑框
+      getTemplate (data) {
+        switch (data) {
+          case 'fastq':
+            // 高能预警 要复制一份对象 否则你会哭的
+            this.currentFileattr = JSON.parse(JSON.stringify(this.fastqTemplate))
+            break
+          case 'wtf' :
+            // 高能预警 要复制一份对象 否则你会哭的
+            this.currentFileattr = JSON.parse(JSON.stringify(this.wtfTemplate))
+            break
+          default:
+            this.currentFileattr = {
+              filetype: ''
+            }
         }
       },
 
       // 添加打好标签的选中文件/文件夹
       addNewTaggedFile () {
+        console.log('before', this.currentSourceInfo)
+        console.log('this.currentFiletype', this.currentFiletype)
+        // 满足后端惨无人道的需求
+        if (this.currentFiletype === '') {
+          this.currentFileattr = {}
+        } else if (this.currentSourceInfo.type === 'public') {
+          // 删除多余属性
+          delete this.currentSourceInfo.principle
+          delete this.currentSourceInfo.project
+        } else if (this.currentSourceInfo.type === 'private') {
+          // 删除多余属性
+          delete this.currentSourceInfo.websites
+        }
+
+        if (this.currentSourceInfo.type === '') {
+          this.currentSourceInfo = {}
+        }
+
         // 添加打好标签的文件
-        let newAttributes = {attribute1: this.attribute1, attribute2: this.attribute2}
+        let newAttributes = {fileattr: this.currentFileattr, source: this.currentSourceInfo}
         // 更改中间的状态提示
         this.renewNodeData(newAttributes)
         console.log(this.taggedModifiedFiles)
       },
 
-      // 忽略当前文件/文件夹的属性信息
+      // 放弃当前点选文件/文件夹的修改
       ignoreNewAttribute () {
         // store中删除
         this.removeTaggedFile()
-        // 界面不显示
-        this.attribute1 = ''
-        this.attribute2 = ''
+
+        // 不显示信息
+        // 重置文件属性
+        this.currentFileattr = {
+          filetype: ''
+        }
+        this.currentFiletype = ''
+
+        // 重置文件来源
+        this.currentSourceInfo = {
+          type: '',
+          project: '',
+          principle: '',
+          websites: ''
+        }
       }
     }
   }
@@ -229,79 +374,6 @@
 
 <style lang="scss" scoped>
     #file-status-info-root {
-        height: 100%;
-        width: 100%;
-        background-color: rgba(242, 242, 242, 0.6);
-        padding: 0.5em 1em;
-    }
-
-    // 所有子标题的公共样式
-    .title {
-        margin-top: 1em;
-        font-size: 1.1em;
-        font-weight: 500;
-    }
-
-    .info-title {
-        margin: 1em 0;
-        font-weight: 500;
-        span {
-            font-size: 1.2em;
-        }
-        .el-button {
-            float: right;
-            margin-right: 1em;
-            margin-top: 0.2em;
-            width: 3.5em;
-        }
-    }
-
-    .basic-info {
-        .basic-info-items {
-            margin: 0.5em 0 0 1em;
-            span {
-                display: block;
-                font-size: 0.8em;
-                margin: 0.5em 0;
-            }
-            .item-name {
-                font-size: 0.9em;
-                font-weight: 500;
-                margin: 1em 0;
-            }
-        }
-    }
-
-    .organization {
-        .sort {
-            position: relative;
-            margin: 1em;
-            .icon {
-                float: left;
-                font-size: 1.4em;
-            }
-            .item-wrapper {
-                position: absolute;
-                top: 0;
-                left: 2em;
-                .el-button {
-                    font-size: 0.8em;
-                    margin: 0.2em 0.5em 0.5em 0;
-                }
-            }
-        }
-    }
-
-    .popover-sort-tree {
-        .popover-title {
-            margin: 0.5em 0;
-            text-align: center;
-            letter-spacing: 1.5em;
-            font-size: 1.2em;
-            font-weight: 600;
-        }
-        .el-checkbox {
-            float: right;
-        }
+        overflow: scroll;
     }
 </style>

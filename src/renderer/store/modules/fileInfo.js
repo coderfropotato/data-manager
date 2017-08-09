@@ -7,10 +7,15 @@ import * as types from '@/store/mutation-types'
 
 const state = {
   show: false,
+
   // 磁盘序列号
   serialNumber: '',
+
   // 基本信息
   basicInfo: {},
+
+  // 来源信息
+  sourceInfo: {},
 
   // 自定义信息
   customize: {},
@@ -47,6 +52,7 @@ const mutations = {
   // 获取文件信息
   [types.RECEIVE_FILE_DETAIL] (state, detail) {
     state.basicInfo = detail.basic
+    state.sourceInfo = detail.source
     state.customize = detail.customize
     state.fileAttr = detail.fileattr
     state.serialNumber = detail.serial_number
