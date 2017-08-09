@@ -2,7 +2,7 @@
     <div id="file-status-root">
         <!--标题-->
         <div id="file-status-title">
-            所有变更
+            <h1>所有变更</h1>
         </div>
         <!--文件树-->
         <div id="file-status-tree">
@@ -37,44 +37,35 @@
     // mounted时加载
     mounted () {
       this.getModifiedFiles()  // 获取修改文件
-      this.showFileInfo = false // 刚刚打开时不显示右侧文件信息
+      this.toggleShowFileStatusAside(false) // 刚刚打开时不显示右侧文件信息
     },
 
     data () {
       return {
-        // 是否显示commit
-        showCommitOrIgnore: false,
-
-        // 所有选中的文件或文件夹路径，此时已准备提交，有可能多于已打好标签的文件
-        selectedModifiedFiles: []
+        // 中间栏是否显示commit/ignore按钮
+        showCommitOrIgnore: false
       }
     },
 
     computed: mapState({
+      // 所有中间栏选中的文件/文件夹
+      selectedModifiedFiles: state => state.modified.selectedModifiedFiles,
+
       // 变更文件
       modifiedFiles: state => state.modified.modifiedFiles,
 
       // 变更文件树
       modifiedFilesTree: state => state.modified.modifiedFilesTree,
 
-      // 当前选中文件/文件夹的基本信息
-      basicInfo: state => state.fileInfo.basicInfo,
-
       // 所有打好标记的文件
       taggedModifiedFiles: state => state.modified.taggedModifiedFiles
 
     }),
 
-    watch: {
-      // 观察所有打好标记的文件，若有新增或删除，重新渲染文件树的样式
-      taggedModifiedFiles () {
-
-      }
-    },
-
     methods: {
       // 映射Actions
       ...mapActions([
+        'toggleShowFileStatusAside',  // 切换展示右侧文件信息边栏
         'getModifiedFiles',  // 获取修改的文件
         'getFileInfo', // 获取文件/文件夹信息
         'setNodeData', // 设置当前点击节点的数据
@@ -147,10 +138,12 @@
         this.getFileInfo(payload)
 
         // 右侧展示文件信息
-        this.showModifiedFileInfo()
+        this.toggleShowFileStatusAside(true)
 
         // 设置节点信息
         this.setNodeData(data)
+
+//        console.log(data)
       },
 
       // 处理选中节点
