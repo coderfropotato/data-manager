@@ -41,7 +41,6 @@
           this.$store.dispatch(call, data)
         }
       })
-//      ipcRenderer.send('getSearchConditions')
 
       // 禁用浏览器拖拽事件
       document.addEventListener('drop', e => {

@@ -5,7 +5,7 @@
         <el-row :gutter="20">
           <el-col :span="6" v-for="(item,index) in displayData" :key="index">
             <!--TODO：添加编辑按钮-->
-            <div class="grid-item" @click="getNextDirectory(item.item, item)">
+            <div class="grid-item" @dblclick="getNextDirectory(item.item, item)">
               <svg class="icon" aria-hidden="true">
                 <use xlink:href="#icon-wenjian1" v-if="!item.isFile"></use>
                 <use xlink:href="#icon-file" v-if="item.isFile"></use>
@@ -25,6 +25,7 @@
 <script>
   import {mapState} from 'vuex'
   import scrollBar from '../../assets/JS/headerScrollbar'
+  import bus from '@/assets/JS/bus'
 
   export default {
     name: 'DiskDirectory',
@@ -43,7 +44,10 @@
     }),
     watch: {
       rowDirData () {
+        bus.$emit('loading-end')
         // 当原始数据发生变化时，重新刷新计算（第一次请求加载数据）
+        this.dirData = {}
+        this.historyMap = new Map()
         this.displayData = []
 
         // 去除磁盘层，记录磁盘序列号
