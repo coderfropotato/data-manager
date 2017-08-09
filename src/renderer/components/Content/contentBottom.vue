@@ -15,12 +15,12 @@
     },
     beforeMount () {
       bus.$on('loading-content', () => {
-        console.log('loading')
         this.loading = true
       })
       bus.$on('loading-end', () => {
-        console.log('loading-end')
-        this.loading = false
+        this.$nextTick(() => {
+          this.loading = false
+        })
       })
     }
   }

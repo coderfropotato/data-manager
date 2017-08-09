@@ -166,9 +166,8 @@
       // 获取文件
       openFile () {
         this.fullScreenLoading = true
-        if (this.$store.state.files.allFiles && this.$store.state.files.sortDirRowData) {
+        if (this.$store.state.files.allFiles.length && Object.keys(this.$store.state.files.sortDirRowData).length) {
           this.fullScreenLoading = false
-          // 不做任何处理
         } else {
           this.$store.dispatch('openFile').then(() => {
             this.fullScreenLoading = false
