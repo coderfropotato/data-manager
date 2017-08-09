@@ -1,8 +1,10 @@
 <template>
   <div class="smartSort-root">
+    <el-button v-for="item in sortOrder" :key="item" class="sort">{{item}}</el-button>
     <el-row type="flex">
-      <el-col :span="7" v-for="(item,index) in smartSort" :key="index">
-        <el-row v-for="list in item" :key="list">{{list}}
+      <el-col :span="4" v-for="(item,index) in smartSort" :key="index">
+        <el-row v-for="list in item" :key="list">
+          <el-button type="text" @click="addSelect(index, list)">{{list}}</el-button>
         </el-row>
       </el-col>
       <!--<el-col :span="1"></el-col>-->
@@ -33,23 +35,25 @@
     },
     computed: mapState({
       // 所有文件选项的数据，即管理的磁盘
-      smartSort: state => state.newDirectory.smartSort
+      smartSort: state => state.newDirectory.smartSort,
+      sortOrder: state => state.newDirectory.sortOrder
     }),
     methods: {
-//      getAuthors (e) {
-//        let year = e.target.innerText
-//        console.log(e.target.innerText)
-//        this.$store.dispatch('getAuthors', year)
-//        this.showAuthors = true
-//      },
-//      getArticles (e) {
-//        console.log(e.target.innerText)
-//        this.showArticles = true
-//      }
+      addSelect (index, list) {
+        console.log(index)
+        console.log(list)
+        let name = this.sortOrder[index - 1]
+        console.log(this.sortOrder[index - 1])
+        let select = {}
+        select[name] = 'haha'
+      }
     }
   }
 </script>
-<style>
+<style lang="scss">
   .smartSort-root {
+    .sort {
+      margin-left: 5em;
+    }
   }
 </style>

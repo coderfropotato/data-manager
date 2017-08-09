@@ -369,9 +369,16 @@
           ])
       },
       showSmartSort (e) {
-        let smartSortName = e.target.innerText
-        console.log(smartSortName)
-        this.$store.dispatch('showSmartSort', smartSortName)
+        let tableName = e.target.innerText
+        let select = {}
+        console.log(tableName)
+        // 当点击一个新的智能视图时，smartSort数组会置空，重新向里面push数据
+        this.$store.commit('setSmartSort')
+        this.$store.dispatch('showSmartSort', {
+          'tableName': tableName,
+          'select': select
+        })
+        this.$router.push('/smartSort')
       }
     },
     components: {

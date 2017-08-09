@@ -21,10 +21,10 @@
 //          })
 //        }
         this.$store.dispatch('openFile')
-        // 向后台请求用户创建的所有智能视图
-        this.$store.dispatch('showSmartSortList')
-        // 向后台请求创建智能视图的限制条件
       })
+      // 向后台请求用户创建的所有智能视图
+      this.$store.dispatch('showSmartSortList')
+      // 向后台请求创建智能视图的限制条件
       this.$store.dispatch('getSearchConditions')
       /*
        * 通过主进程在窗口之间传递数据
@@ -41,7 +41,6 @@
           this.$store.dispatch(call, data)
         }
       })
-//      ipcRenderer.send('getSearchConditions')
 
       // 禁用浏览器拖拽事件
       document.addEventListener('drop', e => {

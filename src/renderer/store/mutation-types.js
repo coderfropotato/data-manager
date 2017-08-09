@@ -36,6 +36,8 @@ export const SHOW_SMART_SORT_LIST = 'showSmartSortList'
 export const SHOW_SMART_SORT = 'showSmartSort'
 // 处理后台返回的搜索条件
 export const HANDLE_SEARCH_CONDITION_MAP = 'handleConditionMap'
+// 重置智能视图里面的内容
+export const SET_SMART_SORT = 'setSmartSort'
 // 设置搜索位置
 export const SET_SEARCH_RANGE = 'setSearchRange'
 export const CHANGE_MODIFIED_FILES_TREE_NODE = 'changeModifiedFilesTreeNode'
