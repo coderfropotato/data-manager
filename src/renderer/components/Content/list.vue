@@ -92,6 +92,7 @@
 </template>
 <script>
   import {mapState} from 'vuex'
+  import bus from '@/assets/JS/bus'
 
   export default {
     data () {
@@ -109,6 +110,14 @@
       // 是否显示拖拽导入文件提示
       dragFiles: state => state.showControl.dragShow
     }),
+    watch: {
+      filesData () {
+        // 结束加载动画
+        this.$nextTick(() => {
+          bus.$emit('loading-end')
+        })
+      }
+    },
     mounted () {
       // 监听列表区拖拽，有拖入则显示导入提示，拖出则隐藏提示
       let list = document.getElementById('list-root')
@@ -225,8 +234,11 @@
 
 <style lang="scss">
   #list-root {
-    min-height: 400px;
     position: relative;
+    -webkit-overflow-y: overlay;
+    overflow-x: hidden;
+    height: 95%;
+    min-height: 400px;
     .el-table__body-wrapper {
       overflow: hidden;
     }

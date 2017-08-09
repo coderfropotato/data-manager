@@ -36,16 +36,18 @@ const state = {
 const actions = {
   // 打开文件选项
   openFile ({commit}) {
-    sendMessage('openFile', {}).then(data => {
-      console.log(data)
-      commit(types.OPEN_FILE, data)
+    return new Promise((resolve, reject) => {
+      sendMessage('openFile', {}).then(data => {
+        resolve()
+        console.log(data)
+        commit(types.OPEN_FILE, data)
+      })
     })
   },
 
   // 获取磁盘（包含我的电脑）文件树
   getDiskFileTree ({commit}, serialNumber) {
     sendMessage('getFileTree', {serialNumber}).then(data => {
-      console.log(data)
       commit({
         type: types.GET_DISK_FILE_TREE,
         serialNumber,
@@ -57,6 +59,7 @@ const actions = {
   // 获取文件列表
   getSortFileList ({commit}, path) {
     sendMessage('getSortFileList', {path}).then(data => {
+      console.log(data)
       let fileList = data.fileList
       commit(types.SET_FILE_LIST, fileList)
     })

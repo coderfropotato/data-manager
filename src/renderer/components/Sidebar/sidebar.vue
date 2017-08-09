@@ -1,5 +1,5 @@
 <template>
-  <div id="sidebar-root">
+  <div id="sidebar-root" v-loading.fullscreen.lock="fullScreenLoading">
     <div class="nav-menu" ref="navMenu">
       <el-col :span="24">
         <!--router 激活导航，以index为path-->
@@ -106,7 +106,9 @@
 //          }
         },
         // TODO：无法使用计算属性，不能响应窗口大小变化，未来可做更深的考虑
-        middleHeight: 400
+        middleHeight: 400,
+        // 加载动画
+        fullScreenLoading: false
       }
     },
     computed: mapState({
@@ -163,10 +165,14 @@
       },
       // 获取文件
       openFile () {
+        this.fullScreenLoading = true
         if (this.$store.state.files.allFiles && this.$store.state.files.sortDirRowData) {
+          this.fullScreenLoading = false
           // 不做任何处理
         } else {
-          this.$store.dispatch('openFile')
+          this.$store.dispatch('openFile').then(() => {
+            this.fullScreenLoading = false
+          })
         }
       }
     }
