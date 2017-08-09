@@ -90,6 +90,10 @@
           3: {
             title: '新增智能分类',
             url: '/newsmartsortdir'
+          },
+          4: {
+            title: '从Excel模板导入文件',
+            url: '/excelimport'
           }
           // TODO 未实现功能
 //          4: {

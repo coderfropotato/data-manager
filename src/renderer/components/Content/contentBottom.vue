@@ -1,11 +1,14 @@
 <!--加载List或uploadFile组件-->
 <template>
-  <div class="contentBottom-root">
+  <div id="contentBottom-root">
     <router-view></router-view>
   </div>
 </template>
 <script>
   export default {}
 </script>
-<style>
+<style lang="scss">
+  #contentBottom-root{
+    height: 100%;
+  }
 </style>

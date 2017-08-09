@@ -14,8 +14,8 @@ const state = {
 }
 
 const actions = {
-  sendNewSortInfo ({commit}, {path}) {
-    sendMessage('', path).then(status => {
+  sendNewSortInfo ({commit}, path) {
+    sendMessage('', {path}).then(status => {
     })
   },
   // 获取文件详情
