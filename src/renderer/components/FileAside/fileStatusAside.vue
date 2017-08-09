@@ -91,7 +91,7 @@
                 <el-button type="primary" size="small" @click="addNewTaggedFile">更改属性</el-button>
                 <el-button size="small">自动识别</el-button>
                 <el-button size="small">忽略此文件</el-button>
-                <el-button size="small">放弃修改</el-button>
+                <el-button size="small" @click="ignoreNewAttribute">放弃修改</el-button>
             </div>
         </div>
         <!-- 当勾选要提交的文件时，显示对应信息 -->
@@ -335,6 +335,28 @@
         let newAttributes = {fileattr: this.currentFileattr, source: this.currentSourceInfo}
         // 更改中间的状态提示
         this.renewNodeData(newAttributes)
+        console.log(this.taggedModifiedFiles)
+      },
+
+      // 放弃当前点选文件/文件夹的修改
+      ignoreNewAttribute () {
+        // store中删除
+        this.removeTaggedFile()
+
+        // 不显示信息
+        // 重置文件属性
+        this.currentFileattr = {
+          filetype: ''
+        }
+        this.currentFiletype = ''
+
+        // 重置文件来源
+        this.currentSourceInfo = {
+          type: '',
+          project: '',
+          principle: '',
+          websites: ''
+        }
         console.log(this.taggedModifiedFiles)
       }
     }
