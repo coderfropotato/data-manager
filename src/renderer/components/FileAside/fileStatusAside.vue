@@ -96,7 +96,7 @@
         </div>
         <!-- 当勾选要提交的文件时，显示对应信息 -->
         <div class="side-content" v-if="!showMode">
-            您选中了个文件
+            您选中了{{ selectedFilesNum }}个文件
         </div>
     </div>
 
@@ -111,8 +111,6 @@
     data () {
       return {
         // 控制是否显示
-        showMode: true, // 是否是展示文件信息，true时展示文件/文件夹属性，false展示选中了多少文件等属性
-
         showBasicInfo: true,    // 是否展示基本信息
         showSourceInfo: true,   // 是否展示来源信息
         showFileInfo: true,     // 是否展示文件属性
@@ -142,28 +140,13 @@
 
         // 前端临时保存的数据
         // 来源信息下拉框的值
-        currentSourceInfo: {
-          type: '',
-          project: '',
-          principle: '',
-          websites: ''
-        },
+        currentSourceInfo: {},
 
         // 当前准备填写的文件类型
         currentFiletype: '',
 
         // 文件属性的值
-        currentFileattr: {
-          filetype: '',
-          attr1: {
-            some: 'hehe',
-            thing: 'quni'
-          },
-          attr2: {
-            oh: 'daye',
-            interesting: 'de'
-          }
-        },
+        currentFileattr: {},
 
         // 英文key与中文翻译对应表
         nameMap: {
@@ -247,7 +230,8 @@
     },
 
     watch: {
-      nodeData () {
+      // 观察basicInfo来判断是否点击了不同的文件/文件夹 不要观察nodeData 因为有可能nodeData改变了但是文件属性还没获取到
+      basicInfo () {
         // step1 二话不说，我觉得你根本就没有信息
         // 文件属性部分
         this.currentFileattr = {
@@ -261,8 +245,10 @@
           principle: '',
           websites: ''
         }
+        console.log('i am gonna set it')
         // step2 如果文件已打好标签，直接获取显示
         if (this.taggedModifiedFiles.get(this.nodeData.path)) {
+//          console.log('1')
           let infos = this.taggedModifiedFiles.get(this.nodeData.path)
           // 填充文件属性部分
           this.currentFileattr = infos.fileattr
@@ -271,21 +257,27 @@
           // 填充文件来源部分
           this.currentSourceInfo = infos.source
         } else if (this.fileAttr.filetype || this.sourceInfo.type) {    // step3 如果后台存在数据，说明该文件存在过，要把原来的信息展示出来，此时把后台存有的数据存到this.currentFileattr中
+//          console.log('2')
           // 填充文件属性部分
           if (this.fileAttr.filetype) {
             this.currentFileattr = this.fileAttr
             this.currentFiletype = this.currentFileattr.filetype
+            console.log('after clicked setting', this.currentFiletype)
           }
           // 填充文件来源部分
           if (this.sourceInfo.type) {
             this.currentSourceInfo = this.sourceInfo
           }
         }
+//        console.log('i am done setting it')
+//        console.log('result', '|', this.currentFileattr, '|', this.currentFiletype, '|', this.currentSourceInfo)
       }
     },
 
     computed: {
       ...mapState({
+        selectedFilesNum: state => state.modified.selectedFilesNum, // 中间选中的文件数目
+        showMode: state => state.modified.showMode, // 是否是展示文件信息，true时展示文件/文件夹属性，false展示选中了多少文件等属性
         showFileStatusAside: state => state.modified.showFileStatusAside,    // 是否展示右侧文件详情栏
         basicInfo: state => state.fileInfo.basicInfo,  // 文件基本信息
         sourceInfo: state => state.fileInfo.sourceInfo, // 文件来源信息
@@ -331,6 +323,24 @@
 
       // 添加打好标签的选中文件/文件夹
       addNewTaggedFile () {
+        console.log('before', this.currentSourceInfo)
+        console.log('this.currentFiletype', this.currentFiletype)
+        // 满足后端惨无人道的需求
+        if (this.currentFiletype === '') {
+          this.currentFileattr = {}
+        } else if (this.currentSourceInfo.type === 'public') {
+          // 删除多余属性
+          delete this.currentSourceInfo.principle
+          delete this.currentSourceInfo.project
+        } else if (this.currentSourceInfo.type === 'private') {
+          // 删除多余属性
+          delete this.currentSourceInfo.websites
+        }
+
+        if (this.currentSourceInfo.type === '') {
+          this.currentSourceInfo = {}
+        }
+
         // 添加打好标签的文件
         let newAttributes = {fileattr: this.currentFileattr, source: this.currentSourceInfo}
         // 更改中间的状态提示
@@ -357,12 +367,13 @@
           principle: '',
           websites: ''
         }
-        console.log(this.taggedModifiedFiles)
       }
     }
   }
 </script>
 
 <style lang="scss" scoped>
-
+    #file-status-info-root {
+        overflow: scroll;
+    }
 </style>

@@ -158,19 +158,16 @@ const sortDir = [
 ]
 export const searchConditions = [
   {
-    'title': '性别',
-    'attribute': ['雌性', '雄性']
+    'sex': ['雌性', '雄性']
   },
   {
-    'title': '年龄',
-    'attribute': ['16-20', '30-50', '60-80']
+    'age': ['16-20', '30-50', '60-80']
   },
   {
-    'title': '品种',
-    'attribute': ['高茎', '低茎']
+    'strain': ['高茎', '低茎']
   }
 ]
-export const smartSort = [['Klaus', 'Mate', 'Mike', 'Stefan'], ['haha', 'xixi', 'huhu', 'dada'], ['uzi', 'mlxg', 'korol', 'xiaohu']]
+export const smartSort = ['uzi', 'mlxg', 'korol', 'xiaohu']
 // export const newSmartSort = [
 //   {
 //     label: '智能视图一'

@@ -51,7 +51,6 @@ const actions = {
 const mutations = {
   // 获取文件信息
   [types.RECEIVE_FILE_DETAIL] (state, detail) {
-    // console.log(detail)
     state.basicInfo = detail.basic
     state.sourceInfo = detail.source
     state.customize = detail.customize
