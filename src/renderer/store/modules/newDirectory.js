@@ -40,7 +40,8 @@ const state = {
   smartSortList: [],
   smartSort: [[]],
   searchConditions: [],
-  sortOrder: []
+  sortOrder: [],
+  tableName: ''
 }
 
 const actions = {
@@ -120,6 +121,8 @@ const mutations = {
     let smartView = response.smartView
     state.smartSort.push(smartView.data)
     state.sortOrder = smartView.tabs
+    state.tableName = smartView.table
+    console.log(state.tableName)
     // console.log(object.smartSort)
     console.log(response)
     // console.log(state.smartSort)

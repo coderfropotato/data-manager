@@ -1,8 +1,8 @@
 <template>
   <div class="smartSort-root">
-    <el-button v-for="item in sortOrder" :key="item" class="sort">{{item}}</el-button>
+    <el-button v-for="item in sortOrder" :key="item" type='text' class="sort">{{item}}</el-button>
     <el-row type="flex">
-      <el-col :span="4" v-for="(item,index) in smartSort" :key="index">
+      <el-col :span="3" v-for="(item,index) in smartSort" :key="index">
         <el-row v-for="list in item" :key="list">
           <el-button type="text" @click="addSelect(index, list)">{{list}}</el-button>
         </el-row>
@@ -40,12 +40,18 @@
     }),
     methods: {
       addSelect (index, list) {
+        let tableName =
         console.log(index)
         console.log(list)
         let name = this.sortOrder[index - 1]
         console.log(this.sortOrder[index - 1])
         let select = {}
-        select[name] = 'haha'
+        select[name] = list
+        console.log(select)
+        this.dispatch('showSmartSort', {
+          'tableName': tableName,
+          'select': select
+        })
       }
     }
   }
@@ -53,7 +59,7 @@
 <style lang="scss">
   .smartSort-root {
     .sort {
-      margin-left: 5em;
+      margin: 0 5.3em;
     }
   }
 </style>
