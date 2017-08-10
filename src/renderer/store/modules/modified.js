@@ -6,16 +6,26 @@ import * as types from '@/store/mutation-types'
 import packUpModified from '@/assets/JS/convertJSON'
 
 // 给node底下的所有子节点都打上标签
-function tagYouAll (state, node, newAttributes) {
+// isdir=true时，只能更改来源属性，不能重置其他属性,isdir=false时，直接赋值即可
+function tagYouAll (state, node, newAttributes, isdir) {
   // console.log(node)
   if (node.hasOwnProperty('status')) {
     node.status = node.status + '*' + 'tagged'
     // 这里要复制一个新的newAttributes对象，否则给不同文件/文件夹打标签会混乱
-    state.taggedModifiedFiles.set(node.path, JSON.parse(JSON.stringify(newAttributes)))
+    if (!isdir) { // 文件
+      state.taggedModifiedFiles.set(node.path, JSON.parse(JSON.stringify(newAttributes)))
+    } else {  // 文件夹
+      let oldAttributes = state.taggedModifiedFiles.get(node.path)
+      if (oldAttributes) {
+        oldAttributes.source = newAttributes.source // 原来有的话只更新source属性
+      } else {  // 没有的话直接设置上
+        state.taggedModifiedFiles.set(node.path, JSON.parse(JSON.stringify(newAttributes)))
+      }
+    }
   }
   if (node.hasOwnProperty('children')) {
     for (let childNode in node.children) {
-      tagYouAll(state, node.children[childNode], newAttributes)
+      tagYouAll(state, node.children[childNode], newAttributes, isdir)
     }
   }
 }
@@ -141,9 +151,12 @@ const mutations = {
   },
 
   // 更新当前节点及子节点数据
-  [types.RENEW_NODE_DATA] (state, newAttributes) {
+  [types.RENEW_NODE_DATA] (state, payload) {
+    let newAttributes = payload.newAttributes
+    let isdir = payload.isdir
     // 打标签啊打标签
-    tagYouAll(state, state.nodeData, newAttributes)
+    console.log(newAttributes, isdir)
+    tagYouAll(state, state.nodeData, newAttributes, isdir)
     // console.log(state.taggedModifiedFiles)
   },
 

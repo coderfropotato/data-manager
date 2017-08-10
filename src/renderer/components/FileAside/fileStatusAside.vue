@@ -231,12 +231,13 @@
     },
 
     watch: {
+      // 展示信息用
       // 观察basicInfo来判断是否点击了不同的文件/文件夹 不要观察nodeData 因为有可能nodeData改变了但是文件属性还没获取到
+      // 当用户点击了中间某个文件/文件夹时需要获取一定的属性
       basicInfo () {
         // step1 二话不说，我觉得你根本就没有信息
         // 文件属性部分
         this.currentFileattr = {
-          filetype: ''
         }
         this.currentFiletype = ''
         // 文件来源部分
@@ -304,6 +305,7 @@
         return this.nameMap[eng]
       },
 
+      // 更改信息用
       // 用户选择不同的文件类型时，下面展示不同的属性编辑框
       getTemplate (data) {
         // 如果已缓存，直接复制显示
@@ -356,7 +358,7 @@
           delete newAttributes.fileattr
         }
         // 更改中间的状态提示
-        this.renewNodeData(newAttributes)
+        this.renewNodeData({newAttributes: newAttributes, isdir: this.isdir})
         console.log(this.taggedModifiedFiles)
       },
 
