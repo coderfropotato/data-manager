@@ -115,6 +115,7 @@
       modifiedFiles: state => state.modified.modifiedNum
     }),
     mounted () {
+      console.log('mo')
       this.updateStyle()
       // 设置中间文件树区域的高度
       this.setMiddleHeight()
@@ -126,6 +127,9 @@
         this.$refs.middle.style.height = this.middleHeight + 'px'
       }, false)
 
+      bus.$on('error', () => {
+        this.fullScreenLoading = false
+      })
       // 等文件树展开完成后再获取高度
       bus.$on('tree-height-changed', () => {
         setTimeout(() => {

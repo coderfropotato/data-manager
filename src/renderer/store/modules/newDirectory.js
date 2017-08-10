@@ -45,6 +45,43 @@ const state = {
 }
 
 const actions = {
+  // 判断磁盘目录能否被管理
+  judgeNewDiskDir ({commit}, path) {
+    return new Promise((resolve, reject) => {
+      sendMessage('judgeNewDiskDir', {path}).then(data => {
+        resolve(data.status)
+      })
+    })
+  },
+
+  addNewDiskDir ({commit}, dirInfo) {
+    return new Promise((resolve, reject) => {
+      let data = {
+        path: dirInfo.path,
+        alias: dirInfo.alias,
+        attr: {
+          // 数组
+          projectInfo: dirInfo.projectInfo,
+          // 数组
+          customAttr: dirInfo.customAttr
+        }
+      }
+      // 如果是远程服务器
+      if (dirInfo.dataSource === 'remoteServer') {
+        Object.assign(data, {
+          source: dirInfo.remoteServer
+        })
+      } else {
+        Object.assign(data, {
+          source: {}
+        })
+      }
+      sendMessage('addDiskDir', data).then(data => {
+        resolve(data.status)
+      })
+    })
+  },
+
   sendNewSortInfo ({commit}, path) {
     sendMessage('', {path}).then(status => {
     })

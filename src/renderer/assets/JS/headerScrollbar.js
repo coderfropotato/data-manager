@@ -44,12 +44,14 @@ function scrollBar () {
     move()
   }
 
+  // 清除监听函数
+  scrollBar.removeEventListener('mousemove', getMoveX)
   if (scrollBar && hiddenWidth > 0) {
-    scrollBar.addEventListener('mousedown', function (e) {
+    scrollBar.addEventListener('mousedown', function down (e) {
       startX = e.clientX
       scrollBar.addEventListener('mousemove', getMoveX, false)
     })
-    scrollBar.addEventListener('mouseup', function () {
+    scrollBar.addEventListener('mouseup', function up () {
       scrollBar.removeEventListener('mousemove', getMoveX)
     }, false)
   }

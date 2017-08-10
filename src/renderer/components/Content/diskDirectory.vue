@@ -175,6 +175,7 @@
       .grid-item {
         text-align: center;
         margin: 1em;
+        height: 6em;
         .icon {
           font-size: 3em;
         }
