@@ -37,7 +37,6 @@ const conditionMap = {
 const state = {
   newDiskDirInfo: [],
   newSortDirInfo: [],
-  smartSortList: [],
   smartSort: [[]],
   searchConditions: [],
   sortOrder: [],
@@ -61,15 +60,15 @@ const actions = {
   },
 
   // 获取智能视图列表显示在文件树上面
-  showSmartSortList ({commit}) {
-    // 这里返回的data应该是所有智能视图的名字的数组
-    return new Promise((resolve, reject) => {
-      sendMessage('showSmartSortList', {}).then(data => {
-        resolve()
-        commit(types.SHOW_SMART_SORT_LIST, data)
-      })
-    })
-  },
+  // showSmartSortList ({commit}) {
+  //   // 这里返回的data应该是所有智能视图的名字的数组
+  //   return new Promise((resolve, reject) => {
+  //     sendMessage('showSmartSortList', {}).then(data => {
+  //       resolve()
+  //       commit(types.SHOW_SMART_SORT_LIST, data)
+  //     })
+  //   })
+  // },
 
   // 点击智能视图名称，将名称发送给后台，后台根据智能视图的名称发送具体的数据
   showSmartSort ({commit}, payload) {
@@ -82,7 +81,6 @@ const actions = {
   },
   getSearchConditions ({commit}) {
     sendMessage('getSearchConditions', {}).then(data => {
-      console.log(data)
       commit(types.GET_SEARCH_CONDITIONS, data)
     })
     // commit(types.GET_SEARCH_CONDITIONS)
@@ -115,10 +113,9 @@ const mutations = {
   },
 
   // 在sidebar展示所有的智能视图
-  [types.SHOW_SMART_SORT_LIST] (state, smartSortList) {
-    state.smartSortList = smartSortList.allSmartView
-    console.log(smartSortList.allSmartView)
-  },
+  // [types.SHOW_SMART_SORT_LIST] (state, smartSortList) {
+  //   state.smartSortList = smartSortList.allSmartView
+  // },
 
   [types.SHOW_SMART_SORT] (state, response) {
     // state.smartSort = object.smartSort
@@ -139,7 +136,6 @@ const mutations = {
   [types.GET_SEARCH_CONDITIONS] (state, response) {
     // let data = object.searchConditions
     let data = response.searchConditions
-    console.log(response.searchConditions)
     // 对数据进行中英文映射处理
     for (let item in data) {
       // 选项条目名

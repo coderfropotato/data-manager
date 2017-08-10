@@ -4,7 +4,7 @@
       <span>请输入智能视图名称</span>
       <el-input type="text" v-model="name" size="small"></el-input>
     </div>
-    <div class="searchCondition">
+    <div class="searchConditions">
       <span>添加搜索条件</span>
       <div class="searchConditon">
         <el-button v-for="(item,index) in limitedConditions" :key="item" size="mini" :index="index">{{item}}<i
@@ -12,7 +12,7 @@
         </el-button>
       </div>
       <div v-for="(item,index) in searchConditions" :key="name" v-bind:data-name=item.name>{{item.label}}
-        <el-button v-for="it in item.value" :key="it" @click="addLimitedCondition">{{it}}</el-button>
+        <el-button v-for="it in item.value" :key="it" @click="addLimitedCondition" size="mini">{{it}}</el-button>
       </div>
     </div>
     <div class="sortCondition">
@@ -87,14 +87,15 @@
         let text = e.target.innerText
         let count = 0
         let length = this.limitedConditions.length
+        let name
         // 把用户点击的每一个搜索条件以key: value 对象的形式包装起来 key是
         let object = {}
         if ($(e.target).parent().data('name')) {
-          this.name = $(e.target).parent().data('name')
+          name = $(e.target).parent().data('name')
         } else if ($(e.target).parent().parent().data('name')) {
-          this.name = $(e.target).parent().parent().data('name')
+          name = $(e.target).parent().parent().data('name')
         }
-        object[this.name] = text
+        object[name] = text
         // 如果用户还未选择条件，则直接添加
         if (length === 0) {
           this.limitedConditions.push(text)
@@ -191,6 +192,10 @@
     }
     >div {
       margin: 1.5em 0 0 1em;
+    }
+    .searchConditions {
+      overflow-y: scroll;
+      height: 100%;
     }
     .searchConditon,
     .search-input {
