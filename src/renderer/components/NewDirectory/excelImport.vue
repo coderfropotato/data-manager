@@ -69,12 +69,15 @@
 </template>
 <script>
   import {ipcRenderer, shell} from 'electron'
+  import {mapState} from 'vuex'
 
   export default {
     data () {
       return {
         placeholder: '请选择模板',
         generateTemplate: false,
+        // 在生成模板时，获得后台反馈的磁盘序列号
+        serialNumber: '',
         path: '',
         fileType: '',
         options: [
@@ -85,6 +88,9 @@
         ]
       }
     },
+    computed: mapState({
+      targetDisks: state => state.excel.targetPositions
+    }),
     methods: {
       showFilename () {
         ipcRenderer.send('open-file-dialog', 'single')
@@ -156,6 +162,7 @@
       },
       openFile (path) {
         // shell.showItemInFolder(path)
+        // 打开文件
         shell.openExternal('file://' + path)
       }
     }

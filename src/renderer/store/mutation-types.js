@@ -40,6 +40,8 @@ export const HANDLE_SEARCH_CONDITION_MAP = 'handleConditionMap'
 export const SET_SMART_SORT = 'setSmartSort'
 // 设置搜索位置
 export const SET_SEARCH_RANGE = 'setSearchRange'
+// 设置 Excel 导入目标磁盘信息
+export const SET_IMPORT_TARGET_DISKS = 'setImportTargetDisks'
 export const CHANGE_MODIFIED_FILES_TREE_NODE = 'changeModifiedFilesTreeNode'
 export const SET_NODE_DATA = 'setNodeData'
 export const RENEW_NODE_DATA = 'renewNodeData'
