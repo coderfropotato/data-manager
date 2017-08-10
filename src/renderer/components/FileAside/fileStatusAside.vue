@@ -1,104 +1,106 @@
 <template>
-    <div id="file-status-info-root" v-if="showFileStatusAside">
-        <!-- 当点击文件/文件夹，显示对应信息 -->
-        <div class="side-content" v-if="showMode">
-            <!--组件标题-->
-            <div class="header">
-                <h1>文件详情</h1>
+  <div id="file-status-info-root" v-if="showFileStatusAside">
+    <!-- 当点击文件/文件夹，显示对应信息 -->
+    <div class="side-content" v-if="showMode">
+      <!--组件标题-->
+      <div class="header">
+        <h1>文件详情</h1>
+      </div>
+      <!--基本信息-->
+      <div class="basic-info">
+        <h2>基本信息
+          <el-button type="primary" v-if="showBasicInfo" @click="showBasicInfo = !showBasicInfo">收起
+          </el-button>
+          <el-button type="primary" v-if="!showBasicInfo" @click="showBasicInfo = !showBasicInfo">展开
+          </el-button>
+        </h2>
+        <ul class="basic-info" v-if="showBasicInfo">
+          <li>文件名: {{ basicInfo.filename }}</li>
+          <!--文件夹不显示文件大小-->
+          <li v-if="basicInfo.size">文件大小：{{ basicInfo.size }}</li>
+          <li>创建时间：{{ basicInfo.ctime }}</li>
+        </ul>
+      </div>
+      <!-- 来源信息 -->
+      <div class="source-info">
+        <h2>来源信息
+          <el-button type="primary" v-if="showSourceInfo" @click="showSourceInfo = !showSourceInfo">收起
+          </el-button>
+          <el-button type="primary" v-if="!showSourceInfo" @click="showSourceInfo = !showSourceInfo">展开
+          </el-button>
+        </h2>
+        <ul v-if="showSourceInfo">
+          <li>类别:
+            <el-select v-model="currentSourceInfo.type" filterable placeholder="选择来源">
+              <el-option v-for="option in sourceTypeOptions" :key="option.value" :label="option.label"
+                         :value="option.value">
+              </el-option>
+            </el-select>
+          </li>
+          <!-- 若是私有数据，显示如下内容  -->
+          <div class="private-source" v-if="currentSourceInfo.type === 'private'">
+            <li>项目名：
+              <el-input v-model="currentSourceInfo.project" placeholder="请输入项目名"></el-input>
+            </li>
+            <li>项目负责人：
+              <el-input v-model="currentSourceInfo.principle" placeholder="请输入项目负责人"></el-input>
+            </li>
+          </div>
+          <!-- 若是公有数据，显示如下内容 -->
+          <div class="public-source" v-if="currentSourceInfo.type === 'public'">
+            <li>数据来源网址：
+              <el-input v-model="currentSourceInfo.websites" placeholder="请输入数据来源网址"></el-input>
+            </li>
+          </div>
+        </ul>
+      </div>
+      <!-- 文件属性 -->
+      <div class="file-info" v-if="!isdir">
+        <h2>文件属性
+          <el-button type="primary" v-if="showFileInfo" @click="showFileInfo = !showFileInfo">收起</el-button>
+          <el-button type="primary" v-if="!showFileInfo" @click="showFileInfo = !showFileInfo">展开</el-button>
+        </h2>
+        <div class="fileattr" v-if="showFileInfo">
+          <ul>
+            <li>文件类型：
+              <!--这个地方要抽离出来currentFiletype，不能直接用currentFileattr.filetype,否则会死循环到怀疑人生-->
+              <el-select class="showFileAttribute" v-model="currentFiletype" @change="getTemplate"
+                         placeholder="请选择文件类型">
+                <el-option
+                  v-for="item in filetypeOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </li>
+            <!-- 根据不同文件类型，自动显示不同的属性 -->
+            <div class="root-attributes" v-for="(rootAttribute, key) in currentFileattr"
+                 v-if="key != 'filetype'">
+              <h3>{{ getChineseName(key) }}</h3>
+              <div class="child-attributes" v-for="(childAttribute, key) in rootAttribute">
+                {{ getChineseName(key) }}
+                <!--这个地方只能用rootAttribute[key]，不能用childAttribute，who tm knows-->
+                <el-input v-model="rootAttribute[key]" placeholder="请输入内容"></el-input>
+              </div>
             </div>
-            <!--基本信息-->
-            <div class="basic-info">
-                <h2>基本信息
-                    <el-button type="primary" v-if="showBasicInfo" @click="showBasicInfo = !showBasicInfo">收起
-                    </el-button>
-                    <el-button type="primary" v-if="!showBasicInfo" @click="showBasicInfo = !showBasicInfo">展开
-                    </el-button>
-                </h2>
-                <ul class="basic-info" v-if="showBasicInfo">
-                    <li>文件名: {{ basicInfo.filename }}</li>
-                    <!--文件夹不显示文件大小-->
-                    <li v-if="basicInfo.size">文件大小：{{ basicInfo.size }}</li>
-                    <li>创建时间：{{ basicInfo.ctime }}</li>
-                </ul>
-            </div>
-            <!-- 来源信息 -->
-            <div class="source-info">
-                <h2>来源信息
-                    <el-button type="primary" v-if="showSourceInfo" @click="showSourceInfo = !showSourceInfo">收起
-                    </el-button>
-                    <el-button type="primary" v-if="!showSourceInfo" @click="showSourceInfo = !showSourceInfo">展开
-                    </el-button>
-                </h2>
-                <ul v-if="showSourceInfo">
-                    <li>类别:
-                        <el-select v-model="currentSourceInfo.type" filterable placeholder="选择来源">
-                            <el-option v-for="option in sourceTypeOptions" :key="option.value" :label="option.label"
-                                       :value="option.value">
-                            </el-option>
-                        </el-select>
-                    </li>
-                    <!-- 若是私有数据，显示如下内容  -->
-                    <div class="private-source" v-if="currentSourceInfo.type === 'private'">
-                        <li>项目名：
-                            <el-input v-model="currentSourceInfo.project" placeholder="请输入项目名"></el-input>
-                        </li>
-                        <li>项目负责人：
-                            <el-input v-model="currentSourceInfo.principle" placeholder="请输入项目负责人"></el-input>
-                        </li>
-                    </div>
-                    <!-- 若是公有数据，显示如下内容 -->
-                    <div class="public-source" v-if="currentSourceInfo.type === 'public'">
-                        <li>数据来源网址：
-                            <el-input v-model="currentSourceInfo.websites" placeholder="请输入数据来源网址"></el-input>
-                        </li>
-                    </div>
-                </ul>
-            </div>
-            <!-- 文件属性 -->
-            <div class="file-info">
-                <h2>文件属性
-                    <el-button type="primary" v-if="showFileInfo" @click="showFileInfo = !showFileInfo">收起</el-button>
-                    <el-button type="primary" v-if="!showFileInfo" @click="showFileInfo = !showFileInfo">展开</el-button>
-                </h2>
-                <div class="fileattr" v-if="showFileInfo">
-                    <ul>
-                        <li>文件类型：
-                            <!--这个地方要抽离出来currentFiletype，不能直接用currentFileattr.filetype,否则会死循环到怀疑人生-->
-                            <el-select v-model="currentFiletype" @change="getTemplate" placeholder="请选择文件类型">
-                                <el-option
-                                        v-for="item in filetypeOptions"
-                                        :key="item.value"
-                                        :label="item.label"
-                                        :value="item.value">
-                                </el-option>
-                            </el-select>
-                        </li>
-                        <!-- 根据不同文件类型，自动显示不同的属性 -->
-                        <div class="root-attributes" v-for="(rootAttribute, key) in currentFileattr"
-                             v-if="key != 'filetype'">
-                            <h3>{{ getChineseName(key) }}</h3>
-                            <div class="child-attributes" v-for="(childAttribute, key) in rootAttribute">
-                                {{ getChineseName(key) }}
-                                <!--这个地方只能用rootAttribute[key]，不能用childAttribute，who tm knows-->
-                                <el-input v-model="rootAttribute[key]" placeholder="请输入内容"></el-input>
-                            </div>
-                        </div>
-                    </ul>
-                </div>
-            </div>
-            <!-- 底部按钮 -->
-            <div class="footer">
-                <el-button type="primary" size="small" @click="addNewTaggedFile">更改属性</el-button>
-                <el-button size="small">自动识别</el-button>
-                <el-button size="small">忽略此文件</el-button>
-                <el-button size="small" @click="ignoreNewAttribute">放弃修改</el-button>
-            </div>
+          </ul>
         </div>
-        <!-- 当勾选要提交的文件时，显示对应信息 -->
-        <div class="side-content" v-if="!showMode">
-            您选中了{{ selectedFilesNum }}个文件
-        </div>
+      </div>
+      <!-- 底部按钮 -->
+      <div class="footer">
+        <el-button type="primary" size="small" @click="addNewTaggedFile">更改属性</el-button>
+        <el-button size="small">自动识别</el-button>
+        <el-button size="small">忽略此文件</el-button>
+        <el-button size="small" @click="ignoreNewAttribute">放弃修改</el-button>
+        <!--{{ currentFilattr }}-->
+      </div>
     </div>
+    <!-- 当勾选要提交的文件时，显示对应信息 -->
+    <div class="side-content" v-if="!showMode">
+      您选中了{{ selectedFilesNum }}个文件
+    </div>
+  </div>
 
 </template>
 
@@ -245,37 +247,37 @@
           principle: '',
           websites: ''
         }
-        console.log('i am gonna set it')
         // step2 如果文件已打好标签，直接获取显示
         if (this.taggedModifiedFiles.get(this.nodeData.path)) {
-//          console.log('1')
+//          console.log('cached in taggedFiles')
           let infos = this.taggedModifiedFiles.get(this.nodeData.path)
-          // 填充文件属性部分
-          this.currentFileattr = infos.fileattr
-          this.currentFiletype = infos.fileattr.filetype
-
+//          console.log(infos)
+          // 文件才有下面的属性
+          if (!this.isdir && infos.fileattr) {  // 要先判断infos里面有没有fileattr 因为有可能用户点击了父文件打了标签，这时它的子文件没有该属性
+            // 填充文件属性部分
+            this.currentFileattr = infos.fileattr
+            this.currentFiletype = infos.fileattr.filetype
+//            console.log('in basicInfo, this.currentFileattr', this.currentFileattr)
+          }
           // 填充文件来源部分
           this.currentSourceInfo = infos.source
-        } else if (this.fileAttr.filetype || this.sourceInfo.type) {    // step3 如果后台存在数据，说明该文件存在过，要把原来的信息展示出来，此时把后台存有的数据存到this.currentFileattr中
-//          console.log('2')
+        } else if (this.sourceInfo.type || (!this.isdir && this.fileAttr.filetype)) {    // step3 如果后台存在数据，说明该文件存在过，要把原来的信息展示出来，此时把后台存有的数据存到this.currentFileattr中
           // 填充文件属性部分
-          if (this.fileAttr.filetype) {
+          if (!this.isdir && this.fileAttr.filetype) {
             this.currentFileattr = this.fileAttr
             this.currentFiletype = this.currentFileattr.filetype
-            console.log('after clicked setting', this.currentFiletype)
           }
           // 填充文件来源部分
           if (this.sourceInfo.type) {
             this.currentSourceInfo = this.sourceInfo
           }
         }
-//        console.log('i am done setting it')
-//        console.log('result', '|', this.currentFileattr, '|', this.currentFiletype, '|', this.currentSourceInfo)
       }
     },
 
     computed: {
       ...mapState({
+        isdir: state => state.fileInfo.isdir, // 当前展示的文件是否是文件夹
         selectedFilesNum: state => state.modified.selectedFilesNum, // 中间选中的文件数目
         showMode: state => state.modified.showMode, // 是否是展示文件信息，true时展示文件/文件夹属性，false展示选中了多少文件等属性
         showFileStatusAside: state => state.modified.showFileStatusAside,    // 是否展示右侧文件详情栏
@@ -305,30 +307,37 @@
 
       // 用户选择不同的文件类型时，下面展示不同的属性编辑框
       getTemplate (data) {
-        switch (data) {
-          case 'fastq':
-            // 高能预警 要复制一份对象 否则你会哭的
-            this.currentFileattr = JSON.parse(JSON.stringify(this.fastqTemplate))
-            break
-          case 'wtf' :
-            // 高能预警 要复制一份对象 否则你会哭的
-            this.currentFileattr = JSON.parse(JSON.stringify(this.wtfTemplate))
-            break
-          default:
-            this.currentFileattr = {
-              filetype: ''
-            }
+        // 如果已缓存，直接复制显示
+        if (this.taggedModifiedFiles.get(this.nodeData.path)) {
+          let infos = this.taggedModifiedFiles.get(this.nodeData.path)
+          this.currentFileattr = infos.fileattr
+        } else {  // 没有type的话直接显示空模板
+          switch (data) {
+            case 'fastq':
+              // 高能预警 要复制一份对象 否则你会哭的
+              this.currentFileattr = JSON.parse(JSON.stringify(this.fastqTemplate))
+              break
+            case 'wtf' :
+              // 高能预警 要复制一份对象 否则你会哭的
+              this.currentFileattr = JSON.parse(JSON.stringify(this.wtfTemplate))
+              break
+            default:
+              this.currentFileattr = {
+                filetype: ''
+              }
+          }
         }
       },
 
       // 添加打好标签的选中文件/文件夹
       addNewTaggedFile () {
-        console.log('before', this.currentSourceInfo)
-        console.log('this.currentFiletype', this.currentFiletype)
+//        console.log('before', this.currentSourceInfo)
+//        console.log('this.currentSourceInfo.type ', this.currentSourceInfo.type)
         // 满足后端惨无人道的需求
         if (this.currentFiletype === '') {
           this.currentFileattr = {}
-        } else if (this.currentSourceInfo.type === 'public') {
+        }
+        if (this.currentSourceInfo.type === 'public') {
           // 删除多余属性
           delete this.currentSourceInfo.principle
           delete this.currentSourceInfo.project
@@ -336,13 +345,17 @@
           // 删除多余属性
           delete this.currentSourceInfo.websites
         }
-
         if (this.currentSourceInfo.type === '') {
           this.currentSourceInfo = {}
         }
 
         // 添加打好标签的文件
         let newAttributes = {fileattr: this.currentFileattr, source: this.currentSourceInfo}
+
+        // 为文件夹打标签的话不会有fileattr属性
+        if (this.isdir) {
+          delete newAttributes.fileattr
+        }
         // 更改中间的状态提示
         this.renewNodeData(newAttributes)
         console.log(this.taggedModifiedFiles)
@@ -373,7 +386,7 @@
 </script>
 
 <style lang="scss" scoped>
-    #file-status-info-root {
-        overflow: scroll;
-    }
+  #file-status-info-root {
+    overflow: scroll;
+  }
 </style>

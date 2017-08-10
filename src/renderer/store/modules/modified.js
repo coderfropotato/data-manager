@@ -58,9 +58,9 @@ const state = {
 
 const actions = {
   // 更新文件信息
-  updateFileInfo ({commit}, payload) {
-    console.log(payload)
-    sendMessage('updateFileInfo', {payload}).then(data => {
+  updateFileInfo ({commit}, updateList) {
+    console.log('sending.......', updateList)
+    sendMessage('updateAttribute', {updateList: updateList}).then(data => {
     })
   },
 
