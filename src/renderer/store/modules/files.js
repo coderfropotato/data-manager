@@ -16,6 +16,7 @@ const state = {
   currentDiskDirTree: '',
   // 记录当前选中文件夹的路径
   currentPath: '',
+  smartSortList: [],
   // 所有文件，可读，不可变更
   allFiles: [],
   // 分类，用户可以自己建立多层文件夹来分类数据
@@ -38,7 +39,7 @@ const actions = {
   openFile ({commit}) {
     return new Promise((resolve, reject) => {
       sendMessage('openFile', {}).then(data => {
-        resolve()
+        resolve(1)
         console.log(data)
         commit(types.OPEN_FILE, data)
       })
@@ -57,26 +58,33 @@ const actions = {
   },
 
   // 获取文件列表
-  getSortFileList ({commit}, path) {
-    sendMessage('getSortFileList', {path}).then(data => {
-      console.log(data)
-      let fileList = data.fileList
-      commit(types.SET_FILE_LIST, fileList)
+  getSortFileList ({commit}, payload) {
+    return new Promise((resolve, reject) => {
+      sendMessage('getSortFileList', {
+        path: payload.lastPath,
+        page: payload.page,
+        size: payload.size
+      }).then(data => {
+        let fileList = data.fileList
+        if (fileList.length !== 0) {
+          commit(types.SET_FILE_LIST, fileList)
+        }
+        resolve(data.isLastPage)
+      })
     })
   },
 
   // 获取回收站
   getTrash ({commit}) {
     sendMessage('getTrash', {}).then(data => {
-      commit(types.GET_TRASH, data)
-      console.log(data)
+      commit(types.GET_TRASH, data.trash)
     })
   },
 
   // 获取忽略文件
   getIgnore ({commit}) {
     sendMessage('getIgnore', {}).then(data => {
-      commit(types.GET_IGNORE, data)
+      commit(types.GET_IGNORE, data.ignore)
     })
   },
 
@@ -103,6 +111,8 @@ const mutations = {
   [types.OPEN_FILE] (state, response) {
     state.allFiles = response.allFiles
     state.sortDirRowData = response.sortDir.sort
+    state.smartSortList = response.smartViews
+
     // 对原始的文件树数据进行处理
     state.sortFileTree = []
     travelTree(state.sortDirRowData, state.sortFileTree, '')
@@ -117,13 +127,19 @@ const mutations = {
     state.cacheDir.push(temp)
     state.currentDiskDirTree = payload.data.tree
   },
+
   // 设置分类文件列表信息
   [types.SET_SORT_FILE_LIST] (state, response) {
   },
 
   // 设置文件列表信息
   [types.SET_FILE_LIST] (state, response) {
-    state.currentFileList = response
+    // 如果传进的response数组为 0，则设置文件列表为空，否则将新获取的文件加入原数组
+    if (response.length === 0) {
+      state.currentFileList = []
+    } else {
+      state.currentFileList = state.currentFileList.concat(response)
+    }
   },
 
   // 获取回收站
@@ -146,7 +162,6 @@ const mutations = {
   // 获取忽略文件
   [types.GET_IGNORE] (state, response) {
     state.ignore = response
-    state.currentFileList = response
   },
 
   // 设置当前的文件树

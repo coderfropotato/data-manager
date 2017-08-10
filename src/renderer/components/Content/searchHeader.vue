@@ -158,6 +158,7 @@
         for (let item in Array.from(set.values())) {
           this.selectedCondition.push(Array.from(set.values())[item])
         }
+        console.log(this.selectedCondition)
       },
       // 删除所选搜索条件
       deleteItem (index) {

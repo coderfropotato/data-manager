@@ -134,7 +134,6 @@
               if (path.indexOf('\\') >= 0) {
                 dirName = path.split('\\').pop()
               }
-              console.log(dirName)
               let directoryInfo = {
                 name: dirName,
                 lastModified: stats.mtime,

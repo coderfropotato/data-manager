@@ -4,36 +4,42 @@
       <span>请输入智能视图名称</span>
       <el-input type="text" v-model="name" size="small"></el-input>
     </div>
-    <div>
-      <span>添加限制条件</span>
+    <div class="searchConditions">
+      <span>添加搜索条件</span>
       <div class="searchConditon">
         <el-button v-for="(item,index) in limitedConditions" :key="item" size="mini" :index="index">{{item}}<i
           class="el-icon-circle-close" @click="deleteLimitedCondition(index)"></i></el-button>
         </el-button>
       </div>
-      <div v-for="item in searchConditions">{{item.title}}
-        <el-button v-for="it in item.attribute" :key="it" @click="addLimitedCondition">{{it}}</el-button>
+      <div v-for="(item,index) in searchConditions" :key="name" v-bind:data-name=item.name>{{item.label}}
+        <el-button v-for="it in item.value" :key="it" @click="addLimitedCondition" size="mini">{{it}}</el-button>
       </div>
     </div>
-    <div class="search-input">
-      <el-button v-for="(item,index) in selectedCondition" :key="item" size="mini">{{item}}<i
-        class="el-icon-circle-close" @click="deleteItem(index)"></i></el-button>
-      </el-button>
-      <el-popover
-          ref="popoverAdd"
-          placement="right"
-          width="200"
-          trigger="click">
-        <el-menu @select="showItem">
-          <el-menu-item
-              v-for="(item, index) in newDirList"
-              :key="item.title" :index="item.title">
-            {{item.title}}
-          </el-menu-item>
-        </el-menu>
-      </el-popover>
+    <div class="sortCondition">
+      <div><span>添加排序条件</span></div>
+      <div class="search-input">
+        <el-button v-for="(item,index) in selectedCondition" :key="item" size="mini">{{item}}<i
+          class="el-icon-circle-close" @click="deleteItem(index)"></i></el-button>
+        </el-button>
+        <!--<el-popover-->
+        <!--ref="popoverAdd"-->
+        <!--placement="right"-->
+        <!--width="200"-->
+        <!--trigger="click">-->
+        <!--<el-menu @select="showItem">-->
+        <!--<el-menu-item-->
+        <!--v-for="(item, index) in newDirList"-->
+        <!--:key="item.title" :index="item.title">-->
+        <!--{{item.title}}-->
+        <!--</el-menu-item>-->
+        <!--</el-menu>-->
+        <!--</el-popover>-->
+      </div>
+      <div v-for="(item,index) in searchConditions" :key="name" v-bind:data-name=item.name style="clear: both">{{item.label}}
+        <el-button v-for="it in item.value" :key="it" @click="showItem">{{it}}</el-button>
+      </div>
     </div>
-    <el-button size="small" v-popover:popoverAdd>Add</el-button>
+    <!--<el-button size="small" v-popover:popoverAdd>Add</el-button>-->
     <div>
       <el-button class="add" size="small" @click="addSmartSort">创建智能视图</el-button>
     </div>
@@ -42,6 +48,7 @@
 <script>
   import {ipcRenderer} from 'electron'
   import {mapState} from 'vuex'
+  import $ from 'jquery'
   export default {
     data () {
       return {
@@ -60,23 +67,10 @@
           {
             title: '文件类型'
           }],
-//        options: [{
-//          value: '负责人',
-//          label: '负责人'
-//        }, {
-//          value: '年份',
-//          label: '年份'
-//        }, {
-//          value: '项目',
-//          label: '项目'
-//        }, {
-//          value: '文件类型',
-//          label: '文件类型'
-//        }],
-//        value: '',
         i: 0,
         // amount是新建智能视图的数量
         amount: 1,
+        // 限制条件所对应的分类的英文 如type
         name: '',
         // 存储限制条件的对象
         limitedObject: []
@@ -93,9 +87,19 @@
         let text = e.target.innerText
         let count = 0
         let length = this.limitedConditions.length
+        let name
+        // 把用户点击的每一个搜索条件以key: value 对象的形式包装起来 key是
+        let object = {}
+        if ($(e.target).parent().data('name')) {
+          name = $(e.target).parent().data('name')
+        } else if ($(e.target).parent().parent().data('name')) {
+          name = $(e.target).parent().parent().data('name')
+        }
+        object[name] = text
         // 如果用户还未选择条件，则直接添加
         if (length === 0) {
           this.limitedConditions.push(text)
+          this.limitedObject.push(object)
         } else { // 如果已经有选择的条件，判断用户点击的条件是否重复
           for (this.i = 0; this.i < length; this.i++) {
             if (this.limitedConditions[this.i].indexOf(text) !== -1) {
@@ -104,16 +108,25 @@
           } // 如果没有重复，则向selectedCondition添加元素
           if (count === 0) {
             this.limitedConditions.push(text)
+            this.limitedObject.push(object)
           }
         }
+        console.log(this.limitedObject)
       },
       deleteLimitedCondition (index) {
         this.limitedConditions.splice(index, 1)
       },
-      showItem (index) {
-        let text = index
+      showItem (e) {
+        console.log(e.target.innerText)
+        let text = e.target.innerText
         let count = 0
         let length = this.selectedCondition.length
+        // 把用户点击的每一个搜索条件以key: value 对象的形式包装起来 key是
+        if ($(e.target).parent().data('name')) {
+          this.name = $(e.target).parent().data('name')
+        } else if ($(e.target).parent().parent().data('name')) {
+          this.name = $(e.target).parent().parent().data('name')
+        }
         // 如果用户还未选择条件，则直接添加
         if (length === 0) {
           this.selectedCondition.push(text)
@@ -127,6 +140,7 @@
             this.selectedCondition.push(text)
           }
         }
+        console.log(this.selectedCondition)
       },
       deleteItem (index) {
         this.selectedCondition.splice(index, 1)
@@ -134,17 +148,15 @@
       addSmartSort () {
         let temp = {
           name: this.name,
-          limitedCondition: this.value,
+          context: [],
+          limitedCondition: this.limitedObject,
           selectedCondition: this.selectedCondition
         }
         let call = {
           mode: 'action',
-          API: 'setNewSmartSort'
+          API: 'addNewSmartSort'
         }
         ipcRenderer.send('change-data', call, temp)
-        this.$alert('创建成功', {
-          confirmButtonText: '确定'
-        })
         this.amount++
       },
       show () {
@@ -179,7 +191,11 @@
       }
     }
     >div {
-      margin: 1em;
+      margin: 1.5em 0 0 1em;
+    }
+    .searchConditions {
+      overflow-y: scroll;
+      height: 100%;
     }
     .searchConditon,
     .search-input {

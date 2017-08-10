@@ -16,7 +16,8 @@ import SearchHeader from '@/components/Content/searchHeader'
 import ImportFile from '@/components/Content/importFile'
 import ContentBottom from '@/components/Content/contentBottom'
 import DiskDirectory from '@/components/Content/diskDirectory'
-// import SmartSort from '@/components/Content/smartSort'
+import SmartSort from '@/components/Content/smartSort'
+import Ignore from '@/components/Content/ignore'
 const routes = [
   {
     path: 'files',
@@ -45,6 +46,11 @@ const routes = [
         path: 'diskdirectory',
         name: 'DiskDirectory',
         component: DiskDirectory
+      },
+      {
+        path: 'ignore',
+        name: 'Ignore',
+        component: Ignore
       }
     ]
   },
@@ -71,6 +77,14 @@ const routes = [
     name: 'Collection',
     components: {
       default: Collection
+    }
+  },
+  {
+    path: 'smartSort',
+    name: 'SmartSort',
+    components: {
+      default: Files,
+      ContentBottom: SmartSort
     }
   }
 ]

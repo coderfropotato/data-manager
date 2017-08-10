@@ -1,5 +1,5 @@
 <template>
-  <div id="fileDirectory-root" v-loading.fullscreen.lock="fullScreenLoading">
+  <div id="fileDirectory-root">
     <div class="allFiles">
       <div class="title">
         <span>所有文件</span>
@@ -37,11 +37,8 @@
         </el-popover>
         <el-button size="mini" class="button-inner-plus" v-popover:addSortPop>+</el-button>
       </div>
-      <div v-for="(item,index) in smartSortList" :key="item" class="smartSortList">
-        <el-button size="small" @click="showSmartSort">{{item}}</el-button>
-      </div>
       <!--<div v-for="(item,index) in smartSortList" :key="item" class="smartSortList">-->
-      <!--<el-button size="small">{{item}}</el-button>-->
+        <!--<el-button size="small" @click="showSmartSort" type="text">{{item}}</el-button>-->
       <!--</div>-->
       <el-tree
           :data="sortFileTree"
@@ -98,7 +95,7 @@
     name: 'AllFiles',
     data () {
       return {
-        count: 1,
+        // count: 1,
         // 控制面板折叠与展开
         show: {
           allFiles: true,
@@ -115,19 +112,24 @@
         currentNode: {},
         newSortDirName: '新建分类',
         rowFileTree: [],
-        fullScreenLoading: false
+        // 记录列表第几页（分类）
+        page: 0,
+        // 一次请求加载多少条数据（分类）
+        size: 50,
+        // 防止多次请求的标志，每次接到加载内容的消息后，置此标志为0，数据加载完成后再置为1
+        loadFlag: 1
       }
     },
     computed: mapState({
       // 所有文件选项的数据，即管理的磁盘
       diskDir: state => state.files.allFiles,
       // 智能分类列表
-      smartSortList: state => state.newDirectory.smartSortList,
+      smartSortList: state => state.files.smartSortList,
       // 分类文件夹树
-      sortFileTree: state => state.files.sortFileTree
+      sortFileTree: state => state.files.sortFileTree,
+      currentPath: state => state.files.currentPath
     }),
     mounted () {
-      this.fullScreenLoading = false
       // 重置列表数据，防止和搜索组件数据混合
       this.$store.commit('setFileList', [])
       // 插入文件小图标
@@ -136,10 +138,13 @@
       bus.$on('newSort', () => {
         this.appendNode()
       })
-    },
-    watch: {
-      diskDir () {
-      }
+      // 接受加载更多内容的通知
+      bus.$on('load-content', () => {
+        if (this.loadFlag) {
+          this.loadFlag = 0
+          this.loadMoreContent()
+        }
+      })
     },
     filters: {
       formatDiskName (name) {
@@ -189,10 +194,7 @@
       },
       // 加载忽略的内容
       loadIgnoreContent () {
-        let routerPath = this.$router.currentRoute.fullPath
-        if (routerPath !== '/files/list') {
-          this.$router.push('/files/list')
-        }
+        this.$router.push('/files/ignore')
         this.$store.dispatch('getIgnore')
         // 重置列表数据，防止和搜索组件数据混合
         this.$store.commit('setFileList', [])
@@ -211,6 +213,7 @@
         // 加载动画
         bus.$emit('loading-content')
       },
+
       // 加载磁盘（包含我的电脑）文件树
       loadDiskFileTree (index) {
         let serialNumber
@@ -233,12 +236,19 @@
         // 加载动画
         bus.$emit('loading-content')
       },
-      // 加载分类文件列表
-      loadSortFileList (nodeObj, node, component) {
+
+      // 用户点击侧边栏分类树，加载分类文件列表
+      loadSortFileList (nodeObj, node) {
+        // 重置文件列表数组
+        this.$store.commit('setFileList', [])
+        this.page = 0
+        this.loadFlag = 1
+        // 获取当前的路由信息，进行重定向
         let routerPath = this.$router.currentRoute.fullPath
         if (routerPath !== '/files/list') {
           this.$router.push('/files/list')
         }
+        // 获取当前节点，为添加节点提供父节点信息
         let path = nodeObj.id
         this.currentNode = {
           nodeObj,
@@ -251,12 +261,63 @@
         let tempPath = path.split('/')
         tempPath.pop()
         let lastPath = tempPath.join('/')
-        this.$store.dispatch('getSortFileList', lastPath)
+        this.$store.dispatch({
+          type: 'getSortFileList',
+          lastPath,
+          size: this.size,
+          page: this.page++
+        }).then(isLastPage => {
+          this.loadFlag = 1
+          bus.$emit('loading-end')
+          // 如果是最后一页
+          if (isLastPage) {
+            this.$message({
+              type: 'warning',
+              message: '没有更多内容了',
+              duration: 4000,
+              showClose: true
+            })
+            this.loadFlag = 0
+          }
+        })
         // 加载动画
-        console.log('loading-content')
         bus.$emit('loading-content')
-        // 通过空的 Vue 实例作为中央时间总线，发送路径更改信息
       },
+
+      // 下拉，自动加载文件列表
+      loadMoreContent () {
+        // 开启加载动画
+        bus.$emit('loading-content')
+        let path = this.currentPath.split('/')
+        path.pop()
+        // 发送加载请求
+        this.$store.dispatch({
+          type: 'getSortFileList',
+          lastPath: path.join('/'),
+          size: this.size,
+          page: this.page++
+        }).then(isLastPage => {
+          // 置加载标志为 1，可以进行下一内容加载
+          setTimeout(() => {
+            this.$nextTick(() => {
+              this.loadFlag = 1
+              // 加载动画结束
+              bus.$emit('loading-end')
+            })
+          }, 1000)
+          // 如果是最后一页
+          if (isLastPage) {
+            this.$message({
+              type: 'warning',
+              message: '没有更多内容了',
+              duration: 4000,
+              showClose: true
+            })
+            this.loadFlag = 0
+          }
+        })
+      },
+
       // 当节点展开或关闭时，树的高度会发生变化，需要发出相关事件，通知 sidebar 组件改变scrollbar样式
       treeHeightChanged () {
         // 会触发MaxListenersExceededWarning 错误
@@ -405,9 +466,16 @@
           ])
       },
       showSmartSort (e) {
-        let smartSortName = e.target.innerText
-        console.log(smartSortName)
-        this.$store.dispatch('showSmartSort', smartSortName)
+        let tableName = e.target.innerText
+        let select = {}
+        console.log(tableName)
+        // 当点击一个新的智能视图时，smartSort数组会置空，重新向里面push数据
+        this.$store.commit('setSmartSort')
+        this.$store.dispatch('showSmartSort', {
+          'tableName': tableName,
+          'select': select
+        })
+        this.$router.push('/smartSort')
       }
     },
     components: {

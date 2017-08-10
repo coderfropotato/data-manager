@@ -64,7 +64,7 @@
           <ul>
             <li>文件类型：
               <!--这个地方要抽离出来currentFiletype，不能直接用currentFileattr.filetype,否则会死循环到怀疑人生-->
-              <el-select class="showFileAttribute" v-model="currentFiletype" @change="getTemplate"
+              <el-select v-model="currentFiletype" @change="getTemplate"
                          placeholder="请选择文件类型">
                 <el-option
                   v-for="item in filetypeOptions"
@@ -93,7 +93,6 @@
         <el-button size="small">自动识别</el-button>
         <el-button size="small">忽略此文件</el-button>
         <el-button size="small" @click="ignoreNewAttribute">放弃修改</el-button>
-        <!--{{ currentFilattr }}-->
       </div>
     </div>
     <!-- 当勾选要提交的文件时，显示对应信息 -->
@@ -105,7 +104,7 @@
 </template>
 
 <script>
-  import { mapState, mapActions } from 'vuex'
+  import {mapState, mapActions} from 'vuex'
 
   export default {
     name: 'FileStatusAside',
@@ -387,6 +386,7 @@
 
 <style lang="scss" scoped>
   #file-status-info-root {
-    overflow: scroll;
+    overflow-y: scroll;
+    width: 100%;
   }
 </style>

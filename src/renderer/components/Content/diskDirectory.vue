@@ -11,7 +11,7 @@
                 <use xlink:href="#icon-file" v-if="item.isFile"></use>
               </svg>
               <div class="file-name">
-                <el-tooltip :content="item.name" placement="top">
+                <el-tooltip :content="item.name" placement="top" :open-delay="2000">
                   <span>{{item.name | formatName(10)}}</span>
                 </el-tooltip>
               </div>

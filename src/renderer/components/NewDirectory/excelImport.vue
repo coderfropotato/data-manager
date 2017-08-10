@@ -62,17 +62,22 @@
           </el-col>
         </el-row>
       </div>
+      <div class="import-result">
+      </div>
     </div>
   </div>
 </template>
 <script>
   import {ipcRenderer, shell} from 'electron'
+  import {mapState} from 'vuex'
 
   export default {
     data () {
       return {
         placeholder: '请选择模板',
         generateTemplate: false,
+        // 在生成模板时，获得后台反馈的磁盘序列号
+        serialNumber: '',
         path: '',
         fileType: '',
         options: [
@@ -83,6 +88,9 @@
         ]
       }
     },
+    computed: mapState({
+      targetDisks: state => state.excel.targetPositions
+    }),
     methods: {
       showFilename () {
         ipcRenderer.send('open-file-dialog', 'single')
@@ -114,13 +122,14 @@
               type: 'success',
               title: '成功',
               message: 'Excel 模板生成成功，点击打开！',
-              duration: 3000,
+              duration: 0,
               onClick: this.openFile(path)
             })
             // 切换到导入模板状态
             this.placeholder = '请选择模板'
             this.generateTemplate = false
-            this.path = ''
+            // 设置路径模板生成路径
+            this.path = path
           } else {
             this.$notify({
               type: 'error',
@@ -153,6 +162,7 @@
       },
       openFile (path) {
         // shell.showItemInFolder(path)
+        // 打开文件
         shell.openExternal('file://' + path)
       }
     }

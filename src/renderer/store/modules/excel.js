@@ -3,16 +3,23 @@
  */
 
 import sendMessage from '@/api'
-// import * as types from '@/store/mutation-types'
+import * as types from '@/store/mutation-types'
 const state = {
-  newDiskDirInfo: [],
-  newSortDirInfo: [],
-  smartSortList: [],
-  smartSort: [[]],
-  searchConditions: []
+  targetPositions: []
 }
 
 const actions = {
+  // 获取导入目标磁盘
+  getImportTargetDisks ({commit}) {
+    return new Promise((resolve, reject) => {
+      sendMessage('getImportTargetDisks', {}).then(data => {
+        console.log(data)
+        commit('setImportTargetDisks', data.disks)
+        resolve()
+      })
+    })
+  },
+
   // 导入 Excel 模板文件
   importExcelTemplate ({commit}, path) {
     return new Promise((resolve, reject) => {
@@ -32,7 +39,12 @@ const actions = {
   }
 }
 
-const mutations = {}
+const mutations = {
+  // 设置可以选择的磁盘
+  [types.SET_IMPORT_TARGET_DISKS] (state, data) {
+    state.targetPositions = data
+  }
+}
 
 export default {
   state,

@@ -1,86 +1,89 @@
 <template>
   <div id="list-root">
-    <div class="lists-display" v-if="status === 'Lists'">
-      <div class="list-items">
-        <div class="list-item" v-for="(item,index) in filesData" :key="index" @click="showFileInfo(item)">
-          <div class="file-name">
-            <el-tooltip :content="item.rowName" placement="right-start">
-              <span>{{item.basic.filename | formatName(10)}}</span>
-            </el-tooltip>
-          </div>
-          <div class="create-time">
-            {{item.basic.ctime | formatDate}}
-          </div>
-          <div class="size">
-            {{item.basic.size | formatSize}}
-          </div>
-          <div class="edit">
-            <el-button type="text">
-              编辑
-            </el-button>
+    <div class="list-root-inner" ref="ListRootInner">
+      <div class="lists-display" v-if="status === 'Lists'">
+        <div class="list-items">
+          <div class="list-item" v-for="(item,index) in filesData" :key="index" @click="showFileInfo(item)">
+            <div class="file-name">
+              <el-tooltip :content="item.basic.filename" placement="right-start" :open-delay="2000">
+                <span>{{item.basic.filename | formatName(10)}}</span>
+              </el-tooltip>
+            </div>
+            <div class="create-time">
+              {{item.basic.ctime | formatDate}}
+            </div>
+            <div class="size">
+              {{item.basic.size | formatSize}}
+            </div>
+            <div class="edit">
+              <el-button type="text">
+                编辑
+              </el-button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <div class="columns-display" v-if="status === 'Columns'">
-      <el-table :data="filesData"
-                highlight-current-row
-                style="width: 100%;"
-                @row-click="showFileInfo">
-        <el-table-column
-            type="index"
-            label="序号"
-            width="100"
-            sortable>
-        </el-table-column>
-        <el-table-column
-            label="文件名"
-            sortable>
-          <template scope="scope">
-            <el-tooltip :content="scope.row.filename" placement="right-start">
-              <span>{{scope.row.basic.filename | formatName(10)}}</span>
-            </el-tooltip>
-          </template>
-        </el-table-column>
-        <el-table-column
-            label="创建时间"
-            sortable>
-          <template scope="scope">
-            <span>{{ scope.row.basic.ctime | formatDate}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column
-            label="文件大小"
-            sortable>
-          <template scope="scope">
-            <span>{{ scope.row.basic.size | formatSize}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column
-            label="操作">
-          <template scope="scope">
-            <el-button type="text">编辑</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-    </div>
-    <div class="grid-display" v-if="status === 'Grid'">
-      <div class="grid-items">
-        <el-row :gutter="20">
-          <el-col :span="6" v-for="(item,index) in filesData" :key="index">
-            <!--TODO：添加编辑按钮-->
-            <div class="grid-item" @click="showFileInfo(item)">
-              <svg class="icon" aria-hidden="true">
-                <use xlink:href="#icon-file"></use>
-              </svg>
-              <div class="file-name">
-                <el-tooltip :content="item.basic.filename" placement="top">
-                  <span>{{item.basic.filename | formatName(10)}}</span>
-                </el-tooltip>
+      <div class="columns-display" v-if="status === 'Columns'">
+        <el-table
+            :data="filesData"
+            highlight-current-row
+            style="width: 100%;"
+            @row-click="showFileInfo">
+          <el-table-column
+              type="index"
+              label="序号"
+              width="100"
+              sortable>
+          </el-table-column>
+          <el-table-column
+              label="文件名"
+              sortable>
+            <template scope="scope">
+              <el-tooltip :content="scope.row.basic.filename" placement="right-start" :open-delay="2000">
+                <span>{{scope.row.basic.filename | formatName(10)}}</span>
+              </el-tooltip>
+            </template>
+          </el-table-column>
+          <el-table-column
+              label="创建时间"
+              sortable>
+            <template scope="scope">
+              <span>{{ scope.row.basic.ctime | formatDate}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+              label="文件大小"
+              sortable>
+            <template scope="scope">
+              <span>{{ scope.row.basic.size | formatSize}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+              label="操作">
+            <template scope="scope">
+              <el-button type="text">编辑</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
+      <div class="grid-display" v-if="status === 'Grid'">
+        <div class="grid-items">
+          <el-row :gutter="20">
+            <el-col :span="6" v-for="(item,index) in filesData" :key="index">
+              <!--TODO：添加编辑按钮-->
+              <div class="grid-item" @click="showFileInfo(item)">
+                <svg class="icon" aria-hidden="true">
+                  <use xlink:href="#icon-file"></use>
+                </svg>
+                <div class="file-name">
+                  <el-tooltip :content="item.basic.filename" placement="top" :open-delay="2000">
+                    <span>{{item.basic.filename | formatName(10)}}</span>
+                  </el-tooltip>
+                </div>
               </div>
-            </div>
-          </el-col>
-        </el-row>
+            </el-col>
+          </el-row>
+        </div>
       </div>
     </div>
     <div class="drag-zone">
@@ -98,7 +101,12 @@
     data () {
       return {
         // 记录拖入与拖出的次数
-        count: 0
+        count: 0,
+        // 列表根元素的高度，即容器的高度
+        listRootHeight: 0,
+        // 用于滚动事件节流
+        scrollTimer: 0,
+        lastScrollFireTime: 0
       }
     },
     computed: mapState({
@@ -110,17 +118,10 @@
       // 是否显示拖拽导入文件提示
       dragFiles: state => state.showControl.dragShow
     }),
-    watch: {
-      filesData () {
-        // 结束加载动画
-        this.$nextTick(() => {
-          bus.$emit('loading-end')
-        })
-      }
-    },
     mounted () {
       // 监听列表区拖拽，有拖入则显示导入提示，拖出则隐藏提示
       let list = document.getElementById('list-root')
+      this.listRootHeight = list.clientHeight
       list.addEventListener('dragenter', e => {
         // drag-zone 也有监听拖拽事件，同时监听父子元素会导致拖出事件频繁触发，造成闪烁
         this.count++
@@ -140,6 +141,22 @@
 
       // 监听拖拽，对导入的文件进行处理
       this.dragEvent()
+    },
+    watch: {
+      filesData () {
+        this.$nextTick(() => {
+          setTimeout(() => {
+            bus.$emit('loading-end')
+          }, 1000)
+        })
+        // 如果列表容器高度为0，则获取列表容器的高度
+        if (!this.listRootHeight) {
+          this.listRootHeight = document.getElementById('list-root').clientHeight
+        }
+        this.$nextTick(() => {
+          document.getElementById('list-root').addEventListener('scroll', this.loadContent, false)
+        })
+      }
     },
     filters: {
       // 格式化文件名，如果文件名大于某个长度，则做截断处理
@@ -169,6 +186,40 @@
       }
     },
     methods: {
+      // 滚动事件节流
+      loadContent (e, minScrollTime, minDistance) {
+        // 最小触发时间
+        minScrollTime = minScrollTime || 100
+        // 最小触发加载距离
+        minDistance = minDistance || 300
+        // 在切换列表显示模式，列表高度会发生变化，但数据不会更新，需要在在滚动时获取
+        let listHeight = this.$refs.ListRootInner.clientHeight
+        let listRootHeight = document.getElementById('list-root').clientHeight
+        let now = new Date().getTime()
+
+        // 滚动时需要的处理事件
+        function loadMoreContent () {
+          let scrollHeight = document.querySelector('#list-root').scrollTop
+          let distance = listHeight - scrollHeight - minDistance
+
+          if (distance / listHeight < 0.25 || distance < listRootHeight) {
+            // 发送加载内容的通知
+            bus.$emit('load-content')
+          }
+        }
+
+        if (!this.scrollTimer) {
+          if (now - this.lastScrollFireTime > (2 * minScrollTime)) {
+            loadMoreContent()
+            this.lastScrollFireTime = now
+          }
+          this.scrollTimer = setTimeout(() => {
+            this.scrollTimer = null
+            this.lastScrollFireTime = new Date().getTime()
+            loadMoreContent()
+          }, minScrollTime)
+        }
+      },
       showFileInfo (file) {
         // 获取文件的具体信息
         this.$store.dispatch({
@@ -239,6 +290,9 @@
     overflow-x: hidden;
     height: 95%;
     min-height: 400px;
+    .list-root-inner {
+      position: relative;
+    }
     .el-table__body-wrapper {
       overflow: hidden;
     }

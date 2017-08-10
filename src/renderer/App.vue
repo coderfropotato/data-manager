@@ -7,6 +7,7 @@
 <script>
   import './api/database'
   import {ipcRenderer} from 'electron'
+  import bus from '@/assets/JS/bus'
 
   export default {
     name: 'data-manager-desktop',
@@ -20,12 +21,19 @@
 //            message: '有文件状态发生改变'
 //          })
 //        }
-        this.$store.dispatch('openFile')
-        // 向后台请求用户创建的所有智能视图
-        this.$store.dispatch('showSmartSortList')
         // 向后台请求创建智能视图的限制条件
+        this.$store.dispatch('getSearchConditions').then(() => {
+          this.$store.dispatch('getImportTargetDisks')
+        })
       })
-      this.$store.dispatch('getSearchConditions')
+      bus.$on('error', () => {
+        bus.$emit('loading-end')
+        this.$notify({
+          type: 'error',
+          message: '数据读取错误，请重试或尝试重启软件',
+          duration: 0
+        })
+      })
       /*
        * 通过主进程在窗口之间传递数据
        * @state 说明 action/mutation 调用方式和接口
