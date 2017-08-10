@@ -16,6 +16,7 @@ const state = {
   currentDiskDirTree: '',
   // 记录当前选中文件夹的路径
   currentPath: '',
+  smartSortList: [],
   // 所有文件，可读，不可变更
   allFiles: [],
   // 分类，用户可以自己建立多层文件夹来分类数据
@@ -110,6 +111,8 @@ const mutations = {
   [types.OPEN_FILE] (state, response) {
     state.allFiles = response.allFiles
     state.sortDirRowData = response.sortDir.sort
+    state.smartSortList = response.smartViews
+
     // 对原始的文件树数据进行处理
     state.sortFileTree = []
     travelTree(state.sortDirRowData, state.sortFileTree, '')

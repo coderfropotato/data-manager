@@ -145,13 +145,11 @@
         // 发送请求
         this.getFileInfo(payload)
 
-        // 右侧展示文件信息
-        this.toggleShowFileStatusAside(true)
-
         // 设置节点信息
         this.setNodeData(data)
 
-//        console.log('data', data)
+        // 右侧展示文件信息
+        this.toggleShowFileStatusAside(true)
       },
 
       // 处理选中节点

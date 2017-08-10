@@ -55,7 +55,7 @@
         </ul>
       </div>
       <!-- 文件属性 -->
-      <div class="file-info">
+      <div class="file-info" v-if="!isdir">
         <h2>文件属性
           <el-button type="primary" v-if="showFileInfo" @click="showFileInfo = !showFileInfo">收起</el-button>
           <el-button type="primary" v-if="!showFileInfo" @click="showFileInfo = !showFileInfo">展开</el-button>
@@ -64,12 +64,13 @@
           <ul>
             <li>文件类型：
               <!--这个地方要抽离出来currentFiletype，不能直接用currentFileattr.filetype,否则会死循环到怀疑人生-->
-              <el-select v-model="currentFiletype" @change="getTemplate" placeholder="请选择文件类型">
+              <el-select v-model="currentFiletype" @change="getTemplate"
+                         placeholder="请选择文件类型">
                 <el-option
-                    v-for="item in filetypeOptions"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
+                  v-for="item in filetypeOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
                 </el-option>
               </el-select>
             </li>
@@ -230,12 +231,13 @@
     },
 
     watch: {
+      // 展示信息用
       // 观察basicInfo来判断是否点击了不同的文件/文件夹 不要观察nodeData 因为有可能nodeData改变了但是文件属性还没获取到
+      // 当用户点击了中间某个文件/文件夹时需要获取一定的属性
       basicInfo () {
         // step1 二话不说，我觉得你根本就没有信息
         // 文件属性部分
         this.currentFileattr = {
-          filetype: ''
         }
         this.currentFiletype = ''
         // 文件来源部分
@@ -245,37 +247,40 @@
           principle: '',
           websites: ''
         }
-        console.log('i am gonna set it')
         // step2 如果文件已打好标签，直接获取显示
         if (this.taggedModifiedFiles.get(this.nodeData.path)) {
-//          console.log('1')
           let infos = this.taggedModifiedFiles.get(this.nodeData.path)
+          // 文件才有下面的属性
+          if (!this.isdir) {  // 只有文件夹有fileattr属性
+            // 填充文件属性部分
+            this.currentFileattr = infos.fileattr
+            this.currentFiletype = infos.fileattr.filetype
+          }
+          // 填充文件来源部分,因为是在taggedModifiedFiles中获取的信息，所以有的字段可能没有，要先判断一下
+          this.currentSourceInfo.type = infos.source.type ? infos.source.type : ''
+          this.currentSourceInfo.project = infos.source.project ? infos.source.project : ''
+          this.currentSourceInfo.principle = infos.source.principle ? infos.source.principle : ''
+          this.currentSourceInfo.websites = infos.source.websites ? infos.source.websites : ''
+        } else if (this.sourceInfo.type || (!this.isdir && this.fileAttr.filetype)) {    // step3 如果后台存在数据，说明该文件存在过，要把原来的信息展示出来，此时把后台存有的数据存到this.currentFileattr中
           // 填充文件属性部分
-          this.currentFileattr = infos.fileattr
-          this.currentFiletype = infos.fileattr.filetype
-
-          // 填充文件来源部分
-          this.currentSourceInfo = infos.source
-        } else if (this.fileAttr.filetype || this.sourceInfo.type) {    // step3 如果后台存在数据，说明该文件存在过，要把原来的信息展示出来，此时把后台存有的数据存到this.currentFileattr中
-//          console.log('2')
-          // 填充文件属性部分
-          if (this.fileAttr.filetype) {
+          if (!this.isdir && this.fileAttr.filetype) {
             this.currentFileattr = this.fileAttr
             this.currentFiletype = this.currentFileattr.filetype
-            console.log('after clicked setting', this.currentFiletype)
           }
           // 填充文件来源部分
           if (this.sourceInfo.type) {
-            this.currentSourceInfo = this.sourceInfo
+            this.currentSourceInfo.type = this.sourceInfo.type ? this.sourceInfo.type : ''
+            this.currentSourceInfo.project = this.sourceInfo.project ? this.sourceInfo.project : ''
+            this.currentSourceInfo.principle = this.sourceInfo.principle ? this.sourceInfo.principle : ''
+            this.currentSourceInfo.websites = this.sourceInfo.websites ? this.sourceInfo.websites : ''
           }
         }
-//        console.log('i am done setting it')
-//        console.log('result', '|', this.currentFileattr, '|', this.currentFiletype, '|', this.currentSourceInfo)
       }
     },
 
     computed: {
       ...mapState({
+        isdir: state => state.fileInfo.isdir, // 当前展示的文件是否是文件夹
         selectedFilesNum: state => state.modified.selectedFilesNum, // 中间选中的文件数目
         showMode: state => state.modified.showMode, // 是否是展示文件信息，true时展示文件/文件夹属性，false展示选中了多少文件等属性
         showFileStatusAside: state => state.modified.showFileStatusAside,    // 是否展示右侧文件详情栏
@@ -303,32 +308,40 @@
         return this.nameMap[eng]
       },
 
+      // 更改信息用
       // 用户选择不同的文件类型时，下面展示不同的属性编辑框
       getTemplate (data) {
-        switch (data) {
-          case 'fastq':
-            // 高能预警 要复制一份对象 否则你会哭的
-            this.currentFileattr = JSON.parse(JSON.stringify(this.fastqTemplate))
-            break
-          case 'wtf' :
-            // 高能预警 要复制一份对象 否则你会哭的
-            this.currentFileattr = JSON.parse(JSON.stringify(this.wtfTemplate))
-            break
-          default:
-            this.currentFileattr = {
-              filetype: ''
-            }
+        // 如果已缓存，直接复制显示
+        if (this.taggedModifiedFiles.get(this.nodeData.path)) {
+          let infos = this.taggedModifiedFiles.get(this.nodeData.path)
+          this.currentFileattr = infos.fileattr
+        } else {  // 没有type的话直接显示空模板
+          switch (data) {
+            case 'fastq':
+              // 高能预警 要复制一份对象 否则你会哭的
+              this.currentFileattr = JSON.parse(JSON.stringify(this.fastqTemplate))
+              break
+            case 'wtf' :
+              // 高能预警 要复制一份对象 否则你会哭的
+              this.currentFileattr = JSON.parse(JSON.stringify(this.wtfTemplate))
+              break
+            default:
+              this.currentFileattr = {
+                filetype: ''
+              }
+          }
         }
       },
 
       // 添加打好标签的选中文件/文件夹
       addNewTaggedFile () {
-        console.log('before', this.currentSourceInfo)
-        console.log('this.currentFiletype', this.currentFiletype)
+//        console.log('before', this.currentSourceInfo)
+//        console.log('this.currentSourceInfo.type ', this.currentSourceInfo.type)
         // 满足后端惨无人道的需求
         if (this.currentFiletype === '') {
           this.currentFileattr = {}
-        } else if (this.currentSourceInfo.type === 'public') {
+        }
+        if (this.currentSourceInfo.type === 'public') {
           // 删除多余属性
           delete this.currentSourceInfo.principle
           delete this.currentSourceInfo.project
@@ -336,15 +349,19 @@
           // 删除多余属性
           delete this.currentSourceInfo.websites
         }
-
         if (this.currentSourceInfo.type === '') {
           this.currentSourceInfo = {}
         }
 
         // 添加打好标签的文件
         let newAttributes = {fileattr: this.currentFileattr, source: this.currentSourceInfo}
+
+        // 为文件夹打标签的话不会有fileattr属性
+        if (this.isdir) {
+          delete newAttributes.fileattr
+        }
         // 更改中间的状态提示
-        this.renewNodeData(newAttributes)
+        this.renewNodeData({newAttributes: newAttributes, isdir: this.isdir})
         console.log(this.taggedModifiedFiles)
       },
 
