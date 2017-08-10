@@ -208,7 +208,7 @@
         ipcRenderer.send('open-file-dialog', 'single')
         ipcRenderer.on('selected-directory', (event, path) => {
           // 将返回的 path 数组转化成 string
-          this.path = path.toString()
+          this.ruleForm.path = path.toString()
         })
       },
       // 生成 Excel 模板
