@@ -80,12 +80,11 @@ const actions = {
     // commit(types.SHOW_SMART_SORT)
   },
   getSearchConditions ({commit}) {
-    sendMessage('getSearchConditions', {}).then(data => {
-      commit(types.GET_SEARCH_CONDITIONS, data)
+    // sendMessage('getSearchConditions', {}).then(data => {
+    //   commit(types.GET_SEARCH_CONDITIONS, data)
     return new Promise((resolve, reject) => {
       sendMessage('getSearchConditions', {}).then(data => {
         resolve()
-        console.log(data)
         commit(types.GET_SEARCH_CONDITIONS, data)
       })
     })
