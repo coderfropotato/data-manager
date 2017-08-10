@@ -82,6 +82,12 @@ const actions = {
   getSearchConditions ({commit}) {
     sendMessage('getSearchConditions', {}).then(data => {
       commit(types.GET_SEARCH_CONDITIONS, data)
+    return new Promise((resolve, reject) => {
+      sendMessage('getSearchConditions', {}).then(data => {
+        resolve()
+        console.log(data)
+        commit(types.GET_SEARCH_CONDITIONS, data)
+      })
     })
     // commit(types.GET_SEARCH_CONDITIONS)
   }

@@ -39,7 +39,7 @@ const actions = {
   openFile ({commit}) {
     return new Promise((resolve, reject) => {
       sendMessage('openFile', {}).then(data => {
-        resolve()
+        resolve(1)
         console.log(data)
         commit(types.OPEN_FILE, data)
       })
