@@ -249,18 +249,18 @@
         }
         // step2 如果文件已打好标签，直接获取显示
         if (this.taggedModifiedFiles.get(this.nodeData.path)) {
-//          console.log('cached in taggedFiles')
           let infos = this.taggedModifiedFiles.get(this.nodeData.path)
-//          console.log(infos)
           // 文件才有下面的属性
-          if (!this.isdir && infos.fileattr) {  // 要先判断infos里面有没有fileattr 因为有可能用户点击了父文件打了标签，这时它的子文件没有该属性
+          if (!this.isdir) {  // 只有文件夹有fileattr属性
             // 填充文件属性部分
             this.currentFileattr = infos.fileattr
             this.currentFiletype = infos.fileattr.filetype
-//            console.log('in basicInfo, this.currentFileattr', this.currentFileattr)
           }
-          // 填充文件来源部分
-          this.currentSourceInfo = infos.source
+          // 填充文件来源部分,因为是在taggedModifiedFiles中获取的信息，所以有的字段可能没有，要先判断一下
+          this.currentSourceInfo.type = infos.source.type ? infos.source.type : ''
+          this.currentSourceInfo.project = infos.source.project ? infos.source.project : ''
+          this.currentSourceInfo.principle = infos.source.principle ? infos.source.principle : ''
+          this.currentSourceInfo.websites = infos.source.websites ? infos.source.websites : ''
         } else if (this.sourceInfo.type || (!this.isdir && this.fileAttr.filetype)) {    // step3 如果后台存在数据，说明该文件存在过，要把原来的信息展示出来，此时把后台存有的数据存到this.currentFileattr中
           // 填充文件属性部分
           if (!this.isdir && this.fileAttr.filetype) {
@@ -269,7 +269,10 @@
           }
           // 填充文件来源部分
           if (this.sourceInfo.type) {
-            this.currentSourceInfo = this.sourceInfo
+            this.currentSourceInfo.type = this.sourceInfo.type ? this.sourceInfo.type : ''
+            this.currentSourceInfo.project = this.sourceInfo.project ? this.sourceInfo.project : ''
+            this.currentSourceInfo.principle = this.sourceInfo.principle ? this.sourceInfo.principle : ''
+            this.currentSourceInfo.websites = this.sourceInfo.websites ? this.sourceInfo.websites : ''
           }
         }
       }

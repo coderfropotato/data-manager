@@ -12,9 +12,9 @@ function tagYouAll (state, node, newAttributes, isdir) {
   if (node.hasOwnProperty('status')) {
     node.status = node.status + '*' + 'tagged'
     // 这里要复制一个新的newAttributes对象，否则给不同文件/文件夹打标签会混乱
-    if (!isdir) { // 文件
+    if (!isdir) { // 如果一开始点击文件,直接把所有属性赋值即可
       state.taggedModifiedFiles.set(node.path, JSON.parse(JSON.stringify(newAttributes)))
-    } else {  // 文件夹
+    } else {  //  如果一开始点击文件夹，需要添加属性，不能覆盖属性
       let oldAttributes = state.taggedModifiedFiles.get(node.path)
       if (oldAttributes) {
         oldAttributes.source = newAttributes.source // 原来有的话只更新source属性

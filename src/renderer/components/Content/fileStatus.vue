@@ -150,8 +150,6 @@
 
         // 右侧展示文件信息
         this.toggleShowFileStatusAside(true)
-
-//        console.log('data', data)
       },
 
       // 处理选中节点
