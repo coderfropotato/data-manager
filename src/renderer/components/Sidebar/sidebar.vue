@@ -115,7 +115,6 @@
       modifiedFiles: state => state.modified.modifiedNum
     }),
     mounted () {
-      console.log('mo')
       this.updateStyle()
       // 设置中间文件树区域的高度
       this.setMiddleHeight()

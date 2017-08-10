@@ -50,9 +50,11 @@ function scrollBar () {
     scrollBar.addEventListener('mousedown', function down (e) {
       startX = e.clientX
       scrollBar.addEventListener('mousemove', getMoveX, false)
+      scrollBar.removeEventListener('mousedown', down)
     })
     scrollBar.addEventListener('mouseup', function up () {
       scrollBar.removeEventListener('mousemove', getMoveX)
+      scrollBar.removeEventListener('mouseup', up)
     }, false)
   }
 }

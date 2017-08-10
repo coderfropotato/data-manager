@@ -12,7 +12,7 @@
           :render-content="renderContent"
           @node-click="handleNodeClick"
           @check-change="handleCheckChange"
-          :default-expand-all="true"
+          :default-expand-all="false"
           :show-checkbox="true"
           ref="tree"
           node-key="path"
