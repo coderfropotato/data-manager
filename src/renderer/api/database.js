@@ -1,3 +1,4 @@
+// 数据缓存优化
 import localforage from 'localforage'
 
 localforage.config({
@@ -7,10 +8,4 @@ localforage.config({
   ],
   name: 'DataManager'
 })
-
-localforage.setItem('one', {one: '1', two: '2'}).then(function (value) {
-}).catch(function (err) {
-  console.log(err)
-})
-
 export default {}

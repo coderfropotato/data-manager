@@ -3,6 +3,9 @@
  */
 // 点击打开文件的操作，获取所有文件（磁盘目录），分类文件夹树，智能视图
 export const OPEN_FILE = 'openFile'
+// 设置节点信息
+export const SET_TREE_NODE = 'setTreeNode'
+export const TOGGLE_TREE_NODE_DISPLAY = 'toggleTreeNodeDisplay'
 // 设置展示的文件列表
 export const SET_FILE_LIST = 'setFileList'
 // 设置磁盘的文件树数据

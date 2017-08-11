@@ -191,6 +191,7 @@
             value: ''
           }
         ],
+        // 表单数据
         basicForm: {
           // 别名
           alias: '',
@@ -205,6 +206,7 @@
           username: '',
           password: ''
         },
+        // 表单验证规则
         rules: {
           alias: [
             {required: true, message: '请输入磁盘别名', trigger: 'blur'}
@@ -230,17 +232,23 @@
         },
         // 记录用户选择的结果
         customChoose: [],
+        // 项目模板选项
         template: 'project',
+        // 是否使用密匙（暂不支持）
         useKey: true,
+        // 是否显示高级选项
         showAdvanced: false
       }
     },
     methods: {
+      // 重置表格数据
       resetForm () {
         this.$refs['basicForm'].resetFields()
       },
       // 添加自定义文件夹条目
+      // TODO 防止自定义条目重复选择
       addCustomOption () {
+        // 只能选择提供的条目
         let optionLength = this.customOptions.length
         if (this.customChoose.length < optionLength) {
           this.customChoose.push({
@@ -291,6 +299,7 @@
               })
             }
             // 将所有文件夹信息汇总
+            // TODO 目录类型需要明确（私有数据，共有数据，共享数据）
             let directoryInfo = {
               alias: formData.alias,
               path: formData.path,

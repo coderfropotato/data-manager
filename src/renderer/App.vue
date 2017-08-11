@@ -1,9 +1,9 @@
 <template>
   <div id="app">
+    <!--加载index.vue组件-->
     <router-view></router-view>
   </div>
 </template>
-
 <script>
   import './api/database'
   import {ipcRenderer} from 'electron'
@@ -23,10 +23,10 @@
 //        }
         // 向后台请求创建智能视图的限制条件
         this.$store.dispatch('getSearchConditions').then(() => {
-          // 获取导入 Excel 表格的可选择磁盘
           this.$store.dispatch('openFile').then(() => {
             // 向后台请求创建智能视图的限制条件
             this.$store.dispatch('getSearchConditions').then(() => {
+              // 获取导入 Excel 表格的可选择磁盘
               this.$store.dispatch('getImportTargetDisks')
             })
           })

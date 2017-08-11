@@ -3,7 +3,7 @@
  */
 import $ from 'jquery'
 
-function scrollBar () {
+function scrollBar (tem) {
   let startX = 0
   let currentX = 0
   let moveX = 0

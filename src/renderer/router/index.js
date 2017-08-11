@@ -25,7 +25,7 @@ const baseRoutes = [
     redirect: '/'
   }
 ]
-// 加入新窗口路由
+// 合并其他路由模块
 let routes = baseRoutes.concat(NewFile)
 
 export default new Router({

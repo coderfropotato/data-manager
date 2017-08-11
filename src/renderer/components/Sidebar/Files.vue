@@ -1,5 +1,6 @@
 <template>
   <div id="fileDirectory-root">
+    <!--所有文件-->
     <div class="allFiles">
       <div class="title">
         <span>所有文件</span>
@@ -22,6 +23,7 @@
         </div>
       </div>
     </div>
+    <!--分类-->
     <div class="sortFiles">
       <div class="title">
         <span>分类</span>
@@ -51,8 +53,8 @@
           v-show="show.sortFiles"
           :render-content="renderContent">
       </el-tree>
-
     </div>
+    <!--其他-->
     <div class="others">
       <div class="title">
         <span>其他</span>
@@ -109,7 +111,9 @@
         },
         // 记录当前选中的高亮节点，用于添加新节点时定位父节点
         currentNode: {},
+        // 记录新建目录的名字
         newSortDirName: '新建分类',
+        // 原始分类树的数据
         rowFileTree: [],
         // 记录列表第几页（分类）
         page: 0,
@@ -126,14 +130,15 @@
       smartSortList: state => state.files.smartSortList,
       // 分类文件夹树
       sortFileTree: state => state.files.sortFileTree,
+      // 当前路径，面包屑导航
       currentPath: state => state.files.currentPath
     }),
     mounted () {
-      // 重置列表数据，防止和搜索组件数据混合
+      // 重置列表数据，防止和搜索组件等其他共用List的组件的数据混合
       this.$store.commit('setFileList', [])
       // 插入文件小图标
       // this.insertFileIcon()
-      // 接受 sidebar 加弹窗的新建分类
+      // 接受 sidebar 新建按钮的新建分类通知
       bus.$on('newSort', () => {
         this.appendNode()
       })
@@ -146,6 +151,7 @@
       })
     },
     filters: {
+      // 格式化名字（所有文件的磁盘名含有别名和序列号，以*分隔，需要提取别名）
       formatDiskName (name) {
         if (name !== undefined) {
           let index = name.indexOf('*')
@@ -158,7 +164,7 @@
       }
     },
     methods: {
-      // 插入文件Icon
+      // 在文件树条目的名字前插入文件Icon
       insertFileIcon () {
         let Icon = '<svg class="icon" aria-hidden="true">\n' + '<use xlink:href="#icon-wenjian"></use>\n' + '</svg>'
         let downIcon = $('.el-tree-node__expand-icon')
@@ -201,7 +207,7 @@
         // 加载动画
         bus.$emit('loading-content')
       },
-      // 加载回收站的内容
+      // 加载回收站的内容（需要重用List组件）
       loadTrashContent () {
         let routerPath = this.$router.currentRoute.fullPath
         if (routerPath !== '/files/list') {
@@ -335,6 +341,7 @@
       },
 
       // 在当前选中节点下添加新的节点，如果没有选中，则新建一个分类树
+      // TODO element 组件不会修改 tree 组件的原始数据，需要在用户确认后向后台发送修改信息，再重新请求数据
       appendNode () {
         // 父节点信息
         let node = this.currentNode.node
@@ -355,10 +362,11 @@
             id: nodeId,
             children: []
           }
-          // 调用源代码中的方法增加节点，单是不会更新源数据（非API）
+          // 调用源代码中的方法增加节点，但是不会更新原始数据（非API）
           node.store.append(data, nodeObj)
         } else {
-          // 直接在源数据中添加新节点
+          // 直接在原始数据中添加新节点
+          // 不能直接更改，需要通过 store 进行更改
           let data = {
             label: this.newSortDirName,
             id: this.newSortDirName,
@@ -370,18 +378,19 @@
         }
       },
 
-      // 删除节点
+      // TODO 删除节点
       removeNode (node, data) {
         // 调用源代码中的方法删除节点，单是不会更新源数据（非API）
         node.store.remove(data)
       },
 
-      // 确认编辑节点的结果
+      // TODO 确认编辑节点的结果
       confirmEditNode (node, data) {
         console.log(node.data.label)
       },
 
       // 树节点渲染函数 vue-render
+      // TODO 点击修改后，重复点击输入框会触发加载文件列表的函数
       renderContent (h, {node, data, store}) {
         return h(
           'span',
@@ -431,10 +440,13 @@
                   click: (e) => {
                     e.stopPropagation()
                     e.preventDefault()
-                    data.labelShow = 'none'
-                    data.inputShow = 'inline-block'
+                    // 不能直接更改 node 的状态，需要通过 store
                     this.$store.commit('setTreeNode', node)
-                    this.$store.commit('toggleTreeNodeDisplay', 'inline-block', 'none')
+                    this.$store.commit({
+                      type: 'toggleTreeNodeDisplay',
+                      inputShow: 'inline-block',
+                      labelShow: 'none'
+                    })
                   }
                 }
               },
@@ -456,6 +468,7 @@
                   display: data.inputShow
                 },
                 on: {
+                  // 输入框失去焦点后，确认编辑状态
                   blur: e => {
                     e.stopPropagation()
                     e.preventDefault()
@@ -526,11 +539,13 @@
       background-color: inherit;
       border: none;
       margin: 0.3em 1em;
+      // 增大下拉图标大小
       .el-tree-node__expand-icon{
         border: 8px solid transparent;
         border-left-color: #97a8be;
         border-left-width: 8px;
       }
+      // 叶子节点没有下拉图标
       .el-tree-node__expand-icon.is-leaf{
         border-color: transparent;
         cursor: default;
@@ -586,13 +601,14 @@
     }
   }
 
-  // 节点问题
+  // 修改节点
   .el-tree-node {
     .el-input {
       display: none;
       width: 80%;
       input {
         border: none;
+        // 考虑是否设置输入框的背景色，设置后无法明显看到输入状态
         // background-color: inherit;
         padding: 0;
         font-size: 1.1em;
