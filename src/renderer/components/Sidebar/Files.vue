@@ -198,6 +198,7 @@
         this.$store.dispatch('getIgnore')
         // 重置列表数据，防止和搜索组件数据混合
         this.$store.commit('setFileList', [])
+        this.$store.commit('setCurrentPath', '忽略/')
         // 加载动画
         bus.$emit('loading-content')
       },
@@ -210,6 +211,7 @@
         this.$store.dispatch('getTrash')
         // 重置列表数据，防止和搜索组件数据混合
         this.$store.commit('setFileList', [])
+        this.$store.commit('setCurrentPath', '回收站/')
         // 加载动画
         bus.$emit('loading-content')
       },

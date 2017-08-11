@@ -4,6 +4,7 @@
 
 import sendMessage from '@/api'
 import * as types from '@/store/mutation-types'
+
 const state = {
   targetPositions: []
 }
@@ -13,7 +14,6 @@ const actions = {
   getImportTargetDisks ({commit}) {
     return new Promise((resolve, reject) => {
       sendMessage('getImportTargetDisks', {}).then(data => {
-        console.log(data)
         commit('setImportTargetDisks', data.disks)
         resolve()
       })
@@ -21,9 +21,15 @@ const actions = {
   },
 
   // 导入 Excel 模板文件
-  importExcelTemplate ({commit}, path) {
+  importExcelTemplate ({commit}, payload) {
     return new Promise((resolve, reject) => {
-      sendMessage('importExcelTemplate', {path}).then()
+      sendMessage('importExcelTemplate', {
+        path: payload.path,
+        serialNumber: payload.serialNumber,
+        filetype: payload.fileType
+      }).then(data => {
+        resolve(data)
+      })
     })
   },
   // 生成 Excel 模板文件

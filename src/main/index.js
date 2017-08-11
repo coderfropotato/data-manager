@@ -46,7 +46,7 @@ ipcMain.on('addFile', (event, arg) => {
   if (arg.API === 'open') {
     let URL = arg.URL
     newWin = new BrowserWindow({
-      height: 500,
+      height: 600,
       width: 800
     })
     newWin.loadURL(baseURL + URL)
@@ -59,7 +59,7 @@ ipcMain.on('addFile', (event, arg) => {
 // 打开浏览本地文件的窗口
 ipcMain.on('open-file-dialog', function (event, type) {
   // 默认只能打开单个文件夹
-  let properties = ['openFile', 'openDirectory']
+  let properties = ['openFile']
   if (type !== 'single') {
     properties.push('multiSelections')
   }

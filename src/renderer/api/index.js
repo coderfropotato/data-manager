@@ -8,8 +8,8 @@
 import bus from '@/assets/JS/bus'
 
 let zmq = require('zeromq')
-// const baseURL = 'tcp://10.139.17.101'
-const baseURL = 'tcp://10.139.47.111'
+const baseURL = 'tcp://10.139.17.101'
+// const baseURL = 'tcp://10.139.47.111'
 // const baseURL = 'tcp://10.139.20.203'
 const PORT = 4242
 const URL = baseURL + ':' + PORT
@@ -36,6 +36,7 @@ let sendMessage = function (API, params) {
   setTimeout(function () {
     if (flag === 0) {
       console.error('服务器无响应' + ' API: ' + API)
+      bus.$emit('error')
       flag = 0
     }
   }, outTime)

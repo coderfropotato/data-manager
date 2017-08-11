@@ -2,108 +2,66 @@
   <div id="newDiskFile-root">
     <div class="newDiskFile-inner">
       <!--基本设置-->
-      <div class="basic-settings">
-        <!--从本地磁盘添加文件目录-->
-        <div class="localDisk">
-          <el-row :gutter="20">
-            <el-col :span="3">
-              <span>别名</span>
-            </el-col>
-            <el-col :span="8">
-              <el-input v-model="alias" size="small">
+      <el-form
+          :model="basicForm"
+          :rules="rules"
+          ref="basicForm"
+          label-position="left"
+          label-width="80px">
+        <el-form-item label="别名" prop="alias">
+          <el-input v-model="basicForm.alias" size="small"></el-input>
+        </el-form-item>
+        <el-form-item label="数据源" required>
+          <el-select v-model="basicForm.dataSource" size="small" clearable>
+            <el-option
+                v-for="item in dataSourceOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <div class="remote" v-if="basicForm.dataSource === 'remoteServer'">
+          <el-form-item label="协议" prop="protocol">
+            <el-select v-model="basicForm.protocol" size="small">
+              <el-option
+                  v-for="item in protocolOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="主机" prop="host">
+            <el-input v-model="basicForm.host" size="small">
+            </el-input>
+          </el-form-item>
+          <el-form-item label="端口号" prop="port">
+            <el-input v-model="basicForm.port" size="small">
+            </el-input>
+          </el-form-item>
+          <el-form-item label="用户名" prop="username">
+            <el-col :span="24">
+              <el-input v-model="basicForm.username" size="small">
               </el-input>
             </el-col>
-            <el-col :span="3">
-              <span>数据源</span>
-            </el-col>
-            <el-col :span="8">
-              <el-select v-model="dataSource" size="small" clearable>
-                <el-option
-                    v-for="item in dataSourceOptions"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
-                </el-option>
-              </el-select>
-            </el-col>
-          </el-row>
+          </el-form-item>
+          <el-form-item label="密码" prop="password">
+            <el-input type="password" v-model="basicForm.password" size="small">
+            </el-input>
+            <el-checkbox v-model="useKey" style="margin-left: 1.5em;">使用密钥</el-checkbox>
+          </el-form-item>
         </div>
-
-        <!--从远程服务器添加文件目录-->
-        <div class="area" v-if="dataSource=='remoteServer'">
-          <el-row :gutter="20">
-            <el-col :span="3"><span>协议</span></el-col>
-            <el-col :span="8">
-              <el-select v-model="remoteServer.protocol" size="small">
-                <el-option
-                    v-for="item in protocolOptions"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
-                </el-option>
-              </el-select>
-            </el-col>
-          </el-row>
-          <div class="Host">
-            <el-row :gutter="20">
-              <el-col :span="3">
-                <span>主机</span>
-              </el-col>
-              <el-col :span="8">
-                <el-input v-model="remoteServer.host" size="small">
-                </el-input>
-              </el-col>
-              <el-col :span="3">
-                <span>端口号</span>
-              </el-col>
-              <el-col :span="6">
-                <el-input v-model="remoteServer.port" size="small">
-                </el-input>
-              </el-col>
-            </el-row>
-          </div>
-          <div class="username">
-            <el-row :gutter="20">
-              <el-col :span="3">
-                <span>用户名</span>
-              </el-col>
-              <el-col :span="8">
-                <el-input v-model="remoteServer.username" size="small">
-                </el-input>
-              </el-col>
-              <el-col :span="3">
-                <span>密码</span>
-              </el-col>
-              <el-col :span="6">
-                <el-input v-model="remoteServer.password" size="small">
-                </el-input>
-              </el-col>
-              <el-col :span="2">
-                <el-checkbox v-model="useKey">使用密钥</el-checkbox>
-              </el-col>
-            </el-row>
-          </div>
-        </div>
-        <!--文件目录路径-->
-        <div class="path">
-          <el-row :gutter="20">
-            <el-col :span="3">
-              <span>路径</span>
-            </el-col>
-            <el-col :span="17">
-              <el-input v-model="path" size="small">
-              </el-input>
-            </el-col>
-            <el-col :span="3">
-              <el-button size="small" @click="showFilename">浏览</el-button>
-            </el-col>
-          </el-row>
-        </div>
-      </div>
+        <!--选择路径-->
+        <el-form-item label="路径" prop="path">
+          <el-input v-model="basicForm.path" size="small"></el-input>
+          <el-button type="primary" size="small" @click="showPath" style="margin-left: 1.5em;">浏览</el-button>
+        </el-form-item>
+      </el-form>
       <!--展开高级选项按钮-->
       <div class="show-advanced">
         <el-row>
-          <el-col :span="22">
+          <el-col :span="20">
             <el-tooltip content="为文件夹添加属性信息" placement="top">
               <el-button size="small" @click="showAdvanced=!showAdvanced">展开高级选项
               </el-button>
@@ -115,13 +73,15 @@
       <div class="advanced-options" v-if="showAdvanced">
         <div>
           <el-row :gutter="20">
-            <el-col :span="10">
+            <el-col :span="24">
               <span>为文件夹添加属性（可不填）</span>
             </el-col>
-            <el-col :span="2">
+          </el-row>
+          <el-row :gutter="20">
+            <el-col :span="4">
               <span>模板</span>
             </el-col>
-            <el-col :span="8">
+            <el-col :span="14">
               <!--当用户选择后，通知用户添加自定义条目-->
               <el-select v-model="template" size="small" clearable @change="noticeAddCustom">
                 <el-option
@@ -137,10 +97,10 @@
         <div class="project-attr">
           <div class="attr-item" v-for="item in projectAttr">
             <el-row :gutter="20">
-              <el-col :span="3">
+              <el-col :span="4">
                 <span>{{item.name}}</span>
               </el-col>
-              <el-col :span="8">
+              <el-col :span="14">
                 <el-input placeholder="请输入" v-model="item.value" size="small">
                 </el-input>
               </el-col>
@@ -150,7 +110,7 @@
           <div class="custom" v-if="template === 'custom'">
             <div class="custom-item" v-for="(custom,index) in customChoose" :key="index">
               <el-row :gutter="20">
-                <el-col :span="4">
+                <el-col :span="6">
                   <el-select v-model="custom.attr" size="small" cleara>
                     <el-option
                         v-for="item in customOptions"
@@ -160,7 +120,7 @@
                     </el-option>
                   </el-select>
                 </el-col>
-                <el-col :span="8">
+                <el-col :span="14">
                   <el-input v-model="custom.value" size="small"></el-input>
                 </el-col>
                 <el-col :span="2">
@@ -173,8 +133,12 @@
         </div>
       </div>
       <div class="confirm">
-        <el-button @click="closeWindow">取&nbsp;&nbsp;消</el-button>
-        <el-button @click="confirmAddDirectory" type="primary">确&nbsp;&nbsp;认</el-button>
+        <el-row type="flex" justify="center">
+          <el-col :span="12">
+            <el-button @click="resetForm">重置</el-button>
+            <el-button type="primary" @click="confirmAddDirectory">提交</el-button>
+          </el-col>
+        </el-row>
       </div>
     </div>
   </div>
@@ -215,7 +179,7 @@
         projectAttr: [
           {
             name: '项目',
-            attr: 'projectName',
+            attr: 'project',
             value: ''
           }, {
             name: '年份',
@@ -223,33 +187,59 @@
             value: ''
           }, {
             name: '负责人',
-            attr: 'owner',
+            attr: 'principal',
             value: ''
           }
         ],
-        // 记录用户选择的结果
-        customChoose: [],
-        // 别名
-        alias: '',
-        // 路径
-        path: '',
-        remoteServer: {
+        basicForm: {
+          // 别名
+          alias: '',
+          // 路径
+          path: '',
+          // 数据源
+          dataSource: 'localDisk',
+          // 远程服务器信息
           protocol: '',
           host: '',
           port: '',
           username: '',
           password: ''
         },
-        dataSource: 'localDisk',
+        rules: {
+          alias: [
+            {required: true, message: '请输入磁盘别名', trigger: 'blur'}
+          ],
+          path: [
+            {required: true, message: '请选择路径', trigger: 'blur'}
+          ],
+          protocol: [
+            {required: true, message: '请选择协议', trigger: 'change'}
+          ],
+          host: [
+            {required: true, message: '请输入主机地址', trigger: 'blur'}
+          ],
+          port: [
+            {required: true, message: '请输入端口', trigger: 'blur'}
+          ],
+          username: [
+            {required: true, message: '请输入用户名', trigger: 'blur'}
+          ],
+          password: [
+            {required: true, message: '请输入密码', trigger: 'blur'}
+          ]
+        },
+        // 记录用户选择的结果
+        customChoose: [],
         template: 'project',
         useKey: true,
         showAdvanced: false
       }
     },
     methods: {
-      clearProject (e) {
-        console.log(e)
+      resetForm () {
+        this.$refs['basicForm'].resetFields()
       },
+      // 添加自定义文件夹条目
       addCustomOption () {
         let optionLength = this.customOptions.length
         if (this.customChoose.length < optionLength) {
@@ -265,7 +255,13 @@
           })
         }
       },
-      showFilename () {
+      // 删除自定义文件夹条目
+      deleteCustomChoose (index) {
+        this.customChoose.splice(index, 1)
+        console.log(this.customChoose)
+      },
+      // 显示选择路径
+      showPath () {
         ipcRenderer.send('open-file-dialog', 'single')
         ipcRenderer.on('selected-directory', (event, path) => {
           // 将返回的 path 数组转化成 string
@@ -281,104 +277,153 @@
           })
         }
       },
-      // 删除自定义文件夹条目
-      deleteCustomChoose (index) {
-        this.customChoose.splice(index, 1)
-        console.log(this.customChoose)
-      },
-      closeWindow () {
-        this.$confirm('是否关闭窗口', '警告', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          ipcRenderer.send('addFile', {API: 'close'})
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消'
-          })
-        })
-      },
       confirmAddDirectory () {
-        // 提取项目信息
-        let projectInfo = []
-        for (let item in this.projectAttr) {
-          projectInfo.push({
-            attr: this.projectAttr[item].attr,
-            value: this.projectAttr[item].value
-          })
-        }
-        // 将所有文件夹信息汇总
-        let directoryInfo = {
-          alias: this.alias,
-          path: this.path,
-          remoteServer: this.remoteServer,
-          dataSource: this.dataSource, // localDisk, remoteServer
-          projectInfo,
-          customAttr: this.customChoose
-        }
-        let call = {
-          mode: 'mutation',
-          API: 'setNewDiskDirInfo'
-        }
-        ipcRenderer.send('change-data', call, directoryInfo)
+        this.$refs['basicForm'].validate((valid) => {
+          if (valid) {
+            // 提取项目信息
+            let formData = this.basicForm
+            let projectInfo = []
+            for (let item in this.projectAttr) {
+              projectInfo.push({
+                [this.projectAttr[item].attr]: this.projectAttr[item].value
+              })
+            }
+            // 将所有文件夹信息汇总
+            let directoryInfo = {
+              alias: formData.alias,
+              path: formData.path,
+              remoteServer: {
+                protocol: formData.protocol,
+                host: formData.host,
+                port: formData.port,
+                username: formData.username,
+                password: formData.password
+              },
+              dataSource: formData.dataSource, // localDisk, remoteServer
+              projectInfo,
+              customAttr: this.customChoose
+            }
+            console.log(directoryInfo)
+            // 判断当前路径是否已经被管理
+            this.$store.dispatch('judgeNewDiskDir', formData.path).then(status => {
+              // 文件夹可以被管理
+              if (status === 0) {
+                this.$store.dispatch('addNewDiskDir', directoryInfo).then(status => {
+                  if (status) {
+                    this.$message({
+                      type: 'info',
+                      message: '目录添加成功',
+                      showClose: true
+                    })
+                  }
+                  // 重新刷新数据
+                  let call = {
+                    mode: 'action',
+                    API: 'openFile'
+                  }
+                  ipcRenderer.send('change-data', call)
+                })
+              }
+              // 子文件夹已被管理
+              if (status === -1) {
+                this.$confirm('存在子文件已被管理，是否放弃操作或继续（继续将删除已存在的子文件夹信息）?', '提示', {
+                  confirmButtonText: '继续',
+                  cancelButtonText: '放弃',
+                  type: 'warning'
+                }).then(() => {
+                  this.$store.dispatch('addNewDiskDir', directoryInfo).then(() => {
+                    // 重新刷新数据
+                    let call = {
+                      mode: 'action',
+                      API: 'openFile'
+                    }
+                    ipcRenderer.send('change-data', call)
+                  })
+                }).catch(() => {
+                  this.$message({
+                    type: 'info',
+                    message: '已放弃',
+                    showClose: true
+                  })
+                })
+              }
+              // 父文件夹（包括本身）已被管理
+              if (status === 1) {
+                this.$confirm('此文件夹已被管理', '提示', {
+                  confirmButtonText: '确定',
+                  type: 'warning'
+                })
+              }
+            })
+          } else {
+            return false
+          }
+        })
       }
     }
   }
 </script>
 <style lang="scss">
-  html,
-  body {
-    height: 100%;
-  }
-  body {
-    overflow-y: scroll;
-  }
   // 隐藏滚动条
-  ::-webkit-scrollbar {
-    display: none;
-  }
-
   #newDiskFile-root {
     height: 100%;
     width: 100%;
-  }
-  // 内间距
-  .newDiskFile-inner {
-    width: 80%;
-    margin: 2em auto;
-    .el-input {
-      display: inline-block;
+    overflow-y: scroll;
+    font-weight: 500;
+    &::-webkit-scrollbar {
+      display: none;
     }
-  }
-  // 行间距
-  .el-col {
-    margin: 1em 0;
-  }
-  // 显示高级选项按钮
-  .show-advanced {
-    .el-button {
-      float: right;
-      margin-right: -0.8em;
+    // 内间距
+    .newDiskFile-inner {
+      width: 80%;
+      margin: 2em auto;
     }
-  }
+    .el-form {
+      .el-input {
+        display: inline-block;
+        width: 24em;
+      }
+      .el-form-item {
+        width: 32em;
+        margin: 1em auto;
+      }
+    }
+    .advanced-options {
+      // 行间距
+      .el-col {
+        margin: 1em 0;
+      }
+      .attr-item {
+        .el-input {
+          width: 24em;
+        }
+      }
+    }
 
-  .advanced-options {
-    i.el-input__icon.el-icon-close {
-      margin-right: -4em !important;
+    // 显示高级选项按钮
+    .show-advanced {
+      .el-button {
+        float: right;
+        margin-right: -0.8em;
+      }
     }
-  }
-  // 确认与取消按钮
-  .confirm {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    margin: 2em 0;
-    width: 100%;
-    text-aligin: center;
-    .el-button {
-      margin: 0 3em;
+
+    .advanced-options {
+      width: 32em;
+      margin: 2em auto;
+      i.el-input__icon.el-icon-close {
+        margin-right: -4em !important;
+      }
+    }
+
+    // 确认与取消按钮
+    .confirm {
+      .el-row--flex {
+        text-align: center;
+      }
+      .el-button {
+        margin: 2em 2em;
+      }
     }
   }
 </style>
