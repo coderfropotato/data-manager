@@ -4,15 +4,16 @@
       <span>请输入智能视图名称</span>
       <el-input type="text" v-model="name" size="small"></el-input>
     </div>
-    <div class="searchConditions">
+    <div>
       <span>添加搜索条件</span>
+      <el-button size="small" @click="showSearchConditons">{{content.searchConditions}}</el-button>
       <div class="searchConditon">
         <el-button v-for="(item,index) in limitedConditions" :key="item" size="mini" :index="index">{{item}}<i
           class="el-icon-circle-close" @click="deleteLimitedCondition(index)"></i></el-button>
         </el-button>
       </div>
-      <div v-for="(item,index) in searchConditions" :key="name" v-bind:data-name=item.name>{{item.label}}
-        <el-button v-for="it in item.value" :key="it" @click="addLimitedCondition" size="mini">{{it}}</el-button>
+      <div class="conditions" v-for="(item,index) in searchConditions" :key="name" v-bind:data-name=item.name v-if="show.searchConditions">{{item.label}}
+        <el-button type="text" v-for="it in item.value" :key="it" @click="addLimitedCondition" size="small">{{it}}</el-button>
       </div>
     </div>
     <div class="sortCondition">
@@ -35,8 +36,9 @@
         <!--</el-menu>-->
         <!--</el-popover>-->
       </div>
-      <div v-for="(item,index) in searchConditions" :key="name" v-bind:data-name=item.name style="clear: both">{{item.label}}
-        <el-button v-for="it in item.value" :key="it" @click="showItem">{{it}}</el-button>
+      <el-button size="small" @click="showSortConditons">{{content.sortConditions}}</el-button>
+      <div v-if="show.sortConditions" v-for="(item,index) in searchConditions" :key="name" v-bind:data-name=item.name style="clear: both">{{item.label}}
+        <el-button type="text" v-for="it in item.value" :key="it" @click="showItem">{{it}}</el-button>
       </div>
     </div>
     <!--<el-button size="small" v-popover:popoverAdd>Add</el-button>-->
@@ -67,6 +69,14 @@
           {
             title: '文件类型'
           }],
+        content: {
+          searchConditions: '展开',
+          sortConditions: '展开'
+        },
+        show: {
+          searchConditions: false,
+          sortConditions: false
+        },
         i: 0,
         // amount是新建智能视图的数量
         amount: 1,
@@ -82,6 +92,22 @@
     mounted () {
     },
     methods: {
+      showSearchConditons () {
+        if (this.content.searchConditions === '展开') {
+          this.content.searchConditions = '收起'
+        } else {
+          this.content.searchConditions = '展开'
+        }
+        this.show.searchConditions = !this.show.searchConditions
+      },
+      showSortConditons () {
+        if (this.content.sortConditions === '展开') {
+          this.content.sortConditions = '收起'
+        } else {
+          this.content.sortConditions = '展开'
+        }
+        this.show.sortConditions = !this.show.sortConditions
+      },
       addLimitedCondition (e) {
         console.log(e.target.innerText)
         let text = e.target.innerText
@@ -158,27 +184,6 @@
         }
         ipcRenderer.send('change-data', call, temp)
         this.amount++
-      },
-      show () {
-        this.newDirList = [
-          {
-            title: '负责人'
-          },
-          {
-            title: '年份'
-          },
-          {
-            title: '项目'
-          },
-          {
-            title: '文件类型'
-          }]
-        for (this.i = 0; this.i < this.newDirList.length; this.i++) {
-          if (this.value === this.newDirList[this.i].title) {
-            console.log(this.newDirList[this.i])
-            this.newDirList.splice(this.i, 1)
-          }
-        }
       }
     }
   }
@@ -192,10 +197,6 @@
     }
     >div {
       margin: 1.5em 0 0 1em;
-    }
-    .searchConditions {
-      overflow-y: scroll;
-      height: 100%;
     }
     .searchConditon,
     .search-input {
@@ -215,6 +216,12 @@
     .add {
       margin-left: 22.5em;
       margin-top: 1em;
+    }
+    .conditions {
+      font-size: 0.8em;
+      .el-button {
+        margin-left: 1em;
+      }
     }
   }
 </style>
