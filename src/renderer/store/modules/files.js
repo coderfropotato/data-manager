@@ -10,7 +10,7 @@ import travelTree from '@/assets/JS/handleSortTreeData'
 const state = {
   // 记录当前选择的文件
   currentFile: '',
-  // 记录当前的文件列表
+  // 记录当前的文件列表（列表展示）
   currentFileList: [],
   // 记录当前的文件树
   currentDiskDirTree: '',
@@ -31,7 +31,8 @@ const state = {
   // 忽略文件
   ignore: [],
   // 导入的文件，防止文件重复
-  importFilesMap: new Map()
+  importFilesMap: new Map(),
+  node: {}
 }
 
 const actions = {
@@ -50,7 +51,7 @@ const actions = {
   getDiskFileTree ({commit}, serialNumber) {
     sendMessage('getFileTree', {serialNumber}).then(data => {
       commit({
-        type: types.GET_DISK_FILE_TREE,
+        type: types.SET_DISK_FILE_TREE,
         serialNumber,
         data
       })
@@ -77,14 +78,14 @@ const actions = {
   // 获取回收站
   getTrash ({commit}) {
     sendMessage('getTrash', {}).then(data => {
-      commit(types.GET_TRASH, data.trash)
+      commit(types.SET_TRASH, data.trash)
     })
   },
 
   // 获取忽略文件
   getIgnore ({commit}) {
     sendMessage('getIgnore', {}).then(data => {
-      commit(types.GET_IGNORE, data.ignore)
+      commit(types.SET_IGNORE, data.ignore)
     })
   },
 
@@ -118,18 +119,19 @@ const mutations = {
     travelTree(state.sortDirRowData, state.sortFileTree, '')
   },
 
+  // 添加分类目录
+  [types.ADD_SORT_DIRECTORY] (state, newDir) {
+    state.sortFileTree.push(newDir)
+  },
+
   // 获取文件树
-  [types.GET_DISK_FILE_TREE] (state, payload) {
+  [types.SET_DISK_FILE_TREE] (state, payload) {
     let temp = {
       serialNumber: payload.serialNumber,
       tree: payload.data.tree
     }
     state.cacheDir.push(temp)
     state.currentDiskDirTree = payload.data.tree
-  },
-
-  // 设置分类文件列表信息
-  [types.SET_SORT_FILE_LIST] (state, response) {
   },
 
   // 设置文件列表信息
@@ -143,7 +145,7 @@ const mutations = {
   },
 
   // 获取回收站
-  [types.GET_TRASH] (state, response) {
+  [types.SET_TRASH] (state, response) {
     state.trash = response
     state.currentFileList = response
   },
@@ -160,7 +162,7 @@ const mutations = {
   },
 
   // 获取忽略文件
-  [types.GET_IGNORE] (state, response) {
+  [types.SET_IGNORE] (state, response) {
     state.ignore = response
   },
 

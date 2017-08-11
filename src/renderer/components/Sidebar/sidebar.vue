@@ -180,7 +180,6 @@
     }
   }
 </script>
-<!--分离SCSS文件-->
 <style lang="scss">
   $backgroundColor: #F7F9F9;
   #sidebar-root {

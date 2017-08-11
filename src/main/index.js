@@ -57,11 +57,15 @@ ipcMain.on('addFile', (event, arg) => {
 })
 
 // 打开浏览本地文件的窗口
-ipcMain.on('open-file-dialog', function (event, type) {
+ipcMain.on('open-file-dialog', function (event, type, target) {
   // 默认只能打开单个文件夹
   let properties = ['openFile']
   if (type !== 'single') {
     properties.push('multiSelections')
+  }
+  // 默认情况下，target 为空，打开目录
+  if (!target) {
+    properties.push('openDirectory')
   }
   dialog.showOpenDialog({
     // 只打开文件夹

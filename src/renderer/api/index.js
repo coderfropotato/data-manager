@@ -35,12 +35,11 @@ let sendMessage = function (API, params) {
   let flag = 0
   setTimeout(function () {
     if (flag === 0) {
-      console.error('服务器无响应' + ' API: ' + API)
+      console.error('服务器无响应' + '\n API: ' + API)
       bus.$emit('error')
       flag = 0
     }
   }, outTime)
-
   return new Promise((resolve, reject) => {
     request.on('message', function (msg) {
       flag = 1
@@ -51,13 +50,13 @@ let sendMessage = function (API, params) {
         request.close()
       } else if (rep.status === 400) {
         bus.$emit('error')
-        console.error('参数数目错误' + ' API: ' + API)
+        console.error('参数数目错误' + '\n API: ' + API)
       } else if (rep.status === 500) {
         bus.$emit('error')
-        console.error('服务器错误' + ' API: ' + API)
+        console.error('服务器错误' + '\n API: ' + API)
       } else {
         bus.$emit('error')
-        console.error('参数格式错误' + ' API: ' + API)
+        console.error('参数格式错误' + '\n API: ' + API)
       }
     })
   })

@@ -13,6 +13,9 @@ const conditionMap = {
   'public': '共有数据',
   'share': '共享数据',
   'filetype': '文件类型',
+  'websites': '网站',
+  'id': '样本编号',
+  'name': '样本名',
   'organism': '物种',
   'strain': '品种',
   'tissue': '组织',
@@ -45,9 +48,12 @@ const state = {
 
 const actions = {
   // 判断磁盘目录能否被管理
-  judgeNewDiskDir ({commit}, path) {
+  judgeNewDiskDir ({commit}, payload) {
     return new Promise((resolve, reject) => {
-      sendMessage('judgeNewDiskDir', {path}).then(data => {
+      sendMessage('judgeNewDiskDir', {
+        path: payload.path,
+        ip: payload.host
+      }).then(data => {
         resolve(data.status)
       })
     })
@@ -165,9 +171,7 @@ const mutations = {
     state.smartSort.push(smartView.data)
     state.sortOrder = smartView.tabs
     state.tableName = smartView.table
-    console.log(state.tableName)
     // console.log(object.smartSort)
-    console.log(response)
     // console.log(state.smartSort)
   },
   // smartSort置空
@@ -180,8 +184,9 @@ const mutations = {
     let data = response.searchConditions
     // 对数据进行中英文映射处理
     for (let item in data) {
-      // 选项条目名
+      // 选项条目名 是中文
       let options = ''
+      // option是英文
       let option = ''
       for (option in data[item]) {
         options = conditionMap[option]
@@ -196,6 +201,11 @@ const mutations = {
       }
       state.searchConditions.push(condition)
     }
+  },
+  [types.DELETE_LIST] (state, payload) {
+    let from = payload.from
+    let deleteLength = payload.deleteLength
+    state.smartSort.splice(from, deleteLength)
   }
 }
 
