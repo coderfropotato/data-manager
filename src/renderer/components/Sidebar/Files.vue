@@ -37,8 +37,10 @@
         </el-popover>
         <el-button size="mini" class="button-inner-plus" v-popover:addSortPop>+</el-button>
       </div>
-      <div v-for="(item,index) in smartSortList" :key="item" class="smartSortList">
-        <el-button size="small" @click="showSmartSort" type="text">{{item}}</el-button>
+      <div class="smartSortList-warpper">
+        <div v-for="(item,index) in smartSortList" :key="item" class="smartSortList">
+          <el-button size="small" @click="showSmartSort" type="text">{{item}}</el-button>
+        </div>
       </div>
       <el-tree
           :data="sortFileTree"
@@ -564,6 +566,10 @@
       span {
         margin: 0 0.2em;
       }
+    }
+    .smartSortList-warpper {
+      height: 100px;
+      overflow-y: scroll;
     }
     .smartSortList {
       .el-button {
