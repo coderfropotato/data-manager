@@ -4,6 +4,7 @@
 
 import sendMessage from '@/api'
 import * as types from '@/store/mutation-types'
+import {Message} from 'element-ui'
 // import * as object from '@/api/data'
 
 const conditionMap = {
@@ -95,11 +96,17 @@ const actions = {
   // 将新添加的智能视图添加到智能视图列表中去
   // temp 包含着名称，限制条件(是一个对象数组)，选择条件 (选择条件是一个数组）
   addNewSmartSort ({commit}, temp) {
-    // 这里应该返回一个true或者false
-    sendMessage('setNewSmartSort', {temp}).then(data => {
-      commit(types.ADD_SMART_SORT, temp, data)
+    return new Promise((resolve, reject) => {
+      let tableName = temp.name
+      let context = temp.context
+      let limitedCondition = temp.limitedCondition
+      let selectedCondition = temp.selectedCondition
+      // 这里应该返回一个true或者false
+      sendMessage('setNewSmartSort', {tableName, context, limitedCondition, selectedCondition}).then(data => {
+        resolve(1)
+        commit(types.ADD_SMART_SORT, data)
+      })
     })
-    // commit(types.ADD_SMART_SORT, temp)
   },
 
   // 获取智能视图列表显示在文件树上面
@@ -147,15 +154,16 @@ const mutations = {
   },
 
   // 新增智能视图
-  [types.ADD_SMART_SORT] (state, newSmartSort, response) {
-    if (response === true) {
-      state.smartSortList.push(newSmartSort.name)
-      this.$alert('创建成功', {
-        confirmButtonText: '确定'
+  [types.ADD_SMART_SORT] (state, response) {
+    if (response.status) {
+      Message.success({
+        message: '创建成功',
+        showClose: true
       })
     } else {
-      this.$alert('创建失败', {
-        confirmButtonText: '确定'
+      Message.warning({
+        message: '创建失败',
+        showClose: true
       })
     }
   },

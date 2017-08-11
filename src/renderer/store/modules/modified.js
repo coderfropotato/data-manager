@@ -4,6 +4,7 @@
 import sendMessage from '@/api'
 import * as types from '@/store/mutation-types'
 import packUpModified from '@/assets/JS/convertJSON'
+import { Message } from 'element-ui'
 
 // 给node底下的所有子节点都打上标签
 // isdir=true时，只能更改来源属性，不能重置其他属性,isdir=false时，直接赋值即可
@@ -86,10 +87,24 @@ const state = {
 
 const actions = {
   // 更新文件信息
-  updateFileInfo ({commit}, updateList) {
+  updateFileInfo ({commit, dispatch}, updateList) {
     console.log('sending.......', updateList)
     sendMessage('updateAttribute', {updateList: updateList}).then(data => {
-      console.log(data)
+      // 提示用户
+      if (data.info === 'success') {
+        Message({
+          message: '成功',
+          type: 'success'
+        })
+        // 更新文件状态
+        // getModifiedFiles()
+        dispatch('getModifiedFiles')
+      } else {
+        Message({
+          message: '请重试',
+          type: 'warning'
+        })
+      }
     })
   },
 

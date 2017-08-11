@@ -6,14 +6,16 @@
     </div>
     <div>
       <span>添加搜索条件</span>
-      <el-button size="small" @click="showSearchConditons">{{content.searchConditions}}</el-button>
       <div class="searchConditon">
         <el-button v-for="(item,index) in limitedConditions" :key="item" size="mini" :index="index">{{item}}<i
           class="el-icon-circle-close" @click="deleteLimitedCondition(index)"></i></el-button>
         </el-button>
       </div>
-      <div class="conditions" v-for="(item,index) in searchConditions" :key="name" v-bind:data-name=item.name v-if="show.searchConditions">{{item.label}}
-        <el-button type="text" v-for="it in item.value" :key="it" @click="addLimitedCondition" size="small">{{it}}</el-button>
+      <el-button class="button" size="small" @click="showSearchConditons">{{content.searchConditions}}</el-button>
+      <div class="conditions-wrapper" v-if="show.searchConditions">
+        <div class="conditions" v-for="(item,index) in searchConditions" :key="name" v-bind:data-name=item.name>{{item.label}}
+          <el-button type="text" v-for="it in item.value" :key="it" @click="addLimitedCondition" size="small">{{it}}</el-button>
+        </div>
       </div>
     </div>
     <div class="sortCondition">
@@ -36,9 +38,11 @@
         <!--</el-menu>-->
         <!--</el-popover>-->
       </div>
-      <el-button size="small" @click="showSortConditons">{{content.sortConditions}}</el-button>
-      <div v-if="show.sortConditions" v-for="(item,index) in searchConditions" :key="name" v-bind:data-name=item.name style="clear: both">{{item.label}}
-        <el-button type="text" v-for="it in item.value" :key="it" @click="showItem">{{it}}</el-button>
+      <el-button size="small" @click="showSortConditons" style="margin-top: 1.2em">{{content.sortConditions}}</el-button>
+      <div class="conditions-wrapper" v-if="show.sortConditions">
+        <div class="conditions" v-for="(item,index) in searchConditions" :key="name" v-bind:data-name=item.name style="clear: both">{{item.label}}
+          <el-button type="text" v-for="it in item.value" :key="it" @click="showItem" size="small">{{it}}</el-button>
+        </div>
       </div>
     </div>
     <!--<el-button size="small" v-popover:popoverAdd>Add</el-button>-->
@@ -56,19 +60,6 @@
       return {
         selectedCondition: [],
         limitedConditions: [],
-        newDirList: [
-          {
-            title: '负责人'
-          },
-          {
-            title: '年份'
-          },
-          {
-            title: '项目'
-          },
-          {
-            title: '文件类型'
-          }],
         content: {
           searchConditions: '展开',
           sortConditions: '展开'
@@ -147,12 +138,7 @@
         let text = e.target.innerText
         let count = 0
         let length = this.selectedCondition.length
-        // 把用户点击的每一个搜索条件以key: value 对象的形式包装起来 key是
-        if ($(e.target).parent().data('name')) {
-          this.name = $(e.target).parent().data('name')
-        } else if ($(e.target).parent().parent().data('name')) {
-          this.name = $(e.target).parent().parent().data('name')
-        }
+
         // 如果用户还未选择条件，则直接添加
         if (length === 0) {
           this.selectedCondition.push(text)
@@ -200,7 +186,7 @@
     }
     .searchConditon,
     .search-input {
-      width: 20em;
+      width: 25em;
       margin: 1em 0;
       height: 1.7em;
       border: 1px solid #bfcbd9;
@@ -208,20 +194,29 @@
     }
     .search-input {
       float: left;
-      margin-left: 1em;
     }
     > .el-button {
       margin-top: 1.5em;
     }
-    .add {
-      margin-left: 22.5em;
-      margin-top: 1em;
+    .conditions-wrapper{
+      height: 300px;
+      overflow-y: scroll;
+      clear: both;
     }
     .conditions {
       font-size: 0.8em;
       .el-button {
-        margin-left: 1em;
+        margin-left: 2em;
       }
+    }
+    .button {
+      position: relative;
+      top: -3.7em;
+      left:33.3em;
+    }
+    .add {
+      margin-left: 30em;
+      margin-top: 1em;
     }
   }
 </style>
