@@ -8,6 +8,9 @@ import * as types from '@/store/mutation-types'
 const state = {
   show: false,
 
+  // 是否是文件夹
+  isdir: false,
+
   // 磁盘序列号
   serialNumber: '',
 
@@ -56,6 +59,7 @@ const mutations = {
     state.customize = detail.customize
     state.fileAttr = detail.fileattr
     state.serialNumber = detail.serial_number
+    state.isdir = detail.isdir
   },
 
   // 显示文件信息区

@@ -28,6 +28,7 @@
           })
         })
       })
+      // 接受 API 的错误提示
       bus.$on('error', () => {
         bus.$emit('loading-end')
         this.$notify({
