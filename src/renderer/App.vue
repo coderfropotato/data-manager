@@ -23,10 +23,11 @@
 //        }
         // 向后台请求创建智能视图的限制条件
         this.$store.dispatch('getSearchConditions').then(() => {
+          // 获取导入 Excel 表格的可选择磁盘
           this.$store.dispatch('getImportTargetDisks')
         })
       })
-      // 接受 API 的错误提示
+      // 接受与后台交互的 API 的错误提示
       bus.$on('error', () => {
         bus.$emit('loading-end')
         this.$notify({
@@ -51,7 +52,7 @@
         }
       })
 
-      // 禁用浏览器拖拽事件
+      // 禁用浏览器默认拖拽事件，防止用户拖拽的文件被打开
       document.addEventListener('drop', e => {
         e.preventDefault()
       }, false)

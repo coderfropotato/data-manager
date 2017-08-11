@@ -45,9 +45,12 @@ const state = {
 
 const actions = {
   // 判断磁盘目录能否被管理
-  judgeNewDiskDir ({commit}, path) {
+  judgeNewDiskDir ({commit}, payload) {
     return new Promise((resolve, reject) => {
-      sendMessage('judgeNewDiskDir', {path}).then(data => {
+      sendMessage('judgeNewDiskDir', {
+        path: payload.path,
+        ip: payload.host
+      }).then(data => {
         resolve(data.status)
       })
     })
