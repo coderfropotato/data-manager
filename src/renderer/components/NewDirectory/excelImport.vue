@@ -261,6 +261,7 @@
               serialNumber: this.ruleForm.serialNumber,
               fileType: this.ruleForm.fileType
             }).then(data => {
+              // 获取导入结果反馈
               if (data.error !== '') {
                 this.$notify({
                   type: 'error',
@@ -271,16 +272,20 @@
                 return false
               }
               this.imported = true
+              // 获取并设置导入结果数据，用于显示导入结果列表
+              // 未找到的文件
               for (let item in data.not_found) {
                 this.importResult.notFoundFiles.push({
                   file: data.not_found[item]
                 })
               }
+              // 重复的文件
               for (let item in data.repeat) {
                 this.importResult.repeatFiles.push({
                   file: data.repeat[item]
                 })
               }
+              // 错误消息
               for (let item in data.warn_msg) {
                 this.importResult.warnMsg.push({
                   file: data.warn_msg[item]

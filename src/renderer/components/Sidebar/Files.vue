@@ -39,11 +39,11 @@
         </el-popover>
         <el-button size="mini" class="button-inner-plus" v-popover:addSortPop>+</el-button>
       </div>
-      <div class="smartSortList-warpper">
-        <div v-for="(item,index) in smartSortList" :key="item" class="smartSortList">
-          <el-button size="small" @click="showSmartSort" type="text">{{item}}</el-button>
-        </div>
-      </div>
+      <!--<div class="smartSortList-warpper">-->
+        <!--<div v-for="(item,index) in smartSortList" :key="item" class="smartSortList">-->
+          <!--<el-button size="small" @click="showSmartSort" type="text">{{item}}</el-button>-->
+        <!--</div>-->
+      <!--</div>-->
       <el-tree
           :data="sortFileTree"
           node-key="id"
