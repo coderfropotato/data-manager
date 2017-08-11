@@ -87,7 +87,7 @@ const state = {
 
 const actions = {
   // 更新文件信息
-  updateFileInfo ({commit}, updateList) {
+  updateFileInfo ({commit, dispatch}, updateList) {
     console.log('sending.......', updateList)
     sendMessage('updateAttribute', {updateList: updateList}).then(data => {
       // 提示用户
@@ -97,7 +97,8 @@ const actions = {
           type: 'success'
         })
         // 更新文件状态
-        this.getModifiedFiles()
+        // getModifiedFiles()
+        dispatch('getModifiedFiles')
       } else {
         Message({
           message: '请重试',
