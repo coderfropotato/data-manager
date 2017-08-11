@@ -49,22 +49,28 @@
         let name = this.sortOrder[index - 1]
         console.log(this.sortOrder[index - 1])
         // 判断某一项是否重复点击，如果不重复，则请求下一列的数据。
-        if (this.select[name] !== list) {
-          this.select[name] = list
-          console.log(this.select)
-          if (this.index === index || this.index > index) {
-            this.$store.commit('deleteList', {
-              'from': index + 1,
-              'deleteLength': this.smartSort.length - index
-            })
-            console.log(this.smartSort.length)
-          }
-          this.$store.dispatch('showSmartSort', {
-            'tableName': this.tableName,
-            'select': this.select
-          })
-          this.index = index
-        }
+        this.select[name] = list
+        console.log(this.select[name])
+        this.$store.dispatch('showSmartSort', {
+          'tableName': this.tableName,
+          'select': this.select
+        })
+//        if (this.select[name] !== list) {
+//          this.select[name] = list
+//          console.log(this.select)
+//          if (this.index === index || this.index > index) {
+//            this.$store.commit('deleteList', {
+//              'from': index + 1,
+//              'deleteLength': this.smartSort.length - index
+//            })
+//            console.log(this.smartSort.length)
+//          }
+//          this.$store.dispatch('showSmartSort', {
+//            'tableName': this.tableName,
+//            'select': this.select
+//          })
+//          this.index = index
+//        }
       }
     }
   }
