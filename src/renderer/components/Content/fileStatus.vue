@@ -125,6 +125,11 @@
 
       // 处理点击节点事件
       handleNodeClick (data) {
+        // 如果点击了磁盘，不显示任何信息
+        if (data.serialNumber) {
+          return 0
+        }
+
         // 设置成显示模式
         this.setShowMode(true)
 
