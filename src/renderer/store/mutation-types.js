@@ -55,6 +55,7 @@ export const SHOW_SMART_SORT = 'showSmartSort'
 export const HANDLE_SEARCH_CONDITION_MAP = 'handleConditionMap'
 // 重置智能视图里面的内容
 export const SET_SMART_SORT = 'setSmartSort'
+export const DELETE_LIST = 'deleteList'
 // 设置搜索位置
 export const SET_SEARCH_RANGE = 'setSearchRange'
 // 设置 Excel 导入目标磁盘信息

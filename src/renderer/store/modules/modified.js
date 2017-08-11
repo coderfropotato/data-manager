@@ -7,25 +7,43 @@ import packUpModified from '@/assets/JS/convertJSON'
 
 // 给node底下的所有子节点都打上标签
 // isdir=true时，只能更改来源属性，不能重置其他属性,isdir=false时，直接赋值即可
-function tagYouAll (state, node, newAttributes, isdir) {
+function tagYouAll (state, node, newAttributes, onlySourceInfo) {
   // console.log(node)
   if (node.hasOwnProperty('status')) {
+    // 更新展示状态
     node.status = node.status + '*' + 'tagged'
-    // 这里要复制一个新的newAttributes对象，否则给不同文件/文件夹打标签会混乱
-    if (!isdir) { // 如果一开始点击文件,直接把所有属性赋值即可
-      state.taggedModifiedFiles.set(node.path, JSON.parse(JSON.stringify(newAttributes)))
-    } else {  //  如果一开始点击文件夹，需要添加属性，不能覆盖属性
-      let oldAttributes = state.taggedModifiedFiles.get(node.path)
-      if (oldAttributes) {
-        oldAttributes.source = newAttributes.source // 原来有的话只更新source属性
-      } else {  // 没有的话直接设置上
+
+    // 更新数据状态
+    if (node.isdir) { // 如果被打标签的是文件夹
+      if (!onlySourceInfo) {  // 怎么可能传过来文件信息呢，are you 弄啥嘞
+        console.log('exo me????')
+      } else {  // 用户给上层文件夹打标签，下层文件夹要接收到信息，此时直接赋值即可
         state.taggedModifiedFiles.set(node.path, JSON.parse(JSON.stringify(newAttributes)))
+      }
+    } else {  // 如果被打标签的是文件
+      if (!onlySourceInfo) {  // 而且传过来的信息是文件的信息，就直接赋值
+        state.taggedModifiedFiles.set(node.path, JSON.parse(JSON.stringify(newAttributes)))
+      } else {  // 用户给上层文件夹赋值，下层文件要接收到，还要保留原来的数据
+        let oldAttributes = state.taggedModifiedFiles.get(node.path)
+        if (oldAttributes) { // 如果taggedModifiedFiles已经有信息了
+          if (Object.keys(oldAttributes.fileattr).length > 0) { // 如果该文件原来已经有详细属性
+            oldAttributes.source = newAttributes.source // 只更新source属性
+          } else {  // 若原来文件没有属性，此时在上层的SourceInfo基础上，还要补上fileattr
+            let source = oldAttributes.source
+            let fileattr = {}
+            state.taggedModifiedFiles.set(node.path, JSON.parse(JSON.stringify({source: source, fileattr: fileattr})))
+          }
+        } else {  // 如果如果taggedModifiedFiles还没有信息
+          let source = newAttributes.source
+          let fileattr = {}
+          state.taggedModifiedFiles.set(node.path, JSON.parse(JSON.stringify({source: source, fileattr: fileattr})))
+        }
       }
     }
   }
   if (node.hasOwnProperty('children')) {
     for (let childNode in node.children) {
-      tagYouAll(state, node.children[childNode], newAttributes, isdir)
+      tagYouAll(state, node.children[childNode], newAttributes, onlySourceInfo)
     }
   }
 }
@@ -71,6 +89,7 @@ const actions = {
   updateFileInfo ({commit}, updateList) {
     console.log('sending.......', updateList)
     sendMessage('updateAttribute', {updateList: updateList}).then(data => {
+      console.log(data)
     })
   },
 
@@ -121,8 +140,8 @@ const actions = {
   },
 
   // 更新当前节点的数据
-  renewNodeData ({commit}, newAttributes) {
-    commit(types.RENEW_NODE_DATA, newAttributes)
+  renewNodeData ({commit}, payload) {
+    commit(types.RENEW_NODE_DATA, payload)
   }
 }
 
@@ -153,11 +172,9 @@ const mutations = {
   // 更新当前节点及子节点数据
   [types.RENEW_NODE_DATA] (state, payload) {
     let newAttributes = payload.newAttributes
-    let isdir = payload.isdir
+    let onlySourceInfo = payload.onlySourceInfo
     // 打标签啊打标签
-    console.log(newAttributes, isdir)
-    tagYouAll(state, state.nodeData, newAttributes, isdir)
-    // console.log(state.taggedModifiedFiles)
+    tagYouAll(state, state.nodeData, newAttributes, onlySourceInfo)
   },
 
   [types.SET_SHOW_MODE] (state, status) {

@@ -104,7 +104,7 @@
 </template>
 
 <script>
-  import {mapState, mapActions} from 'vuex'
+  import { mapState, mapActions } from 'vuex'
 
   export default {
     name: 'FileStatusAside',
@@ -237,8 +237,7 @@
       basicInfo () {
         // step1 二话不说，我觉得你根本就没有信息
         // 文件属性部分
-        this.currentFileattr = {
-        }
+        this.currentFileattr = {}
         this.currentFiletype = ''
         // 文件来源部分
         this.currentSourceInfo = {
@@ -311,26 +310,63 @@
       // 更改信息用
       // 用户选择不同的文件类型时，下面展示不同的属性编辑框
       getTemplate (data) {
-        // 如果已缓存，直接复制显示
-        if (this.taggedModifiedFiles.get(this.nodeData.path)) {
-          let infos = this.taggedModifiedFiles.get(this.nodeData.path)
-          this.currentFileattr = infos.fileattr
-        } else {  // 没有type的话直接显示空模板
-          switch (data) {
-            case 'fastq':
-              // 高能预警 要复制一份对象 否则你会哭的
-              this.currentFileattr = JSON.parse(JSON.stringify(this.fastqTemplate))
-              break
-            case 'wtf' :
-              // 高能预警 要复制一份对象 否则你会哭的
-              this.currentFileattr = JSON.parse(JSON.stringify(this.wtfTemplate))
-              break
-            default:
-              this.currentFileattr = {
-                filetype: ''
-              }
+        console.log('getTemplate with choice ', data)
+//        // 如果已缓存，直接复制显示
+//        let oldAttribute = this.taggedModifiedFiles.get(this.nodeData.path)
+//        console.log('oldAttribute', oldAttribute)
+//        if (oldAttribute) { // 已缓存
+//          if (Object.keys(oldAttribute.fileattr).length > 0){ // 如果有文件详细属性，复制过去
+//            this.currentFileattr = oldAttribute.fileattr
+//            this.currentFiletype = oldAttribute.fileattr.filetype
+//          }
+//          if (Object.keys(oldAttribute.source).length > 0) {  // 如果有文件来源信息
+//
+//          }
+//        } else {  // 没有type的话直接显示空模板
+//          switch (data) {
+//            case 'fastq':
+//              // 高能预警 要复制一份对象 否则你会哭的
+//              this.currentFileattr = JSON.parse(JSON.stringify(this.fastqTemplate))
+//              break
+//            case 'wtf' :
+//              // 高能预警 要复制一份对象 否则你会哭的
+//              this.currentFileattr = JSON.parse(JSON.stringify(this.wtfTemplate))
+//              break
+//            default:
+//              this.currentFileattr = {
+//                filetype: ''
+//              }
+//          }
+//        }
+//
+//        this.currentFiletype = this.currentFileattr.filetype
+        // 先生成模板呗
+        switch (data) {
+          case 'fastq':
+            // 高能预警 要复制一份对象 否则你会哭的
+            this.currentFileattr = JSON.parse(JSON.stringify(this.fastqTemplate))
+            break
+          case 'wtf' :
+            // 高能预警 要复制一份对象 否则你会哭的
+            this.currentFileattr = JSON.parse(JSON.stringify(this.wtfTemplate))
+            break
+          default:
+            this.currentFileattr = {}
+        }
+
+        // 判断之前是否缓存过
+        let oldAttribute = this.taggedModifiedFiles.get(this.nodeData.path)
+        console.log('oldAttribute', oldAttribute)
+        if (oldAttribute) { // 已缓存
+          if (Object.keys(oldAttribute.fileattr).length > 0) { // 如果有文件详细属性，复制过去
+            this.currentFileattr = JSON.parse(JSON.stringify(oldAttribute.fileattr))
+            this.currentFiletype = oldAttribute.fileattr.filetype
+          }
+          if (Object.keys(oldAttribute.source).length > 0) {  // 如果有文件来源信息
+            this.currentSourceInfo = JSON.parse(JSON.stringify(oldAttribute.source))
           }
         }
+        // TODO:从服务器拉数据
       },
 
       // 添加打好标签的选中文件/文件夹
@@ -361,7 +397,7 @@
           delete newAttributes.fileattr
         }
         // 更改中间的状态提示
-        this.renewNodeData({newAttributes: newAttributes, isdir: this.isdir})
+        this.renewNodeData({newAttributes: newAttributes, onlySourceInfo: this.isdir})
         console.log(this.taggedModifiedFiles)
       },
 
