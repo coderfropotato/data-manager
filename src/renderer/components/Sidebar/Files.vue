@@ -88,7 +88,6 @@
 
 <script>
   import $ from 'jquery'
-  import Tree from '@/components/Sidebar/tree'
   import {mapState} from 'vuex'
   import bus from '@/assets/JS/bus'
   import {ipcRenderer} from 'electron'
@@ -342,6 +341,7 @@
         // 父节点信息
         let node = this.currentNode.node
         let nodeObj = this.currentNode.nodeObj
+        console.log(node)
         // 判断父节点是否存在，即是否选中节点
         if (node) {
           // 判断文件夹名是否重复
@@ -359,15 +359,16 @@
           }
           // 调用源代码中的方法增加节点，单是不会更新源数据（非API）
           node.store.append(data, nodeObj)
-          console.log(node.store.root)
         } else {
           // 直接在源数据中添加新节点
           let data = {
             label: this.newSortDirName,
             id: this.newSortDirName,
-            children: []
+            children: [],
+            inputShow: 'none',
+            labelShow: 'inline-block'
           }
-          this.sortFileTree.push(data)
+          this.$store.commit('addSortDirectory', data)
         }
       },
 
@@ -430,10 +431,12 @@
                 },
                 on: {
                   click: (e) => {
+                    e.stopPropagation()
                     e.preventDefault()
                     data.labelShow = 'none'
                     data.inputShow = 'inline-block'
-                    this.editNode(node, data)
+                    this.$store.commit('setTreeNode', node)
+                    this.$store.commit('toggleTreeNodeDisplay', 'inline-block', 'none')
                   }
                 }
               },
@@ -456,6 +459,8 @@
                 },
                 on: {
                   blur: e => {
+                    e.stopPropagation()
+                    e.preventDefault()
                     data.labelShow = 'inline-block'
                     data.inputShow = 'none'
                     data.label = e.target.value
@@ -481,9 +486,6 @@
         })
         this.$router.push('/smartSort')
       }
-    },
-    components: {
-      Tree
     }
   }
 </script>
@@ -526,6 +528,15 @@
       background-color: inherit;
       border: none;
       margin: 0.3em 1em;
+      .el-tree-node__expand-icon{
+        border: 8px solid transparent;
+        border-left-color: #97a8be;
+        border-left-width: 8px;
+      }
+      .el-tree-node__expand-icon.is-leaf{
+        border-color: transparent;
+        cursor: default;
+      }
       // 删除小图标
       .icon-wrapper {
         display: inline-block;

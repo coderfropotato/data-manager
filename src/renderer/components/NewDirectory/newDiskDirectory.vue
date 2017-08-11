@@ -260,7 +260,7 @@
         this.customChoose.splice(index, 1)
         console.log(this.customChoose)
       },
-      // 显示选择路径
+      // 在输入框显示选择路径
       showPath () {
         ipcRenderer.send('open-file-dialog', 'single')
         ipcRenderer.on('selected-directory', (event, path) => {
@@ -268,6 +268,7 @@
           this.path = path.toString()
         })
       },
+      // 提示信息
       noticeAddCustom (e) {
         if (e === 'custom') {
           this.$notify.info({
@@ -277,6 +278,7 @@
           })
         }
       },
+      // 确认添加磁盘目录
       confirmAddDirectory () {
         this.$refs['basicForm'].validate((valid) => {
           if (valid) {
@@ -303,9 +305,12 @@
               projectInfo,
               customAttr: this.customChoose
             }
-            console.log(directoryInfo)
             // 判断当前路径是否已经被管理
-            this.$store.dispatch('judgeNewDiskDir', formData.path).then(status => {
+            this.$store.dispatch({
+              type: 'judgeNewDiskDir',
+              path: formData.path,
+              host: formData.host
+            }).then(status => {
               // 文件夹可以被管理
               if (status === 0) {
                 this.$store.dispatch('addNewDiskDir', directoryInfo).then(status => {
