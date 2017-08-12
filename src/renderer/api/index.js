@@ -8,8 +8,8 @@
 import bus from '@/assets/JS/bus'
 
 let zmq = require('zeromq')
-const baseURL = 'tcp://10.139.17.101'
-// const baseURL = 'tcp://10.139.47.111'
+// const baseURL = 'tcp://10.139.17.101'
+const baseURL = 'tcp://10.139.47.111'
 // const baseURL = 'tcp://10.139.20.203'
 // 端口号
 const PORT = 4242

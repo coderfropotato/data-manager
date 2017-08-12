@@ -67,6 +67,7 @@
     methods: {
       // 映射Actions
       ...mapActions([
+        'ignoreFiles',  // 忽略文件
         'updateFileInfo', // 给后端发消息，请求更新文件信息
         'setSelectedFilesNum', // 设置选中的文件数目
         'toggleShowFileStatusAside',  // 切换展示右侧文件信息边栏
@@ -192,9 +193,8 @@
 
       // 忽略选中的文件
       ignoreSelectedFiles () {
-
+        this.ignoreFiles(this.$refs.tree.getCheckedKeys())
       }
-
     }
   }
 

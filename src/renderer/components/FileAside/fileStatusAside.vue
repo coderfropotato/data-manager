@@ -91,7 +91,7 @@
       <div class="footer">
         <el-button type="primary" size="small" @click="addNewTaggedFile">更改属性</el-button>
         <el-button size="small">自动识别</el-button>
-        <el-button size="small">忽略此文件</el-button>
+        <el-button size="small" @click="ignoreThis">忽略此文件</el-button>
         <el-button size="small" @click="ignoreNewAttribute">放弃修改</el-button>
       </div>
     </div>
@@ -296,6 +296,7 @@
 
     methods: {
       ...mapActions([
+        'ignoreFiles',  // 忽略文件
         'setNodeData', // 设置当前节点信息
         'renewNodeData',    // 更新当前节点数据
         'removeTaggedFile', // 放弃修改文件/文件夹的属性
@@ -311,35 +312,6 @@
       // 用户选择不同的文件类型时，下面展示不同的属性编辑框
       getTemplate (data) {
         console.log('getTemplate with choice ', data)
-//        // 如果已缓存，直接复制显示
-//        let oldAttribute = this.taggedModifiedFiles.get(this.nodeData.path)
-//        console.log('oldAttribute', oldAttribute)
-//        if (oldAttribute) { // 已缓存
-//          if (Object.keys(oldAttribute.fileattr).length > 0){ // 如果有文件详细属性，复制过去
-//            this.currentFileattr = oldAttribute.fileattr
-//            this.currentFiletype = oldAttribute.fileattr.filetype
-//          }
-//          if (Object.keys(oldAttribute.source).length > 0) {  // 如果有文件来源信息
-//
-//          }
-//        } else {  // 没有type的话直接显示空模板
-//          switch (data) {
-//            case 'fastq':
-//              // 高能预警 要复制一份对象 否则你会哭的
-//              this.currentFileattr = JSON.parse(JSON.stringify(this.fastqTemplate))
-//              break
-//            case 'wtf' :
-//              // 高能预警 要复制一份对象 否则你会哭的
-//              this.currentFileattr = JSON.parse(JSON.stringify(this.wtfTemplate))
-//              break
-//            default:
-//              this.currentFileattr = {
-//                filetype: ''
-//              }
-//          }
-//        }
-//
-//        this.currentFiletype = this.currentFileattr.filetype
         // 先生成模板呗
         switch (data) {
           case 'fastq':
@@ -408,9 +380,7 @@
 
         // 不显示信息
         // 重置文件属性
-        this.currentFileattr = {
-          filetype: ''
-        }
+        this.currentFileattr = {}
         this.currentFiletype = ''
 
         // 重置文件来源
@@ -420,6 +390,12 @@
           principle: '',
           websites: ''
         }
+      },
+
+      // 忽略当前的文件
+      ignoreThis () {
+        let filePath = this.serialNumber + this.basicInfo.path
+        this.ignoreFiles([filePath])
       }
     },
     filters: {
