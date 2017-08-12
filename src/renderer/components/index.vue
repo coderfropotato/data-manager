@@ -1,3 +1,4 @@
+<!--划分三栏组件-->
 <template>
   <div id='index-root'>
     <div class='sidebar-wrapper'>
@@ -17,10 +18,14 @@
 </template>
 
 <script>
+  // 侧边栏导航组件
   import Sidebar from './Sidebar/sidebar'
+  // 内容区组件
   import ContentDetail from './Content/content'
+  // 文件详情区组件
   import FileAside from './FileAside/fileAside'
   import $ from 'jquery'
+  // jQuery 插件，可拖拽改变 div 宽度
   import 'jquery-resizable-dom/src/jquery-resizable'
 
   export default {
@@ -51,9 +56,5 @@
 </script>
 
 <style lang='scss' scoped>
-  $baseColor-1: #0294FF;
-  $back-Color1: #404042;
-  $back-Color2: #4E546C;
-  $sideBarWidth: 14em;
   @import "../assets/SCSS/resizable";
 </style>

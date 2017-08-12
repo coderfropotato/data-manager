@@ -7,8 +7,6 @@ import NewSmartSortdir from '@/components/NewDirectory/newSmartSort'
 import NewDirectory from '@/components/NewDirectory/newDirectory'
 // 新增目录
 import NewDiskDirectory from '@/components/NewDirectory/newDiskDirectory'
-// 新增分类
-import NewSortDirectory from '@/components/NewDirectory/newSortDirectory'
 // Excel 导入文件
 import ExcelImport from '@/components/NewDirectory/excelImport'
 const routes = [
@@ -24,10 +22,6 @@ const routes = [
       {
         path: 'newsmartsortdir',
         component: NewSmartSortdir
-      },
-      {
-        path: 'newsortdir',
-        component: NewSortDirectory
       },
       {
         path: 'excelImport',

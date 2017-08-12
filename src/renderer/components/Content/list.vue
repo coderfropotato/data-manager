@@ -106,7 +106,8 @@
         listRootHeight: 0,
         // 用于滚动事件节流
         scrollTimer: 0,
-        lastScrollFireTime: 0
+        lastScrollFireTime: 0,
+        lastPosition: 0
       }
     },
     computed: mapState({
@@ -198,8 +199,13 @@
         let now = new Date().getTime()
 
         // 滚动时需要的处理事件
-        function loadMoreContent () {
+        function loadMoreContent (self) {
           let scrollHeight = document.querySelector('#list-root').scrollTop
+          // 防止回滚请求
+          if (self.lastPosition > scrollHeight) {
+            return
+          }
+          self.lastPosition = scrollHeight
           let distance = listHeight - scrollHeight - minDistance
 
           if (distance / listHeight < 0.25 || distance < listRootHeight) {
@@ -210,13 +216,13 @@
 
         if (!this.scrollTimer) {
           if (now - this.lastScrollFireTime > (2 * minScrollTime)) {
-            loadMoreContent()
+            loadMoreContent(this)
             this.lastScrollFireTime = now
           }
           this.scrollTimer = setTimeout(() => {
             this.scrollTimer = null
             this.lastScrollFireTime = new Date().getTime()
-            loadMoreContent()
+            loadMoreContent(this)
           }, minScrollTime)
         }
       },

@@ -119,6 +119,17 @@ const mutations = {
     travelTree(state.sortDirRowData, state.sortFileTree, '')
   },
 
+  // 设置节点信息
+  [types.SET_TREE_NODE] (state, node) {
+    state.node = node
+  },
+
+  [types.TOGGLE_TREE_NODE_DISPLAY] (state, payload) {
+    console.log(state.node.data)
+    state.node.data.inputShow = payload.inputShow
+    state.node.data.labelShow = payload.labelShow
+  },
+
   // 添加分类目录
   [types.ADD_SORT_DIRECTORY] (state, newDir) {
     state.sortFileTree.push(newDir)

@@ -5,7 +5,7 @@
       <div class="import-title">
         <el-row>
           <el-col :span="16">
-            <span class="title">请选择&nbsp;Excel&nbsp;模板文件</span>
+            <span class="title">{{title}}</span>
           </el-col>
           <el-col :span="8">
             <span>没有模板？</span>
@@ -120,6 +120,7 @@
   export default {
     data () {
       return {
+        title: '请选择 Excel 模板文件',
         placeholder: '请选择模板',
         ruleForm: {
           path: '',
@@ -180,7 +181,7 @@
       resetForm () {
         this.$refs['ruleForm'].resetFields()
       },
-      // 检查路径是否符合要求
+      // 自定义验证方法，检查路径是否符合要求
       checkPath (rule, value, callback) {
         // 选择生成模板路径
         if (this.generateTemplate) {
@@ -213,15 +214,22 @@
       },
       // 生成 Excel 模板
       generateExcelTemplate () {
-        this.placeholder = '请选择模板生成路径'
-        this.generateTemplate = true
+        // this.generateTemplate = true
+        // 验证表单字段
         this.$refs['ruleForm'].validate((valid) => {
+          // 验证通过
           if (valid) {
+            /**
+             * 发送生成模板的请求
+             * @path 生成路径
+             * @fileType 所选择的文件类型
+             */
             this.$store.dispatch({
               type: 'generateExcelTemplate',
               path: this.ruleForm.path,
               fileType: this.ruleForm.fileType
             }).then(response => {
+              // 返回生成的模板的所在路径
               let path = response.path
               if (path !== '') {
                 this.$notify({
@@ -261,6 +269,13 @@
               serialNumber: this.ruleForm.serialNumber,
               fileType: this.ruleForm.fileType
             }).then(data => {
+              /**
+               *  获取导入结果反馈
+               *  @error 错误消息
+               *  @repeat 重复的导入文件
+               *  @not_found 没有找到的文件
+               *  @warn_msg 有关文件错误的消息
+               */
               if (data.error !== '') {
                 this.$notify({
                   type: 'error',
@@ -271,16 +286,20 @@
                 return false
               }
               this.imported = true
+              // 获取并设置导入结果数据，用于显示导入结果列表
+              // 未找到的文件
               for (let item in data.not_found) {
                 this.importResult.notFoundFiles.push({
                   file: data.not_found[item]
                 })
               }
+              // 重复的文件
               for (let item in data.repeat) {
                 this.importResult.repeatFiles.push({
                   file: data.repeat[item]
                 })
               }
+              // 错误消息
               for (let item in data.warn_msg) {
                 this.importResult.warnMsg.push({
                   file: data.warn_msg[item]
@@ -301,6 +320,13 @@
       },
       // 切换显示状态
       toggle (value) {
+        if (value) {
+          this.placeholder = '请选择模板生成路径'
+          this.title = '生成模板文件'
+        } else {
+          this.placeholder = '请选择模板'
+          this.title = '请选择 Excel 模板文件'
+        }
         this.generateTemplate = value
       }
     }

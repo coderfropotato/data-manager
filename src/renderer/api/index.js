@@ -8,13 +8,14 @@
 import bus from '@/assets/JS/bus'
 
 let zmq = require('zeromq')
-// const baseURL = 'tcp://10.139.17.101'
-const baseURL = 'tcp://10.139.47.111'
+const baseURL = 'tcp://10.139.17.101'
+// const baseURL = 'tcp://10.139.47.111'
 // const baseURL = 'tcp://10.139.20.203'
+// 端口号
 const PORT = 4242
 const URL = baseURL + ':' + PORT
 // 设置和服务器的延时
-const outTime = 5000
+const outTime = 8000
 let request
 let sendMessage = function (API, params) {
   if (API === '') {
@@ -61,4 +62,5 @@ let sendMessage = function (API, params) {
     })
   })
 }
+
 export default sendMessage

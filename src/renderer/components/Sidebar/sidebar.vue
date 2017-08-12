@@ -1,5 +1,6 @@
 <template>
   <div id="sidebar-root" v-loading.fullscreen.lock="fullScreenLoading">
+    <!--固定加载区域-->
     <div class="nav-menu" ref="navMenu">
       <el-col :span="24">
         <!--router 激活导航，以index为path-->
@@ -20,7 +21,7 @@
             <svg class="icon" aria-hidden="true">
               <use xlink:href="#icon-import"></use>
             </svg>
-            <!--角标，提醒文件更改数量-->
+            <!--角标，提醒文件更改数量，最大99-->
             <el-badge :value="modifiedFiles" :max="99" class="item">
               <span>文件状态</span>
             </el-badge>
@@ -36,14 +37,15 @@
     </div>
     <div class="line" ref="line"></div>
 
-    <!--根据选择加载视图-->
+    <!--根据选择加载组件-->
     <div class="middle" ref="middle">
       <div class="middle-inner" ref="middleInner">
+        <!--默认路由，和 content.vue的命名路由共同组成基本的路由管理-->
         <router-view></router-view>
       </div>
     </div>
 
-    <!--添加目录-->
+    <!--添加目录，点击打开新的窗口-->
     <div class="bottom" ref="bottom">
       <el-popover
           ref="popoverAdd"
@@ -58,10 +60,9 @@
           </el-menu-item>
         </el-menu>
       </el-popover>
-      <!--添加文件按钮 这里IDE可能会显示红色-->
+      <!--添加文件按钮，点击弹出窗口-->
       <el-button type="text" class="add" v-popover:popoverAdd>+</el-button>
-
-      <!--设置-->
+      <!--设置功能，未实现-->
       <svg class="icon" aria-hidden="true" style="display: none;">
         <use xlink:href="#icon-setting"></use>
       </svg>
@@ -78,6 +79,7 @@
     name: 'Sidebar',
     data () {
       return {
+        // 加号弹窗列表内容
         newDirList: {
           1: {
             title: '新增数据目录',
@@ -112,9 +114,11 @@
       }
     },
     computed: mapState({
+      // 更改的文件数量，文件状态的角标
       modifiedFiles: state => state.modified.modifiedNum
     }),
     mounted () {
+      // 判断目录区域是否需要滚动
       this.updateStyle()
       // 设置中间文件树区域的高度
       this.setMiddleHeight()
@@ -126,9 +130,11 @@
         this.$refs.middle.style.height = this.middleHeight + 'px'
       }, false)
 
+      // 如果请求出现错误，结束加载动画
       bus.$on('error', () => {
         this.fullScreenLoading = false
       })
+
       // 等文件树展开完成后再获取高度
       bus.$on('tree-height-changed', () => {
         setTimeout(() => {
@@ -137,8 +143,9 @@
       })
     },
     methods: {
+      // 打开新的窗口
       openNewWindow (indexPath) {
-        // 新建分类选项
+        // 新建分类选项不打开新的窗口
         if (indexPath === '/newsortdir') {
           bus.$emit('newSort')
         } else {
@@ -150,7 +157,7 @@
           })
         }
       },
-      // 更新滚动样式
+      // 更新文件目录区域滚动样式
       updateStyle () {
         if (this.$refs.middleInner.clientHeight > this.middleHeight) {
           this.$refs.middle.style.overflowY = 'overlay'
@@ -158,7 +165,7 @@
           this.$refs.middle.style.overflowY = 'hidden'
         }
       },
-      // 计算并设置中间区域的高度
+      // 计算并设置中间区域（文件目录）的高度
       setMiddleHeight () {
         this.middleHeight = window.innerHeight -
           this.$refs.navMenu.clientHeight -
@@ -169,6 +176,7 @@
       // 获取文件
       openFile () {
         this.fullScreenLoading = true
+        // 手动点击时，如果已存在数据，则不再次请求数据（其他有新数据产生的情况下，需调用action请求）
         if (this.$store.state.files.allFiles.length && Object.keys(this.$store.state.files.sortDirRowData).length) {
           this.fullScreenLoading = false
         } else {
@@ -217,10 +225,6 @@
       width: 100%;
       // 避免滚动条影响宽度，只在webkit内核中器作用
       -webkit-overflow-y: overlay;
-      // 隐藏滚动条
-      /*&::-webkit-scrollbar {*/
-      /*display: none;*/
-      /*}*/
     }
 
     .bottom {
