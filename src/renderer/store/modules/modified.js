@@ -154,6 +154,26 @@ const actions = {
     commit(types.SET_SELECTED_FILES_NUM, num)
   },
 
+  // 忽略这些文件/文件夹
+  ignoreFiles ({commit, dispatch}, files) {
+    sendMessage('ignoreFiles', {paths: files}).then(data => {
+      // 提示用户
+      if (data.info === 'success') {
+        Message({
+          message: '成功忽略',
+          type: 'success'
+        })
+        // 更新文件状态
+        dispatch('getModifiedFiles')
+      } else {
+        Message({
+          message: '请重试',
+          type: 'warning'
+        })
+      }
+    })
+  },
+
   // 更新当前节点的数据
   renewNodeData ({commit}, payload) {
     commit(types.RENEW_NODE_DATA, payload)
@@ -163,6 +183,7 @@ const actions = {
 const mutations = {
   // 获取所有的修改文件并转换成合适的格式
   [types.RECEIVE_MODIFIED_FILES] (state, files) {
+    // console.log(files)
     state.modifiedFilesTree = files
     let result = packUpModified(files)
     state.modifiedFiles = result.res

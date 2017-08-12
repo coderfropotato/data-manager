@@ -17,8 +17,8 @@
         <ul class="basic-info" v-if="showBasicInfo">
           <li>文件名: {{ basicInfo.filename }}</li>
           <!--文件夹不显示文件大小-->
-          <li v-if="basicInfo.size">文件大小：{{ basicInfo.size }}</li>
-          <li>创建时间：{{ basicInfo.ctime }}</li>
+          <li v-if="basicInfo.size">文件大小：{{ basicInfo.size | formatSize}}</li>
+          <li>创建时间：{{ basicInfo.ctime | formatDate}}</li>
         </ul>
       </div>
       <!-- 来源信息 -->
@@ -91,7 +91,7 @@
       <div class="footer">
         <el-button type="primary" size="small" @click="addNewTaggedFile">更改属性</el-button>
         <el-button size="small">自动识别</el-button>
-        <el-button size="small">忽略此文件</el-button>
+        <el-button size="small" @click="ignoreThis">忽略此文件</el-button>
         <el-button size="small" @click="ignoreNewAttribute">放弃修改</el-button>
       </div>
     </div>
@@ -289,13 +289,14 @@
         filetype: state => state.fileInfo.fileAttr.filetype,   // 即fileattr.filetype 文件类型
         taggedModifiedFiles: state => state.modified.taggedModifiedFiles,   // 已打好标签的文件列表
         serialNumber: state => state.fileInfo.serialNumber,     // 点选文件/文件夹的磁盘序列号
-        modifiedFilesTree: state => state.modified.modifiedFilesTree,   // 变更文件的文件树，直接从后台获取
+        // modifiedFilesTree: state => state.modified.modifiedFilesTree,   // 变更文件的文件树，直接从后台获取
         nodeData: state => state.modified.nodeData  // 当前点选的文件/文件夹对应的Tree组件中的Node对象
       })
     },
 
     methods: {
       ...mapActions([
+        'ignoreFiles',  // 忽略文件
         'setNodeData', // 设置当前节点信息
         'renewNodeData',    // 更新当前节点数据
         'removeTaggedFile', // 放弃修改文件/文件夹的属性
@@ -311,35 +312,6 @@
       // 用户选择不同的文件类型时，下面展示不同的属性编辑框
       getTemplate (data) {
         console.log('getTemplate with choice ', data)
-//        // 如果已缓存，直接复制显示
-//        let oldAttribute = this.taggedModifiedFiles.get(this.nodeData.path)
-//        console.log('oldAttribute', oldAttribute)
-//        if (oldAttribute) { // 已缓存
-//          if (Object.keys(oldAttribute.fileattr).length > 0){ // 如果有文件详细属性，复制过去
-//            this.currentFileattr = oldAttribute.fileattr
-//            this.currentFiletype = oldAttribute.fileattr.filetype
-//          }
-//          if (Object.keys(oldAttribute.source).length > 0) {  // 如果有文件来源信息
-//
-//          }
-//        } else {  // 没有type的话直接显示空模板
-//          switch (data) {
-//            case 'fastq':
-//              // 高能预警 要复制一份对象 否则你会哭的
-//              this.currentFileattr = JSON.parse(JSON.stringify(this.fastqTemplate))
-//              break
-//            case 'wtf' :
-//              // 高能预警 要复制一份对象 否则你会哭的
-//              this.currentFileattr = JSON.parse(JSON.stringify(this.wtfTemplate))
-//              break
-//            default:
-//              this.currentFileattr = {
-//                filetype: ''
-//              }
-//          }
-//        }
-//
-//        this.currentFiletype = this.currentFileattr.filetype
         // 先生成模板呗
         switch (data) {
           case 'fastq':
@@ -408,9 +380,7 @@
 
         // 不显示信息
         // 重置文件属性
-        this.currentFileattr = {
-          filetype: ''
-        }
+        this.currentFileattr = {}
         this.currentFiletype = ''
 
         // 重置文件来源
@@ -420,6 +390,33 @@
           principle: '',
           websites: ''
         }
+      },
+
+      // 忽略当前的文件
+      ignoreThis () {
+        let filePath = this.serialNumber + this.basicInfo.path
+        this.ignoreFiles([filePath])
+      }
+    },
+    filters: {
+      // 格式化文件大小
+      formatSize (size) {
+        if (size <= 0) {
+          return '0 bytes'
+        }
+        const abbreviations = ['bytes', 'kB', 'MB', 'GB']
+        const index = Math.floor(Math.log(size) / Math.log(1024))
+        return `${+(size / Math.pow(1024, index)).toPrecision(3)} ${abbreviations[index]}`
+      },
+      // 格式化时间，将秒转化成 XXXX/XX/XX 形式
+      formatDate (date) {
+        let d = new Date(date * 1000)
+        let month = '' + (d.getMonth() + 1)
+        let day = '' + d.getDate()
+        let year = d.getFullYear()
+        if (month.length < 2) month = '0' + month
+        if (day.length < 2) day = '0' + day
+        return [year, month, day].join('/')
       }
     }
   }
