@@ -1,5 +1,5 @@
 /*
-* 用于提供模拟数据
+* 用于提供模拟数据，
 */
 const allFiles = ['我的电脑', 'USB_154', 'Sandisk01', 'Sandisk02']
 const sortDir = [
