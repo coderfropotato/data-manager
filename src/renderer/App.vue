@@ -1,3 +1,4 @@
+<!--根组件-->
 <template>
   <div id="app">
     <!--加载index.vue组件-->

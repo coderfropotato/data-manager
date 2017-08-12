@@ -7,7 +7,7 @@
           <el-col :span="16">
             <span class="title">{{title}}</span>
           </el-col>
-          <el-col :span="8">
+          <el-col :span="8" v-if="!generateTemplate">
             <span>没有模板？</span>
             <el-button type="text" @click="toggle(true)">
               点击生成
