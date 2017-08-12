@@ -57,7 +57,7 @@
       modifiedFiles: state => state.modified.modifiedFiles,
 
       // 变更文件树
-      modifiedFilesTree: state => state.modified.modifiedFilesTree,
+      // modifiedFilesTree: state => state.modified.modifiedFilesTree,
 
       // 所有打好标记的文件
       taggedModifiedFiles: state => state.modified.taggedModifiedFiles

@@ -17,8 +17,8 @@
         <ul class="basic-info" v-if="showBasicInfo">
           <li>文件名: {{ basicInfo.filename }}</li>
           <!--文件夹不显示文件大小-->
-          <li v-if="basicInfo.size">文件大小：{{ basicInfo.size }}</li>
-          <li>创建时间：{{ basicInfo.ctime }}</li>
+          <li v-if="basicInfo.size">文件大小：{{ basicInfo.size | formatSize}}</li>
+          <li>创建时间：{{ basicInfo.ctime | formatDate}}</li>
         </ul>
       </div>
       <!-- 来源信息 -->
@@ -289,7 +289,7 @@
         filetype: state => state.fileInfo.fileAttr.filetype,   // 即fileattr.filetype 文件类型
         taggedModifiedFiles: state => state.modified.taggedModifiedFiles,   // 已打好标签的文件列表
         serialNumber: state => state.fileInfo.serialNumber,     // 点选文件/文件夹的磁盘序列号
-        modifiedFilesTree: state => state.modified.modifiedFilesTree,   // 变更文件的文件树，直接从后台获取
+        // modifiedFilesTree: state => state.modified.modifiedFilesTree,   // 变更文件的文件树，直接从后台获取
         nodeData: state => state.modified.nodeData  // 当前点选的文件/文件夹对应的Tree组件中的Node对象
       })
     },
@@ -420,6 +420,27 @@
           principle: '',
           websites: ''
         }
+      }
+    },
+    filters: {
+      // 格式化文件大小
+      formatSize (size) {
+        if (size <= 0) {
+          return '0 bytes'
+        }
+        const abbreviations = ['bytes', 'kB', 'MB', 'GB']
+        const index = Math.floor(Math.log(size) / Math.log(1024))
+        return `${+(size / Math.pow(1024, index)).toPrecision(3)} ${abbreviations[index]}`
+      },
+      // 格式化时间，将秒转化成 XXXX/XX/XX 形式
+      formatDate (date) {
+        let d = new Date(date * 1000)
+        let month = '' + (d.getMonth() + 1)
+        let day = '' + d.getDate()
+        let year = d.getFullYear()
+        if (month.length < 2) month = '0' + month
+        if (day.length < 2) day = '0' + day
+        return [year, month, day].join('/')
       }
     }
   }

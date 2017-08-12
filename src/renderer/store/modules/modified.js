@@ -163,6 +163,7 @@ const actions = {
 const mutations = {
   // 获取所有的修改文件并转换成合适的格式
   [types.RECEIVE_MODIFIED_FILES] (state, files) {
+    console.log(files)
     state.modifiedFilesTree = files
     let result = packUpModified(files)
     state.modifiedFiles = result.res
