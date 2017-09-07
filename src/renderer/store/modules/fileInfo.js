@@ -2,14 +2,14 @@
  * 管理单个文件的基本信息，用于右侧文件详情显示
  */
 
-import sendMessage from '@/api'
+import fetchData from '@/api'
 import * as types from '@/store/mutation-types'
 
 const state = {
   show: false,
 
   // 是否是文件夹
-  isdir: false,
+  isDir: false,
 
   // 磁盘序列号
   serialNumber: '',
@@ -33,19 +33,31 @@ const state = {
   }
 }
 
+const getters = {
+  show: state => state.show,
+  isDir: state => state.isDir,
+  serialNumber: state => state.serialNumber,
+  basicInfo: state => state.basicInfo,
+  sourceInfo: state => state.sourceInfo,
+  customize: state => state.customize,
+  fileAttr: state => state.fileAttr,
+  fileType: state => state.fileAttr.filetype,
+  organization: state => state.organization
+}
+
 const actions = {
   // 获取文件详情
   getFileInfo ({commit}, payload) {
     let path = payload.path
     let serialNumber = payload.serialNumber
-    sendMessage('getFileInfo', {path, serialNumber}).then(data => {
+    fetchData('getFileInfo', {path, serialNumber}).then(data => {
       commit(types.RECEIVE_FILE_DETAIL, data.info)
     })
   },
 
   // 获取文件的所属分类
   getFileSort ({commit}, path, volumeId) {
-    sendMessage('getFileSort', {}).then(data => {
+    fetchData('getFileSort', {}).then(data => {
       commit(types.SET_FILE_SORTS, data)
     })
   }
@@ -59,7 +71,7 @@ const mutations = {
     state.customize = detail.customize
     state.fileAttr = detail.fileattr
     state.serialNumber = detail.serial_number
-    state.isdir = detail.isdir
+    state.isDir = detail.isdir
   },
 
   // 显示文件信息区
@@ -75,6 +87,7 @@ const mutations = {
 
 export default {
   state,
+  getters,
   actions,
   mutations
 }

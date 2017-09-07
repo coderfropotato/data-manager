@@ -2,56 +2,31 @@
  * 管理单个文件的基本信息，用于右侧文件详情显示
  */
 
-import sendMessage from '@/api'
+import fetchData from '@/api'
 import * as types from '@/store/mutation-types'
 import {Message} from 'element-ui'
 // import * as object from '@/api/data'
-
-const conditionMap = {
-  'year': '年份',
-  'type': '数据源',
-  'private': '私有数据',
-  'public': '共有数据',
-  'share': '共享数据',
-  'filetype': '文件类型',
-  'websites': '网站',
-  'id': '样本编号',
-  'name': '样本名',
-  'organism': '物种',
-  'strain': '品种',
-  'tissue': '组织',
-  'sex': '性别',
-  'age': '年龄',
-  'development_stage': '发育阶段',
-  'breeding_history': '育种史',
-  'biomaterial_provider': '材料提供者',
-  'geographic_location': '地理位置',
-  'treatment': '处理方式',
-  'replicate': '生物学重复',
-  'generation': '世代',
-  'instrument': '测序平台',
-  'strategy': '建库策略',
-  'read_length': '读长',
-  'source': '组学分类',
-  'selection': '模版类型',
-  'layout': '单/双端',
-  'serial_number': '磁盘序列号'
-}
-
 const state = {
   newDiskDirInfo: [],
-  newSortDirInfo: [],
+  newCategoryDirInfo: [],
   smartSort: [[]],
-  searchConditions: [],
   sortOrder: [],
   tableName: ''
+}
+
+const getters = {
+  newDiskDirInfo: state => state.newDiskDirInfo,
+  newCategoryDirInfo: state => state.newCategoryDirInfo,
+  smartSort: state => state.smartSort,
+  sortOrder: state => state.sortOrder,
+  tableName: state => state.tableName
 }
 
 const actions = {
   // 判断磁盘目录能否被管理
   judgeNewDiskDir ({commit}, payload) {
     return new Promise((resolve, reject) => {
-      sendMessage('judgeNewDiskDir', {
+      fetchData('judgeNewDiskDir', {
         path: payload.path,
         ip: payload.host
       }).then(data => {
@@ -82,14 +57,14 @@ const actions = {
           source: {}
         })
       }
-      sendMessage('addDiskDir', data).then(data => {
+      fetchData('addDiskDir', data).then(data => {
         resolve(data.status)
       })
     })
   },
 
   sendNewSortInfo ({commit}, path) {
-    sendMessage('', {path}).then(status => {
+    fetchData('', {path}).then(status => {
     })
   },
 
@@ -102,7 +77,7 @@ const actions = {
       let limitedCondition = temp.limitedCondition
       let selectedCondition = temp.selectedCondition
       // 这里应该返回一个true或者false
-      sendMessage('setNewSmartSort', {tableName, context, limitedCondition, selectedCondition}).then(data => {
+      fetchData('setNewSmartSort', {tableName, context, limitedCondition, selectedCondition}).then(data => {
         resolve(1)
         commit(types.ADD_SMART_SORT, data)
       })
@@ -113,7 +88,7 @@ const actions = {
   // showSmartSortList ({commit}) {
   //   // 这里返回的data应该是所有智能视图的名字的数组
   //   return new Promise((resolve, reject) => {
-  //     sendMessage('showSmartSortList', {}).then(data => {
+  //     fetchData('showSmartSortList', {}).then(data => {
   //       resolve()
   //       commit(types.SHOW_SMART_SORT_LIST, data)
   //     })
@@ -124,21 +99,10 @@ const actions = {
   showSmartSort ({commit}, payload) {
     let tableName = payload.tableName
     let select = payload.select
-    sendMessage('showSmartSort', {tableName, select}).then(data => {
+    fetchData('showSmartSort', {tableName, select}).then(data => {
       commit(types.SHOW_SMART_SORT, data)
     })
     // commit(types.SHOW_SMART_SORT)
-  },
-  getSearchConditions ({commit}) {
-    // sendMessage('getSearchConditions', {}).then(data => {
-    //   commit(types.GET_SEARCH_CONDITIONS, data)
-    return new Promise((resolve, reject) => {
-      sendMessage('getSearchConditions', {}).then(data => {
-        resolve()
-        commit(types.GET_SEARCH_CONDITIONS, data)
-      })
-    })
-    // commit(types.GET_SEARCH_CONDITIONS)
   }
 }
 
@@ -150,7 +114,7 @@ const mutations = {
 
   // 新增分类文件信息
   [types.SET_NEW_SORT_DIR_INFO] (state, newDirInfo) {
-    state.newSortDirInfo.push(newDirInfo)
+    state.newCategoryDirInfo.push(newDirInfo)
   },
 
   // 新增智能视图
@@ -187,29 +151,6 @@ const mutations = {
     state.smartSort = [[]]
   },
 
-  [types.GET_SEARCH_CONDITIONS] (state, response) {
-    // let data = object.searchConditions
-    let data = response.searchConditions
-    // 对数据进行中英文映射处理
-    for (let item in data) {
-      // 选项条目名 是中文
-      let options = ''
-      // option是英文
-      let option = ''
-      for (option in data[item]) {
-        options = conditionMap[option]
-      }
-      let condition = {
-        // 选项名
-        label: options,
-        // 原选项英文值
-        name: option,
-        // 原选项条目英文值
-        value: data[item][option]
-      }
-      state.searchConditions.push(condition)
-    }
-  },
   [types.DELETE_LIST] (state, payload) {
     let from = payload.from
     let deleteLength = payload.deleteLength
@@ -219,6 +160,7 @@ const mutations = {
 
 export default {
   state,
+  getters,
   actions,
   mutations
 }

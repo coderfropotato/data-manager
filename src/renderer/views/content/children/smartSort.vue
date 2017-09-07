@@ -25,7 +25,7 @@
 </template>
 <script>
 //  import $ from 'jquery'
-  import {mapState} from 'vuex'
+  import {mapGetters} from 'vuex'
   export default {
     data () {
       return {
@@ -34,11 +34,11 @@
         index: 0
       }
     },
-    computed: mapState({
-      smartSort: state => state.newDirectory.smartSort,
-      sortOrder: state => state.newDirectory.sortOrder,
-      tableName: state => state.newDirectory.tableName
-    }),
+    computed: mapGetters([
+      'smartSort',
+      'sortOrder',
+      'tableName'
+    ]),
     methods: {
       addSelect (index, list) {
 //        console.log(index)

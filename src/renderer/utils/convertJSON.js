@@ -10,10 +10,10 @@ function packup (files, res, path, countObj) {
     }
     // 文件
     if (files[item].hasOwnProperty('__info__') && Object.keys(files[item]).length === 1) {
-      res.push({ label: item, path: path + '/' + item, status: files[item]['__info__']['status'], isdir: false })
+      res.push({ label: item, path: path + '/' + item, status: files[item]['__info__']['status'], isDir: false })
       countObj.count++
     } else { // 文件夹
-      res.push({ label: item, path: path + '/' + item, disabled: true, isdir: true, children: [] })
+      res.push({ label: item, path: path + '/' + item, disabled: true, isDir: true, children: [] })
       // 如果该文件夹也有修改信息
       if (files[item].hasOwnProperty('__info__')) {
         res[res.length - 1].status = files[item]['__info__']['status']
@@ -44,7 +44,7 @@ function packUpModified (modified) {
       let folderAlias = modified[disk][folder]['__info__']['alias']
       // 添加顶层文件信息
       // disable该节点
-      res[res.length - 1].children.push({ label: folderAlias, path: serialNumber + rootPath, disabled: true, isdir: true, children: [] })
+      res[res.length - 1].children.push({ label: folderAlias, path: serialNumber + rootPath, disabled: true, isDir: true, children: [] })
       // 递归添加该文件树信息
       packup(modified[disk][folder], res[res.length - 1].children[res[res.length - 1].children.length - 1].children, serialNumber + rootPath, countObj)
     }

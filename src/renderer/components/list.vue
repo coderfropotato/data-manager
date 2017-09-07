@@ -3,7 +3,7 @@
     <div class="list-root-inner" ref="ListRootInner">
       <div class="lists-display" v-if="status === 'Lists'">
         <div class="list-items">
-          <div class="list-item" v-for="(item,index) in filesData" :key="index" @click="showFileInfo(item)">
+          <div class="list-item" v-for="(item,index) in listData" :key="index" @click="showFileInfo(item)">
             <div class="file-name">
               <el-tooltip :content="item.basic.filename" placement="right-start" :open-delay="2000">
                 <span>{{item.basic.filename | formatName(10)}}</span>
@@ -25,7 +25,7 @@
       </div>
       <div class="columns-display" v-if="status === 'Columns'">
         <el-table
-            :data="filesData"
+            :data="listData"
             highlight-current-row
             style="width: 100%;"
             @row-click="showFileInfo">
@@ -69,7 +69,7 @@
       <div class="grid-display" v-if="status === 'Grid'">
         <div class="grid-items">
           <el-row :gutter="20">
-            <el-col :span="6" v-for="(item,index) in filesData" :key="index">
+            <el-col :span="6" v-for="(item,index) in listData" :key="index">
               <!--TODO：添加编辑按钮-->
               <div class="grid-item" @click="showFileInfo(item)">
                 <svg class="icon" aria-hidden="true">
@@ -94,10 +94,35 @@
   </div>
 </template>
 <script>
-  import {mapState} from 'vuex'
-  import bus from '@/assets/JS/bus'
+  import {mapGetters} from 'vuex'
+  import bus from '@/utils/bus'
 
   export default {
+    name: 'List',
+    props: {
+      listData: {
+        type: Array,
+        default () {
+          return []
+        }
+      },
+      // 操作选项
+      operation: {
+        type: Object,
+        default () {
+          return {
+            text: '编辑',
+            event: () => {
+            }
+          }
+        },
+        validator (value) {
+          if (value.text && value.event) {
+            return true
+          }
+        }
+      }
+    },
     data () {
       return {
         // 记录拖入与拖出的次数
@@ -110,14 +135,11 @@
         lastPosition: 0
       }
     },
-    computed: mapState({
-      filesData: state => state.files.currentFileList,
-      // 当前路径， 导航面包屑
-      currentPath: state => state.files.currentPath,
+    computed: mapGetters({
       // 文件展示状态 list/column/grid
-      status: state => state.showControl.listDisplayStatus,
+      status: 'listDisplayStatus',
       // 是否显示拖拽导入文件提示
-      dragFiles: state => state.showControl.dragShow
+      dragFiles: 'dragShow'
     }),
     mounted () {
       // 监听列表区拖拽，有拖入则显示导入提示，拖出则隐藏提示
@@ -144,7 +166,7 @@
       this.dragEvent()
     },
     watch: {
-      filesData () {
+      listData () {
         this.$nextTick(() => {
           setTimeout(() => {
             bus.$emit('loading-end')
@@ -166,7 +188,7 @@
           return name.length > maxLength ? name.substr(0, maxLength - 1) + '...' : name
         }
       },
-      // 格式化文件大小，将
+      // 格式化文件大小，最近格式为相应的单位
       formatSize (size) {
         if (size <= 0) {
           return '0 bytes'
@@ -226,6 +248,8 @@
           }, minScrollTime)
         }
       },
+
+      // 点击文件，显示文件信息
       showFileInfo (file) {
         // 获取文件的具体信息
         this.$store.dispatch({
@@ -284,6 +308,10 @@
           e.dataTransfer.dragEffect = 'copy'
         }, false)
         dragZone.addEventListener('drop', this.dropHandler, false)
+      },
+
+      // 编辑事件
+      editEvent () {
       }
     }
   }

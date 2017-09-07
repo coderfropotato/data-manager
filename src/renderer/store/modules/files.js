@@ -2,10 +2,10 @@
  * 管理后台传送的文件分类
  * 即侧边栏的所有文件夹中的文件
  */
-import sendMessage from '@/api'
+import fetchData from '@/api'
 import * as types from '@/store/mutation-types'
 // 引入文件树数据处理函数
-import travelTree from '@/assets/JS/handleSortTreeData'
+import travelTree from '@/utils/handleSortTreeData'
 
 const state = {
   // 记录当前选择的文件
@@ -35,13 +35,26 @@ const state = {
   node: {}
 }
 
+const getters = {
+  currentFile: state => state.currentFile,
+  allFiles: state => state.allFiles,
+  currentFileList: state => state.currentFileList,
+  currentDiskDirTree: state => state.currentDiskDirTree,
+  currentPath: state => state.currentPath,
+  smartSortList: state => state.smartSortList,
+  sortDirRowData: state => state.sortDirRowData,
+  sortFileTree: state => state.sortFileTree,
+  cacheDir: state => state.cacheDir,
+  trash: state => state.trash,
+  ignore: state => state.ignore
+}
+
 const actions = {
   // 打开文件选项
   openFile ({commit}) {
     return new Promise((resolve, reject) => {
-      sendMessage('openFile', {}).then(data => {
+      fetchData('openFile', {}).then(data => {
         resolve(1)
-        console.log(data)
         commit(types.OPEN_FILE, data)
       })
     })
@@ -49,7 +62,7 @@ const actions = {
 
   // 获取磁盘（包含我的电脑）文件树
   getDiskFileTree ({commit}, serialNumber) {
-    sendMessage('getFileTree', {serialNumber}).then(data => {
+    fetchData('getFileTree', {serialNumber}).then(data => {
       commit({
         type: types.SET_DISK_FILE_TREE,
         serialNumber,
@@ -61,7 +74,7 @@ const actions = {
   // 获取文件列表
   getSortFileList ({commit}, payload) {
     return new Promise((resolve, reject) => {
-      sendMessage('getSortFileList', {
+      fetchData('getSortFileList', {
         path: payload.lastPath,
         page: payload.page,
         size: payload.size
@@ -77,14 +90,14 @@ const actions = {
 
   // 获取回收站
   getTrash ({commit}) {
-    sendMessage('getTrash', {}).then(data => {
+    fetchData('getTrash', {}).then(data => {
       commit(types.SET_TRASH, data.trash)
     })
   },
 
   // 获取忽略文件
   getIgnore ({commit}) {
-    sendMessage('getIgnore', {}).then(data => {
+    fetchData('getIgnore', {}).then(data => {
       commit(types.SET_IGNORE, data.ignore)
     })
   },
@@ -190,6 +203,7 @@ const mutations = {
 
 export default {
   state,
+  getters,
   actions,
   mutations
 }

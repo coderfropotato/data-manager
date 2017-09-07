@@ -21,16 +21,16 @@
   </div>
 </template>
 <script>
-  import {mapState} from 'vuex'
-  import bus from '@/assets/JS/bus'
+  import {mapGetters} from 'vuex'
+  import bus from '@/utils/bus'
   export default {
     name: 'DiskDirectory',
     data () {
       return {
       }
     },
-    computed: mapState({
-      displayData: state => state.files.ignore
+    computed: mapGetters({
+      displayData: 'ignore'
     }),
     watch: {
       displayData () {

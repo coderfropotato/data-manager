@@ -1,12 +1,13 @@
 // 公共样式
 html,
 body{
+  font-size: 62.5%;
   height: 100%;
   overflow: hidden;
 }
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  font-size: 16px;
+  font-size: 1.6rem;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: left;

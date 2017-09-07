@@ -5,13 +5,13 @@
       <el-col :span="24">
         <!--router 激活导航，以index为path-->
         <el-menu class="menu" router>
-          <el-menu-item index="/files/list" @click="openFile">
+          <el-menu-item index="/files" @click="openFile">
             <svg class="icon" aria-hidden="true">
               <use xlink:href="#icon-zhuye"></use>
             </svg>
             <span>文件</span>
           </el-menu-item>
-          <el-menu-item index="/search">
+          <el-menu-item index="/search?type=search">
             <svg class="icon" aria-hidden="true">
               <use xlink:href="#icon-sousuo"></use>
             </svg>
@@ -35,12 +35,13 @@
         </el-menu>
       </el-col>
     </div>
+
     <div class="line" ref="line"></div>
 
     <!--根据选择加载组件-->
     <div class="middle" ref="middle">
       <div class="middle-inner" ref="middleInner">
-        <!--默认路由，和 content.vue的命名路由共同组成基本的路由管理-->
+        <!--默认路由，和 content.vue 的命名路由共同组成基本的路由管理-->
         <router-view></router-view>
       </div>
     </div>
@@ -62,7 +63,7 @@
       </el-popover>
       <!--添加文件按钮，点击弹出窗口-->
       <el-button type="text" class="add" v-popover:popoverAdd>+</el-button>
-      <!--设置功能，未实现-->
+      <!-- TODO 设置功能，未实现-->
       <svg class="icon" aria-hidden="true" style="display: none;">
         <use xlink:href="#icon-setting"></use>
       </svg>
@@ -72,8 +73,8 @@
 
 <script>
   import {ipcRenderer} from 'electron'
-  import bus from '@/assets/JS/bus'
-  import {mapState} from 'vuex'
+  import bus from '@/utils/bus'
+  import {mapGetters} from 'vuex'
 
   export default {
     name: 'Sidebar',
@@ -87,7 +88,7 @@
           },
           2: {
             title: '新增分类',
-            url: '/newsortdir'
+            url: '/newcategorydir'
           },
           3: {
             title: '新增智能分类',
@@ -113,9 +114,9 @@
         fullScreenLoading: false
       }
     },
-    computed: mapState({
+    computed: mapGetters({
       // 更改的文件数量，文件状态的角标
-      modifiedFiles: state => state.modified.modifiedNum
+      modifiedFiles: 'modifiedNum'
     }),
     mounted () {
       // 判断目录区域是否需要滚动
@@ -146,8 +147,8 @@
       // 打开新的窗口
       openNewWindow (indexPath) {
         // 新建分类选项不打开新的窗口
-        if (indexPath === '/newsortdir') {
-          bus.$emit('newSort')
+        if (indexPath === '/newcategorydir') {
+          bus.$emit('newCategory')
         } else {
           // 嵌套路由
           let url = '/newfile' + indexPath
@@ -175,7 +176,7 @@
       },
       // 获取文件
       openFile () {
-        this.fullScreenLoading = true
+        // this.fullScreenLoading = true
         // 手动点击时，如果已存在数据，则不再次请求数据（其他有新数据产生的情况下，需调用action请求）
         if (this.$store.state.files.allFiles.length && Object.keys(this.$store.state.files.sortDirRowData).length) {
           this.fullScreenLoading = false

@@ -56,7 +56,7 @@
   </div>
 </template>
 <script>
-  import scrollBar from '../../assets/JS/headerScrollbar'
+  import scrollBar from '@/utils/headerScrollbar'
   import {mapState} from 'vuex'
 
   export default {

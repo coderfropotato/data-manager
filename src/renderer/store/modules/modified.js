@@ -1,13 +1,13 @@
 /*
  * 文件状态功能
  */
-import sendMessage from '@/api'
+import fetchData from '@/api'
 import * as types from '@/store/mutation-types'
-import packUpModified from '@/assets/JS/convertJSON'
+import packUpModified from '@/utils/convertJSON'
 import { Message } from 'element-ui'
 
 // 给node底下的所有子节点都打上标签
-// isdir=true时，只能更改来源属性，不能重置其他属性,isdir=false时，直接赋值即可
+// isDir=true时，只能更改来源属性，不能重置其他属性,isDir=false时，直接赋值即可
 function tagYouAll (state, node, newAttributes, onlySourceInfo) {
   // console.log(node)
   if (node.hasOwnProperty('status')) {
@@ -15,7 +15,7 @@ function tagYouAll (state, node, newAttributes, onlySourceInfo) {
     node.status = node.status + '*' + 'tagged'
 
     // 更新数据状态
-    if (node.isdir) { // 如果被打标签的是文件夹
+    if (node.isDir) { // 如果被打标签的是文件夹
       if (!onlySourceInfo) {  // 怎么可能传过来文件信息呢，are you 弄啥嘞
         console.log('exo me????')
       } else {  // 用户给上层文件夹打标签，下层文件夹要接收到信息，此时直接赋值即可
@@ -85,11 +85,24 @@ const state = {
   activeModifiedFile: '' // 当前正在进行编辑的文件路径
 }
 
+const getters = {
+  modifiedFiles: state => state.modifiedFiles,
+  modifiedFilesTree: state => state.modifiedFilesTree,
+  showFileStatusAside: state => state.showFileStatusAside,
+  taggedModifiedFiles: state => state.taggedModifiedFiles,
+  modifiedNum: state => state.modifiedNum,
+  nodeData: state => state.nodeData,
+  selectedModifiedFiles: state => state.selectedModifiedFiles,
+  selectedFilesNum: state => state.selectedFilesNum,
+  showMode: state => state.showMode,
+  activeModifiedFile: state => state.activeModifiedFile
+}
+
 const actions = {
   // 更新文件信息
   updateFileInfo ({commit, dispatch}, updateList) {
     console.log('sending.......', updateList)
-    sendMessage('updateAttribute', {updateList: updateList}).then(data => {
+    fetchData('updateAttribute', {updateList: updateList}).then(data => {
       // 提示用户
       if (data.info === 'success') {
         Message({
@@ -112,7 +125,7 @@ const actions = {
   getModifiedFiles ({commit}) {
     // 获取更改文件后返回
     return new Promise((resolve, reject) => {
-      sendMessage('getModifiedFiles', {}).then((data) => {
+      fetchData('getModifiedFiles', {}).then((data) => {
         if (data.isModified) {
           resolve(true)
           commit(types.RECEIVE_MODIFIED_FILES, data.tree)
@@ -156,7 +169,7 @@ const actions = {
 
   // 忽略这些文件/文件夹
   ignoreFiles ({commit, dispatch}, files) {
-    sendMessage('ignoreFiles', {paths: files}).then(data => {
+    fetchData('ignoreFiles', {paths: files}).then(data => {
       // 提示用户
       if (data.info === 'success') {
         Message({
@@ -230,6 +243,7 @@ const mutations = {
 
 export default {
   state,
+  getters,
   actions,
   mutations
 }

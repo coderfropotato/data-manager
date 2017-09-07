@@ -56,7 +56,7 @@
   </div>
 </template>
 <script>
-  import scrollBar from '../../assets/JS/searchScrollbar'
+  import scrollBar from '@/utils/searchScrollbar'
 
   export default {
     name: 'FileHeader',

@@ -23,9 +23,9 @@
   </div>
 </template>
 <script>
-  import {mapState} from 'vuex'
-  import scrollBar from '../../assets/JS/headerScrollbar'
-  import bus from '@/assets/JS/bus'
+  import {mapGetters} from 'vuex'
+  import scrollBar from '@/utils/headerScrollbar'
+  import bus from '@/utils/bus'
 
   export default {
     name: 'DiskDirectory',
@@ -38,9 +38,9 @@
         historyMap: new Map()
       }
     },
-    computed: mapState({
-      rowDirData: state => state.files.currentDiskDirTree,
-      currentPath: state => state.files.currentPath
+    computed: mapGetters({
+      rowDirData: 'currentDiskDirTree',
+      currentPath: 'currentPath'
     }),
     watch: {
       rowDirData () {

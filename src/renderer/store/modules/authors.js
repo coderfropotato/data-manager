@@ -1,13 +1,18 @@
 // 点击具体的年份，获取当前年份下所有创建文件夹的作者
-// import sendMessage from '@/api'
+// import fetchData from '@/api'
 import * as types from '@/store/mutation-types'
 import authors from '@/api/data'
 const state = {
   authors: []
 }
+
+const getters = {
+  authors: state => state.authors
+}
+
 const actions = {
   getAuthors ({commit}) {
-    // sendMessage('getAuthors',{}).then(data => {
+    // fetchData('getAuthors',{}).then(data => {
     //   commit(types.GET_AUTHORS,data)
     // })
     let data = authors
@@ -24,6 +29,7 @@ const mutations = {
 
 export default {
   state,
+  getters,
   actions,
   mutations
 }

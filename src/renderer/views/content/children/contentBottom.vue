@@ -5,7 +5,7 @@
   </div>
 </template>
 <script>
-  import bus from '@/assets/JS/bus'
+  import bus from '@/utils/bus'
 
   export default {
     data () {

@@ -1,14 +1,14 @@
 <!--根组件-->
 <template>
   <div id="app">
-    <!--加载index.vue组件-->
+    <!--加载 index.vue 组件或首页-->
     <router-view></router-view>
   </div>
 </template>
 <script>
   import './api/database'
   import {ipcRenderer} from 'electron'
-  import bus from '@/assets/JS/bus'
+  // import bus from '@/utils/bus'
 
   export default {
     name: 'data-manager-desktop',
@@ -34,14 +34,14 @@
         })
       })
       // 接受与后台交互的 API 的错误提示
-      bus.$on('error', () => {
-        bus.$emit('loading-end')
-        this.$notify({
-          type: 'error',
-          message: '数据读取错误，请重试或尝试重启软件',
-          duration: 0
-        })
-      })
+//      bus.$on('error', () => {
+//        bus.$emit('loading-end')
+//        this.$notify({
+//          type: 'error',
+//          message: '数据读取错误，请重试或尝试重启软件',
+//          duration: 0
+//        })
+//      })
       /*
        * 通过主进程在窗口之间传递数据
        * @state 说明 action/mutation 调用方式和接口

@@ -9,6 +9,13 @@ const state = {
   dragShow: false
 }
 
+const getters = {
+  Content: state => state.Content,
+  FileInfo: state => state.FileInfo,
+  listDisplayStatus: state => state.listDisplayStatus,
+  dragShow: state => state.dragShow
+}
+
 const mutations = {
   [types.SET_FILE_DISPLAY_STATUS] (state, status) {
     state.listDisplayStatus = status
@@ -20,5 +27,6 @@ const mutations = {
 
 export default {
   state,
+  getters,
   mutations
 }

@@ -1,7 +1,7 @@
 /*
  * 文件状态功能
  */
-import sendMessage from '@/api'
+import fetchData from '@/api'
 import * as types from '@/store/mutation-types'
 
 const conditionMap = {
@@ -32,15 +32,23 @@ const conditionMap = {
 }
 
 const state = {
+  searchResults: [],
   searchConditions: [],
   searchPositions: []
 }
 
+const getters = {
+  searchResults: state => state.searchResults,
+  searchConditions: state => state.searchConditions,
+  searchPositions: state => state.searchPositions
+}
+
 const actions = {
   // 获取搜索条件
-  getSearchConditionMap ({commit}) {
+  getSearchConditions ({commit}) {
     return new Promise((resolve, reject) => {
-      sendMessage('getSearchConditions').then(data => {
+      fetchData('getSearchConditions').then(data => {
+        resolve()
         commit('handleConditionMap', data)
       })
     })
@@ -49,7 +57,7 @@ const actions = {
   getSearchResult ({commit}, value) {
     // TODO 添加搜索范围
     return new Promise((resolve, reject) => {
-      sendMessage('searchContext', value).then((data) => {
+      fetchData('searchContext', value).then((data) => {
         console.log(data)
       })
     })
@@ -64,8 +72,6 @@ const mutations = {
 
   // 处理后台返回的可供用户选择的搜索条件
   [types.HANDLE_SEARCH_CONDITION_MAP] (state, data) {
-    console.log(data)
-
     // 对数据进行中英文映射处理
     for (let item in data) {
       // 选项条目名
@@ -89,6 +95,7 @@ const mutations = {
 
 export default {
   state,
+  getters,
   actions,
   mutations
 }

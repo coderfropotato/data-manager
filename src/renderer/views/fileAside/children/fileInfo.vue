@@ -36,7 +36,7 @@
             <div class="sort-tree">
               <el-tree
                   node-key="id"
-                  :data="popoverTreeData"
+                  :data="sortFileTree"
                   show-checkbox
                   ref="sortTree"
                   check-strictly
@@ -64,7 +64,7 @@
   </div>
 </template>
 <script>
-  import {mapState} from 'vuex'
+  import {mapGetters} from 'vuex'
 
   let tempData = ['1/1.txt/', '1/2.2/3.2/', '1/2.4/3/', '1/2.txt/']
   let tempSort = []
@@ -78,13 +78,13 @@
         tempData
       }
     },
-    computed: mapState({
-      show: state => state.fileInfo.show,
-      basicInfo: state => state.fileInfo.basicInfo,
-      otherInfo: state => state.fileInfo.otherInfo,
-      popoverTreeData: state => state.files.sortFileTree
+    computed: mapGetters([
+      'show',
+      'basicInfo',
+      'otherInfo',
+      'sortFileTree'
       // sorts: state => state.fileInfo.fileSorts
-    }),
+    ]),
     watch: {
       show () {
         for (let node in tempData) {

@@ -55,7 +55,7 @@
         </ul>
       </div>
       <!-- 文件属性 -->
-      <div class="file-info" v-if="!isdir">
+      <div class="file-info" v-if="!isDir">
         <h2>文件属性
           <el-button type="primary" v-if="showFileInfo" @click="showFileInfo = !showFileInfo">收起</el-button>
           <el-button type="primary" v-if="!showFileInfo" @click="showFileInfo = !showFileInfo">展开</el-button>
@@ -104,7 +104,7 @@
 </template>
 
 <script>
-  import { mapState, mapActions } from 'vuex'
+  import { mapGetters, mapActions } from 'vuex'
 
   export default {
     name: 'FileStatusAside',
@@ -250,7 +250,7 @@
         if (this.taggedModifiedFiles.get(this.nodeData.path)) {
           let infos = this.taggedModifiedFiles.get(this.nodeData.path)
           // 文件才有下面的属性
-          if (!this.isdir) {  // 只有文件夹有fileattr属性
+          if (!this.isDir) {  // 只有文件夹有fileattr属性
             // 填充文件属性部分
             this.currentFileattr = infos.fileattr
             this.currentFiletype = infos.fileattr.filetype
@@ -260,9 +260,9 @@
           this.currentSourceInfo.project = infos.source.project ? infos.source.project : ''
           this.currentSourceInfo.principle = infos.source.principle ? infos.source.principle : ''
           this.currentSourceInfo.websites = infos.source.websites ? infos.source.websites : ''
-        } else if (this.sourceInfo.type || (!this.isdir && this.fileAttr.filetype)) {    // step3 如果后台存在数据，说明该文件存在过，要把原来的信息展示出来，此时把后台存有的数据存到this.currentFileattr中
+        } else if (this.sourceInfo.type || (!this.isDir && this.fileAttr.filetype)) {    // step3 如果后台存在数据，说明该文件存在过，要把原来的信息展示出来，此时把后台存有的数据存到this.currentFileattr中
           // 填充文件属性部分
-          if (!this.isdir && this.fileAttr.filetype) {
+          if (!this.isDir && this.fileAttr.filetype) {
             this.currentFileattr = this.fileAttr
             this.currentFiletype = this.currentFileattr.filetype
           }
@@ -278,20 +278,20 @@
     },
 
     computed: {
-      ...mapState({
-        isdir: state => state.fileInfo.isdir, // 当前展示的文件是否是文件夹
-        selectedFilesNum: state => state.modified.selectedFilesNum, // 中间选中的文件数目
-        showMode: state => state.modified.showMode, // 是否是展示文件信息，true时展示文件/文件夹属性，false展示选中了多少文件等属性
-        showFileStatusAside: state => state.modified.showFileStatusAside,    // 是否展示右侧文件详情栏
-        basicInfo: state => state.fileInfo.basicInfo,  // 文件基本信息
-        sourceInfo: state => state.fileInfo.sourceInfo, // 文件来源信息
-        fileAttr: state => state.fileInfo.fileAttr,  // 文件详细信息
-        filetype: state => state.fileInfo.fileAttr.filetype,   // 即fileattr.filetype 文件类型
-        taggedModifiedFiles: state => state.modified.taggedModifiedFiles,   // 已打好标签的文件列表
-        serialNumber: state => state.fileInfo.serialNumber,     // 点选文件/文件夹的磁盘序列号
+      ...mapGetters([
+        'isDir', // 当前展示的文件是否是文件夹
+        'selectedFilesNum', // 中间选中的文件数目
+        'showMode', // 是否是展示文件信息，true时展示文件/文件夹属性，false展示选中了多少文件等属性
+        'showFileStatusAside',    // 是否展示右侧文件详情栏
+        'basicInfo',  // 文件基本信息
+        'sourceInfo', // 文件来源信息
+        'fileAttr',  // 文件详细信息
+        'fileType',   // 即fileattr.filetype 文件类型
+        'taggedModifiedFiles',   // 已打好标签的文件列表
+        'serialNumber',     // 点选文件/文件夹的磁盘序列号
         // modifiedFilesTree: state => state.modified.modifiedFilesTree,   // 变更文件的文件树，直接从后台获取
-        nodeData: state => state.modified.nodeData  // 当前点选的文件/文件夹对应的Tree组件中的Node对象
-      })
+        'nodeData' // 当前点选的文件/文件夹对应的Tree组件中的Node对象
+      ])
     },
 
     methods: {
@@ -365,11 +365,11 @@
         let newAttributes = {fileattr: this.currentFileattr, source: this.currentSourceInfo}
 
         // 为文件夹打标签的话不会有fileattr属性
-        if (this.isdir) {
+        if (this.isDir) {
           delete newAttributes.fileattr
         }
         // 更改中间的状态提示
-        this.renewNodeData({newAttributes: newAttributes, onlySourceInfo: this.isdir})
+        this.renewNodeData({newAttributes: newAttributes, onlySourceInfo: this.isDir})
         console.log(this.taggedModifiedFiles)
       },
 

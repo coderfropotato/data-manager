@@ -1,32 +1,40 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-// 加载根组件
-import Index from '@/components/index'
-// 加载路由模块
-/*
- * LoadContent 模块管理 sidebar 和 content 的命名路由视图
- * sidebar 为默认的路由视图，content 为命名路由视图
- */
-
-import LoadContent from './loadContent'
-import NewFile from './newDirectory'
+// 新建文件夹的路由不属于 index 的自路由，需要单独引入
+import newDirRoute from './newDirectory'
 
 Vue.use(Router)
+
+// 加载根组件
+const Index = r => require.ensure([], () => r(require('@/views/index')), 'index')
+// 其他路由模块
+const routeModules = require.context('.', false, /\.js$/)
+let childrenRoutes = []
+
+routeModules.keys().forEach(key => {
+  if (key === './index.js' || key === './newDirectory.js') {
+    return
+  }
+  childrenRoutes = childrenRoutes.concat(routeModules(key).default)
+})
 
 const baseRoutes = [
   {
     path: '/',
     name: 'Index',
-    component: Index,
-    children: LoadContent
+    components: {
+      default: Index
+    },
+    children: childrenRoutes
   },
   {
     path: '*',
     redirect: '/'
   }
 ]
-// 合并其他路由模块
-let routes = baseRoutes.concat(NewFile)
+
+// 附加路由
+let routes = baseRoutes.concat(newDirRoute)
 
 export default new Router({
   routes

@@ -1,15 +1,12 @@
 <template>
   <div id="content-root">
     <router-view name="ContentHeader"></router-view>
-    <router-view name="ContentMiddle"></router-view>
     <router-view name="ContentBottom"></router-view>
   </div>
 </template>
 <script>
   export default {
-    name: 'Content',
-    mounted () {
-    }
+    name: 'Content'
   }
 </script>
 <style lang="scss">

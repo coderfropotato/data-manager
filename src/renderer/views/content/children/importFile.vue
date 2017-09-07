@@ -57,7 +57,7 @@
 </template>
 <script>
   import {ipcRenderer} from 'electron'
-  import {mapState} from 'vuex'
+  import {mapGetters} from 'vuex'
   import fs from 'fs'
 
   export default {
@@ -67,9 +67,9 @@
         importFiles: []
       }
     },
-    computed: mapState({
-      importFilesMap: state => state.files.importFilesMap,
-      path: state => state.files.currentPath
+    computed: mapGetters({
+      importFilesMap: 'importFilesMap',
+      path: 'currentPath'
     }),
     mounted () {
       if (this.path === '') {

@@ -30,7 +30,7 @@
 </template>
 
 <script>
-  import {mapState, mapActions} from 'vuex'
+  import {mapGetters, mapActions} from 'vuex'
 
   export default {
     name: 'fileStatusContent',
@@ -49,20 +49,20 @@
       }
     },
 
-    computed: mapState({
+    computed: mapGetters([
 //      // 所有中间栏选中的文件/文件夹
 //      selectedModifiedFiles: state => state.modified.selectedModifiedFiles,
 
       // 变更文件
-      modifiedFiles: state => state.modified.modifiedFiles,
+      'modifiedFiles',
 
       // 变更文件树
       // modifiedFilesTree: state => state.modified.modifiedFilesTree,
 
       // 所有打好标记的文件
-      taggedModifiedFiles: state => state.modified.taggedModifiedFiles
+      'taggedModifiedFiles'
 
-    }),
+    ]),
 
     methods: {
       // 映射Actions
