@@ -9,8 +9,8 @@
                 <use xlink:href="#icon-file"></use>
               </svg>
               <div class="file-name">
-                <el-tooltip :content="item" placement="top" :open-delay="2000">
-                  <span>{{item | formatName(10)}}</span>
+                <el-tooltip :content="item.filename" placement="top" :open-delay="2000">
+                  <span>{{item.filename | formatName(10)}}</span>
                 </el-tooltip>
               </div>
             </div>
@@ -23,11 +23,11 @@
 <script>
   import {mapGetters} from 'vuex'
   import bus from '@/utils/bus'
+
   export default {
     name: 'DiskDirectory',
     data () {
-      return {
-      }
+      return {}
     },
     computed: mapGetters({
       displayData: 'ignore'
