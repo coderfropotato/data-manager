@@ -318,10 +318,6 @@
           e.dataTransfer.dragEffect = 'copy'
         }, false)
         dragZone.addEventListener('drop', this.dropHandler, false)
-      },
-
-      // 编辑事件
-      editEvent () {
       }
     }
   }
