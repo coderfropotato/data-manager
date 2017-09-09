@@ -21,27 +21,27 @@
       <div class="title">
         组织分类
       </div>
-      <div class="sort">
+      <div class="category">
         <svg class="icon" aria-hidden="true">
           <use xlink:href="#icon-wenjian"></use>
         </svg>
         <el-popover
-            ref="addSort"
+            ref="addCategory"
             placement="left-end"
             width="260">
-          <div class="popover-sort-tree">
+          <div class="popover-category-tree">
             <div class="popover-title">
               分类
             </div>
-            <div class="sort-tree">
+            <div class="category-tree">
               <el-tree
                   node-key="id"
-                  :data="sortFileTree"
+                  :data="categoryFileTree"
                   show-checkbox
-                  ref="sortTree"
+                  ref="categoryTree"
                   check-strictly
                   :default-expanded-keys="tempData"
-                  @check-change="setSortDir">
+                  @check-change="setCategoryDir">
               </el-tree>
             </div>
           </div>
@@ -49,12 +49,12 @@
         <!--当分类条目较多时，条目和按钮为一个整体，计算样式-->
         <div class="item-wrapper">
           <!--分类的条目-->
-          <div class="sort-items">
-            <el-button size="mini" v-for="item in sorts" :key="item">{{item}}</el-button>
-            <el-button size="mini" v-if="!sorts.length" @click="addFileSort" v-popover:addSort>
+          <div class="category-items">
+            <el-button size="mini" v-for="item in categorys" :key="item">{{item}}</el-button>
+            <el-button size="mini" v-if="!categorys.length" @click="addFileCategory" v-popover:addCategory>
               添加分类
             </el-button>
-            <el-button size="mini" v-if="sorts.length" v-popover:addSort @click="setCheckNode">
+            <el-button size="mini" v-if="categorys.length" v-popover:addCategory @click="setCheckNode">
               +
             </el-button>
           </div>
@@ -67,14 +67,14 @@
   import {mapGetters} from 'vuex'
 
   let tempData = ['1/1.txt/', '1/2.2/3.2/', '1/2.4/3/', '1/2.txt/']
-  let tempSort = []
+  let tempCategory = []
 
   export default {
     name: 'FileInfo',
     data () {
       return {
         // 记录分类的数组
-        sorts: [],
+        categorys: [],
         tempData
       }
     },
@@ -82,17 +82,17 @@
       'show',
       'basicInfo',
       'otherInfo',
-      'sortFileTree'
-      // sorts: state => state.fileInfo.fileSorts
+      'categoryFileTree'
+      // categorys: state => state.fileInfo.fileCategorys
     ]),
     watch: {
       show () {
         for (let node in tempData) {
           let path = tempData[node].split('/')
           path.pop()
-          tempSort.push(path.join('>'))
+          tempCategory.push(path.join('>'))
         }
-        this.sorts = tempSort
+        this.categorys = tempCategory
       }
     },
     filters: {
@@ -104,10 +104,13 @@
       },
       // 格式化文件大小，将
       formatSize (size) {
+        if (!size) {
+          return '无'
+        }
         if (size <= 0) {
           return '0 bytes'
         }
-        const abbreviations = ['bytes', 'kB', 'MB', 'GB']
+        const abbreviations = ['bytes', 'KB', 'MB', 'GB']
         const index = Math.floor(Math.log(size) / Math.log(1024))
         return `${+(size / Math.pow(1024, index)).toPrecision(3)} ${abbreviations[index]}`
       },
@@ -123,21 +126,21 @@
       }
     },
     methods: {
-      addFileSort () {
+      addFileCategory () {
       },
       setCheckNode () {
         // node-key 必须是唯一的，否则无法设置节点
-        this.$refs.sortTree.setCheckedKeys(tempData)
+        this.$refs.categoryTree.setCheckedKeys(tempData)
       },
       // 设置分类的目录
-      setSortDir () {
+      setCategoryDir () {
         // 清空分类数组
-        this.sorts = []
-        let checkedNodes = this.$refs.sortTree.getCheckedNodes()
+        this.categorys = []
+        let checkedNodes = this.$refs.categoryTree.getCheckedNodes()
         for (let node in checkedNodes) {
           let path = checkedNodes[node].id.split('/')
           path.pop()
-          this.sorts.push(path.join('>'))
+          this.categorys.push(path.join('>'))
         }
       }
     }
@@ -189,7 +192,7 @@
   }
 
   .organization {
-    .sort {
+    .category {
       position: relative;
       margin: 1em;
       .icon {
@@ -208,7 +211,7 @@
     }
   }
 
-  .popover-sort-tree {
+  .popover-category-tree {
     .popover-title {
       margin: 0.5em 0;
       text-align: center;

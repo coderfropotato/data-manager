@@ -16,14 +16,14 @@
               {{item.basic.size | formatSize}}
             </div>
             <div class="edit">
-              <el-button type="text">
-                编辑
+              <el-button type="text" @click.stop="operationEvent">
+                {{operation.text}}
               </el-button>
             </div>
           </div>
         </div>
       </div>
-      <div class="columns-display" v-if="status === 'Columns'">
+      <div class="columns-display" v-if="status === 'Column'">
         <el-table
             :data="listData"
             highlight-current-row
@@ -61,7 +61,7 @@
           <el-table-column
               label="操作">
             <template scope="scope">
-              <el-button type="text">编辑</el-button>
+              <el-button type="text" @click.stop="operationEvent">{{operation.text}}</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -71,9 +71,10 @@
           <el-row :gutter="20">
             <el-col :span="6" v-for="(item,index) in listData" :key="index">
               <!--TODO：添加编辑按钮-->
-              <div class="grid-item" @click="showFileInfo(item)">
+              <div class="grid-item" @click.stop="showFileInfo(item)">
                 <svg class="icon" aria-hidden="true">
-                  <use xlink:href="#icon-file"></use>
+                  <use xlink:href="#icon-wenjian1" v-if="item.isdir"></use>
+                  <use xlink:href="#icon-file" v-if="!item.isdir"></use>
                 </svg>
                 <div class="file-name">
                   <el-tooltip :content="item.basic.filename" placement="top" :open-delay="2000">
@@ -100,13 +101,16 @@
   export default {
     name: 'List',
     props: {
+      // 列表数据
       listData: {
         type: Array,
         default () {
           return []
         }
       },
-      // 操作选项
+      /**
+       * 可对列表数据进行的操作
+       */
       operation: {
         type: Object,
         default () {
@@ -190,10 +194,13 @@
       },
       // 格式化文件大小，最近格式为相应的单位
       formatSize (size) {
+        if (!size) {
+          return '无'
+        }
         if (size <= 0) {
           return '0 bytes'
         }
-        const abbreviations = ['bytes', 'kB', 'MB', 'GB']
+        const abbreviations = ['bytes', 'KB', 'MB', 'GB']
         const index = Math.floor(Math.log(size) / Math.log(1024))
         return `${+(size / Math.pow(1024, index)).toPrecision(3)} ${abbreviations[index]}`
       },
@@ -209,6 +216,9 @@
       }
     },
     methods: {
+      operationEvent () {
+        this.operation.event()
+      },
       // 滚动事件节流
       loadContent (e, minScrollTime, minDistance) {
         // 最小触发时间

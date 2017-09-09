@@ -2,10 +2,18 @@
  * 控制列表视图区
  */
 import * as types from '@/store/mutation-types'
+
 const state = {
   Content: false,
   FileInfo: false,
-  listDisplayStatus: 'Columns',
+  listDisplayStatus: 'Column',
+  // 切换展示状态的选项
+  displayOptions: [
+    {
+      value: 'Grid',
+      label: 'Grid'
+    }
+  ],
   dragShow: false
 }
 
@@ -22,6 +30,9 @@ const mutations = {
   },
   [types.TOGGLE_DRAG_SHOW] (state, status) {
     state.dragShow = status
+  },
+  [types.CHANGE_DISPLAY_OPTIONS] (state, options) {
+    state.displayOptions = options
   }
 }
 

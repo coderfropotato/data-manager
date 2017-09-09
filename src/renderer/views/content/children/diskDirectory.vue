@@ -5,7 +5,8 @@
         <el-row :gutter="20">
           <el-col :span="6" v-for="(item,index) in displayData" :key="index">
             <!--TODO：添加编辑按钮-->
-            <div class="grid-item" @dblclick="getNextDirectory(item.item, item)">
+            <div class="grid-item" @dblclick.stop.prevent="getNextDirectory(item.item, item)"
+                 @click.stop.prevent="loadFileInfo(item.item, item)">
               <svg class="icon" aria-hidden="true">
                 <use xlink:href="#icon-wenjian1" v-if="!item.isFile"></use>
                 <use xlink:href="#icon-file" v-if="item.isFile"></use>
@@ -23,7 +24,7 @@
   </div>
 </template>
 <script>
-  import {mapGetters} from 'vuex'
+  import {mapGetters, mapMutations, mapActions} from 'vuex'
   import scrollBar from '@/utils/headerScrollbar'
   import bus from '@/utils/bus'
 
@@ -111,8 +112,16 @@
       * 然后把下一层的文件信息对象赋值给 dirData，遍历 dirData 的属性，生成显示数组，添加路径，序列号等需要的属性
       * 将浏览记录放如 historyMap，以实现回滚浏览器
       * */
+      ...mapMutations([
+        'showFileInfo'
+      ]),
+      ...mapActions([
+        'getFileInfo'
+      ]),
       getNextDirectory (name, selectedItem) {
-        // 判断是否为文件夹
+        /**
+         * 判断是否为文件夹，长度为 1 则不是文件夹，不可获取下一层文件，返回
+         */
         if (Object.keys(this.dirData[name]).length === 1) {
           return
         }
@@ -155,6 +164,26 @@
           displayData: this.displayData,
           dirData: this.dirData
         })
+      },
+      /**
+       * 点击文件图标，获取文件的详细信息
+       */
+      loadFileInfo (name, selectedItem) {
+        // 若是文件夹，不可获取信息，返回
+        if (Object.keys(this.dirData[name]).length > 1) {
+          return
+        }
+        // 先记录磁盘序列号
+        let serialNumber = selectedItem.serialNumber
+        // 记录真实的路径，currentPath 记录的导航面包屑路径，不是真实的路径
+        let parentPath = selectedItem.path
+        // 获取文件详细信息
+        let path = parentPath.slice(0, -1)
+        this.getFileInfo({
+          path,
+          serialNumber
+        })
+        this.showFileInfo()
       }
     }
   }

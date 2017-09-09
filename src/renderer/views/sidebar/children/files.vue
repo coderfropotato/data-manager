@@ -6,7 +6,7 @@
 </template>
 
 <script>
-  import {mapGetters} from 'vuex'
+  import {mapGetters, mapMutations, mapActions} from 'vuex'
   import bus from '@/utils/bus'
   import FileManager from '@/components/fileManager'
 
@@ -18,13 +18,13 @@
         // 控制面板折叠与展开
         show: {
           allFiles: true,
-          sortFiles: true,
+          categoryFiles: true,
           others: true
         },
         // 折叠或展开按钮的状态
         content: {
           allFiles: '收起',
-          sortFiles: '收起',
+          categoryFiles: '收起',
           others: '收起'
         },
         // FileManager 组件的点击事件对象
@@ -52,9 +52,9 @@
       // 所有文件选项的数据，即管理的磁盘
       'allFiles',
       // 智能分类列表
-      'smartSortList',
+      'smartCategoryList',
       // 分类文件夹树
-      'sortFileTree',
+      'categoryFileTree',
       // 当前路径，面包屑导航
       'currentPath'
     ]),
@@ -89,8 +89,28 @@
       }
     },
     methods: {
+      ...mapMutations([
+        'setFileDisplayStatus',
+        'changeDisplayOptions',
+        'setCurrentPath',
+        'setFileList',
+        'setSmartCategory'
+      ]),
+      ...mapActions([
+        'getDiskFileTree',
+        'getIgnore',
+        'getTrash',
+        'showSmartCategory',
+        'getCategoryFileList'
+      ]),
       // 加载磁盘（包含我的电脑）文件树
       loadDiskFileTree (index) {
+        // 浏览磁盘只有一个展示状态
+        this.setFileDisplayStatus('Grid')
+        this.changeDisplayOptions([{
+          value: 'Grid',
+          label: 'Grid'
+        }])
         let serialNumber
         // 获取路径，去除磁盘path中的 * 和序列号
         let path = this.allFiles[index]
@@ -105,17 +125,33 @@
         } else {
           serialNumber = this.allFiles[index].split('*').pop()
         }
-        this.$store.dispatch('getDiskFileTree', serialNumber)
+        this.getDiskFileTree(serialNumber)
         this.$router.push('/files/diskdirectory')
-        this.$store.commit('setCurrentPath', path)
+        this.setCurrentPath(path)
         // 加载动画
         bus.$emit('loading-content')
       },
 
       // 用户点击侧边栏分类树，加载分类文件列表
       loadCategory (nodeObj, node) {
+        // 分类有三个展示状态
+        this.setFileDisplayStatus('Column')
+        this.changeDisplayOptions([
+          {
+            value: 'Lists',
+            label: 'List'
+          },
+          {
+            value: 'Column',
+            label: 'Column'
+          },
+          {
+            value: 'Grid',
+            label: 'Grid'
+          }
+        ])
         // 重置文件列表数组
-        this.$store.commit('setFileList', [])
+        this.setFileList([])
         this.page = 0
         this.loadFlag = 1
         // 获取当前的路由信息，进行重定向
@@ -130,14 +166,13 @@
           node
         }
         // 根据用户的选择，设置状态管理中的当前路径
-        this.$store.commit('setCurrentPath', path)
+        this.setCurrentPath(path)
         // 发送获取文件列表请求
         // 对路径进行处理，去除路径最后的一个 /
         let tempPath = path.split('/')
         tempPath.pop()
         let lastPath = tempPath.join('/')
-        this.$store.dispatch({
-          type: 'getSortFileList',
+        this.getCategoryFileList({
           lastPath,
           size: this.size,
           page: this.page++
@@ -161,25 +196,48 @@
 
       // 加载忽略的内容
       loadIgnoreContent () {
+        // 忽略文件有一个展示状态
+        this.setFileDisplayStatus('Grid')
+        this.changeDisplayOptions([{
+          value: 'Grid',
+          label: 'Grid'
+        }])
         this.$router.push('/files/ignore')
-        this.$store.dispatch('getIgnore')
+        this.getIgnore()
         // 重置列表数据，防止和搜索组件数据混合
-        this.$store.commit('setFileList', [])
-        this.$store.commit('setCurrentPath', '忽略/')
+        this.setFileList([])
+        this.setCurrentPath('忽略/')
         // 加载动画
         bus.$emit('loading-content')
       },
 
       // 加载回收站的内容（需要重用List组件）
       loadTrashContent () {
+        // 回收站有三个展示状态
+        this.setFileDisplayStatus('Column')
+        this.changeDisplayOptions([
+          {
+            value: 'Lists',
+            label: 'List'
+          },
+          {
+            value: 'Column',
+            label: 'Column'
+          },
+          {
+            value: 'Grid',
+            label: 'Grid'
+          }
+        ])
         let routerPath = this.$router.currentRoute.fullPath
+        console.log(routerPath)
         if (routerPath !== '/files/list') {
-          this.$router.push('/files/list?type=trash')
+          this.$router.replace('/files/list?type=trash')
         }
-        this.$store.dispatch('getTrash')
+        this.getTrash()
         // 重置列表数据，防止和搜索组件数据混合
-        this.$store.commit('setFileList', [])
-        this.$store.commit('setCurrentPath', '回收站/')
+        this.setFileList([])
+        this.setCurrentPath('回收站/')
         // 加载动画
         bus.$emit('loading-content')
       },
@@ -191,8 +249,7 @@
         let path = this.currentPath.split('/')
         path.pop()
         // 发送加载请求
-        this.$store.dispatch({
-          type: 'getSortFileList',
+        this.getCategoryFileList({
           lastPath: path.join('/'),
           size: this.size,
           page: this.page++
@@ -252,7 +309,7 @@
             inputShow: 'none',
             labelShow: 'inline-block'
           }
-          this.$store.commit('addSortDirectory', data)
+          this.$store.commit('addCategoryDirectory', data)
         }
       },
 
@@ -364,17 +421,17 @@
           ])
       },
 
-      showSmartSort (e) {
+      showSmartCategory (e) {
         let tableName = e.target.innerText
         let select = {}
         console.log(tableName)
-        // 当点击一个新的智能视图时，smartSort数组会置空，重新向里面push数据
-        this.$store.commit('setSmartSort')
-        this.$store.dispatch('showSmartSort', {
-          'tableName': tableName,
-          'select': select
+        // 当点击一个新的智能视图时，smartCategory数组会置空，重新向里面push数据
+        this.setSmartCategory()
+        this.showSmartCategory({
+          tableName,
+          select
         })
-        this.$router.push('/smartSort')
+        this.$router.push('/smartCategory')
       }
     },
 

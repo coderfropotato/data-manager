@@ -228,7 +228,7 @@ setTimeout(Raven.wrap(doIt), 1000)
     │   │   ├── bus.js # 中间通信组件，用于非父子组件之间的通信
     │   │   ├── convertJSON.js 
     │   │   ├── fileAttributesTemplates.js
-    │   │   ├── handleSortTreeData.js # 将获得的数据提取成可用的数据
+    │   │   ├── handleCategoryTreeData.js # 将获得的数据提取成可用的数据
     │   │   ├── headerScrollbar.js # 控制导航面包屑滚动
     │   │   └── searchScrollbar.js # 控制导航面包屑滚动
     │   ├── SCSS
@@ -247,7 +247,7 @@ setTimeout(Raven.wrap(doIt), 1000)
     │   │   ├── importFile.vue # 导入文件
     │   │   ├── list.vue # 展示文件列表
     │   │   ├── searchHeader.vue # 搜索功能
-    │   │   └── smartSort.vue # 智能视图
+    │   │   └── smartCategory.vue # 智能视图
     │   ├── FileAside
     │   │   ├── fileAside.vue # 加载具体组件的路由
     │   │   ├── fileInfo.vue # 展示文件详情
@@ -256,7 +256,7 @@ setTimeout(Raven.wrap(doIt), 1000)
     │   │   ├── excelImport.vue # 导入Excel
     │   │   ├── newDirectory.vue # 加载具体组件的路由
     │   │   ├── newDiskDirectory.vue # 新增所有文件目录 
-    │   │   └── newSmartSort.vue # 新增智能视图
+    │   │   └── newSmartCategory.vue # 新增智能视图
     │   ├── Sidebar
     │   │   ├── Files.vue # 文件
     │   │   ├── collection.vue # 收藏

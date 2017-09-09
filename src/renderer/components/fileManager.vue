@@ -38,17 +38,17 @@
         <el-button size="mini" @click="trigShow" data-name="categoryFiles">{{content.categoryFiles}}</el-button>
         <!--输入新建分类的文件名-->
         <el-popover
-            ref="addSortPop"
+            ref="addCategoryPop"
             placement="top-start"
             width="200"
             trigger="click">
           <el-input placeholder="请输入文件夹名称" v-model="newCategoryDirName"></el-input>
           <el-button type="primary" @click="appendNode">添加</el-button>
         </el-popover>
-        <el-button size="mini" class="button-inner-plus" v-popover:addSortPop v-if="hasNewButton">+</el-button>
+        <el-button size="mini" class="button-inner-plus" v-popover:addCategoryPop v-if="hasNewButton">+</el-button>
       </div>
       <el-tree
-          :data="sortFileTree"
+          :data="categoryFileTree"
           node-key="id"
           highlight-current
           :expand-on-click-node="false"
@@ -166,9 +166,9 @@
       // 所有文件选项的数据，即管理的磁盘
       'allFiles',
       // 智能分类列表
-      'smartSortList',
+      'smartCategoryList',
       // 分类文件夹树
-      'sortFileTree',
+      'categoryFileTree',
       // 当前路径，面包屑导航
       'currentPath'
     ]),
@@ -314,7 +314,7 @@
             inputShow: 'none',
             labelShow: 'inline-block'
           }
-          this.$store.commit('addSortDirectory', data)
+          this.$store.commit('addCategoryDirectory', data)
         }
       },
 
@@ -425,17 +425,17 @@
             )
           ])
       },
-      showSmartSort (e) {
+      showSmartCategory (e) {
         let tableName = e.target.innerText
         let select = {}
         console.log(tableName)
-        // 当点击一个新的智能视图时，smartSort数组会置空，重新向里面push数据
-        this.$store.commit('setSmartSort')
-        this.$store.dispatch('showSmartSort', {
+        // 当点击一个新的智能视图时，smartCategory数组会置空，重新向里面push数据
+        this.$store.commit('setSmartCategory')
+        this.$store.dispatch('showSmartCategory', {
           'tableName': tableName,
           'select': select
         })
-        this.$router.push('/smartSort')
+        this.$router.push('/smartCategory')
       }
     }
   }
@@ -519,11 +519,11 @@
         margin: 0 0.2em;
       }
     }
-    .smartSortList-warpper {
+    .smartCategoryList-warpper {
       height: 100px;
       overflow-y: scroll;
     }
-    .smartSortList {
+    .smartCategoryList {
       .el-button {
         margin: 1em 0 0 4em;
         width: 10em;

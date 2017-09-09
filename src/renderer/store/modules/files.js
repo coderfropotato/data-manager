@@ -5,7 +5,7 @@
 import fetchData from '@/api'
 import * as types from '@/store/mutation-types'
 // 引入文件树数据处理函数
-import travelTree from '@/utils/handleSortTreeData'
+import travelTree from '@/utils/handleCategoryTreeData'
 
 const state = {
   // 记录当前选择的文件
@@ -16,14 +16,14 @@ const state = {
   currentDiskDirTree: '',
   // 记录当前选中文件夹的路径
   currentPath: '',
-  smartSortList: [],
+  smartCategoryList: [],
   // 所有文件，可读，不可变更
   allFiles: [],
   // 分类，用户可以自己建立多层文件夹来分类数据
   // 原始数据
-  sortDirRowData: [],
+  categoryDirRowData: [],
   // 处理后的数据
-  sortFileTree: [],
+  categoryFileTree: [],
   // 缓存请求的文件（所有文件选项）
   cacheDir: [],
   // 回收站
@@ -41,9 +41,9 @@ const getters = {
   currentFileList: state => state.currentFileList,
   currentDiskDirTree: state => state.currentDiskDirTree,
   currentPath: state => state.currentPath,
-  smartSortList: state => state.smartSortList,
-  sortDirRowData: state => state.sortDirRowData,
-  sortFileTree: state => state.sortFileTree,
+  smartCategoryList: state => state.smartCategoryList,
+  categoryDirRowData: state => state.categoryDirRowData,
+  categoryFileTree: state => state.categoryFileTree,
   cacheDir: state => state.cacheDir,
   trash: state => state.trash,
   ignore: state => state.ignore
@@ -72,9 +72,9 @@ const actions = {
   },
 
   // 获取文件列表
-  getSortFileList ({commit}, payload) {
+  getCategoryFileList ({commit}, payload) {
     return new Promise((resolve, reject) => {
-      fetchData('getSortFileList', {
+      fetchData('getCategoryFileList', {
         path: payload.lastPath,
         page: payload.page,
         size: payload.size
@@ -124,12 +124,12 @@ const mutations = {
   // 打开文件选项
   [types.OPEN_FILE] (state, response) {
     state.allFiles = response.allFiles
-    state.sortDirRowData = response.sortDir.sort
-    state.smartSortList = response.smartViews
+    state.categoryDirRowData = response.categoryDir.category
+    state.smartCategoryList = response.smartViews
 
     // 对原始的文件树数据进行处理
-    state.sortFileTree = []
-    travelTree(state.sortDirRowData, state.sortFileTree, '')
+    state.categoryFileTree = []
+    travelTree(state.categoryDirRowData, state.categoryFileTree, '')
   },
 
   // 设置节点信息
@@ -145,7 +145,7 @@ const mutations = {
 
   // 添加分类目录
   [types.ADD_SORT_DIRECTORY] (state, newDir) {
-    state.sortFileTree.push(newDir)
+    state.categoryFileTree.push(newDir)
   },
 
   // 获取文件树

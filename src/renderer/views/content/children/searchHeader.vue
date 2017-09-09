@@ -69,7 +69,7 @@
             label: 'List'
           },
           {
-            value: 'Columns',
+            value: 'Column',
             label: 'Column'
           },
           {

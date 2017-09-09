@@ -25,7 +25,7 @@ export const RECEIVE_MODIFIED_FILES = 'receiveModifiedFiles'
 // 是否显示文件详情
 export const SHOW_FILE_INFO = 'showFileInfo'
 // 设置文件所属分类，用于文件详情界面添加文件分类
-export const SET_FILE_SORTS = 'setFileSorts'
+export const SET_FILE_SORTS = 'setFileCategorys'
 // 设置文件列表显示状态，用于切换 List，Column，Grid 三种状态
 export const SET_FILE_DISPLAY_STATUS = 'setFileDisplayStatus'
 // 设置列表区域的拖拽区是否显示
@@ -39,25 +39,25 @@ export const ADD_TAGGED_MODIFIED_FILE = 'addTaggedModifiedFile'
 //
 export const GET_AUTHORS = 'getAuthors'
 // 添加分类目录，用于在文件树直接操作
-export const ADD_SORT_DIRECTORY = 'addSortDirectory'
+export const ADD_SORT_DIRECTORY = 'addCategoryDirectory'
 // 设置新增智能视图信息
-export const SET_NEW_SMART_SORT_INFO = 'setNewSmartSortInfo'
+export const SET_NEW_SMART_SORT_INFO = 'setNewSmartCategoryInfo'
 // 设置新增磁盘信息
 export const SET_NEW_DISK_DIR_INFO = 'setNewDiskDirInfo'
 // 设置新增分类文件夹信息
-export const SET_NEW_SORT_DIR_INFO = 'setNewSortDirInfo'
+export const SET_NEW_SORT_DIR_INFO = 'setNewCategoryDirInfo'
 // 向后台请求搜索条件
 export const GET_SEARCH_CONDITIONS = 'getSearchConditions'
 // 临时用来显示添加的智能视图
-export const ADD_SMART_SORT = 'addSmartSort'
+export const ADD_SMART_SORT = 'addSmartCategory'
 // 显示所有的智能视图
-export const SHOW_SMART_SORT_LIST = 'showSmartSortList'
+export const SHOW_SMART_SORT_LIST = 'showSmartCategoryList'
 // 显示单个具体的智能视图样式
-export const SHOW_SMART_SORT = 'showSmartSort'
+export const SHOW_SMART_SORT = 'showSmartCategory'
 // 处理后台返回的搜索条件
 export const HANDLE_SEARCH_CONDITION_MAP = 'handleConditionMap'
 // 重置智能视图里面的内容
-export const SET_SMART_SORT = 'setSmartSort'
+export const SET_SMART_SORT = 'setSmartCategory'
 export const DELETE_LIST = 'deleteList'
 // 设置搜索位置
 export const SET_SEARCH_RANGE = 'setSearchRange'
@@ -70,3 +70,4 @@ export const REMOVE_TAGGED_FILE = 'removeTaggedFile'
 export const SET_SHOW_MODE = 'setShowMode'
 export const SET_SELECTED_FILES_NUM = 'setSelectedFilesNum'
 export const IGNORE_FILES = 'ignoreFiles'
+export const CHANGE_DISPLAY_OPTIONS = 'changeDisplayOptions'

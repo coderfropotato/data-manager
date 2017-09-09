@@ -6,10 +6,11 @@
 */
 // 基本配置
 import bus from '@/utils/bus'
+import fs from 'fs'
 
 let zmq = require('zeromq')
 // const baseURL = 'tcp://10.139.17.101'
-const baseURL = 'tcp://172.168.2.25'
+const baseURL = 'tcp://10.139.10.63'
 // const baseURL = 'tcp://10.139.20.203'
 // 端口号
 const PORT = 4242
@@ -45,11 +46,18 @@ let getData = function (API, params) {
     request.on('message', function (msg) {
       flag = 1
       let rep = JSON.parse(msg)
+      let data = Buffer.from(msg)
+
+      fs.writeFile('/Users/wuyiqing/Desktop/data-manager-front-end2/api/' + API + '.json', data, {flag: 'a'}, function (err) {
+        if (err) {
+          console.error(err)
+        } else {
+          console.log('写入成功')
+        }
+      })
+
       if (rep.status === 200) {
         let data = rep.data
-        // 输出数据
-        console.log(API + ':')
-        console.log(data)
         resolve(data)
         request.close()
       } else if (rep.status === 400) {

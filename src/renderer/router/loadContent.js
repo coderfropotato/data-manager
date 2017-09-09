@@ -16,7 +16,7 @@ const SearchHeader = r => require.ensure([], () => r(require('@/views/content/ch
 const ImportFile = r => require.ensure([], () => r(require('@/views/content/children/importFile')), 'importFile')
 const ContentBottom = r => require.ensure([], () => r(require('@/views/content/children/contentBottom')), 'contentBottom')
 const DiskDirectory = r => require.ensure([], () => r(require('@/views/content/children/diskDirectory')), 'diskDirectory')
-const SmartSort = r => require.ensure([], () => r(require('@/views/content/children/smartSort')), 'smartSort')
+const SmartCategory = r => require.ensure([], () => r(require('@/views/content/children/smartCategory')), 'smartCategory')
 const Ignore = r => require.ensure([], () => r(require('@/views/content/children/ignore')), 'ignore')
 // fileAside 的组件
 const FileInfo = r => require.ensure([], () => r(require('@/views/fileAside/children/fileInfo')), 'fileInfo')
@@ -86,11 +86,11 @@ const routes = [
     }
   },
   {
-    path: 'smartSort',
-    name: 'SmartSort',
+    path: 'smartCategory',
+    name: 'SmartCategory',
     components: {
       default: Files,
-      ContentBottom: SmartSort
+      ContentBottom: SmartCategory
     }
   }
 ]

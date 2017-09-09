@@ -9,16 +9,16 @@ import {Message} from 'element-ui'
 const state = {
   newDiskDirInfo: [],
   newCategoryDirInfo: [],
-  smartSort: [[]],
-  sortOrder: [],
+  smartCategory: [[]],
+  categoryOrder: [],
   tableName: ''
 }
 
 const getters = {
   newDiskDirInfo: state => state.newDiskDirInfo,
   newCategoryDirInfo: state => state.newCategoryDirInfo,
-  smartSort: state => state.smartSort,
-  sortOrder: state => state.sortOrder,
+  smartCategory: state => state.smartCategory,
+  categoryOrder: state => state.categoryOrder,
   tableName: state => state.tableName
 }
 
@@ -63,21 +63,21 @@ const actions = {
     })
   },
 
-  sendNewSortInfo ({commit}, path) {
+  sendNewCategoryInfo ({commit}, path) {
     fetchData('', {path}).then(status => {
     })
   },
 
   // 将新添加的智能视图添加到智能视图列表中去
   // temp 包含着名称，限制条件(是一个对象数组)，选择条件 (选择条件是一个数组）
-  addNewSmartSort ({commit}, temp) {
+  addNewSmartCategory ({commit}, temp) {
     return new Promise((resolve, reject) => {
       let tableName = temp.name
       let context = temp.context
       let limitedCondition = temp.limitedCondition
       let selectedCondition = temp.selectedCondition
       // 这里应该返回一个true或者false
-      fetchData('setNewSmartSort', {tableName, context, limitedCondition, selectedCondition}).then(data => {
+      fetchData('setNewSmartCategory', {tableName, context, limitedCondition, selectedCondition}).then(data => {
         resolve(1)
         commit(types.ADD_SMART_SORT, data)
       })
@@ -85,10 +85,10 @@ const actions = {
   },
 
   // 获取智能视图列表显示在文件树上面
-  // showSmartSortList ({commit}) {
+  // showSmartCategoryList ({commit}) {
   //   // 这里返回的data应该是所有智能视图的名字的数组
   //   return new Promise((resolve, reject) => {
-  //     fetchData('showSmartSortList', {}).then(data => {
+  //     fetchData('showSmartCategoryList', {}).then(data => {
   //       resolve()
   //       commit(types.SHOW_SMART_SORT_LIST, data)
   //     })
@@ -96,10 +96,10 @@ const actions = {
   // },
 
   // 点击智能视图名称，将名称发送给后台，后台根据智能视图的名称发送具体的数据
-  showSmartSort ({commit}, payload) {
+  showSmartCategory ({commit}, payload) {
     let tableName = payload.tableName
     let select = payload.select
-    fetchData('showSmartSort', {tableName, select}).then(data => {
+    fetchData('showSmartCategory', {tableName, select}).then(data => {
       commit(types.SHOW_SMART_SORT, data)
     })
     // commit(types.SHOW_SMART_SORT)
@@ -133,28 +133,28 @@ const mutations = {
   },
 
   // 在sidebar展示所有的智能视图
-  // [types.SHOW_SMART_SORT_LIST] (state, smartSortList) {
-  //   state.smartSortList = smartSortList.allSmartView
+  // [types.SHOW_SMART_SORT_LIST] (state, smartCategoryList) {
+  //   state.smartCategoryList = smartCategoryList.allSmartView
   // },
 
   [types.SHOW_SMART_SORT] (state, response) {
-    // state.smartSort = object.smartSort
+    // state.smartCategory = object.smartCategory
     let smartView = response.smartView
-    state.smartSort.push(smartView.data)
-    state.sortOrder = smartView.tabs
+    state.smartCategory.push(smartView.data)
+    state.categoryOrder = smartView.tabs
     state.tableName = smartView.table
-    // console.log(object.smartSort)
-    // console.log(state.smartSort)
+    // console.log(object.smartCategory)
+    // console.log(state.smartCategory)
   },
-  // smartSort置空
+  // smartCategory置空
   [types.SET_SMART_SORT] (state) {
-    state.smartSort = [[]]
+    state.smartCategory = [[]]
   },
 
   [types.DELETE_LIST] (state, payload) {
     let from = payload.from
     let deleteLength = payload.deleteLength
-    state.smartSort.splice(from, deleteLength)
+    state.smartCategory.splice(from, deleteLength)
   }
 }
 

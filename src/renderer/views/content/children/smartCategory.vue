@@ -1,8 +1,8 @@
 <template>
-  <div class="smartSort-root">
-    <!--<el-button v-for="item in sortOrder" :key="item" type='text' class="sort">{{item}}</el-button>-->
+  <div class="smartCategory-root">
+    <!--<el-button v-for="item in categoryOrder" :key="item" type='text' class="category">{{item}}</el-button>-->
     <el-row type="flex" style="margin-top: 2em">
-      <el-col :span="7" v-for="(item,index) in smartSort" :key="index" v-if="item.length !== 0 " class="items">
+      <el-col :span="7" v-for="(item,index) in smartCategory" :key="index" v-if="item.length !== 0 " class="items">
         <el-row v-for="list in item" :key="list" v-if="typeof list === 'string'">
           <div type="text" @click="addSelect(index, list)">{{list}}<i class="el-icon-caret-right"></i></div>
         </el-row>
@@ -35,23 +35,23 @@
       }
     },
     computed: mapGetters([
-      'smartSort',
-      'sortOrder',
+      'smartCategory',
+      'categoryOrder',
       'tableName'
     ]),
     methods: {
       addSelect (index, list) {
 //        console.log(index)
 //        console.log(list)
-        // index 是某一列的在smartSort的索引
+        // index 是某一列的在smartCategory的索引
         // list是某一列具体一个item的值
         // name 是某一列对应的分类的英文 如 2017 对应的是'year'
-        let name = this.sortOrder[index - 1]
-        console.log(this.sortOrder[index - 1])
+        let name = this.categoryOrder[index - 1]
+        console.log(this.categoryOrder[index - 1])
         // 判断某一项是否重复点击，如果不重复，则请求下一列的数据。
         this.select[name] = list
         console.log(this.select[name])
-        this.$store.dispatch('showSmartSort', {
+        this.$store.dispatch('showSmartCategory', {
           'tableName': this.tableName,
           'select': this.select
         })
@@ -61,11 +61,11 @@
 //          if (this.index === index || this.index > index) {
 //            this.$store.commit('deleteList', {
 //              'from': index + 1,
-//              'deleteLength': this.smartSort.length - index
+//              'deleteLength': this.smartCategory.length - index
 //            })
-//            console.log(this.smartSort.length)
+//            console.log(this.smartCategory.length)
 //          }
-//          this.$store.dispatch('showSmartSort', {
+//          this.$store.dispatch('showSmartCategory', {
 //            'tableName': this.tableName,
 //            'select': this.select
 //          })
@@ -76,8 +76,8 @@
   }
 </script>
 <style lang="scss">
-  .smartSort-root {
-    .sort {
+  .smartCategory-root {
+    .category {
       margin: 0 3em;
       width: 3em;
     }

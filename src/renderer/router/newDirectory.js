@@ -2,7 +2,7 @@
 * 加载新建文件夹的组件，一般都会打开新的窗口
 * */
 // 智能视图
-const NewSmartSortDir = r => require.ensure([], () => r(require('@/views/newDirectory/children/newSmartSort')), 'newSmartSort')
+const NewSmartCategoryDir = r => require.ensure([], () => r(require('@/views/newDirectory/children/newSmartCategory')), 'newSmartCategory')
 // 根路由组件
 const NewDirectory = r => require.ensure([], () => r(require('@/views/newDirectory/newDirectory')), 'newDirectory')
 // 新增目录
@@ -21,8 +21,8 @@ const routes = [
         component: NewDiskDirectory
       },
       {
-        path: 'newsmartsortdir',
-        component: NewSmartSortDir
+        path: 'newsmartcategorydir',
+        component: NewSmartCategoryDir
       },
       {
         path: 'excelImport',

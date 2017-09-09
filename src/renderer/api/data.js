@@ -2,7 +2,7 @@
 * 用于提供模拟数据，
 */
 const allFiles = ['我的电脑', 'USB_154', 'Sandisk01', 'Sandisk02']
-const sortDir = [
+const categoryDir = [
   {
     '1': {
       '1.txt': {
@@ -167,8 +167,8 @@ export const searchConditions = [
     'strain': ['高茎', '低茎']
   }
 ]
-export const smartSort = ['uzi', 'mlxg', 'korol', 'xiaohu']
-// export const newSmartSort = [
+export const smartCategory = ['uzi', 'mlxg', 'korol', 'xiaohu']
+// export const newSmartCategory = [
 //   {
 //     label: '智能视图一'
 //
@@ -248,7 +248,7 @@ export function returnRadomFileList () {
 
 export const Files = {
   allFiles,
-  sortDir
+  categoryDir
 }
 
 export const fileInfo = {
@@ -311,6 +311,6 @@ export const modifiedFiles = {
   }
 }
 export default {
-  smartSort,
+  smartCategory,
   searchConditions
 }

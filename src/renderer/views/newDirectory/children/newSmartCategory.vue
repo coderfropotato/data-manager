@@ -1,5 +1,5 @@
 <template>
-  <div class="newSmartSort-root">
+  <div class="newSmartCategory-root">
     <div class="top">
       <span>请输入智能视图名称</span>
       <el-input type="text" v-model="name" size="small"></el-input>
@@ -18,7 +18,7 @@
         </div>
       </div>
     </div>
-    <div class="sortCondition">
+    <div class="categoryCondition">
       <div><span>添加排序条件</span></div>
       <div class="search-input">
         <el-button v-for="(item,index) in selectedCondition" :key="item" size="mini">{{item}}<i
@@ -38,8 +38,8 @@
         <!--</el-menu>-->
         <!--</el-popover>-->
       </div>
-      <el-button size="small" @click="showSortConditons" style="margin-top: 1.2em">{{content.sortConditions}}</el-button>
-      <div class="conditions-wrapper" v-if="show.sortConditions">
+      <el-button size="small" @click="showCategoryConditons" style="margin-top: 1.2em">{{content.categoryConditions}}</el-button>
+      <div class="conditions-wrapper" v-if="show.categoryConditions">
         <div class="conditions" v-for="(item,index) in searchConditions" :key="name" v-bind:data-name=item.name style="clear: both">{{item.label}}
           <el-button type="text" v-for="it in item.value" :key="it" @click="showItem" size="small">{{it}}</el-button>
         </div>
@@ -47,7 +47,7 @@
     </div>
     <!--<el-button size="small" v-popover:popoverAdd>Add</el-button>-->
     <div>
-      <el-button class="add" size="small" @click="addSmartSort">创建智能视图</el-button>
+      <el-button class="add" size="small" @click="addSmartCategory">创建智能视图</el-button>
     </div>
   </div>
 </template>
@@ -62,11 +62,11 @@
         limitedConditions: [],
         content: {
           searchConditions: '展开',
-          sortConditions: '展开'
+          categoryConditions: '展开'
         },
         show: {
           searchConditions: false,
-          sortConditions: false
+          categoryConditions: false
         },
         i: 0,
         // amount是新建智能视图的数量
@@ -91,13 +91,13 @@
         }
         this.show.searchConditions = !this.show.searchConditions
       },
-      showSortConditons () {
-        if (this.content.sortConditions === '展开') {
-          this.content.sortConditions = '收起'
+      showCategoryConditons () {
+        if (this.content.categoryConditions === '展开') {
+          this.content.categoryConditions = '收起'
         } else {
-          this.content.sortConditions = '展开'
+          this.content.categoryConditions = '展开'
         }
-        this.show.sortConditions = !this.show.sortConditions
+        this.show.categoryConditions = !this.show.categoryConditions
       },
       addLimitedCondition (e) {
         console.log(e.target.innerText)
@@ -157,7 +157,7 @@
       deleteItem (index) {
         this.selectedCondition.splice(index, 1)
       },
-      addSmartSort () {
+      addSmartCategory () {
         let temp = {
           name: this.name,
           context: [],
@@ -166,7 +166,7 @@
         }
         let call = {
           mode: 'action',
-          API: 'addNewSmartSort'
+          API: 'addNewSmartCategory'
         }
         ipcRenderer.send('change-data', call, temp)
         this.amount++
@@ -175,7 +175,7 @@
   }
 </script>
 <style lang="scss">
-  .newSmartSort-root {
+  .newSmartCategory-root {
     .top {
       .el-input {
         width: 20em;

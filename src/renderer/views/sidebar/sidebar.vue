@@ -92,7 +92,7 @@
           },
           3: {
             title: '新增智能分类',
-            url: '/newsmartsortdir'
+            url: '/newsmartcategorydir'
           },
           4: {
             title: '从Excel模板导入文件',
@@ -101,11 +101,11 @@
           // TODO 未实现功能
 //          4: {
 //            title: '从搜索结果新建分类',
-//            url: '/newsortformsearch'
+//            url: '/newcategoryformsearch'
 //          },
 //          5: {
 //            title: '从搜索结果新建智能分类',
-//            url: '/newsamrtsortformsearch'
+//            url: '/newsamrtcategoryformsearch'
 //          }
         },
         // TODO：无法使用计算属性，不能响应窗口大小变化，未来可做更深的考虑
@@ -178,7 +178,7 @@
       openFile () {
         // this.fullScreenLoading = true
         // 手动点击时，如果已存在数据，则不再次请求数据（其他有新数据产生的情况下，需调用action请求）
-        if (this.$store.state.files.allFiles.length && Object.keys(this.$store.state.files.sortDirRowData).length) {
+        if (this.$store.state.files.allFiles.length && Object.keys(this.$store.state.files.categoryDirRowData).length) {
           this.fullScreenLoading = false
         } else {
           this.$store.dispatch('openFile').then(() => {

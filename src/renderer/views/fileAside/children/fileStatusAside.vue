@@ -67,10 +67,10 @@
               <el-select v-model="currentFiletype" @change="getTemplate"
                          placeholder="请选择文件类型">
                 <el-option
-                  v-for="item in filetypeOptions"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
+                    v-for="item in filetypeOptions"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
                 </el-option>
               </el-select>
             </li>
@@ -104,7 +104,7 @@
 </template>
 
 <script>
-  import { mapGetters, mapActions } from 'vuex'
+  import {mapGetters, mapActions} from 'vuex'
 
   export default {
     name: 'FileStatusAside',
@@ -401,10 +401,13 @@
     filters: {
       // 格式化文件大小
       formatSize (size) {
+        if (!size) {
+          return '无'
+        }
         if (size <= 0) {
           return '0 bytes'
         }
-        const abbreviations = ['bytes', 'kB', 'MB', 'GB']
+        const abbreviations = ['bytes', 'KB', 'MB', 'GB']
         const index = Math.floor(Math.log(size) / Math.log(1024))
         return `${+(size / Math.pow(1024, index)).toPrecision(3)} ${abbreviations[index]}`
       },

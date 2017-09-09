@@ -29,7 +29,7 @@ const state = {
   // 组织分类
   organization: {
     // 归属的分类
-    fileSorts: []
+    fileCategorys: []
   }
 }
 
@@ -56,8 +56,8 @@ const actions = {
   },
 
   // 获取文件的所属分类
-  getFileSort ({commit}, path, volumeId) {
-    fetchData('getFileSort', {}).then(data => {
+  getFileCategory ({commit}, path, volumeId) {
+    fetchData('getFileCategory', {}).then(data => {
       commit(types.SET_FILE_SORTS, data)
     })
   }
@@ -80,8 +80,8 @@ const mutations = {
   },
 
   // 设置文件的所属分类
-  [types.SET_FILE_SORTS] (state, sorts) {
-    state.sorts = sorts
+  [types.SET_FILE_SORTS] (state, categorys) {
+    state.categorys = categorys
   }
 }
 

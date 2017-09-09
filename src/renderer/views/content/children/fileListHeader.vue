@@ -63,21 +63,21 @@
     name: 'FileHeader',
     data () {
       return {
-        searchValue: '',
-        options: [
-          {
-            value: 'Lists',
-            label: 'List'
-          },
-          {
-            value: 'Columns',
-            label: 'Column'
-          },
-          {
-            value: 'Grid',
-            label: 'Grid'
-          }
-        ]
+        searchValue: ''
+//        options: [
+//          {
+//            value: 'Lists',
+//            label: 'List'
+//          },
+//          {
+//            value: 'Column',
+//            label: 'Column'
+//          },
+//          {
+//            value: 'Grid',
+//            label: 'Grid'
+//          }
+//        ]
       }
     },
     mounted () {
@@ -98,7 +98,8 @@
           let rowPath = state.files.currentPath.split('/')
           rowPath.pop()
           return rowPath
-        }
+        },
+        options: state => state.showControl.displayOptions
       })
     },
     methods: {
