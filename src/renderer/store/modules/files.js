@@ -46,7 +46,9 @@ const getters = {
   categoryFileTree: state => state.categoryFileTree,
   cacheDir: state => state.cacheDir,
   trash: state => state.trash,
-  ignore: state => state.ignore
+  ignore: state => state.ignore,
+  importFilesMap: state => state.importFilesMap,
+  node: state => state.node
 }
 
 const actions = {

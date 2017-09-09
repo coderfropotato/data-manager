@@ -34,7 +34,6 @@
         this.routeType = this.$route.query.type
         // 获取并展示分类文件
         if (type === 'category') {
-          console.log('category')
           this.listData = this.currentFileList
           this.operation = {
             text: '编辑',
@@ -44,7 +43,6 @@
           }
         }
         if (type === 'trash') {
-          console.log('trash')
           // 获取并展示回收站数据
           this.listData = this.trash
           this.operation = {
@@ -56,7 +54,6 @@
         }
         // 获取并展示搜索结果
         if (type === 'search') {
-          console.log('search')
           this.listData = this.searchResults
           this.operation = {
             text: '查看',
