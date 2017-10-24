@@ -32,6 +32,12 @@
             </svg>
             <span>收藏</span>
           </el-menu-item>
+          <el-menu-item index="/database">
+            <svg class="icon" aria-hidden="true">
+              <use xlink:href="#icon-shoucang"></use>
+            </svg>
+            <span>数据库</span>
+          </el-menu-item>
         </el-menu>
       </el-col>
     </div>
