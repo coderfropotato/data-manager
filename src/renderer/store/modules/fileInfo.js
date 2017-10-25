@@ -30,7 +30,9 @@ const state = {
   organization: {
     // 归属的分类
     fileCategorys: []
-  }
+  },
+  //是否移除right view
+  removeRightView:false
 }
 
 const getters = {
@@ -42,7 +44,8 @@ const getters = {
   customize: state => state.customize,
   fileAttr: state => state.fileAttr,
   fileType: state => state.fileAttr.filetype,
-  organization: state => state.organization
+  organization: state => state.organization,
+  removeRightView: state => state.removeRightView
 }
 
 const actions = {
@@ -60,6 +63,18 @@ const actions = {
     fetchData('getFileCategory', {}).then(data => {
       commit(types.SET_FILE_SORTS, data)
     })
+  },
+  //隐藏右侧文件详情
+  hideFileInfo({commit}){
+    commit(types.HIDE_FILE_INFO)
+  },
+  //显示右侧文件详情
+  showFileInfo({commit}){
+    commit(types.SHOW_FILE_INFO)
+  },
+  //移除右侧view
+  removeRightView({commit},status){
+    commit(types.REMOVE_RIGHT_VIEW,status)
   }
 }
 
@@ -78,10 +93,17 @@ const mutations = {
   [types.SHOW_FILE_INFO] (state) {
     state.show = true
   },
+  //隐藏文件信息区
+  [types.HIDE_FILE_INFO] (state) {
+    state.show = false
+  },
 
   // 设置文件的所属分类
   [types.SET_FILE_SORTS] (state, categorys) {
     state.categorys = categorys
+  },
+  [types.REMOVE_RIGHT_VIEW](state,status){
+    state.removeRightView = status;
   }
 }
 

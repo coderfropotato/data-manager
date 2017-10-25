@@ -21,7 +21,7 @@ const Ignore = r => require.ensure([], () => r(require('@/views/content/children
 // fileAside 的组件
 const FileInfo = r => require.ensure([], () => r(require('@/views/fileAside/children/fileInfo')), 'fileInfo')
 const FileStatusAside = r => require.ensure([], () => r(require('@/views/fileAside/children/fileStatusAside')), 'fileStatusAside')
-const Database = r => require.ensure([], () => r(require('@/views/fileAside/children/database')), 'Database')
+const Database = r => require.ensure([], () => r(require('@/views/sidebar/children/database')), 'Database')
 
 const routes = [
   {

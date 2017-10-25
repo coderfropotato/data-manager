@@ -24,6 +24,8 @@ export const SET_CURRENT_PATH = 'setCurrentPath'
 export const RECEIVE_MODIFIED_FILES = 'receiveModifiedFiles'
 // 是否显示文件详情
 export const SHOW_FILE_INFO = 'showFileInfo'
+//隐藏文件详情
+export const HIDE_FILE_INFO = 'hideFileInfo'
 // 设置文件所属分类，用于文件详情界面添加文件分类
 export const SET_FILE_SORTS = 'setFileCategorys'
 // 设置文件列表显示状态，用于切换 List，Column，Grid 三种状态
@@ -71,3 +73,7 @@ export const SET_SHOW_MODE = 'setShowMode'
 export const SET_SELECTED_FILES_NUM = 'setSelectedFilesNum'
 export const IGNORE_FILES = 'ignoreFiles'
 export const CHANGE_DISPLAY_OPTIONS = 'changeDisplayOptions'
+
+
+//移除右侧view
+export const REMOVE_RIGHT_VIEW  = 'removeRightView'
