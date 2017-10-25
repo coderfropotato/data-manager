@@ -6,6 +6,7 @@
 </template>
 
 <script>
+import {mapState} from 'vuex'
 export default {
   name: "report-window",
   data() {
@@ -15,8 +16,15 @@ export default {
       isShow: false
     };
   },
+  mounted(){
+    this.$store.dispatch('removeRightView',true)
+  },
+  beforeDestroy(){
+    this.$store.dispatch('removeRightView',false)
+  },
   methods: {
     loadPage(num) {
+      if (this.isShow) return;
       let _this = this;
       if (!this.isShow) {
         let reportWin = null;
@@ -56,12 +64,29 @@ export default {
         content.on("did-get-response-details", () => {
           content.executeJavaScript(
             `
-				try{
-					document.querySelector("header").style.display="none";
-					document.querySelector("footer").style.display="none";
-				}catch(e){}
-			`
+            if(document){
+              try{
+                document.querySelector("header").style.display="none";
+                document.querySelector("footer").style.display="none";
+              }catch(e){}
+            }
+          `
           );
+        });
+        content.on("dom-ready", () => {
+          content.executeJavaScript(
+              `	var next = document.createElement('div');
+                next.style.width='120px';
+                next.style.height="120px";
+                next.style.backgroundColor="#f60";
+                next.style.position="fixed";
+                next.style.left=0;
+                next.style.top=0;
+                next.addEventListener('click',function(){
+                  
+                },false)
+                document.body.appendChild(next);
+          `);
         });
         //关闭
         reportWin.on("closed", () => {
