@@ -7,19 +7,19 @@
         <el-menu class="menu" router>
           <el-menu-item index="/files" @click="openFile">
             <svg class="icon" aria-hidden="true">
-              <use xlink:href="#icon-zhuye"></use>
+              <use xlink:href="#icon-wenjian"></use>
             </svg>
             <span>文件</span>
           </el-menu-item>
           <el-menu-item index="/search?type=search">
             <svg class="icon" aria-hidden="true">
-              <use xlink:href="#icon-sousuo"></use>
+              <use xlink:href="#icon-search1"></use>
             </svg>
             <span>搜索</span>
           </el-menu-item>
           <el-menu-item index="/filestatus">
             <svg class="icon" aria-hidden="true">
-              <use xlink:href="#icon-import"></use>
+              <use xlink:href="#icon-wenjianjia"></use>
             </svg>
             <!--角标，提醒文件更改数量，最大99-->
             <el-badge :value="modifiedFiles" :max="99" class="item">
@@ -28,13 +28,13 @@
           </el-menu-item>
           <el-menu-item index="/collection">
             <svg class="icon" aria-hidden="true">
-              <use xlink:href="#icon-shoucang"></use>
+              <use xlink:href="#icon-star-empty"></use>
             </svg>
             <span>收藏</span>
           </el-menu-item>
           <el-menu-item index="/database">
             <svg class="icon" aria-hidden="true">
-              <use xlink:href="#icon-shoucang"></use>
+              <use xlink:href="#icon-shujuku"></use>
             </svg>
             <span>数据库</span>
           </el-menu-item>
@@ -78,196 +78,206 @@
 </template>
 
 <script>
-  import {ipcRenderer} from 'electron'
-  import bus from '@/utils/bus'
-  import {mapGetters} from 'vuex'
+import { ipcRenderer } from "electron";
+import bus from "@/utils/bus";
+import { mapGetters } from "vuex";
 
-  export default {
-    name: 'Sidebar',
-    data () {
-      return {
-        // 加号弹窗列表内容
-        newDirList: {
-          1: {
-            title: '新增数据目录',
-            url: '/newdiskdir'
-          },
-          2: {
-            title: '新增分类',
-            url: '/newcategorydir'
-          },
-          3: {
-            title: '新增智能分类',
-            url: '/newsmartcategorydir'
-          },
-          4: {
-            title: '从Excel模板导入文件',
-            url: '/excelimport'
-          }
-          // TODO 未实现功能
-//          4: {
-//            title: '从搜索结果新建分类',
-//            url: '/newcategoryformsearch'
-//          },
-//          5: {
-//            title: '从搜索结果新建智能分类',
-//            url: '/newsamrtcategoryformsearch'
-//          }
+export default {
+  name: "Sidebar",
+  data() {
+    return {
+      // 加号弹窗列表内容
+      newDirList: {
+        1: {
+          title: "新增数据目录",
+          url: "/newdiskdir"
         },
-        // TODO：无法使用计算属性，不能响应窗口大小变化，未来可做更深的考虑
-        middleHeight: 400,
-        // 加载动画
-        fullScreenLoading: false
+        2: {
+          title: "新增分类",
+          url: "/newcategorydir"
+        },
+        3: {
+          title: "新增智能分类",
+          url: "/newsmartcategorydir"
+        },
+        4: {
+          title: "从Excel模板导入文件",
+          url: "/excelimport"
+        }
+        // TODO 未实现功能
+        //          4: {
+        //            title: '从搜索结果新建分类',
+        //            url: '/newcategoryformsearch'
+        //          },
+        //          5: {
+        //            title: '从搜索结果新建智能分类',
+        //            url: '/newsamrtcategoryformsearch'
+        //          }
+      },
+      // TODO：无法使用计算属性，不能响应窗口大小变化，未来可做更深的考虑
+      middleHeight: 400,
+      // 加载动画
+      fullScreenLoading: false
+    };
+  },
+  computed: mapGetters({
+    // 更改的文件数量，文件状态的角标
+    modifiedFiles: "modifiedNum"
+  }),
+  mounted() {
+    // 判断目录区域是否需要滚动
+    this.updateStyle();
+    // 设置中间文件树区域的高度
+    this.setMiddleHeight();
+    this.$refs.middle.style.height = this.middleHeight + "px";
+
+    // 当窗口大小发生改变时重新设置高度
+    window.addEventListener(
+      "resize",
+      () => {
+        this.setMiddleHeight();
+        this.$refs.middle.style.height = this.middleHeight + "px";
+      },
+      false
+    );
+
+    // 如果请求出现错误，结束加载动画
+    bus.$on("error", () => {
+      this.fullScreenLoading = false;
+    });
+
+    // 等文件树展开完成后再获取高度
+    bus.$on("tree-height-changed", () => {
+      setTimeout(() => {
+        this.updateStyle();
+      }, 500);
+    });
+  },
+  methods: {
+    // 打开新的窗口
+    openNewWindow(indexPath) {
+      // 新建分类选项不打开新的窗口
+      if (indexPath === "/newcategorydir") {
+        bus.$emit("newCategory");
+      } else {
+        // 嵌套路由
+        let url = "/newfile" + indexPath;
+        ipcRenderer.send("addFile", {
+          API: "open",
+          URL: url
+        });
       }
     },
-    computed: mapGetters({
-      // 更改的文件数量，文件状态的角标
-      modifiedFiles: 'modifiedNum'
-    }),
-    mounted () {
-      // 判断目录区域是否需要滚动
-      this.updateStyle()
-      // 设置中间文件树区域的高度
-      this.setMiddleHeight()
-      this.$refs.middle.style.height = this.middleHeight + 'px'
-
-      // 当窗口大小发生改变时重新设置高度
-      window.addEventListener('resize', () => {
-        this.setMiddleHeight()
-        this.$refs.middle.style.height = this.middleHeight + 'px'
-      }, false)
-
-      // 如果请求出现错误，结束加载动画
-      bus.$on('error', () => {
-        this.fullScreenLoading = false
-      })
-
-      // 等文件树展开完成后再获取高度
-      bus.$on('tree-height-changed', () => {
-        setTimeout(() => {
-          this.updateStyle()
-        }, 500)
-      })
+    // 更新文件目录区域滚动样式
+    updateStyle() {
+      if (this.$refs.middleInner.clientHeight > this.middleHeight) {
+        this.$refs.middle.style.overflowY = "overlay";
+      } else {
+        this.$refs.middle.style.overflowY = "hidden";
+      }
     },
-    methods: {
-      // 打开新的窗口
-      openNewWindow (indexPath) {
-        // 新建分类选项不打开新的窗口
-        if (indexPath === '/newcategorydir') {
-          bus.$emit('newCategory')
-        } else {
-          // 嵌套路由
-          let url = '/newfile' + indexPath
-          ipcRenderer.send('addFile', {
-            API: 'open',
-            URL: url
-          })
-        }
-      },
-      // 更新文件目录区域滚动样式
-      updateStyle () {
-        if (this.$refs.middleInner.clientHeight > this.middleHeight) {
-          this.$refs.middle.style.overflowY = 'overlay'
-        } else {
-          this.$refs.middle.style.overflowY = 'hidden'
-        }
-      },
-      // 计算并设置中间区域（文件目录）的高度
-      setMiddleHeight () {
-        this.middleHeight = window.innerHeight -
-          this.$refs.navMenu.clientHeight -
-          this.$refs.line.clientHeight -
-          this.$refs.bottom.clientHeight -
-          32
-      },
-      // 获取文件
-      openFile () {
-        // this.fullScreenLoading = true
-        // 手动点击时，如果已存在数据，则不再次请求数据（其他有新数据产生的情况下，需调用action请求）
-        if (this.$store.state.files.allFiles.length && Object.keys(this.$store.state.files.categoryDirRowData).length) {
-          this.fullScreenLoading = false
-        } else {
-          this.$store.dispatch('openFile').then(() => {
-            this.fullScreenLoading = false
-          })
-        }
+    // 计算并设置中间区域（文件目录）的高度
+    setMiddleHeight() {
+      this.middleHeight =
+        window.innerHeight -
+        this.$refs.navMenu.clientHeight -
+        this.$refs.line.clientHeight -
+        this.$refs.bottom.clientHeight -
+        32;
+    },
+    // 获取文件
+    openFile() {
+      // this.fullScreenLoading = true
+      // 手动点击时，如果已存在数据，则不再次请求数据（其他有新数据产生的情况下，需调用action请求）
+      if (
+        this.$store.state.files.allFiles.length &&
+        Object.keys(this.$store.state.files.categoryDirRowData).length
+      ) {
+        this.fullScreenLoading = false;
+      } else {
+        this.$store.dispatch("openFile").then(() => {
+          this.fullScreenLoading = false;
+        });
       }
     }
   }
+};
 </script>
 <style lang="scss">
-  $backgroundColor: #F7F9F9;
-  #sidebar-root {
-    position: relative;
-    background-color: $backgroundColor;
-    height: 100%;
-    .nav-menu {
-      overflow: hidden;
-      .el-menu {
-        background-color: $backgroundColor;
-      }
-    }
-    .el-menu-item {
-      font-size: 0.9em;
-      padding-left: 2em !important;
-      span {
-        margin-left: 0.3em;
-      }
-      .icon {
-        position: relative;
-        font-size: 1.4em;
-        display: inline-block;
-      }
-    }
-
-    .line {
-      height: 1px;
-      width: 90%;
-      background-color: #48576a;
-      margin: 1em auto;
-    }
-
-    .middle {
-      position: relative;
-      width: 100%;
-      // 避免滚动条影响宽度，只在webkit内核中器作用
-      -webkit-overflow-y: overlay;
-    }
-
-    .bottom {
-      position: absolute;
-      transform: translateY(0.5em);
-      bottom: 0;
-      left: 0;
-      background-color: inherit;
-      border-top: 1px solid #8c939d;
-      width: 100%;
-      height: 4em;
-      line-height: 4em;
-      .el-button {
-        position: absolute;
-        bottom: 0.4em;
-        left: 1em;
-        font-size: 2em;
-      }
-      .icon {
-        position: absolute;
-        bottom: 1em;
-        right: 1em;
-        font-size: 1.5em;
-      }
-    }
-
-    .el-popover {
-      .el-menu-item {
-        font-size: 1.2em;
-        padding-left: 1em !important;
-      }
-    }
-    // 文件更改状态角标样式
-    .el-badge__content {
-      top: 1em;
-      right: 4px;
+$backgroundColor: #f7f9f9;
+#sidebar-root {
+  position: relative;
+  background-color: $backgroundColor;
+  height: 100%;
+  .nav-menu {
+    overflow: hidden;
+    .el-menu {
+      background-color: $backgroundColor;
     }
   }
+  .el-menu-item {
+    font-size: 0.9em;
+    padding-left: 2em !important;
+    span {
+      margin-left: 0.3em;
+    }
+    .icon {
+      position: relative;
+      font-size: 1.4em;
+      display: inline-block;
+    }
+  }
+
+  .line {
+    height: 1px;
+    width: 90%;
+    background-color: #48576a;
+    margin: 1em auto;
+  }
+
+  .middle {
+    position: relative;
+    width: 100%;
+    // 避免滚动条影响宽度，只在webkit内核中器作用
+    -webkit-overflow-y: overlay;
+  }
+
+  .bottom {
+    position: absolute;
+    transform: translateY(0.5em);
+    bottom: 0;
+    left: 0;
+    background-color: inherit;
+    border-top: 1px solid #8c939d;
+    width: 100%;
+    height: 4em;
+    line-height: 4em;
+    .el-button {
+      position: absolute;
+      bottom: 0.4em;
+      left: 1em;
+      font-size: 2em;
+    }
+    .icon {
+      position: absolute;
+      bottom: 1em;
+      right: 1em;
+      font-size: 1.5em;
+    }
+  }
+
+  .el-popover {
+    .el-menu-item {
+      font-size: 1.2em;
+      padding-left: 1em !important;
+    }
+  }
+  // 文件更改状态角标样式
+  .el-badge__content {
+    top: 1em;
+    right: 4px;
+  }
+}
+
+
 </style>
