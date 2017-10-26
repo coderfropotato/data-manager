@@ -8,6 +8,7 @@ const FileStatus = r => require.ensure([], () => r(require('@/views/sidebar/chil
 // const FileManager = r => require.ensure([], () => r(require('@/components/fileManager')), 'fileManager')
 const Search = r => require.ensure([], () => r(require('@/views/sidebar/children/search')), 'search')
 const Collection = r => require.ensure([], () => r(require('@/views/sidebar/children/collection')), 'collection')
+const Database = r => require.ensure([], () => r(require('@/views/sidebar/children/database')), 'Database')
 // content 的组件
 const ListHeader = r => require.ensure([], () => r(require('@/views/content/children/fileListHeader')), 'fileListHeader')
 const DataDisplay = r => require.ensure([], () => r(require('@/views/content/children/dataDisplay')), 'dataDisplay')
@@ -21,7 +22,6 @@ const Ignore = r => require.ensure([], () => r(require('@/views/content/children
 // fileAside 的组件
 const FileInfo = r => require.ensure([], () => r(require('@/views/fileAside/children/fileInfo')), 'fileInfo')
 const FileStatusAside = r => require.ensure([], () => r(require('@/views/fileAside/children/fileStatusAside')), 'fileStatusAside')
-const Database = r => require.ensure([], () => r(require('@/views/sidebar/children/database')), 'Database')
 
 const routes = [
   {
