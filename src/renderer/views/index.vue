@@ -1,17 +1,22 @@
 <!--划分三栏组件-->
 <template>
   <div id='index-root'>
-    <div class='sidebar-wrapper'>
-      <Sidebar></Sidebar>
+    <div class="header-wrap">
+      <Header></Header>
     </div>
-    <div class="splitter-left"></div>
-    <div class="right">
-      <div  :class="{'content-wrapper':!  fileInfo.removeRightView,'content-wrapper-hide':fileInfo.removeRightView}">
-        <ContentZone></ContentZone>
+    <div id="index-content">
+      <div class='sidebar-wrapper'>
+        <Sidebar></Sidebar>
       </div>
-      <div v-show="!fileInfo.removeRightView" class='splitter-right'></div>
-      <div v-show="!fileInfo.removeRightView" class='file-wrapper'>
-        <FileAside></FileAside>
+      <div class="splitter-left"></div>
+      <div class="right">
+        <div  :class="{'content-wrapper':!  fileInfo.removeRightView,'content-wrapper-hide':fileInfo.removeRightView}">
+          <ContentZone></ContentZone>
+        </div>
+        <div v-show="!fileInfo.removeRightView" class='splitter-right'></div>
+        <div v-show="!fileInfo.removeRightView" class='file-wrapper'>
+          <FileAside></FileAside>
+        </div>
       </div>
     </div>
   </div>
@@ -42,6 +47,7 @@ export default {
       resizeWidth: true,
       resizeHeight: false
     });
+    this.$router.push("/files");
   },
   computed: {
     ...mapState(["fileInfo"])
@@ -56,11 +62,20 @@ export default {
 
 <style lang='scss' scoped>
 // 整体三栏可调布局
-#index-root {
+#index-root{
+  display: flex;
   height: 100%;
+  flex-direction: column;
+  .header-wrap{
+    height: 66px;
+  }
+}
+#index-content {
+  height: 100%;
+  flex: 1;
   display: flex;
   flex-direction: row;
-  overflow: hidden;
+  border-top: 1px solid #fff;
 
   // 设置高度为 100%
   .sidebar-wrapper,
@@ -73,17 +88,16 @@ export default {
   .splitter-left,
   .splitter-right {
     flex: 0 0 auto;
-    width: 2px;
-    height: 100%;
+    width: 6px;
     cursor: col-resize;
-    background-color: #5e7382;
+    background-color: #eee;
   }
 
   // 侧边栏宽度
   .sidebar-wrapper {
     flex: 0 0 auto;
-    width: 300px;
-    min-width: 230px;
+    width: 240px;
+    min-width: 240px;
     max-width: 60%;
   }
 
@@ -97,7 +111,7 @@ export default {
 
   .content-wrapper-hide {
     flex: 0 0 auto;
-    width: 100%;
+    width: 100%!important;
   }
 
   // flex 布局右样式
