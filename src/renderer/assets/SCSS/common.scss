@@ -92,3 +92,20 @@ body{
 .el-table .el-table__row{
   text-align: center;
 }
+
+::-webkit-scrollbar-thumb {
+  border-radius: 3px;
+  background: #ccc;
+}
+
+::-webkit-scrollbar-track {
+  background: none;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+
+
