@@ -1,6 +1,6 @@
 'use strict'
 
-import {app, BrowserWindow, ipcMain, dialog} from 'electron'
+import { app, BrowserWindow, ipcMain, dialog } from 'electron'
 
 if (process.env.NODE_ENV !== 'development') {
   global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\')
@@ -15,17 +15,18 @@ const baseURL = process.env.NODE_ENV === 'development'
   ? `http://localhost:9080/#`
   : `file://${__dirname}/index.html#`
 
-function createWindow () {
+function createWindow() {
   mainWindow = new BrowserWindow({
-    minHeight: 500,
-    minWidth: 800,
-    height: 700,
-    width: 1120,
+    // minHeight: 500,
+    // minWidth: 800,
+    height: 800,
+    width: 1200,
+    // frame:false,
     useContentSize: true
   })
-
+  mainWindow.setMinimumSize(1200, 800)
   mainWindow.loadURL(winURL)
-
+  mainWindow.setMenu(null)
   mainWindow.on('closed', () => {
     mainWindow = null
   })
@@ -79,11 +80,30 @@ ipcMain.on('open-file-dialog', function (event, type, target) {
 
 app.on('ready', createWindow)
 
-app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    app.quit()
-  }
-})
+//关闭app
+ipcMain.on('window-all-closed', () => {
+  dialog.showMessageBox({
+    type:"question",
+    title:"提示信息",
+    buttons :['确定','cancel'],
+    message:'点击"确定"退出程序'
+  },function(index){
+    // if(process.platform!=='darwin')
+    if(index==0) app.quit()
+  })
+});
+//小化
+ipcMain.on('hide-window', (ev) => {
+  mainWindow.minimize();
+});
+//最大化
+ipcMain.on('show-window', () => {
+  mainWindow.maximize();
+});
+//还原
+ipcMain.on('orignal-window', () => {
+  mainWindow.unmaximize();
+});
 
 app.on('activate', () => {
   if (mainWindow === null) {
