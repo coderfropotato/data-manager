@@ -19,17 +19,17 @@
         </div>
       </div>
     </div>
+    <!-- 文件，搜索，文件状态需要显示bottom file status -->
+    <div v-show="bottom.bottomShow" id="bottom">
+      <Bottom></Bottom>
+    </div>
   </div>
 </template>
 
 <script>
-// 侧边栏导航组件
 import Sidebar from "./sidebar/sidebar";
-// 内容区组件
 import ContentZone from "./content/content";
-// 文件详情区组件
 import FileAside from "./fileAside/fileAside";
-// jQuery 插件，可拖拽改变 div 宽度
 import $ from "jquery";
 import "jquery-resizable-dom/src/jquery-resizable";
 import { mapState } from "vuex";
@@ -50,7 +50,7 @@ export default {
     this.$router.push("/files");
   },
   computed: {
-    ...mapState(["fileInfo"])
+    ...mapState(["fileInfo",'bottom'])
   },
   components: {
     Sidebar,

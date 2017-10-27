@@ -10,12 +10,13 @@ const Search = r => require.ensure([], () => r(require('@/views/sidebar/children
 const Collection = r => require.ensure([], () => r(require('@/views/sidebar/children/collection')), 'collection')
 const Database = r => require.ensure([], () => r(require('@/views/sidebar/children/database')), 'Database')
 // content 的组件
-const ListHeader = r => require.ensure([], () => r(require('@/views/content/children/fileListHeader')), 'fileListHeader')
-const DataDisplay = r => require.ensure([], () => r(require('@/views/content/children/dataDisplay')), 'dataDisplay')
-const FileStatusContent = r => require.ensure([], () => r(require('@/views/content/children/fileStatus')), 'fileStatus')
+const FileStatusContent = r => require.ensure([], () => r(require('@/views/content/children/fileStatusContent')), 'fileStatusContent')
+const FileHeader = r => require.ensure([], () => r(require('@/views/content/children/fileHeader')), 'fileHeader')
+const FileContent = r => require.ensure([], () => r(require('@/views/content/children/fileContent')), 'fileContent')
 const SearchHeader = r => require.ensure([], () => r(require('@/views/content/children/searchHeader')), 'searchHeader')
+
+const SearchContent = r => require.ensure([], () => r(require('@/views/content/children/searchContent')), 'searchContent')
 const ImportFile = r => require.ensure([], () => r(require('@/views/content/children/importFile')), 'importFile')
-const ContentBottom = r => require.ensure([], () => r(require('@/views/content/children/contentBottom')), 'contentBottom')
 const DiskDirectory = r => require.ensure([], () => r(require('@/views/content/children/diskDirectory')), 'diskDirectory')
 const SmartCategory = r => require.ensure([], () => r(require('@/views/content/children/smartCategory')), 'smartCategory')
 const Ignore = r => require.ensure([], () => r(require('@/views/content/children/ignore')), 'ignore')
@@ -29,8 +30,8 @@ const routes = [
     name: 'Files',
     components: {
       default: Files,
-      ContentHeader: ListHeader,
-      ContentBottom: ContentBottom,
+      ContentHeader: FileHeader,
+      ContentBottom: FileContent,
       FileInfo: FileInfo
     },
     // ContentBottom
@@ -45,7 +46,7 @@ const routes = [
         // 文件列表（分类和回收站共用）
         path: 'list',
         name: 'DataDisplay',
-        component: DataDisplay
+        component: SearchContent
       },
       // 磁盘文件
       {
@@ -67,7 +68,8 @@ const routes = [
     components: {
       default: Search,
       ContentHeader: SearchHeader,
-      ContentBottom: DataDisplay
+      ContentBottom: SearchContent,
+      FileInfo:FileInfo
     }
   },
   {
@@ -91,14 +93,6 @@ const routes = [
     name: 'database',
     components: {
       ContentHeader: Database
-    }
-  },
-  {
-    path: 'smartCategory',
-    name: 'SmartCategory',
-    components: {
-      default: Files,
-      ContentBottom: SmartCategory
     }
   }
 ]

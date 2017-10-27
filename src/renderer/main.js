@@ -9,6 +9,7 @@ import App from './App'
 import router from './router'
 import store from './store'
 import Header from './components/header'
+import Bottom from './components/bottom'
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
 // Vue.http = Vue.prototype.$http = axios
 Vue.config.productionTip = false
@@ -21,7 +22,11 @@ Vue.use(ElementUI)
 //     .install()
 
 /* eslint-disable no-new */
+
+
+//import global components
 Vue.component('Header',Header)
+Vue.component('Bottom',Bottom)
 new Vue({
   router,
   store,

@@ -77,3 +77,7 @@ export const CHANGE_DISPLAY_OPTIONS = 'changeDisplayOptions'
 
 //移除右侧view
 export const REMOVE_RIGHT_VIEW  = 'removeRightView'
+//是否显示bottom view
+export const BOTTOM_SHOW = "bottomShow"
+export const BOTTOM_HIDE = "bottomHide"
+

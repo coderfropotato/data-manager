@@ -1,66 +1,6 @@
 <template>
-  <div id="fileInfo-root" v-if="show">
-    <div class="info-title">
-      <span>文件详情</span>
-      <router-link to="/filestatus">
-        <el-button size="mini">编辑</el-button>
-      </router-link>
-    </div>
-    <div class="basic-info" v-if="basicInfo">
-      <span class="title">基本信息</span>
-      <div class="basic-info-items">
-        <el-tooltip :content="basicInfo.filename" placement="top">
-          <span class="item-name">{{basicInfo.filename | formatName(10)}}</span>
-        </el-tooltip>
-        <span>文件类型：{{basicInfo.type}}</span>
-        <span>文件大小：{{basicInfo.size | formatSize}}</span>
-        <span>创建时间：{{basicInfo.ctime | formatDate}}</span>
-      </div>
-    </div>
-    <div class="organization">
-      <div class="title">
-        组织分类
-      </div>
-      <div class="category">
-        <svg class="icon" aria-hidden="true">
-          <use xlink:href="#icon-wenjian"></use>
-        </svg>
-        <el-popover
-            ref="addCategory"
-            placement="left-end"
-            width="260">
-          <div class="popover-category-tree">
-            <div class="popover-title">
-              分类
-            </div>
-            <div class="category-tree">
-              <el-tree
-                  node-key="id"
-                  :data="categoryFileTree"
-                  show-checkbox
-                  ref="categoryTree"
-                  check-strictly
-                  :default-expanded-keys="tempData"
-                  @check-change="setCategoryDir">
-              </el-tree>
-            </div>
-          </div>
-        </el-popover>
-        <!--当分类条目较多时，条目和按钮为一个整体，计算样式-->
-        <div class="item-wrapper">
-          <!--分类的条目-->
-          <div class="category-items">
-            <el-button size="mini" v-for="item in categorys" :key="item">{{item}}</el-button>
-            <el-button size="mini" v-if="!categorys.length" @click="addFileCategory" v-popover:addCategory>
-              添加分类
-            </el-button>
-            <el-button size="mini" v-if="categorys.length" v-popover:addCategory @click="setCheckNode">
-              +
-            </el-button>
-          </div>
-        </div>
-      </div>
-    </div>
+  <div id="fileInfo-root">
+     file info
   </div>
 </template>
 <script>
