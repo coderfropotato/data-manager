@@ -4,6 +4,7 @@ import { app, BrowserWindow, ipcMain, dialog, Tray ,Menu,nativeImage } from 'ele
 if (process.env.NODE_ENV !== 'development') {
   global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\')
 }
+let trayIcon = nativeImage.createFromPath(__dirname+'/256x256.png');
 let mainWindow
 const winURL = process.env.NODE_ENV === 'development'
   ? `http://localhost:9080/#`
@@ -29,26 +30,26 @@ function createWindow() {
   })
 
   // //系统托盘图标
-  // let tray = new Tray(icon)
-  // //tip
-  // tray.setToolTip('gooalgene-data-manager')
-  // //双击icon 显示窗口
-  // tray.on('double-click', () => {
-  //   mainWindow.show()
-  //   mainWindow.focus()
-  // });
-  // tray.on('right-click', () => {
-  //   let contextMenu = Menu.buildFromTemplate([
-  //     {
-  //       label: '退出系统',
-  //       click: function () {
-  //         tray.destroy()
-  //         app.quit()
-  //       }
-  //     }
-  //   ]);
-  //   tray.setContextMenu(contextMenu);
-  // })
+  let tray = new Tray(trayIcon)
+  //tip
+  tray.setToolTip('gooalgene-data-manager')
+  //双击icon 显示窗口
+  tray.on('double-click', () => {
+    mainWindow.show()
+    mainWindow.focus()
+  });
+  tray.on('right-click', () => {
+    let contextMenu = Menu.buildFromTemplate([
+      {
+        label: '退出系统',
+        click: function () {
+          tray.destroy()
+          app.quit()
+        }
+      }
+    ]);
+    tray.setContextMenu(contextMenu);
+  })
 }
 
 /*
