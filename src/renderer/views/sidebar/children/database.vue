@@ -118,16 +118,15 @@ export default {
       this.checkUrl(type, anchorClick);
       if (type === "all") {
         if (!this.searchVal.length || this.searchVal.length > 50) {
-          this.$message("写点东西，小伙子")
+          this.$message("写点东西，小伙子");
           return;
         }
       } else if (type === "reg") {
         if (this.regOne === "" || this.regTwo === "") {
-          this.$message("填点东西，小伙子")
+          this.$message("填点东西，小伙子");
           return;
         }
       }
-      
       let _this = this;
       if (!_this.isShow) {
         let reportWin = null;
@@ -144,15 +143,21 @@ export default {
         const MenuObj = this.$electron.remote.Menu;
         const menuItem = MenuObj.buildFromTemplate([
           {
-            label: "index",
+            label: "首页",
             click: function() {
               content.goToIndex(0);
             }
           },
           {
-            label: "back",
+            label: "后退",
             click: function() {
-              content.goBack();
+              if (content.canGoBack()) content.goBack();
+            }
+          },
+          {
+            label: "前进",
+            click: function() {
+              if (content.canGoForward()) content.goForward();
             }
           }
         ]);
@@ -182,7 +187,7 @@ export default {
           _this.isShow = false;
         });
       } else {
-        _this.$message('老铁，把新打开的窗口关了，再来一试，ok？')
+        _this.$message("老铁，把新打开的窗口关了，再来一试，ok？");
       }
     },
     checkUrl(type) {
@@ -225,8 +230,8 @@ export default {
 
 //TODO
 /*
-2.mock login
-4.view history records
+2.mock login  
+login cookie JSESSIONID = E9BFE6D4FAEC9B690873EQB5B2CC0A6
 */
 </script>
 <style lang="scss" scoped>
@@ -241,6 +246,7 @@ $blue: #386cca;
     font-size: 14px;
     line-height: 56px;
     padding-left: $pl;
+    color: #48576a;     
   }
   .search-wrap {
     border-top: 1px solid #ccc;
@@ -248,7 +254,7 @@ $blue: #386cca;
     height: 300px;
     .search-title {
       font-size: 18px;
-      color: #333;
+      color: #48576a;
       line-height: 18px;
       padding: 20px 0 40px $pl;
     }
@@ -373,6 +379,7 @@ $blue: #386cca;
         p {
           font-size: 14px;
           line-height: 20px;
+          color: #48576a;
         }
       }
     }
