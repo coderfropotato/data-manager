@@ -20,6 +20,7 @@ function createWindow() {
     // minWidth: 800,
     height: 800,
     width: 1200,
+    skipTaskbar:false,
     useContentSize: true
   })
   mainWindow.setMinimumSize(1200, 800)
@@ -35,8 +36,9 @@ function createWindow() {
   tray.setToolTip('gooalgene-data-manager')
   //双击icon 显示窗口
   tray.on('double-click', () => {
-    mainWindow.show()
-    mainWindow.focus()
+    mainWindow.show();
+    mainWindow.focus();
+    mainWindow.setSkipTaskbar(false);
   });
   tray.on('right-click', () => {
     let contextMenu = Menu.buildFromTemplate([
