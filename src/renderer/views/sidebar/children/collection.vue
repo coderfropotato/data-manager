@@ -1,6 +1,6 @@
 <template>
   <div id="collection-root">
-    此功能暂未开放
+    collection contentnpm
   </div>
 </template>
 <script>

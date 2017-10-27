@@ -8,7 +8,7 @@ const FileStatus = r => require.ensure([], () => r(require('@/views/sidebar/chil
 // const FileManager = r => require.ensure([], () => r(require('@/components/fileManager')), 'fileManager')
 const Search = r => require.ensure([], () => r(require('@/views/sidebar/children/search')), 'search')
 const Collection = r => require.ensure([], () => r(require('@/views/sidebar/children/collection')), 'collection')
-const Database = r => require.ensure([], () => r(require('@/views/sidebar/children/database')), 'Database')
+const Database = r => require.ensure([], () => r(require('@/views/content/children/database')), 'Database')
 // content 的组件
 const FileStatusContent = r => require.ensure([], () => r(require('@/views/content/children/fileStatusContent')), 'fileStatusContent')
 const FileHeader = r => require.ensure([], () => r(require('@/views/content/children/fileHeader')), 'fileHeader')
