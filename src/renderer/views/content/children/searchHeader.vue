@@ -1,6 +1,8 @@
 <template>
   <div id="searchHeader-root">
-     search header
+     <el-input placeholder="请输入内容" v-model="input4">
+          <el-button  slot="append" icon="search">搜索</el-button>
+      </el-input>
   </div>
 </template>
 <script>
@@ -10,7 +12,7 @@
     name: 'SearchHeader',
     data () {
       return {
-       
+       input4:""
       }
     },
     computed: {
@@ -29,6 +31,6 @@
 
 <style lang="scss">
   #searchHeader-root {
-    
+    padding: 24px 12px;
   }
 </style>

@@ -10,6 +10,8 @@ import { mapGetters, mapActions } from "vuex";
 export default {
   name: "fileStatus",
   mounted() {
+  },
+  activated(){
     this.$store.dispatch("showBottom");
   },
   data() {
@@ -59,7 +61,7 @@ export default {
       }
     }
   },
-  beforeDestroy() {
+  deactivated() {
     this.$store.dispatch("hideBottom");
   }
 };

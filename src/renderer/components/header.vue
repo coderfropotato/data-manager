@@ -4,11 +4,11 @@
           <img src="../assets/images/logo.png" alt="">
             <span>数据管理系统</span>
       </div>
-      <div class="right">
-          <span @click="hide"></span>
-          <span @click="zoom"></span>
-          <span @click="close"></span>
-      </div>
+      <ol class="right">
+          <li @click="hide"></li>
+          <li @click="zoom"></li>
+          <li @click="close"></li>
+      </ol>
   </div>
 </template>
 
@@ -64,20 +64,18 @@ export default {
     }
   }
   .right {
-    height: 26px;
-    overflow: hidden;
-    margin-top: 24px;
-    span {
-      width: 18px;
-      height: 18px;
+    display: flex;
+    list-style: none;
+    height: 66px;
+    li {
+      flex: 1;
+      width: 22px;
       margin-right: 16px;
-      float: left;
-      background-size: 100% 100%;
-      background-repeat: none;
+      background-size: 16px 16px;
+      background-repeat: no-repeat;
       background-position: center;
-      cursor: pointer !important;
+      cursor: pointer;
       margin-top: 3px;
-      transition: 0.2s all ease;
       &:first-child {
         background-image: url("../assets/images/hide.png");
       }

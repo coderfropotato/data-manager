@@ -47,7 +47,9 @@
     <div class="middle" ref="middle">
       <div class="middle-inner" ref="middleInner">
         <!--默认路由，和 content.vue 的命名路由共同组成基本的路由管理-->
-        <router-view></router-view>
+        <keep-alive>
+          <router-view></router-view>
+        </keep-alive>
       </div>
     </div>
   </div>
@@ -95,6 +97,7 @@ $backgroundColor: #f7f9f9;
   height: 100%;
   .nav-menu {
     overflow: hidden;
+    height: 45%;
     .el-menu {
       background-color: $backgroundColor;
     }
@@ -115,15 +118,15 @@ $backgroundColor: #f7f9f9;
   .line {
     height: 1px;
     width: 90%;
-    background-color: #48576a;
+    background-color: #ccc;
     margin: 1em auto;
   }
 
   .middle {
     position: relative;
     width: 100%;
-    // 避免滚动条影响宽度，只在webkit内核中器作用
-    -webkit-overflow-y: overlay;
+    height: 48%;
+    overflow-y: scroll;
   }
 
   .el-popover {

@@ -15,7 +15,7 @@
                 <h4>{{curMethod}}</h4>
                 <div v-show="searchType!=3" class="id-func methods">
                   <div class="search-input">
-                      <input type="text" v-model.trim="searchVal">
+                      <input type="text" v-model.trim="searchVal" placeholder="请输入您要查找的关键字">
                       <div @click="loadPage('all')" class="search-btn">
                         <i class="el-icon-search"></i>
                         搜索
@@ -27,9 +27,9 @@
                       <option v-for="(item, index) in chrRange" :key="index">{{'Chr'+item}}</option>
                     </select>
                     <div style="overflow:hidden;">
-                      <input v-model.trim="regOne"  type="number" />
+                      <input v-model.trim="regOne"  type="number" placeholder="输入您要查找的数值" />
                       <span></span>
-                      <input v-model.trim="regTwo"  type="number" />
+                      <input v-model.trim="regTwo"  type="number" placeholder="输入您要查找的数值" />
                       <a @click="loadPage('reg')"  href="javascript:;"><i class="el-icon-search"></i>搜索</a>
                     </div>
                 </div>
@@ -102,9 +102,11 @@ export default {
       i < 10 ? (i = "0" + i) : (i = i);
       this.chrRange.push(i);
     }
+  },
+  activated(){
     this.$store.dispatch("removeRightView", true);
   },
-  beforeDestroy() {
+  deactivated() {
     this.$store.dispatch("removeRightView", false);
   },
   methods: {
@@ -135,6 +137,7 @@ export default {
           width: 1300,
           height: 800,
           show: false,
+          resizable:false,
           webPreferences: {
             nodeIntegration: false
           }
