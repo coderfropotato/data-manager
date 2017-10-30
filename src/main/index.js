@@ -16,12 +16,13 @@ const baseURL = process.env.NODE_ENV === 'development'
 
 function createWindow() {
   mainWindow = new BrowserWindow({
-    // minHeight: 500,
-    // minWidth: 800,
-    height: 800,
+    height: 860,
     width: 1200,
+    minHeight: 860,
+    minWidth: 1200,
+    // frame:false,
     skipTaskbar:false,
-    useContentSize: true
+    useContentSize: false,
   })
   mainWindow.setMinimumSize(1200, 800)
   mainWindow.loadURL(winURL)
