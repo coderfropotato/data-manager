@@ -1,22 +1,9 @@
 <template>
   <div id="directory-root">
+      <div class="title">所有文件</span><i @click="addDevice" class="el-icon-plus"></i></div>
       <ol>
-        <li>
-            <div><span>所有设备</span><i class="el-icon-plus"></i></div>
-            <ul>
-              <li>我的电脑</li>
-              <li>我的硬盘</li>
-              <li>更多设备</li>
-            </ul>
-        </li>
-        <li>
-            <div><span>文件分类</span><i class="el-icon-plus"></i></div>
-            <ul>
-              <li>小麦测序数据</li>
-              <li>大豆测序数据</li>
-              <li>更多设备</li>
-            </ul>
-        </li>
+        <router-link v-for="(item,index) in lists" :key="index" tag="li" :to="{ path: '/searchfiles', query: { type: item }}" ><i class="file-icon computer"></i>{{item}}</router-link>
+        <li>更多设备&nbsp;></li>
       </ol>
   </div>
 </template>
@@ -28,52 +15,66 @@ import bus from "@/utils/bus";
 export default {
   name: "AllFiles",
   data() {
-    return {};
+    return {
+      lists:['computer','disk'],
+      selectedIndex: 0
+    };
   },
   computed: mapGetters([]),
   mounted() {},
   filters: {},
-  methods: {}
+  methods: {
+    addDevice(){
+      this.$electron.ipcRenderer.send('addFile',{API:"open",URL:'/newfile/newdiskdir'})
+    }
+  }
 };
 </script>
 <style lang="scss" scoped>
+.router-link-exact-active {
+  &.router-link-active {
+    background: #386cca;
+    color: #fff;
+  }
+}
 #directory-root {
   height: 100%;
-  overflow: scroll;
-  padding: 12px 20px;
-}
-ol {
-  list-style: none;
-  & > li {
-    &:first-child {
-      margin-bottom: 24px;
+  width: 100%;
+  font-size: 14px;
+  color: #48576a;
+  box-sizing: border-box;
+  overflow-y: visible;
+  .title {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 18px;
+    i {
+      cursor:pointer;
+      line-height: 18px;
     }
-    div {
-      display: flex;
-      justify-content: space-between;
-      span {
+  }
+  ol {
+    margin-top: 12px;
+    list-style: none;
+    li {
+      padding-left: 50px;
+      height: 38px;
+      line-height: 38px;
+      cursor: pointer;
+      &:hover {
+        background: #386cca;
+        color: #fff;
       }
-      i {
-        font-size: 14px;
-        line-height: 1.5;
-        cursor: pointer;
+      &.active {
+        background: #386cca;
+        color: #fff;
       }
-    }
-    ul {
-      padding-left: 22px;
-      margin: 8px 0;
-      list-style: none;
-      li {
-        font-size: 14px;
-        line-height: 28px;
-        cursor: pointer;
-        &:hover{
+      &:last-child {
+        font-size: 12px;
+        text-align: right;
+        &:hover {
+          background: #fff;
           color: #386cca;
-        }
-        &:last-child {
-          font-size: 12px;
-          color: #386cca;
-          text-align: right;
         }
       }
     }

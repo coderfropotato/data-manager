@@ -47,7 +47,7 @@ export default {
       resizeWidth: true,
       resizeHeight: false
     });
-    this.$router.push("/files");
+    this.$router.push('/files')
   },
   computed: {
     ...mapState(["fileInfo",'bottom'])
@@ -96,8 +96,8 @@ export default {
   // 侧边栏宽度
   .sidebar-wrapper {
     flex: 0 0 auto;
-    width: 240px;
-    min-width: 240px;
+    width: 200px;
+    min-width: 200px;
     max-width: 60%;
   }
 

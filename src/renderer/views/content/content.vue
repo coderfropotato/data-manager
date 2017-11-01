@@ -17,6 +17,8 @@ export default {
 #content-root {
   position: relative;
   height: 100%;
+  display: flex;
+  flex-direction: column;
   .header {
     height: 3em;
     line-height: 3em;

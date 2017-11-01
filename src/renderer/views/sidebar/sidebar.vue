@@ -45,12 +45,9 @@
     <div class="line" ref="line"></div>
     <!--根据选择加载组件-->
     <div class="middle" ref="middle">
-      <div class="middle-inner" ref="middleInner">
-        <!--默认路由，和 content.vue 的命名路由共同组成基本的路由管理-->
         <keep-alive>
           <router-view></router-view>
         </keep-alive>
-      </div>
     </div>
   </div>
   

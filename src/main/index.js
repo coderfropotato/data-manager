@@ -73,9 +73,12 @@ ipcMain.on('addFile', (event, arg) => {
   if (arg.API === 'open') {
     let URL = arg.URL
     newWin = new BrowserWindow({
-      height: 600,
-      width: 800
+      height: 500,
+      width: 700,
+      minHeight:500,
+      minWidth:700
     })
+    newWin.setMenu(null);
     newWin.loadURL(baseURL + URL)
   }
   if (arg.API === 'close') {

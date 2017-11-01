@@ -62,6 +62,10 @@ export default {
       display: block;
       margin-top: 13px;
     }
+    span{
+      color: #fff;
+      font-size: 18px;
+    }
   }
   .right {
     display: flex;

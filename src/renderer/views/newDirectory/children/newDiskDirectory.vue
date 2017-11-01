@@ -54,12 +54,13 @@
         </div>
         <!--选择路径-->
         <el-form-item label="路径" prop="path">
-          <el-input v-model="basicForm.path" size="small"></el-input>
-          <el-button type="primary" size="small" @click="showPath" style="margin-left: 1.5em;">浏览</el-button>
+          <el-input class="path" v-model="basicForm.path" size="small"></el-input>
+          <input class="potatos-btn" type="button" value="浏览"  @click="showPath">
+          <!-- <el-button  type="primary" size="small" @click="showPath" style="margin-left: 1.5em;">浏览</el-button> -->
         </el-form-item>
       </el-form>
       <!--展开高级选项按钮-->
-      <div class="show-advanced">
+      <!-- <div class="show-advanced">
         <el-row>
           <el-col :span="20">
             <el-tooltip content="为文件夹添加属性信息" placement="top">
@@ -68,7 +69,7 @@
             </el-tooltip>
           </el-col>
         </el-row>
-      </div>
+      </div> -->
       <!--高级选项-->
       <div class="advanced-options" v-if="showAdvanced">
         <div>
@@ -95,7 +96,7 @@
           </el-row>
         </div>
         <div class="project-attr">
-          <div class="attr-item" v-for="item in projectAttr">
+          <div class="attr-item" v-for="(item,index) in projectAttr" :key="index">
             <el-row :gutter="20">
               <el-col :span="4">
                 <span>{{item.name}}</span>
@@ -438,6 +439,24 @@
       .el-button {
         margin: 2em 2em;
       }
+    }
+  }
+  .potatos-btn{
+      width: 60px;
+      height: 30px;
+      outline: none;
+      color:#fff;
+      border:none;
+      border-radius: 4px;
+      background: #20a0ff;
+      position: absolute;
+      right: 54px;
+      top:3px;
+      cursor: pointer;
+  }
+  .path {
+    .el-input__inner{
+      padding-right: 64px;
     }
   }
 </style>

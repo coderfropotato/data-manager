@@ -1,35 +1,55 @@
 <template>
   <div id="fileInfo-root">
-    <div class="title">
-      <p>文件详情</p>
-      <span>编辑</span>
+    <div v-show="!nodata">
+      <div class="title">
+        <p>文件详情</p>
+        <span v-if="module=='read'" @click="module='edit'">编辑</span>
+        <span v-if="module=='edit'" @click="module='read'">保存</span>
+      </div>
+      <div class="des">
+        <img src="../../../assets/images/dna.png" alt=""> <span>Gmax-275-Wm82.a2.v1.fa</span>
+      </div>
+      <ul>
+        <li>
+          <p>文件类型：<span>参考基因组</span></p>
+        </li>
+        <li>
+          <p>文件大小：<span>900M</span></p>
+        </li>
+        <li>
+          <p>创建时间：<span>2017-09-27</span></p>
+        </li>
+      </ul>
+      <div class="text">
+        <h5>数据来源</h5>
+        <p>类别：公共数据</p>
+        <p>类别：<a href="javascript:;">公共数据</a></p>
+        <h5 class="item">参考基因组</h5>
+        <div class="attrs">
+          <span>名称</span>
+          <span>详情</span>
+        </div>
+        <ol  class="item-list">
+            <li :class="{'edit':module==='edit'}" v-for="(item,index) in tableInfo" :key="index"><input ref="attrs" v-model="item.name" :diasbled="{true:module!=='edit',false:module==='edit'}" type="text"> ：<input v-model="item.attr" :diasbled="{true:module!=='edit',false:module==='edit'}" type="text"></li>
+        </ol>
+        <!-- add attrs -->
+        <!-- <p><input type="text">：<input type="text"></p> -->
+        <h5 class="item">备注</h5>
+        <el-input type="textarea" v-model="textarea"></el-input>
+      </div>
+      <div @click="addAttrs" v-show="module==='edit'" class="add-attrs">
+        <i class="el-icon-circle-plus-outline"></i><span>添加文件属性</span>
+      </div>
     </div>
-    <div class="des">
-      <img src="../../../assets/images/dna.png" alt=""> <span>Gmax-275-Wm82.a2.v1.fa</span>
-    </div>
-    <ul>
-      <li>
-        <div><span>文件类型</span><p>参考基因组</p></div>
-      </li>
-      <li>
-        <div><span>文件大小</span><p>900M</p></div>
-      </li>
-      <li>
-        <div><span>创建时间</span><p>2017-09-28</p></div>
-      </li>
-    </ul>
-    <div class="text">
-      <h5>数据来源</h5>
-      <p>类别：公共数据</p>
-      <p>类别：<a href="javascript:;">公共数据</a></p>
-      <h5 class="item">参考基因组</h5>
-      <p>名称：Gmax-275-Wm82.a2.v1</p>
-      <p>数据：其他相关信息</p>
+    <!-- nodata -->
+    <div v-show="nodata">
+        <P>暂无文件详情</P>
     </div>
   </div>
 </template>
 <script>
 import { mapGetters } from "vuex";
+import bus from '@/utils/bus';
 
 let tempData = ["1/1.txt/", "1/2.2/3.2/", "1/2.4/3/", "1/2.txt/"];
 let tempCategory = [];
@@ -38,9 +58,37 @@ export default {
   name: "FileInfo",
   data() {
     return {
+      module: "read",
+      nodata:false,
+      tableInfo: [
+        {
+          name: "属性1",
+          attr: "值1"
+        },
+        {
+          name: "属性2",
+          attr: "值2"
+        },
+        {
+          name: "属性2",
+          attr: "值2"
+        },
+        {
+          name: "属性2",
+          attr: "值2"
+        },
+        {
+          name: "属性2",
+          attr: "值2"
+        },
+        {
+          name: "属性2",
+          attr: "值2"
+        }
+      ],
       // 记录分类的数组
       categorys: [],
-      tempData
+      textarea: "textarea"
     };
   },
   computed: mapGetters([
@@ -50,6 +98,8 @@ export default {
     "categoryFileTree"
     // categorys: state => state.fileInfo.fileCategorys
   ]),
+  mounted(){
+  },
   watch: {
     show() {
       for (let node in tempData) {
@@ -95,6 +145,13 @@ export default {
     }
   },
   methods: {
+    addAttrs(){
+      this.tableInfo.push({name:"",attr:""})
+      let len = this.$refs.attrs.length;
+      console.log(len)
+      console.log(this.$refs.attrs)
+      //this.$refs.attrs[len].focus();
+    },
     addFileCategory() {},
     setCheckNode() {
       // node-key 必须是唯一的，否则无法设置节点
@@ -122,23 +179,24 @@ export default {
   padding: 2em;
   font-size: 14px;
   overflow-y: scroll;
-  .title{
+  .title {
     display: flex;
     justify-content: space-between;
-    span{
+    span {
       color: #386cca;
+      cursor: pointer;
     }
   }
-  .des{
+  .des {
     margin: 22px 0;
     display: flex;
-    img{
-      width:56px;
+    img {
+      width: 56px;
       height: 56px;
       border-radius: 50%;
       display: block;
     }
-    span{
+    span {
       line-height: 56px;
       margin-left: 20px;
       white-space: nowrap;
@@ -146,48 +204,98 @@ export default {
       overflow: hidden;
     }
   }
-  ul{
+  ul {
     list-style: none;
     display: flex;
+    flex-direction: column;
     justify-content: space-between;
-    li{
-      flex:1;
-      font-size: 12px;
-      text-align: center;
-      border-right: 1px solid #ccc;
-      &:last-child{
-        border:none;
+    li {
+      flex: 1;
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      margin-top: 12px;
+      p {
+        font-size: 14px;
       }
-      div{
+    }
+  }
+  .text {
+    margin-top: 40px;
+    h5 {
+      font-size: 14px;
+      margin-bottom: 12px;
+      font-weight: normal;
+    }
+    .item {
+      margin-top: 32px;
+    }
+    .attrs{
+      display: flex;
+      margin-bottom: 8px;
+      span{
+        &:first-child{
+          width: 20%;
+        }
+        &.last-child{
+          width:75%;
+        }
+      }
+    }
+    p {
+      line-height: 26px;
+      white-space: nowrap;
+      overflow: hidden;
+      font-size: 12px;
+      text-overflow: ellipsis;
+      width: 100%;
+      display: flex;
+      input {
+        outline: none;
+        border: none;
+        border-bottom: 1px solid #ccc;
+        font-size: 12px;
+        font-family: "Helvetica Neue", Helvetica, "PingFang SC",
+          "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+        &:first-child {
+          width: 60px;
+        }
+        &:last-child {
+          flex: 1;
+        }
+      }
+      a {
+        color: #386cca;
+      }
+    }
+    .item-list {
+      max-height: 100px;
+      overflow-y: auto;
+      li {
+        width: 100%;
         display: flex;
-        flex-direction: column;
-        p{
-          margin-top: 20px;
+        margin-top: 8px;
+        &.edit {
+          input {
+            border: 1px solid #ccc;
+          }
+        }
+        input {
+          border: none;
+          outline: none;
+          &:first-child {
+            width: 20%;
+          }
+          &:last-child {
+            width: 75%;
+          }
         }
       }
     }
   }
-  .text{
-    margin-top: 40px;
-    h5{
-      font-size: 14px;
-      margin-bottom: 12px;
-      font-weight:normal;
-     
-    }
-    .item{
-      margin-top: 32px;
-    }
-    p{
-      line-height: 26px;
-      white-space: nowrap;
-      overflow: hidden;
-      font-size:12px;
-      text-overflow: ellipsis;
-      a{
-        color: #386cca;
-      }
-    }
+  .add-attrs{
+    margin-top: 20px;
+    cursor: pointer;
   }
 }
 </style>

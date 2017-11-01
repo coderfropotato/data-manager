@@ -9,14 +9,6 @@
               <li>更多设备</li>
             </ul>
         </li>
-        <li>
-            <div><span>文件分类</span><i class="el-icon-plus"></i></div>
-            <ul>
-              <li>小麦测序数据</li>
-              <li>大豆测序数据</li>
-              <li>更多设备</li>
-            </ul>
-        </li>
       </ol>
   </div>
 </template>

@@ -4,7 +4,7 @@
       <p title="index>computer>files"><span>当前位置：</span>index>computer>files</p>
     </div>
     <div class="search">
-       <el-input placeholder="请输入内容" v-model="input4">
+       <el-input size="small" placeholder="请输入关键词" v-model="searchValue">
           <el-button slot="append" icon="search">搜索</el-button>
       </el-input>
     </div>
@@ -17,17 +17,24 @@ export default {
   data() {
     return {
       searchValue: "",
-      //el data
-      input4: ""
     };
   },
   mounted() {}
 };
 </script>
 <style lang="scss">
+.el-button{
+  border-radius: 0;
+  color: #fff!important;
+}
+.el-input-group__append{
+  background:#386cca;
+  border: none;
+}
 #fileHeader-root {
   display: flex;
-  padding: 24px 12px;
+  padding: 12px 12px;
+  height: 58px;
   .breadcrumb {
     p {
       line-height: 35px;
@@ -36,12 +43,12 @@ export default {
       overflow-x: hidden;
       text-overflow: ellipsis;
     }
-    width: 30%;
+    width: 55%;
     padding-right: 12px;
     box-sizing: border-box;
   }
   .search {
-    width: 70%;
+    width: 45%;
   }
   #scrollBar {
     position: relative;

@@ -13,6 +13,7 @@ const Database = r => require.ensure([], () => r(require('@/views/content/childr
 const FileStatusContent = r => require.ensure([], () => r(require('@/views/content/children/fileStatusContent')), 'fileStatusContent')
 const FileHeader = r => require.ensure([], () => r(require('@/views/content/children/fileHeader')), 'fileHeader')
 const FileContent = r => require.ensure([], () => r(require('@/views/content/children/fileContent')), 'fileContent')
+const FileScale = r => require.ensure([], () => r(require('@/views/content/children/fileScale')), 'fileScale')
 const SearchHeader = r => require.ensure([], () => r(require('@/views/content/children/searchHeader')), 'searchHeader')
 
 const SearchContent = r => require.ensure([], () => r(require('@/views/content/children/searchContent')), 'searchContent')
@@ -30,11 +31,9 @@ const routes = [
     name: 'Files',
     components: {
       default: Files,
-      ContentHeader: FileHeader,
-      ContentBottom: FileContent,
+      ContentHeader: FileScale,
       FileInfo: FileInfo
     },
-    // ContentBottom
     children: [
       {
         // 导入文件
@@ -63,13 +62,23 @@ const routes = [
     ]
   },
   {
+    path: "searchfiles",
+    name: "SearchFiles",
+    components: {
+      default: Files,
+      ContentHeader: FileHeader,
+      ContentBottom: FileContent,
+      FileInfo: FileInfo
+    }
+  },
+  {
     path: 'search',
     name: 'Search',
     components: {
       default: Search,
       ContentHeader: SearchHeader,
       ContentBottom: SearchContent,
-      FileInfo:FileInfo
+      FileInfo: FileInfo
     }
   },
   {
