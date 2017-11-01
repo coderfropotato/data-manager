@@ -22,13 +22,16 @@ function createWindow() {
     minWidth: 1200,
     // frame:false,
     skipTaskbar:false,
-    useContentSize: false,
+    useContentSize: true,
   })
-  mainWindow.setMinimumSize(1200, 800)
+  mainWindow.setMinimumSize(1200, 860)
   mainWindow.loadURL(winURL)
   mainWindow.setMenu(null)
   mainWindow.on('closed', () => {
     mainWindow = null
+  })
+  mainWindow.on('resize',(ev)=>{
+    ev.sender.send('windowResize')
   })
 
   // //系统托盘图标

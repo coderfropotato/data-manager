@@ -18,11 +18,16 @@ body{
 * {
   margin: 0;
   padding: 0;
+  font-size: 14px;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
   text-decoration: none;
 }
+  
+  p,h1,h2,h3,h4,h5,h6,b,em,div{
+    color: #48576a;
+  }
 // Icon 公共样式
 .icon {
   width: 1em;
@@ -92,7 +97,25 @@ body{
 .el-table .el-table__row{
   text-align: center;
 }
-
+.el-checkbox__inner::after{
+  left: 3px;
+}
+.el-checkbox__inner{
+  border-radius: 2px;
+}
+//表头颜色
+.el-table__footer-wrapper thead div,
+.el-table__header-wrapper thead div {
+  background-color: #fff;
+}
+.el-table th {
+  background-color: #fff;
+}
+.el-table__row{
+  &:hover{
+    cursor: pointer;
+  }
+}
 ::-webkit-scrollbar-thumb {
   border-radius: 3px;
   background: #ccc;
@@ -103,8 +126,8 @@ body{
 }
 
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 4px;
+  height: 4px;
 }
 
 

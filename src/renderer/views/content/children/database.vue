@@ -143,28 +143,7 @@ export default {
           }
         });
         const content = reportWin.webContents;
-        const MenuObj = this.$electron.remote.Menu;
-        const menuItem = MenuObj.buildFromTemplate([
-          {
-            label: "首页",
-            click: function() {
-              content.goToIndex(0);
-            }
-          },
-          {
-            label: "后退",
-            click: function() {
-              if (content.canGoBack()) content.goBack();
-            }
-          },
-          {
-            label: "前进",
-            click: function() {
-              if (content.canGoForward()) content.goForward();
-            }
-          }
-        ]);
-        reportWin.setMenu(menuItem);
+        reportWin.setMenu(null);
         reportWin.loadURL(_this.url);
         reportWin.on("ready-to-show", () => {
           reportWin.show();
@@ -184,6 +163,46 @@ export default {
         });
         content.on("dom-ready", () => {
           //TODO add historyRecord
+          content.executeJavaScript(
+            `
+              var Pre = document.createElement('div');
+              var Next = document.createElement('div');
+              Pre.style.position="fixed";
+              Next.style.position="fixed";
+              Pre.style.className="pre";
+              Next.style.className="next";
+              Pre.style.left="40px";
+              Next.style.left="100px";
+              Pre.style.top="20px";
+              Next.style.top="20px";
+              Pre.style.width="40px";
+              Next.style.width="40px";
+              Pre.style.height = "40px";
+              Next.style.height = "40px";
+              Pre.style.borderRadius = "8px";
+              Next.style.borderRadius = "8px";
+              Pre.innerHTML='←';
+              Next.innerHTML='→';
+              Pre.style.backgroundColor="rgba(0,0,0,0.5)";
+              Next.style.backgroundColor="rgba(0,0,0,0.5)";
+              Pre.style.textAlign="center";
+              Next.style.textAlign="center";
+              Pre.style.lineHeight="40px";
+              Next.style.lineHeight="40px";
+              Pre.style.fontSize="30px";
+              Next.style.fontSize="30px";
+              Pre.style.color="#fff";
+              Next.style.color="#fff";
+              Pre.style.cursor="pointer";
+              Next.style.cursor="pointer";
+              Pre.style.zIndex="1000000";
+              Next.style.zIndex="1000000";
+              Pre.addEventListener('click',function(){history.back()},false);
+              Next.addEventListener('click',function(){history.forward()},false);
+              document.body.appendChild(Pre);
+              document.body.appendChild(Next);
+            `
+          )
         });
         reportWin.on("closed", () => {
           reportWin = null;
