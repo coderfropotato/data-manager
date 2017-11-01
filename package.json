@@ -6,6 +6,38 @@
   "description": "An electron-vue project",
   "license": null,
   "main": "./dist/electron/main.js",
+  "repository": {
+    "type": "gitlab",
+    "url": "http://54.223.70.246:9000/data-management/data-manager-front-end.git"
+  },
+  "build": {
+    "appId": "com.data-manager-front-end.app",
+    "publish": [
+      {
+        "provider": "github",
+        "token": "_24eR2_pC_yycryM_Pu4"
+      }
+    ],
+    "mac": {
+      "target": [
+        "dmg",
+        "zip"
+      ]
+    },
+    "win": {
+      "target": [
+        "nsis",
+        "zip"
+      ]
+    },
+    "files": [
+      "**/*",
+      "dist/electron/main.js",
+      "node_modules/**/*",
+      "package.json"
+    ],
+    "extends": null
+  },
   "scripts": {
     "build": "node .electron-vue/build.js",
     "build:darwin": "cross-env BUILD_TARGET=darwin node .electron-vue/build.js",
@@ -14,14 +46,15 @@
     "build:win32": "cross-env BUILD_TARGET=win32 node .electron-vue/build.js",
     "build:clean": "cross-env BUILD_TARGET=clean node .electron-vue/build.js",
     "build:web": "cross-env BUILD_TARGET=web node .electron-vue/build.js",
-    "fix:zmq":"npm rebuild zeromq --runtime=electron --target=1.6.11",
+    "fix:zmq": "npm rebuild zeromq --runtime=electron --target=1.6.11",
     "dev": "node .electron-vue/dev-runner.js",
     "pack": "npm run pack:main && npm run pack:renderer",
-    "fix:zmq":"npm rebuild zeromq --runtime=electron --target=1.6.11",
     "pack:main": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.main.config.js",
-    "pack:renderer": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.renderer.config.js"
+    "pack:renderer": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.renderer.config.js",
+    "dist": "electron-builder"
   },
   "dependencies": {
+    "electron-updater": "^2.15.0",
     "element-ui": "^1.4.0",
     "jquery": "^3.2.1",
     "jquery-resizable-dom": "^0.20.0",
@@ -56,12 +89,14 @@
     "del": "^2.2.1",
     "devtron": "^1.1.0",
     "electron": "1.6.11",
+    "electron-builder": "^19.43.0",
     "electron-debug": "^1.1.0",
     "electron-devtools-installer": "^2.0.1",
     "electron-packager": "^8.5.0",
     "electron-rebuild": "^1.1.3",
     "extract-text-webpack-plugin": "^2.0.0-beta.4",
     "file-loader": "^0.11.1",
+    "grunt": "^1.0.1",
     "html-webpack-plugin": "^2.16.1",
     "inject-loader": "^3.0.0",
     "json-loader": "^0.5.4",
