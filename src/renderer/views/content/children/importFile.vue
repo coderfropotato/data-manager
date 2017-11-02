@@ -45,7 +45,7 @@
                     type="text"
                     size="small"
                     @click="handleDeleteFile(scope.$index, scope.row)"
-                    style="color: #20a0ff;">删除
+                    style="color: #386cca;">删除
                 </el-button>
               </template>
             </el-table-column>
@@ -263,7 +263,7 @@
     }
   }
 </script>
-<style lang="scss" scoped>
+<style lang="scss" scoped >
   #uploadFile-root {
     position: relative;
   }
@@ -287,7 +287,7 @@
     .text {
       font-size: 1.1em;
       .el-button {
-        color: #20a0ff;
+        color: #386cca;
         font-size: 0.95em;
       }
     }
@@ -302,7 +302,7 @@
       font-size: 1.1em;
       .el-button {
         float: right;
-        color: #20a0ff;
+        color: #386cca;
       }
     }
   }

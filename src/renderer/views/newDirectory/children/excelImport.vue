@@ -332,7 +332,7 @@
     }
   }
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
   #excelImport-root {
     .import-excel {
       width: 80%;

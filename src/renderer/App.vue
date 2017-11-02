@@ -41,7 +41,7 @@ export default {
   }
 };
 </script>
-
 <style lang="scss">
-@import "./assets/SCSS/common";
+  @import "./assets/SCSS/common";
 </style>
+

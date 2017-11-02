@@ -60,7 +60,7 @@ export default {
 };
 </script>
 
-<style lang='scss' scoped>
+<style lang='scss' >
 // 整体三栏可调布局
 #index-root{
   display: flex;

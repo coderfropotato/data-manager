@@ -46,7 +46,7 @@
     }
   }
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
   #diskDirectory-root {
     height: 100%;
     .grid-display {

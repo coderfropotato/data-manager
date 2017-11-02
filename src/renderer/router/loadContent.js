@@ -15,6 +15,7 @@ const FileHeader = r => require.ensure([], () => r(require('@/views/content/chil
 const FileContent = r => require.ensure([], () => r(require('@/views/content/children/fileContent')), 'fileContent')
 const FileScale = r => require.ensure([], () => r(require('@/views/content/children/fileScale')), 'fileScale')
 const SearchHeader = r => require.ensure([], () => r(require('@/views/content/children/searchHeader')), 'searchHeader')
+const SearchIndex = r => require.ensure([], () => r(require('@/views/content/children/searchIndex')), 'searchIndex')
 
 const SearchContent = r => require.ensure([], () => r(require('@/views/content/children/searchContent')), 'searchContent')
 const ImportFile = r => require.ensure([], () => r(require('@/views/content/children/importFile')), 'importFile')
@@ -68,6 +69,15 @@ const routes = [
       default: Files,
       ContentHeader: FileHeader,
       ContentBottom: FileContent,
+      FileInfo: FileInfo
+    }
+  },
+  {
+    path: "searchindex",
+    name: "SearchIndex",
+    components: {
+      default: Search,
+      ContentHeader: SearchIndex,
       FileInfo: FileInfo
     }
   },

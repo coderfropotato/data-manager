@@ -148,7 +148,7 @@
   }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss" scoped >
   #file-status-info-root {
     overflow-y: scroll;
     width: 100%;

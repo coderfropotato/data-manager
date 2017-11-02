@@ -378,7 +378,7 @@
     }
   }
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
   // 隐藏滚动条
   #newDiskFile-root {
     height: 100%;
@@ -448,7 +448,7 @@
       color:#fff;
       border:none;
       border-radius: 4px;
-      background: #20a0ff;
+      background: #386cca;
       position: absolute;
       right: 54px;
       top:3px;

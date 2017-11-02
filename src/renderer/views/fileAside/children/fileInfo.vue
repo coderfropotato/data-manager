@@ -171,7 +171,7 @@ export default {
   }
 };
 </script>
-<style lang="scss" scoped>
+<style lang="scss" scoped >
 #fileInfo-root {
   height: 100%;
   width: 100%;
@@ -274,7 +274,7 @@ export default {
       li {
         width: 100%;
         display: flex;
-        margin-top: 8px;
+        margin-bottom: 8px;
         &.edit {
           input {
             border: 1px solid #ccc;

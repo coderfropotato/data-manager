@@ -72,7 +72,7 @@ const state = {
 
   taggedModifiedFiles: new Map(),  // 所有已标记好的变更文件
 
-  modifiedNum: 0, // 变更文件的数目
+  modifiedNum: 12, // 变更文件的数目
 
   nodeData: {}, // 当前选中节点的信息，以便打标签
 

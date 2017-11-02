@@ -75,7 +75,7 @@
     }
   }
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
   .smartCategory-root {
     .category {
       margin: 0 3em;

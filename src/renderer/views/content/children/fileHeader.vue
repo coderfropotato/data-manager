@@ -1,7 +1,12 @@
 <template>
   <div id="fileHeader-root">
     <div class="breadcrumb">
-      <p title="index>computer>files"><span>当前位置：</span>index>computer>files</p>
+     <el-breadcrumb separator=">">
+      <el-breadcrumb-item :to="{ path: '/filescale' }">首页</el-breadcrumb-item>
+      <el-breadcrumb-item>活动管理</el-breadcrumb-item>
+      <el-breadcrumb-item>活动列表</el-breadcrumb-item>
+      <el-breadcrumb-item>活动详情</el-breadcrumb-item>
+    </el-breadcrumb>
     </div>
     <div class="search">
        <el-input size="small" placeholder="请输入关键词" v-model="searchValue">
@@ -16,19 +21,22 @@ export default {
   name: "fileHeader",
   data() {
     return {
-      searchValue: "",
+      searchValue: ""
     };
   },
   mounted() {}
 };
 </script>
-<style lang="scss">
-.el-button{
-  border-radius: 0;
-  color: #fff!important;
+<style lang="scss" >
+.el-breadcrumb{
+  margin-top: 10px;
 }
-.el-input-group__append{
-  background:#386cca;
+.el-button {
+  border-radius: 0;
+  color: #fff !important;
+}
+.el-input-group__append {
+  background: #386cca;
   border: none;
 }
 #fileHeader-root {

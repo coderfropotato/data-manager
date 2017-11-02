@@ -1,67 +1,44 @@
 <template>
   <div id="search-root">
-     <ol>
-        <li>
-            <div><span>所有设备</span><i class="el-icon-plus"></i></div>
-            <ul>
-              <li>我的电脑</li>
-              <li>我的硬盘</li>
-              <li>更多设备</li>
-            </ul>
-        </li>
-      </ol>
+    <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">搜索范围</el-checkbox>
+    <div style="margin: 15px 0;"></div>
+    <el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
+      <el-checkbox v-for="city in cities" :label="city" :key="city">{{city}}</el-checkbox>
+    </el-checkbox-group>
   </div>
 </template>
 <script>
-import { mapState } from "vuex";
 export default {
   data() {
     return {
+      checkAll: true,
+      checkedCities: ["C", "D"],
+      cities: ["C", "D", "E", "F"],
+      isIndeterminate: true
     };
   },
-  watch: {},
-  mounted() {},
-  methods: {}
+  methods: {
+    handleCheckAllChange(event) {
+      this.checkedCities = event.target.checked ? this.cities : [];
+      this.isIndeterminate = false;
+    },
+    handleCheckedCitiesChange(value) {
+      let checkedCount = value.length;
+      this.checkAll = checkedCount === this.cities.length;
+      this.isIndeterminate =
+        checkedCount > 0 && checkedCount < this.cities.length;
+    }
+  }
 };
 </script>
-<style lang="scss" scoped>
-#search-root{
-  padding:12px 20px;
-}
-ol {
-  list-style: none;
-  & > li {
-    &:first-child {
-      margin-bottom: 24px;
-    }
-    div {
-      display: flex;
-      justify-content: space-between;
-      span {
-      }
-      i {
-        font-size: 14px;
-        line-height: 1.5;
-        cursor: pointer;
-      }
-    }
-    ul {
-      padding-left: 22px;
-      margin: 8px 0;
-      list-style: none;
-      li {
-        font-size: 14px;
-        line-height: 28px;
-        cursor: pointer;
-        &:hover{
-          color: #386cca;
-        }
-        &:last-child {
-          font-size: 12px;
-          color: #386cca;
-          text-align: right;
-        }
-      }
+<style lang="scss" scoped >
+#search-root {
+  padding: 12px 20px;
+  .el-checkbox-group {
+    padding-left: 20px;
+    .el-checkbox {
+      display: block;
+      width: 100%;
     }
   }
 }

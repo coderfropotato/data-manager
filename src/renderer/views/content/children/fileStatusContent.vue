@@ -67,7 +67,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 #file-status-root {
   height: 100%;
   -webkit-overflow-y: overlay;

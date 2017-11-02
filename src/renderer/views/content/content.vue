@@ -13,7 +13,7 @@ export default {
   name: "Content"
 };
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 #content-root {
   position: relative;
   height: 100%;

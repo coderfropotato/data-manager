@@ -2,7 +2,7 @@
   <div id="directory-root">
       <div class="title">所有文件</span><i @click="addDevice" class="el-icon-plus"></i></div>
       <ol>
-        <router-link v-for="(item,index) in lists" :key="index" tag="li" :to="{ path: '/searchfiles', query: { type: item }}" ><i class="file-icon computer"></i>{{item}}</router-link>
+        <router-link v-for="(item,index) in deviceList" :key="index" tag="li" :to="{ path: '/searchfiles', query: { type: item }}" ><i class="file-icon computer"></i>{{item}}</router-link>
         <li>更多设备&nbsp;></li>
       </ol>
   </div>
@@ -16,7 +16,7 @@ export default {
   name: "AllFiles",
   data() {
     return {
-      lists:['computer','disk'],
+      deviceList:['computer','disk'],
       selectedIndex: 0
     };
   },
@@ -30,7 +30,7 @@ export default {
   }
 };
 </script>
-<style lang="scss" scoped>
+<style lang="scss" scoped >
 .router-link-exact-active {
   &.router-link-active {
     background: #386cca;

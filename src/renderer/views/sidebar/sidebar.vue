@@ -5,13 +5,14 @@
       <el-col :span="24">
         <!--router 激活导航，以index为path-->
         <el-menu class="menu" router>
-          <el-menu-item index="/files" @click="openFile">
+          <!-- @click="openFile" -->
+          <el-menu-item index="/files" >
             <svg class="icon" aria-hidden="true">
               <use xlink:href="#icon-wenjian"></use>
             </svg>
             <span>文件</span>
           </el-menu-item>
-          <el-menu-item index="/search?type=search">
+          <el-menu-item index="/searchindex?type=search">
             <svg class="icon" aria-hidden="true">
               <use xlink:href="#icon-search1"></use>
             </svg>
@@ -69,24 +70,24 @@ export default {
     modifiedFiles: "modifiedNum"
   }),
   methods: {
-    // 获取文件
-    openFile() {
-      // this.fullScreenLoading = true
-      if (
-        this.$store.state.files.allFiles.length &&
-        Object.keys(this.$store.state.files.categoryDirRowData).length
-      ) {
-        this.fullScreenLoading = false;
-      } else {
-        this.$store.dispatch("openFile").then(() => {
-          this.fullScreenLoading = false;
-        });
-      }
-    }
+    // // 获取文件
+    // openFile() {
+    //   // this.fullScreenLoading = true
+    //   if (
+    //     this.$store.state.files.allFiles.length &&
+    //     Object.keys(this.$store.state.files.categoryDirRowData).length
+    //   ) {
+    //     this.fullScreenLoading = false;
+    //   } else {
+    //     this.$store.dispatch("openFile").then(() => {
+    //       this.fullScreenLoading = false;
+    //     });
+    //   }
+    // }
   }
 };
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 $backgroundColor: #f7f9f9;
 #sidebar-root {
   position: relative;
@@ -134,8 +135,8 @@ $backgroundColor: #f7f9f9;
   }
   // 文件更改状态角标样式
   .el-badge__content {
-    top: 1em;
-    right: 4px;
+    top: 1.8em;
+    right: -4px;
   }
 }
 
