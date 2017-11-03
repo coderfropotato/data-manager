@@ -9,6 +9,8 @@
 export default {
   name: "data-manager-desktop",
   mounted() {
+    //默认获取文件列表
+    this.$store.dispatch('getImportTargetDisks');
     // 禁用浏览器默认拖拽事件，防止用户拖拽的文件被打开
     document.addEventListener(
       "drop",
@@ -38,6 +40,12 @@ export default {
       },
       false
     );
+  },
+  created(){
+    this.$electron.ipcRenderer.on('updateFilesList',()=>{
+      //被管理的设备添加成功后 重新获取设备列表
+      this.$store.dispatch('getFileTree');
+    })
   }
 };
 </script>

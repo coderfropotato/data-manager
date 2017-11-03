@@ -145,318 +145,362 @@
   </div>
 </template>
 <script>
-  import {ipcRenderer} from 'electron'
-
-  export default {
-    data () {
-      return {
-        dataSourceOptions: [{
-          value: 'localDisk',
-          label: '本地磁盘或外接设备'
-        }, {
-          value: 'remoteServer',
-          label: '远程服务器'
-        }],
-        protocolOptions: [{
-          value: 'SSH',
-          label: 'SSH'
-        }],
-        templateOptions: [{
-          value: 'project',
-          label: '项目文件夹'
-        }, {
-          value: 'custom',
-          label: '自定义文件夹'
-        }],
-        customOptions: [
-          {
-            value: '条目一',
-            label: '条目一'
-          }, {
-            value: '条目二',
-            label: '条目二'
-          }
-        ],
-        projectAttr: [
-          {
-            name: '项目',
-            attr: 'project',
-            value: ''
-          }, {
-            name: '年份',
-            attr: 'year',
-            value: ''
-          }, {
-            name: '负责人',
-            attr: 'principal',
-            value: ''
-          }
-        ],
-        // 表单数据
-        basicForm: {
-          // 别名
-          alias: '',
-          // 路径
-          path: '',
-          // 数据源
-          dataSource: 'localDisk',
-          // 远程服务器信息
-          protocol: '',
-          host: '',
-          port: '',
-          username: '',
-          password: ''
+import { ipcRenderer } from "electron";
+import fetchData from "../../../api/index";
+export default {
+  data() {
+    return {
+      dataSourceOptions: [
+        {
+          value: "localDisk",
+          label: "本地磁盘或外接设备"
         },
-        // 表单验证规则
-        rules: {
-          alias: [
-            {required: true, message: '请输入磁盘别名', trigger: 'blur'}
-          ],
-          path: [
-            {required: true, message: '请选择路径', trigger: 'blur'}
-          ],
-          protocol: [
-            {required: true, message: '请选择协议', trigger: 'change'}
-          ],
-          host: [
-            {required: true, message: '请输入主机地址', trigger: 'blur'}
-          ],
-          port: [
-            {required: true, message: '请输入端口', trigger: 'blur'}
-          ],
-          username: [
-            {required: true, message: '请输入用户名', trigger: 'blur'}
-          ],
-          password: [
-            {required: true, message: '请输入密码', trigger: 'blur'}
-          ]
+        {
+          value: "remoteServer",
+          label: "远程服务器"
+        }
+      ],
+      protocolOptions: [
+        {
+          value: "SSH",
+          label: "SSH"
+        }
+      ],
+      templateOptions: [
+        {
+          value: "project",
+          label: "项目文件夹"
         },
-        // 记录用户选择的结果
-        customChoose: [],
-        // 项目模板选项
-        template: 'project',
-        // 是否使用密匙（暂不支持）
-        useKey: true,
-        // 是否显示高级选项
-        showAdvanced: false
+        {
+          value: "custom",
+          label: "自定义文件夹"
+        }
+      ],
+      customOptions: [
+        {
+          value: "条目一",
+          label: "条目一"
+        },
+        {
+          value: "条目二",
+          label: "条目二"
+        }
+      ],
+      projectAttr: [
+        {
+          name: "项目",
+          attr: "project",
+          value: ""
+        },
+        {
+          name: "年份",
+          attr: "year",
+          value: ""
+        },
+        {
+          name: "负责人",
+          attr: "principal",
+          value: ""
+        }
+      ],
+      // 表单数据
+      basicForm: {
+        // 别名
+        alias: "",
+        // 路径
+        path: "",
+        // 数据源
+        dataSource: "localDisk",
+        // 远程服务器信息
+        protocol: "",
+        host: "",
+        port: "",
+        username: "",
+        password: ""
+      },
+      // 表单验证规则
+      rules: {
+        alias: [{ required: true, message: "请输入磁盘别名", trigger: "blur" }],
+        path: [{ required: true, message: "请选择路径", trigger: "blur" }],
+        protocol: [{ required: true, message: "请选择协议", trigger: "change" }],
+        host: [{ required: true, message: "请输入主机地址", trigger: "blur" }],
+        port: [{ required: true, message: "请输入端口", trigger: "blur" }],
+        username: [{ required: true, message: "请输入用户名", trigger: "blur" }],
+        password: [{ required: true, message: "请输入密码", trigger: "blur" }]
+      },
+      // 记录用户选择的结果
+      customChoose: [],
+      // 项目模板选项
+      template: "project",
+      // 是否使用密匙（暂不支持）
+      useKey: true,
+      // 是否显示高级选项
+      showAdvanced: false
+    };
+  },
+  methods: {
+    // 重置表格数据
+    resetForm() {
+      this.$refs["basicForm"].resetFields();
+    },
+    // 添加自定义文件夹条目
+    // TODO 防止自定义条目重复选择
+    addCustomOption() {
+      // 只能选择提供的条目
+      let optionLength = this.customOptions.length;
+      if (this.customChoose.length < optionLength) {
+        this.customChoose.push({
+          attr: "",
+          value: ""
+        });
+      } else {
+        this.$notify.info({
+          title: "提示",
+          message: "只能添加" + optionLength + "条可选属性！",
+          duration: 3000
+        });
       }
     },
-    methods: {
-      // 重置表格数据
-      resetForm () {
-        this.$refs['basicForm'].resetFields()
-      },
-      // 添加自定义文件夹条目
-      // TODO 防止自定义条目重复选择
-      addCustomOption () {
-        // 只能选择提供的条目
-        let optionLength = this.customOptions.length
-        if (this.customChoose.length < optionLength) {
-          this.customChoose.push({
-            attr: '',
-            value: ''
-          })
-        } else {
-          this.$notify.info({
-            title: '提示',
-            message: '只能添加' + optionLength + '条可选属性！',
-            duration: 3000
-          })
-        }
-      },
-      // 删除自定义文件夹条目
-      deleteCustomChoose (index) {
-        this.customChoose.splice(index, 1)
-        console.log(this.customChoose)
-      },
-      // 在输入框显示选择路径
-      showPath () {
-        ipcRenderer.send('open-file-dialog', 'single')
-        ipcRenderer.on('selected-directory', (event, path) => {
-          // 将返回的 path 数组转化成 string
-          this.basicForm.path = path.toString()
-        })
-      },
-      // 提示信息
-      noticeAddCustom (e) {
-        if (e === 'custom') {
-          this.$notify.info({
-            title: '提示',
-            message: '请点击下方的加号添加自定义条目',
-            duration: 3000
-          })
-        }
-      },
-      // 确认添加磁盘目录
-      confirmAddDirectory () {
-        this.$refs['basicForm'].validate((valid) => {
-          if (valid) {
-            // 提取项目信息
-            let formData = this.basicForm
-            let projectInfo = []
-            for (let item in this.projectAttr) {
-              projectInfo.push({
-                [this.projectAttr[item].attr]: this.projectAttr[item].value
-              })
+    // 删除自定义文件夹条目
+    deleteCustomChoose(index) {
+      this.customChoose.splice(index, 1);
+      console.log(this.customChoose);
+    },
+    // 在输入框显示选择路径
+    showPath() {
+      ipcRenderer.send("open-file-dialog", "single");
+      ipcRenderer.on("selected-directory", (event, path) => {
+        // 将返回的 path 数组转化成 string
+        this.basicForm.path = path.toString();
+      });
+    },
+    // 提示信息
+    noticeAddCustom(e) {
+      if (e === "custom") {
+        this.$notify.info({
+          title: "提示",
+          message: "请点击下方的加号添加自定义条目",
+          duration: 3000
+        });
+      }
+    },
+    // 确认添加磁盘目录
+    confirmAddDirectory() {
+      let _this = this;
+      this.$refs["basicForm"].validate(valid => {
+        if (valid) {
+          // 提取项目信息
+          let formData = this.basicForm;
+          let projectInfo = [];
+          for (let item in this.projectAttr) {
+            projectInfo.push({
+              [this.projectAttr[item].attr]: this.projectAttr[item].value
+            });
+          }
+          // 将所有文件夹信息汇总
+          // TODO 目录类型需要明确（私有数据，共有数据，共享数据）
+          let directoryInfo = {
+            alias: formData.alias,
+            path: formData.path,
+            remoteServer: {
+              protocol: formData.protocol,
+              host: formData.host,
+              port: formData.port,
+              username: formData.username,
+              password: formData.password
+            },
+            dataSource: formData.dataSource, // localDisk, remoteServer
+            projectInfo,
+            customAttr: this.customChoose
+          };
+          //判断是否可以被管理
+          fetchData("isAliasExist", {
+            alias: _this.basicForm.alias
+          }).then(res => {
+            if (res.result) {
+              //远程服务 或者 本地磁盘
+              let params = {
+                path: _this.basicForm.path,
+                isTelnet: false,
+                alias: _this.basicForm.alias,
+                source: {}
+              };
+              if (_this.basicForm.dataSource === "remoteServer") {
+                params.isTelnet = true;
+                params.source.host = _this.basicForm.host;
+                params.source.port = _this.basicForm.port;
+                params.source.username = _this.basicForm.username;
+                params.source.password = _this.basicForm.password;
+                params.source.secretKey ='';
+                params.source.isSecretKey = false;
+                params.source.protocal =  _this.basicForm.protocol;
+              }
+              fetchData("addDiskDir", params).then(res => {
+                if(res.result ==='success'){
+                  _this.$message({message:"文件夹添加成功",type:"success"});
+                  _this.$electron.ipcRenderer.send('updateFilesList');
+                }else{
+                  _this.$message({message:"文件夹添加错误 请重试",type:"warning"});
+                }
+              });
             }
-            // 将所有文件夹信息汇总
-            // TODO 目录类型需要明确（私有数据，共有数据，共享数据）
-            let directoryInfo = {
-              alias: formData.alias,
-              path: formData.path,
-              remoteServer: {
-                protocol: formData.protocol,
-                host: formData.host,
-                port: formData.port,
-                username: formData.username,
-                password: formData.password
-              },
-              dataSource: formData.dataSource, // localDisk, remoteServer
-              projectInfo,
-              customAttr: this.customChoose
-            }
-            // 判断当前路径是否已经被管理
-            this.$store.dispatch({
-              type: 'judgeNewDiskDir',
+          });
+          /* // 判断当前路径是否已经被管理
+          this.$store.dispatch({
+              type: "judgeNewDiskDir",
               path: formData.path,
               host: formData.host
             }).then(status => {
               // 文件夹可以被管理
               if (status === 0) {
-                this.$store.dispatch('addNewDiskDir', directoryInfo).then(status => {
-                  if (status) {
-                    this.$message({
-                      type: 'info',
-                      message: '目录添加成功',
-                      showClose: true
-                    })
-                  }
-                  // 重新刷新数据
-                  let call = {
-                    mode: 'action',
-                    API: 'openFile'
-                  }
-                  ipcRenderer.send('change-data', call)
-                })
+                this.$store
+                  .dispatch("addNewDiskDir", directoryInfo)
+                  .then(status => {
+                    if (status) {
+                      this.$message({
+                        type: "info",
+                        message: "目录添加成功",
+                        showClose: true
+                      });
+                    }
+                    // 重新刷新数据
+                    let call = {
+                      mode: "action",
+                      API: "openFile"
+                    };
+                    ipcRenderer.send("change-data", call);
+                  });
               }
               // 子文件夹已被管理
               if (status === -1) {
-                this.$confirm('存在子文件已被管理，是否放弃操作或继续（继续将删除已存在的子文件夹信息）?', '提示', {
-                  confirmButtonText: '继续',
-                  cancelButtonText: '放弃',
-                  type: 'warning'
-                }).then(() => {
-                  this.$store.dispatch('addNewDiskDir', directoryInfo).then(() => {
-                    // 重新刷新数据
-                    let call = {
-                      mode: 'action',
-                      API: 'openFile'
-                    }
-                    ipcRenderer.send('change-data', call)
-                  })
-                }).catch(() => {
-                  this.$message({
-                    type: 'info',
-                    message: '已放弃',
-                    showClose: true
-                  })
+                this.$confirm("存在子文件已被管理，是否放弃操作或继续（继续将删除已存在的子文件夹信息）?", "提示", {
+                  confirmButtonText: "继续",
+                  cancelButtonText: "放弃",
+                  type: "warning"
                 })
+                  .then(() => {
+                    this.$store
+                      .dispatch("addNewDiskDir", directoryInfo)
+                      .then(() => {
+                        // 重新刷新数据
+                        let call = {
+                          mode: "action",
+                          API: "openFile"
+                        };
+                        ipcRenderer.send("change-data", call);
+                      });
+                  })
+                  .catch(() => {
+                    this.$message({
+                      type: "info",
+                      message: "已放弃",
+                      showClose: true
+                    });
+                  });
               }
               // 父文件夹（包括本身）已被管理
               if (status === 1) {
-                this.$confirm('此文件夹已被管理', '提示', {
-                  confirmButtonText: '确定',
-                  type: 'warning'
-                })
+                this.$confirm("此文件夹已被管理", "提示", {
+                  confirmButtonText: "确定",
+                  type: "warning"
+                });
               }
-            })
-          } else {
-            return false
-          }
-        })
-      }
+            }); */
+        } else {
+          return false;
+        }
+      });
     }
   }
+};
 </script>
 <style lang="scss" scoped>
-  // 隐藏滚动条
-  #newDiskFile-root {
-    height: 100%;
-    width: 100%;
-    overflow-y: scroll;
-    font-weight: 500;
-    &::-webkit-scrollbar {
-      display: none;
+// 隐藏滚动条
+#newDiskFile-root {
+  height: 100%;
+  width: 100%;
+  overflow-y: scroll;
+  font-weight: 500;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  // 内间距
+  .newDiskFile-inner {
+    width: 80%;
+    margin: 2em auto;
+  }
+  .el-form {
+    .el-input {
+      display: inline-block;
+      width: 24em;
+      &.path {
+        padding-right: 54px;
+      }
     }
-    // 内间距
-    .newDiskFile-inner {
-      width: 80%;
-      margin: 2em auto;
+    .el-form-item {
+      width: 32em;
+      margin: 1em auto;
     }
-    .el-form {
+  }
+  .advanced-options {
+    // 行间距
+    .el-col {
+      margin: 1em 0;
+    }
+    .attr-item {
       .el-input {
-        display: inline-block;
         width: 24em;
       }
-      .el-form-item {
-        width: 32em;
-        margin: 1em auto;
-      }
-    }
-    .advanced-options {
-      // 行间距
-      .el-col {
-        margin: 1em 0;
-      }
-      .attr-item {
-        .el-input {
-          width: 24em;
-        }
-      }
-    }
-
-    // 显示高级选项按钮
-    .show-advanced {
-      .el-button {
-        float: right;
-        margin-right: -0.8em;
-      }
-    }
-
-    .advanced-options {
-      width: 32em;
-      margin: 2em auto;
-      i.el-input__icon.el-icon-close {
-        margin-right: -4em !important;
-      }
-    }
-
-    // 确认与取消按钮
-    .confirm {
-      .el-row--flex {
-        text-align: center;
-      }
-      .el-button {
-        margin: 2em 2em;
-      }
     }
   }
-  .potatos-btn{
-      width: 60px;
-      height: 30px;
-      outline: none;
-      color:#fff;
-      border:none;
-      border-radius: 4px;
+
+  // 显示高级选项按钮
+  .show-advanced {
+    .el-button {
+      float: right;
+      margin-right: -0.8em;
+    }
+  }
+
+  .advanced-options {
+    width: 32em;
+    margin: 2em auto;
+    i.el-input__icon.el-icon-close {
+      margin-right: -4em !important;
+    }
+  }
+
+  // 确认与取消按钮
+  .confirm {
+    .el-row--flex {
+      text-align: center;
+    }
+    .el-button {
+      margin: 2em 2em;
+    }
+  }
+  .potatos-btn {
+    width: 60px;
+    height: 32px;
+    outline: none;
+    color: #fff;
+    border: none;
+    border-radius: 0 4px 4px 0;
+    background: #20a0ff;
+    position: absolute;
+    right: 54px;
+    top: 2px;
+    cursor: pointer;
+    &:hover {
       background: #4db3ff;
-      position: absolute;
-      right: 54px;
-      top:3px;
-      cursor: pointer;
+      border-color: #4db3ff;
+      color: #fff;
+    }
   }
   .path {
-    .el-input__inner{
+    .el-input__inner {
       padding-right: 64px;
     }
   }
+}
 </style>

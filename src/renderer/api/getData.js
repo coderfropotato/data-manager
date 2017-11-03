@@ -9,7 +9,7 @@ import bus from '@/utils/bus'
 
 let zmq = require('zeromq')
 // const baseURL = 'tcp://10.139.17.101'
-const baseURL = 'tcp://172.168.2.19'
+const baseURL = 'tcp://172.168.2.51'
 // const baseURL = 'tcp://10.139.20.203'
 // 端口号
 const PORT = 4242
@@ -34,20 +34,19 @@ let getData = function (API, params) {
   }
   request.send(JSON.stringify(Param))
   let flag = 0
-  setTimeout(function () {
-    if (flag === 0) {
-      console.error('服务器无响应' + '\n API: ' + API)
-      bus.$emit('error')
-      flag = 0
-    }
-  }, outTime)
+  // setTimeout(function () {
+  //   if (flag === 0) {
+  //     console.error('服务器无响应' + '\n API: ' + API)
+  //     bus.$emit('error')
+  //     flag = 0
+  //   }
+  // }, outTime);
   return new Promise((resolve, reject) => {
     request.on('message', function (msg) {
       flag = 1
       let rep = JSON.parse(msg)
-
       if (rep.status === 200) {
-        let data = rep.data
+        let data = rep.data;
         resolve(data)
         request.close()
       } else if (rep.status === 400) {

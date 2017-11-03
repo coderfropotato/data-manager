@@ -4,17 +4,23 @@
     <!-- <router-view></router-view> -->
     <div class="table-wrap">
       <!-- 列表模式 -->
-      <el-table ref="table" @selection-change="handleSelectionChange" @row-dblclick="dbClick" @row-click="selectedRow" :height="tableheight" v-show="selectModule==='list'" :data="tableData" stripestyle="width: 100%">
+      <el-table ref="table" @selection-change="handleSelectionChange" @row-dblclick="dbClick" @row-click="selectedRow" :height="tableheight" v-show="selectModule==='list'" :data="fileTableData" stripestyle="width: 100%">
         <el-table-column type="selection"></el-table-column>
-        <el-table-column sortable prop="isDir" label="选择">
+        <el-table-column sortable prop="isdir" label="选择">
           <template scope="scope">
-            <img v-if="!scope.row.isDir" src="../../../assets/images/single.png"/>
+            <img v-if="!scope.row.isdir" src="../../../assets/images/single.png"/>
             <img v-else src="../../../assets/images/dir.png"/>
           </template>
         </el-table-column>
-        <el-table-column sortable prop="name" label="文件名"></el-table-column>
-        <el-table-column sortable prop="date" label="创建时间"></el-table-column>
-        <el-table-column sortable prop="size" label="文件大小"></el-table-column>
+        <el-table-column sortable prop="filename" label="文件名"></el-table-column>
+        <el-table-column sortable prop="ctime" label="创建时间"></el-table-column>
+        <el-table-column sortable prop="size" label="文件大小">
+          <template scope="scope">
+            <span v-if="scope.row.size<1024">{{scope.row.size+'KB'}}</span>
+            <span v-if="scope.row.size<1024*1024 && scope.row.size>=1024">{{Math.round(scope.row.size/1024*100)/100+'M'}}</span>
+            <span v-if="scope.row.size>=1024*1024">{{Math.round(scope.row.size/1024/1024*100)/100+'G'}}</span>
+          </template>
+        </el-table-column>
       </el-table>
       <div v-show="selectModule!=='list'" class="scale">
         <!-- 平铺模式 -->
@@ -26,7 +32,7 @@
   </div>
 </template>
 <script>
-import { mapState } from "vuex";
+import { mapState,mapGetters } from "vuex";
 import bus from "@/utils/bus";
 export default {
   name: "fileContent",
@@ -35,36 +41,11 @@ export default {
       loading: false,
       selectModule: "list",
       tableheight: 0,
-      selectCount:0,
-      tableData: [
-        {
-          date: "2016-05-02",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄",
-          size: "465M",
-          isDir:false
-        },
-        {
-          date: "2016-05-04",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1517 弄",
-          size: "465M"
-        },
-        {
-          date: "2016-05-04",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1517 弄",
-          size: "465M",
-          isDir:true
-        },
-        {
-          date: "2016-05-04",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1517 弄",
-          size: "465M"
-        }
-      ]
+      selectCount:0
     };
+  },
+  computed:{
+    ...mapGetters(['fileTableData'])
   },
   mounted() {
     let _this = this;

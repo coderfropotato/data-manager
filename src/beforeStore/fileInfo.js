@@ -7,12 +7,27 @@ import * as types from '@/store/mutation-types'
 
 const state = {
   show:false,
+  categorys:[],
   //是否移除right view
   removeRightView: false,
+  //info data
+  count: 1,
+  filename: "",
+  size: "",
+  createTime: "",
+  attrs: [],
+  bz: "",
 }
 
 const getters = {
   show:state=>state.show,
+  categorys:state=>state.categorys,
+  count:state=>state.count,
+  filename:state=>state.filename,
+  size:state=>state.size,
+  createTime:state=>state.createTime,
+  attrs:state=>state.attrs,
+  bz:state=>state.bz,
   removeRightView: state => state.removeRightView
 }
 
@@ -30,6 +45,7 @@ const actions = {
   removeRightView({ commit }, status) {
     commit(types.REMOVE_RIGHT_VIEW, status)
   }
+
 }
 
 const mutations = {
@@ -40,6 +56,11 @@ const mutations = {
   //隐藏文件信息区
   [types.HIDE_FILE_INFO](state) {
     state.show = false
+  },
+
+  // 设置文件的所属分类
+  [types.SET_FILE_SORTS](state, categorys) {
+    state.categorys = categorys
   },
   [types.REMOVE_RIGHT_VIEW](state, status) {
     state.removeRightView = status;

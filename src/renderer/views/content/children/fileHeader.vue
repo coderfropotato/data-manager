@@ -3,9 +3,7 @@
     <div class="breadcrumb">
      <el-breadcrumb separator=">">
       <el-breadcrumb-item :to="{ path: '/filescale' }">首页</el-breadcrumb-item>
-      <el-breadcrumb-item>活动管理</el-breadcrumb-item>
-      <el-breadcrumb-item>活动列表</el-breadcrumb-item>
-      <el-breadcrumb-item>活动详情</el-breadcrumb-item>
+      <el-breadcrumb-item v-for="(item,index) in navText" :key="index">{{item}}</el-breadcrumb-item>
     </el-breadcrumb>
     </div>
     <div class="search">
@@ -16,7 +14,7 @@
   </div>
 </template>
 <script>
-import { mapState } from "vuex";
+import { mapGetters } from "vuex";
 export default {
   name: "fileHeader",
   data() {
@@ -24,7 +22,9 @@ export default {
       searchValue: ""
     };
   },
-  mounted() {}
+  computed:{
+    ...mapGetters(['navText'])
+  }
 };
 </script>
 <style lang="scss">

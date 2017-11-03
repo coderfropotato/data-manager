@@ -3,8 +3,9 @@
       <div class="title">所有文件</span><i @click="addDevice" class="iconfont icon-tianjia"></i></div>
       <ol>
         <!-- icon-wodeyingpan -->
-        <router-link v-for="(item,index) in deviceList" :key="index" tag="li" :to="{ path: '/searchfiles', query: { type: item.name }}" ><i class="iconfont iconfile" :class="{'icon-wodeyingpan':item.isDisk,'icon-diannao':!item.isDisk}"></i>{{item.name}}</router-link>
-        <li>更多设备&nbsp;></li>
+        <!-- <li @click="jumpToSearch(item.name)" v-for="(item,index) in fileList" :key="index"><i class="iconfont iconfile" :class="{'icon-wodeyingpan':item.isDisk,'icon-diannao':!item.isDisk}"></i>{{item.name}}</li> -->
+        <li @click="jumpToSearch(item.alias,item.serial_number,item.path)" v-for="(item,index) in fileList" :key="index"><i class="iconfile iconfont icon-wodeyingpan"></i>{{item.alias}}</li>
+        <li v-show="fileList.length>5">更多设备&nbsp;></li>
       </ol>
   </div>
 </template>
@@ -17,25 +18,32 @@ export default {
   name: "AllFiles",
   data() {
     return {
-      deviceList: [
-        {
-          "name":"我的电脑",
-          "isDisk":false
-        },
-        {
-          "name":"我的磁盘",
-          "isDisk":true
-        }
-      ],
       selectedIndex: 0
     };
   },
-  computed: mapGetters([]),
+  computed: {
+    ...mapGetters(["fileList"])
+  },
   mounted() {},
   filters: {},
   methods: {
-    addDevice(){
-      this.$electron.ipcRenderer.send('addFile',{API:"open",URL:'/newfile/newdiskdir'})
+    addDevice() {
+      this.$electron.ipcRenderer.send("addFile", {
+        API: "open",
+        URL: "/newfile/newdiskdir"
+      });
+    },
+    jumpToSearch(alias,serialNumber, path) {
+      //编程式导航
+      this.$router.push(`/searchfiles?type=${serialNumber}`);
+      //设置面包屑
+      this.$store.dispatch('setNavBar',alias);
+      //设置序列号
+      this.$store.dispatch('setSerialNumber',serialNumber);
+      //获取数据 并更新根文件夹
+      this.$store.dispatch("getFileTree",{serialNumber,path}).then(() => {
+        this.$store.dispatch("updateFilesDetail");
+      });
     }
   }
 };
@@ -59,7 +67,7 @@ export default {
     justify-content: space-between;
     padding: 0 18px;
     i {
-      cursor:pointer;
+      cursor: pointer;
       line-height: 18px;
     }
   }
@@ -74,8 +82,8 @@ export default {
       overflow: hidden;
       white-space: nowrap;
       cursor: pointer;
-      .iconfile{
-        margin-right:12px;
+      .iconfile {
+        margin-right: 12px;
       }
       &:hover {
         background: #386cca;
