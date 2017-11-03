@@ -38,7 +38,7 @@
         <el-input type="textarea" v-model="textarea"></el-input>
       </div>
       <div @click="addAttrs" v-show="module==='edit'" class="add-attrs">
-        <i class="el-icon-circle-plus-outline"></i><span>添加文件属性</span>
+        <i class="iconfont icon-tianjia"></i><span>添加文件属性</span>
       </div>
     </div>
     <!-- nodata -->
@@ -266,6 +266,7 @@ export default {
       }
       a {
         color: #386cca;
+        font-size:12px;
       }
     }
     .item-list {
@@ -296,6 +297,10 @@ export default {
   .add-attrs{
     margin-top: 20px;
     cursor: pointer;
+    vertical-align:center;
+    i{
+      margin-right:12px;
+    }
   }
 }
 </style>

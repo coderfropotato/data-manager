@@ -1,8 +1,9 @@
 <template>
   <div id="directory-root">
-      <div class="title">所有文件</span><i @click="addDevice" class="el-icon-plus"></i></div>
+      <div class="title">所有文件</span><i @click="addDevice" class="iconfont icon-tianjia"></i></div>
       <ol>
-        <router-link v-for="(item,index) in deviceList" :key="index" tag="li" :to="{ path: '/searchfiles', query: { type: item }}" ><i class="file-icon computer"></i>{{item}}</router-link>
+        <!-- icon-wodeyingpan -->
+        <router-link v-for="(item,index) in deviceList" :key="index" tag="li" :to="{ path: '/searchfiles', query: { type: item.name }}" ><i class="iconfont iconfile" :class="{'icon-wodeyingpan':item.isDisk,'icon-diannao':!item.isDisk}"></i>{{item.name}}</router-link>
         <li>更多设备&nbsp;></li>
       </ol>
   </div>
@@ -16,7 +17,16 @@ export default {
   name: "AllFiles",
   data() {
     return {
-      deviceList:['computer','disk'],
+      deviceList: [
+        {
+          "name":"我的电脑",
+          "isDisk":false
+        },
+        {
+          "name":"我的磁盘",
+          "isDisk":true
+        }
+      ],
       selectedIndex: 0
     };
   },
@@ -60,7 +70,13 @@ export default {
       padding-left: 50px;
       height: 38px;
       line-height: 38px;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
       cursor: pointer;
+      .iconfile{
+        margin-right:12px;
+      }
       &:hover {
         background: #386cca;
         color: #fff;

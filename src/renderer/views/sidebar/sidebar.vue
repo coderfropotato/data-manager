@@ -7,36 +7,26 @@
         <el-menu class="menu" router>
           <!-- @click="openFile" -->
           <el-menu-item index="/files" >
-            <svg class="icon" aria-hidden="true">
-              <use xlink:href="#icon-wenjian"></use>
-            </svg>
+            <i class="iconfont icon-wenjian"></i>
             <span>文件</span>
           </el-menu-item>
           <el-menu-item index="/searchindex?type=search">
-            <svg class="icon" aria-hidden="true">
-              <use xlink:href="#icon-search1"></use>
-            </svg>
+            <i class="iconfont icon-sousuo"></i>
             <span>搜索</span>
           </el-menu-item>
           <el-menu-item index="/filestatus">
-            <svg class="icon" aria-hidden="true">
-              <use xlink:href="#icon-wenjianjia"></use>
-            </svg>
+            <i class="iconfont icon-wenjianzhuangtai"></i>
             <!--角标，提醒文件更改数量，最大99-->
             <el-badge :value="modifiedFiles" :max="99" class="item">
               <span>文件状态</span>
             </el-badge>
           </el-menu-item>
           <el-menu-item index="/collection">
-            <svg class="icon" aria-hidden="true">
-              <use xlink:href="#icon-star-empty"></use>
-            </svg>
+            <i class="iconfont icon-wenjian"></i>
             <span>收藏</span>
           </el-menu-item>
           <el-menu-item index="/database">
-            <svg class="icon" aria-hidden="true">
-              <use xlink:href="#icon-shujuku"></use>
-            </svg>
+            <i class="iconfont icon-shujuku"></i>
             <span>数据库</span>
           </el-menu-item>
         </el-menu>
@@ -135,10 +125,10 @@ $backgroundColor: #f7f9f9;
   }
   // 文件更改状态角标样式
   .el-badge__content {
-    top: 1.8em;
-    right: -4px;
+    &.is-fixed {
+      top: 2em;
+      right: -4px;
+    }
   }
 }
-
-
 </style>

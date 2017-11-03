@@ -1,9 +1,10 @@
 <template>
   <div id="filescale">
       <ol>
-        <router-link :to="{path:'/searchfiles',query:{type:item}}" v-for="(item,index) in deviceList" :key="index" tag="li">
-          <img src="../../../assets/images/dna.png" alt="">
-          <p>{{item}}</p></router-link>
+        <router-link :to="{path:'/searchfiles',query:{type:item.name}}" v-for="(item,index) in deviceList" :key="index" tag="li">
+          <img v-if="!item.isDisk" src="../../../assets/images/computer.png" />
+          <img v-else="item.isDisk" src="../../../assets/images/disk.png" />
+          <p>{{item.name}}</p></router-link>
       </ol>
   </div>
 </template>
@@ -12,7 +13,16 @@
 export default {
   data() {
     return {
-      deviceList: ['computer','disk']
+      deviceList: [
+        {
+          "name":"我的电脑",
+          "isDisk":false
+        },
+        {
+          "name":"我的磁盘",
+          "isDisk":true
+        }
+      ]
     };
   }
 };
@@ -21,6 +31,9 @@ export default {
 <style lang="scss" scoped>
 #filescale {
   height: 100%;
+  i{
+    font-size: 80px;
+  }
   ol {
     display: flex;
     list-style: none;
@@ -35,9 +48,13 @@ export default {
       padding-top: 10px;
       cursor: pointer;
       box-sizing: border-box;
+      border-radius:10px;
       opacity: 0.9;
+      &:hover{
+        background:#386cca;
+      }
       &:hover p {
-          color:#386cca;
+          color:#fff;
       }
       img {
         width: 60px;

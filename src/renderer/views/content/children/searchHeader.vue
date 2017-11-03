@@ -27,7 +27,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 #searchHeader-root {
   padding: 24px 12px;
   .el-button {

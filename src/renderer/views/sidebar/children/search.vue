@@ -3,7 +3,7 @@
     <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">搜索范围</el-checkbox>
     <div style="margin: 15px 0;"></div>
     <el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
-      <el-checkbox v-for="city in cities" :label="city" :key="city">{{city}}</el-checkbox>
+      <el-checkbox v-for="city in cities" :label="city" :key="city"><i class="iconfile iconfont icon-wodeyingpan"></i>{{city}}</el-checkbox>
     </el-checkbox-group>
   </div>
 </template>
@@ -31,15 +31,19 @@ export default {
   }
 };
 </script>
-<style lang="scss" scoped >
+<style lang="scss" scoped>
 #search-root {
   padding: 12px 20px;
-  .el-checkbox-group {
+  .el-checkbox-group{
     padding-left: 20px;
-    .el-checkbox {
+    .el-checkbox{
       display: block;
       width: 100%;
     }
+  }
+  
+  .iconfile{
+    margin-right:10px;
   }
 }
 </style>

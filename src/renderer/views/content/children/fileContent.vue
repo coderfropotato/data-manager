@@ -6,9 +6,10 @@
       <!-- 列表模式 -->
       <el-table ref="table" @selection-change="handleSelectionChange" @row-dblclick="dbClick" @row-click="selectedRow" :height="tableheight" v-show="selectModule==='list'" :data="tableData" stripestyle="width: 100%">
         <el-table-column type="selection"></el-table-column>
-        <el-table-column prop="date" label="选择">
+        <el-table-column sortable prop="isDir" label="选择">
           <template scope="scope">
-            <el-icon name="document"></el-icon>
+            <img v-if="!scope.row.isDir" src="../../../assets/images/single.png"/>
+            <img v-else src="../../../assets/images/dir.png"/>
           </template>
         </el-table-column>
         <el-table-column sortable prop="name" label="文件名"></el-table-column>
@@ -40,7 +41,8 @@ export default {
           date: "2016-05-02",
           name: "王小虎",
           address: "上海市普陀区金沙江路 1518 弄",
-          size: "465M"
+          size: "465M",
+          isDir:false
         },
         {
           date: "2016-05-04",
@@ -52,7 +54,8 @@ export default {
           date: "2016-05-04",
           name: "王小虎",
           address: "上海市普陀区金沙江路 1517 弄",
-          size: "465M"
+          size: "465M",
+          isDir:true
         },
         {
           date: "2016-05-04",
@@ -65,9 +68,9 @@ export default {
   },
   mounted() {
     let _this = this;
-    _this.tableheight = document.body.offsetHeight - 66 - 58 - 40 - 4;
+    _this.tableheight = document.body.offsetHeight - 66 - 58 - 40 - 2;
     this.$electron.ipcRenderer.on("windowResize", function() {
-      _this.tableheight = document.body.offsetHeight - 66 - 58 - 40 - 4;
+      _this.tableheight = document.body.offsetHeight - 66 - 58 - 40 - 2;
     });
   },
   methods: {

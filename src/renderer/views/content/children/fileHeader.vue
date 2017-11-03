@@ -27,22 +27,23 @@ export default {
   mounted() {}
 };
 </script>
-<style lang="scss" >
-.el-breadcrumb{
+<style lang="scss">
+.el-breadcrumb {
   margin-top: 10px;
 }
-.el-button {
-  border-radius: 0;
-  color: #fff !important;
-}
-.el-input-group__append {
-  background: #386cca;
-  border: none;
-}
+
 #fileHeader-root {
   display: flex;
   padding: 12px 12px;
   height: 58px;
+  .el-input-group__append {
+    background-color: #386cca !important;
+    border: none;
+    .el-button {
+      border-radius: 0;
+      color: #fff !important;
+    }
+  }
   .breadcrumb {
     p {
       line-height: 35px;

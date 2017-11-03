@@ -448,7 +448,7 @@
       color:#fff;
       border:none;
       border-radius: 4px;
-      background: #386cca;
+      background: #4db3ff;
       position: absolute;
       right: 54px;
       top:3px;
