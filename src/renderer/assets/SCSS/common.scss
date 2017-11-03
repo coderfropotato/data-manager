@@ -25,11 +25,13 @@ body{
   box-sizing: border-box;
   text-decoration: none;
 }
-  
+  a{
+    outline:none;
+  }
   p,h1,h2,h3,h4,h5,h6,b,em,div,input,textarea{
     color: #48576a;
   }
-  input,textarea{
+  input,textarea,button{
     font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
   }
 // Icon 公共样式
@@ -78,19 +80,20 @@ body{
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      width:82%;
     }
   }
 }
-    .el-checkbox{
-      .el-checkbox__inner{
-        height: 1em;
-        width: 1em;
-        font-size: 1em;
-      }
-      .el-checkbox__label{
-        // display: none !important;
-      }
-    }
+.el-checkbox{
+  .el-checkbox__inner{
+    height: 1em;
+    width: 1em;
+    font-size: 1em;
+  }
+  .el-checkbox__label{
+    // display: none !important;
+  }
+}
 
 // 设置按钮的文字颜色为黑色
 .el-button,
@@ -150,6 +153,12 @@ body{
 }
 .el-checkbox+.el-checkbox{
   margin-left: 0;
+}
+
+.el-table__row img{
+  width:24px;
+  height:24px;
+  vertical-align:middle;
 }
 ::-webkit-scrollbar-thumb {
   border-radius: 3px;
