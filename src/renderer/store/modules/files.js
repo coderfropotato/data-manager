@@ -4,21 +4,17 @@
  */
 import fetchData from '@/api'
 import * as types from '@/store/mutation-types'
-// 引入文件树数据处理函数
-//import travelTree from '@/utils/handleCategoryTreeData'
-import convert from '@/utils/convertTreeToList'
-console.log(convert)
 const state = {
   // 记录当前的文件列表（列表展示）
   fileList: [],
   // file table 文件列表
   fileTableData:[],
-  //树深度数组
-  treeArr:[0],
+  //root path
+  rootPath:'',
   //面包屑数组
   navText:[],
   //存序列号
-  serialNumber:""
+  serialNumber:"",
 }
 
 const getters = {
@@ -34,11 +30,21 @@ const actions = {
       commit(types.SET_FILE_LIST,data.disks)
     })
   },
-  getFileTree({commit},params){
+  getDirTree({commit},params){
     // params =>serialNumber path
-    fetchData('getFileTree',params).then(data=>{
-      commit(types.SET_FILE_TABLE_dATA,data);
+    let parm = {
+      rootPath:state.rootPath,
+      childPath:params.path,
+      serialNumber:params.serialNumber
+    }
+    fetchData('getDirTree',parm).then(data=>{
+      console.log(data);
+      commit(types.SET_FILE_TABLE_dATA,data.result.tree);
     })
+  },
+  //设置根路径
+  setRootPath({commit},path){
+    commit(types.SET_ROOT_PATH,path);
   },
   //设置面包屑
   setNavBar({commit},params){
@@ -65,47 +71,23 @@ const mutations = {
     }
   },
   // 设置文件表格数据
-  [types.SET_FILE_TABLE_dATA](state,listObj){
-    if(!listObj.result.tree.length){
-      state.fileTableData=[];
-      state.defaultTableData = [];
+  [types.SET_FILE_TABLE_dATA](state,list){
+    if(list.length==0){
+      state.filetableData = [];
     }else{
-      state.defaultTableData = listObj.result.tree[0];
-      let temp = [];
-      for(let key in listObj.result.tree[0]){
-        let cur = listObj.result.tree[0][key];
-        let obj = {};
-        obj.filename = key;
-        obj.ctime =  cur.ctime;
-        obj.isdir =  cur.isdir;
-        obj.mtime =  cur.mtime;
-        obj.path =  cur.path;
-        obj.size =  cur.size;
-        temp.push(obj);
-      }
-      state.fileTableData = temp;
+      state.fileTableData = list;
     }
   },
-  //设置层级表格显示数据
-
+  //设置rootpath
+  [types.SET_ROOT_PATH](state,path){
+    state.rootPath = path;
+  },
   //设置面包屑
   [types.SET_NAV_BAR](state,params){
     state.navText=[params];
   },
   //更新 filetable 面包屑
   [types.UPDATE_FILES_DETAIL](state,params){
-  },
-  //设置默认树深
-  [types.DEFAULT_TREE_INDEX](state){
-    state.treeArr=[0];
-  },
-  //追加树深度索引
-  [types.PUSH_TREE_INDEX](state,index){
-    state.treeArr.push(index);
-  },
-  //删除树深度索引
-  [types.DEL_TREE_INDEX](state,index){
-    state.treeArr = state.treeArr.slice(0,(state.treeArr.indexOf(index)+1));
   },
   //设置序列号
   [types.SET_SERIAL_NUMBER](state,num){

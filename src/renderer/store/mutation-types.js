@@ -24,4 +24,11 @@ export const DEL_TREE_INDEX = 'delTreeIndex';
 export const SET_SERIAL_NUMBER = 'setSerialNumber';
 //设置根级面包屑
 export const SET_NAV_BAR = 'setNavText';
+//设置根路径
+export const SET_ROOT_PATH = 'setRootPath';
+
+
+
+//search
+export const SET_SEARCH_TABLE_DATA  = 'setSearchTableData';
 

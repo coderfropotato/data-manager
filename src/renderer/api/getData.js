@@ -50,13 +50,13 @@ let getData = function (API, params) {
         resolve(data)
         request.close()
       } else if (rep.status === 400) {
-        bus.$emit('error')
+        bus.$emit('error',rep.status)
         console.error('参数数目错误' + '\n API: ' + API)
       } else if (rep.status === 500) {
-        bus.$emit('error')
+        bus.$emit('error',rep.status)
         console.error('服务器错误' + '\n API: ' + API)
       } else {
-        bus.$emit('error')
+        bus.$emit('error',rep.status)
         console.error('参数格式错误' + '\n API: ' + API)
       }
     })

@@ -1,29 +1,51 @@
 <template>
   <div id="filescale">
       <ol>
-        <router-link :to="{path:'/searchfiles',query:{type:item.name}}" v-for="(item,index) in deviceList" :key="index" tag="li">
-          <img v-if="!item.isDisk" src="../../../assets/images/computer.png" />
-          <img v-else="item.isDisk" src="../../../assets/images/disk.png" />
-          <p>{{item.name}}</p></router-link>
+        <li @click="jumpToSearch(item.alias,item.serialNumber,item.path)" v-for="(item,index) in fileList" :key="index">
+          <img v-if="!item.isTelnet" src="../../../assets/images/computer.png" />
+          <img v-else src="../../../assets/images/disk.png" />
+          <p>{{item.alias}}</p>
+        </li>
       </ol>
   </div>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 export default {
   data() {
     return {
       deviceList: [
         {
-          "name":"我的电脑",
-          "isDisk":false
+          name: "我的电脑",
+          isDisk: false
         },
         {
-          "name":"我的磁盘",
-          "isDisk":true
+          name: "我的磁盘",
+          isDisk: true
         }
       ]
     };
+  },
+  methods: {
+    jumpToSearch(alias, serialNumber, path) {
+      //编程式导航
+      this.$router.push(`/searchfiles?type=${serialNumber}`);
+      //设置面包屑
+      this.$store.dispatch("setNavBar", alias);
+      //设置序列号
+      this.$store.dispatch("setSerialNumber", serialNumber);
+      //设置根路径
+      this.$store.dispatch("setRootPath", path).then(() => {
+        //获取数据
+        this.$store
+          .dispatch("getDirTree", { type: "root", path, serialNumber })
+          .then(() => {});
+      });
+    }
+  },
+  computed: {
+    ...mapGetters(["fileList"])
   }
 };
 </script>
@@ -31,7 +53,7 @@ export default {
 <style lang="scss" scoped>
 #filescale {
   height: 100%;
-  i{
+  i {
     font-size: 80px;
   }
   ol {
@@ -48,13 +70,13 @@ export default {
       padding-top: 10px;
       cursor: pointer;
       box-sizing: border-box;
-      border-radius:10px;
+      border-radius: 10px;
       opacity: 0.9;
-      &:hover{
-        background:#386cca;
+      &:hover {
+        background: #386cca;
       }
       &:hover p {
-          color:#fff;
+        color: #fff;
       }
       img {
         width: 60px;

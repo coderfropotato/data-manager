@@ -33,16 +33,19 @@ export default {
         URL: "/newfile/newdiskdir"
       });
     },
-    jumpToSearch(alias,serialNumber, path) {
+    jumpToSearch(alias, serialNumber, path) {
       //编程式导航
       this.$router.push(`/searchfiles?type=${serialNumber}`);
       //设置面包屑
-      this.$store.dispatch('setNavBar',alias);
+      this.$store.dispatch("setNavBar", alias);
       //设置序列号
-      this.$store.dispatch('setSerialNumber',serialNumber);
-      //获取数据 并更新根文件夹
-      this.$store.dispatch("getFileTree",{serialNumber,path}).then(() => {
-        this.$store.dispatch("updateFilesDetail");
+      this.$store.dispatch("setSerialNumber", serialNumber);
+      //设置根路径
+      this.$store.dispatch("setRootPath", path).then(() => {
+        //获取数据
+        this.$store
+          .dispatch("getDirTree", {type:"root",path,serialNumber})
+          .then(() => {});
       });
     }
   }

@@ -6,6 +6,7 @@
   </div>
 </template>
 <script>
+import bus from '@/utils/bus';
 export default {
   name: "data-manager-desktop",
   mounted() {
@@ -45,6 +46,15 @@ export default {
     this.$electron.ipcRenderer.on('updateFilesList',()=>{
       //被管理的设备添加成功后 重新获取设备列表
       this.$store.dispatch('getFileTree');
+    })
+
+    //请求错误监听
+    bus.$on('error',(res)=>{
+      this.$message({
+         type: 'error',
+         message: res+':  数据读取失败，请重试。',
+         duration: 2000
+       })
     })
   }
 };
