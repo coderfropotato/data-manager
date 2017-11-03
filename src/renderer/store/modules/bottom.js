@@ -2,7 +2,7 @@ import * as types from '@/store/mutation-types'
 
 
 const state={
-    bottomShow:true
+    bottomShow:false
 }
 
 const actions ={
