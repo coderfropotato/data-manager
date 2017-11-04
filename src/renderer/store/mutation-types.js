@@ -32,3 +32,7 @@ export const SET_ROOT_PATH = 'setRootPath';
 //search
 export const SET_SEARCH_TABLE_DATA  = 'setSearchTableData';
 
+//status
+//获取文件状态树的数据
+export const GET_TREE_DATA = 'getTreeData';
+
