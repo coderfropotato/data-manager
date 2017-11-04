@@ -98,6 +98,15 @@ const routes = [
       default: FileStatus,
       ContentBottom: FileStatusContent,
       FileInfo: FileStatusAside
+    },
+  },
+  {
+    path:"filestatusinfo",
+    name:"FileStatusInfo",
+    components:{
+      default:FileStatus,
+      ContentBottom:FileStatusContent,
+      FileInfo:FileInfo
     }
   },
   {
