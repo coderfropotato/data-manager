@@ -1,0 +1,40 @@
+let treeData = [
+    {
+        "id":1,
+        "label":"我的电脑",
+        "children":[
+            {
+                "id":4,
+                "label":"C",
+                "status":-1
+            },
+            {
+                "id":5,
+                "label":"D",
+                "status":0
+            }
+        ]
+    },
+    {
+        "id":2,
+        "label":"我的硬盘",
+        "children":[
+            {
+                "id":6,
+                "label":"硬盘1",
+                "status":1
+            },
+            {
+                "id":7,
+                "label":"硬盘2",
+                "status":0
+            },{
+                "id":8,
+                "label":"硬盘3",
+                status:2
+            }
+        ]
+    }
+]
+
+export default treeData
