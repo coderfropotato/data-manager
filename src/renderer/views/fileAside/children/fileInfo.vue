@@ -1,5 +1,5 @@
 <template>
-  <div id="fileInfo-root">
+  <div id="fileInfo-root" @mouseleave="saveAttrs">
     <div v-show="!nodata">
       <div class="title">
         <p>文件详情</p>
@@ -29,7 +29,7 @@
           <span>名称</span>
           <span>详情</span>
         </div>
-        <ol  class="item-list">
+        <ol class="item-list">
             <li :class="{'edit':module==='edit'}" v-for="(item,index) in tableInfo" :key="index"><input ref="attrs" v-model="item.name" :diasbled="{true:module!=='edit',false:module==='edit'}" type="text"> ：<input v-model="item.attr" :diasbled="{true:module!=='edit',false:module==='edit'}" type="text"></li>
         </ol>
         <!-- add attrs -->
@@ -42,24 +42,24 @@
       </div>
     </div>
     <!-- nodata -->
-    <div v-show="nodata">
+    <div class="no-data" v-show="nodata">
+      <img src="../../../assets/images/nodata.png" alt="">
         <P>暂无文件详情</P>
     </div>
   </div>
 </template>
 <script>
 import { mapGetters } from "vuex";
-import bus from '@/utils/bus';
-
-let tempData = ["1/1.txt/", "1/2.2/3.2/", "1/2.4/3/", "1/2.txt/"];
-let tempCategory = [];
+import bus from "@/utils/bus";
 
 export default {
   name: "FileInfo",
   data() {
     return {
       module: "read",
-      nodata:false,
+      nodata: true,
+      isEdit: false,
+      flag: true,
       tableInfo: [
         {
           name: "属性1",
@@ -86,87 +86,65 @@ export default {
           attr: "值2"
         }
       ],
-      // 记录分类的数组
-      categorys: [],
       textarea: "textarea"
     };
   },
-  computed: mapGetters([
-    "show",
-    "basicInfo",
-    "otherInfo",
-    "categoryFileTree"
-    // categorys: state => state.fileInfo.fileCategorys
-  ]),
-  mounted(){
+  computed: mapGetters([]),
+  created() {
+    //接收获取数据通知
+    bus.$on("reciveData", params => {
+      //get server attrs
+      let res = [{ name: "123", attr: "sd" }];
+      this.tableInfo = res;
+      //初始化状态
+      this.initStatus();
+    });
+    //无详情监听
+    bus.$on('noInfoData',()=>{
+      this.nodata = true;
+      this.initStatus();
+    })
   },
   watch: {
-    show() {
-      for (let node in tempData) {
-        let path = tempData[node].split("/");
-        path.pop();
-        tempCategory.push(path.join(">"));
-      }
-      this.categorys = tempCategory;
+    tableInfo: {
+      handler: function(val, oldVal) {
+        if (!this.flag) {
+          this.isEdit = true;
+        }
+      },
+      deep: true
+    },
+    textarea: function() {
+      if (!this.flag) this.isEdit = true;
     }
   },
-  filters: {
-    // 格式化文件名，如果文件名大于某个长度，则做截断处理
-    formatName(name, maxLength) {
-      if (name !== undefined) {
-        return name.length > maxLength
-          ? name.substr(0, maxLength - 1) + "..."
-          : name;
-      }
-    },
-    // 格式化文件大小，将
-    formatSize(size) {
-      if (!size) {
-        return "无";
-      }
-      if (size <= 0) {
-        return "0 bytes";
-      }
-      const abbreviations = ["bytes", "KB", "MB", "GB"];
-      const index = Math.floor(Math.log(size) / Math.log(1024));
-      return `${+(size / Math.pow(1024, index)).toPrecision(3)} ${abbreviations[
-        index
-      ]}`;
-    },
-    // 格式化时间，将秒转化成 XXXX/XX/XX 形式
-    formatDate(date) {
-      let d = new Date(date * 1000);
-      let month = "" + (d.getMonth() + 1);
-      let day = "" + d.getDate();
-      let year = d.getFullYear();
-      if (month.length < 2) month = "0" + month;
-      if (day.length < 2) day = "0" + day;
-      return [year, month, day].join("/");
-    }
-  },
+  filters: {},
   methods: {
-    addAttrs(){
-      this.tableInfo.push({name:"",attr:""})
-      let len = this.$refs.attrs.length;
-      console.log(len)
-      console.log(this.$refs.attrs)
-      //this.$refs.attrs[len].focus();
-    },
-    addFileCategory() {},
-    setCheckNode() {
-      // node-key 必须是唯一的，否则无法设置节点
-      this.$refs.categoryTree.setCheckedKeys(tempData);
-    },
-    // 设置分类的目录
-    setCategoryDir() {
-      // 清空分类数组
-      this.categorys = [];
-      let checkedNodes = this.$refs.categoryTree.getCheckedNodes();
-      for (let node in checkedNodes) {
-        let path = checkedNodes[node].id.split("/");
-        path.pop();
-        this.categorys.push(path.join(">"));
+    saveAttrs() {
+      //编辑过 并且 不是更新数据的时候
+      if (this.isEdit && !this.flag) {
+        for (let i = 0; i < this.tableInfo.length; i++) {
+          if (!this.tableInfo[i].name) {
+            this.tableInfo.splice(i, 1);
+          } else {
+            continue;
+          }
+        }
+        this.isEdit = false;
       }
+    },
+    addAttrs() {
+      this.isEdit = true;
+      this.tableInfo.push({ name: "", attr: "" });
+      let len = this.$refs.attrs.length;
+    },
+    initStatus() {
+      this.flag = true;
+      this.isEdit = false;
+      //接收新的数据的时候 不watch
+      setTimeout(() => {
+        this.flag = false;
+      }, 300);
     }
   }
 };
@@ -230,15 +208,15 @@ export default {
     .item {
       margin-top: 32px;
     }
-    .attrs{
+    .attrs {
       display: flex;
       margin-bottom: 8px;
-      span{
-        &:first-child{
+      span {
+        &:first-child {
           width: 20%;
         }
-        &.last-child{
-          width:75%;
+        &.last-child {
+          width: 75%;
         }
       }
     }
@@ -266,7 +244,7 @@ export default {
       }
       a {
         color: #386cca;
-        font-size:12px;
+        font-size: 12px;
       }
     }
     .item-list {
@@ -294,12 +272,19 @@ export default {
       }
     }
   }
-  .add-attrs{
+  .add-attrs {
     margin-top: 20px;
     cursor: pointer;
-    vertical-align:center;
-    i{
-      margin-right:12px;
+    vertical-align: center;
+    i {
+      margin-right: 12px;
+    }
+  }
+  .no-data{
+    margin-top:40px;
+    text-align: center;
+    img{
+      width:102px;
     }
   }
 }

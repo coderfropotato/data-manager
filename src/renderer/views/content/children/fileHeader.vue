@@ -7,9 +7,12 @@
     </el-breadcrumb>
     </div>
     <div class="search">
-       <el-input size="small" placeholder="请输入关键词" v-model="searchValue">
+       <el-input ref="search" size="small" placeholder="请输入关键词" v-model="searchValue">
           <el-button slot="append" icon="search">搜索</el-button>
       </el-input>
+      <div class="tag-group">
+          <el-tag   v-for="(tag,index) in tags"  @close="closeTag(tag,index)"  :key="tag.name" :closable="true">{{tag.name}}</el-tag>
+      </div>
     </div>
   </div>
 </template>
@@ -19,11 +22,19 @@ export default {
   name: "fileHeader",
   data() {
     return {
-      searchValue: ""
+      searchValue: "",
+      tags: [
+        { name: "current"}
+      ]
     };
   },
-  computed:{
-    ...mapGetters(['navText'])
+  computed: {
+    ...mapGetters(["navText"])
+  },
+  methods:{
+    closeTag(tag,index){
+      tag.name ==='current'?this.tags[0].name = 'global':this.tags[0].name = 'current';
+    }
   }
 };
 </script>
@@ -52,12 +63,28 @@ export default {
       overflow-x: hidden;
       text-overflow: ellipsis;
     }
-    width: 55%;
+    width: 40%;
     padding-right: 12px;
     box-sizing: border-box;
   }
   .search {
-    width: 45%;
+    width: 60%;
+    position: relative;
+    .el-input__inner{
+      padding-left: 76px;
+      border: none;
+      background:#f5f5f5;
+    }
+    .tag-group {
+      left: 4px;
+      top: 3px;
+      position: absolute;
+      .el-tag{
+        background:#fff;
+        border:1px solid #ccc;
+        color:#666;
+      }
+    }
   }
   #scrollBar {
     position: relative;

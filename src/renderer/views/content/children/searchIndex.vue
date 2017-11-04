@@ -2,7 +2,7 @@
   <div id="searchIndex">
       <div class="search-wrap">
           <div class="search-top">
-              <input type="text" v-model="searchVal" placeholder="请输入关键词">
+              <input type="text" v-model.trim="searchVal" placeholder="请输入关键词">
             <span @click="search">搜索</span>
           </div>
           <p>搜索历史记录</p>
@@ -17,20 +17,40 @@
 </template>
 
 <script>
+import localforage from "localforage";
 export default {
   data() {
     return {
       searchVal: "",
-      searchHistory: ["Gma", "Rna", "Dna"]
+      searchHistory: []
     };
   },
   methods: {
     search() {
-      this.$router.push("/search");
+      if (this.searchVal) {
+        let _this = this;
+        this.$router.push("/search");
+
+        //设置搜索历史
+        this.searchHistory.unshift(this.searchVal);
+        this.searchHistory.length = 10;
+        this.searchVal = "";
+        localforage.setItem("searchHistory", _this.searchHistory);
+      }else{
+        this.$message('请输入关键词');
+      }
     },
     deleteHis(index) {
       this.searchHistory.splice(index, 1);
     }
+  },
+  activated() {
+    let _this = this;
+    this.searchHistory = localforage.getItem("searchHistory", (err, res) => {
+      if (!err) {
+        _this.searchHistory = res;
+      }
+    });
   }
 };
 </script>

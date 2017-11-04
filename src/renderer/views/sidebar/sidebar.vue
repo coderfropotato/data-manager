@@ -21,10 +21,10 @@
               <span>文件状态</span>
             </el-badge>
           </el-menu-item>
-          <el-menu-item index="/collection">
+          <!-- <el-menu-item index="/collection">
             <i class="iconfont icon-wenjian"></i>
             <span>收藏</span>
-          </el-menu-item>
+          </el-menu-item> -->
           <el-menu-item index="/database">
             <i class="iconfont icon-shujuku"></i>
             <span>数据库</span>

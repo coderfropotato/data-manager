@@ -1,34 +1,43 @@
 <template>
   <div id="file-status-root">
-    fileStatus content
+    <el-tree
+      :data="treeData"
+      show-checkbox
+      default-expand-all
+      node-key="id"
+      ref="tree"
+      highlight-current
+      @node-click="jumpToNodeInfo"
+      :render-content="renderContent"
+      :props="defaultProps">
+    </el-tree>
   </div>
 </template>
 
 <script>
 import { mapGetters, mapActions } from "vuex";
-
+import bus from "@/utils/bus";
 export default {
   name: "fileStatus",
-  mounted() {
-  },
-  activated(){
+  activated() {
     this.$store.dispatch("showBottom");
+  },
+  computed: {
+    ...mapGetters(["treeData"])
   },
   data() {
     return {
-      // 中间栏是否显示commit/ignore按钮
-      showCommitOrIgnore: false
+      defaultProps: {
+        children: "children",
+        label: "label"
+      }
     };
   },
   methods: {
-    // 渲染状态标签
     renderContent(h, { node, data }) {
-      // 带status节点
       if (data.status != null) {
         let color = null;
         let tag = null;
-
-        // 判断status
         if (data.status === -1) {
           color = "red";
           tag = "最近删除";
@@ -38,7 +47,7 @@ export default {
         } else if (data.status === 1) {
           color = "green";
           tag = "最近新增";
-        } else if (data.status.indexOf("tagged") !== -1) {
+        } else if (data.status === 2) {
           color = "orange";
           tag = "已打标签";
         }
@@ -49,7 +58,8 @@ export default {
             "el-tag",
             {
               style: {
-                backgroundColor: color
+                backgroundColor: color,
+                marginLeft: "12px"
               }
             },
             tag
@@ -59,10 +69,26 @@ export default {
         // 不带status节点
         return h("span", [h("span", node.label)]);
       }
+    },
+    //通过node-key 选择
+    setCheckedKeys(id) {
+      let arr = [];
+      typeof id === "number" ? arr.push(id) : (arr = id);
+      this.$refs.tree.setCheckedKeys(arr);
+    },
+    //节点点击 显示详情、
+    jumpToNodeInfo(obj,e,component){
+      this.$router.push('/filestatusinfo')
     }
   },
   deactivated() {
     this.$store.dispatch("hideBottom");
+  },
+  created() {
+    //接收sidebar的点击事件
+    bus.$on("statueSideBarClick", id => {
+      this.setCheckedKeys(id);
+    });
   }
 };
 </script>
@@ -70,7 +96,11 @@ export default {
 <style lang="scss" scoped>
 #file-status-root {
   height: 100%;
+  padding: 40px;
   -webkit-overflow-y: overlay;
   overflow-x: hidden;
+  .el-tree {
+    border: none;
+  }
 }
 </style>

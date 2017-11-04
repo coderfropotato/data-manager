@@ -41,6 +41,10 @@ export default {
   .search {
     width: 60%;
     margin: 0 auto;
+    .el-input__inner{
+      border: none;
+      background:#f5f5f5;
+    }
   }
 }
 </style>
