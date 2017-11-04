@@ -1,6 +1,6 @@
 {
-  "name": "gooalgene-desk",
-  "productName": "gooalgene-desk",
+  "name": "data-manager-desktop",
+  "productName": "data-manager-desktop",
   "version": "1.0.0",
   "author": "HeMang",
   "description": "An electron-vue project",
