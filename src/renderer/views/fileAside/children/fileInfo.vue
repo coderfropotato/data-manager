@@ -105,6 +105,9 @@ export default {
       this.initStatus();
     })
   },
+  activated(){
+    console.log(this.$route.query.type)
+  },
   watch: {
     tableInfo: {
       handler: function(val, oldVal) {

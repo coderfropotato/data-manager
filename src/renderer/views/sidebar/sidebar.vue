@@ -6,7 +6,7 @@
         <!--router 激活导航，以index为path-->
         <el-menu class="menu" router>
           <!-- @click="openFile" -->
-          <el-menu-item index="/files" >
+          <el-menu-item index="/files?type=file" >
             <i class="iconfont icon-wenjian"></i>
             <span>文件</span>
           </el-menu-item>

@@ -160,6 +160,16 @@ body{
   height:24px;
   vertical-align:middle;
 }
+
+.el-menu--horizontal.el-menu--dark .el-submenu .el-menu-item.is-active,.el-menu-item.is-active{color:#fff;background:#386cca;}
+.el-menu--horizontal.el-menu--dark .el-submenu .el-menu-item.is-active,.el-menu-item.is-active span{color:#fff;}
+.el-badge__content.is-fixed{
+  top:21px;
+  right:-6px;
+}
+.el-badge__content{
+  border:none;
+}
 ::-webkit-scrollbar-thumb {
   border-radius: 3px;
   background: #ccc;

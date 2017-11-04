@@ -1,5 +1,5 @@
 <template>
-  <div id="file-status-root">
+  <div id="file-status-root" @click="reset">
     <el-tree
       :data="treeData"
       show-checkbox
@@ -77,8 +77,12 @@ export default {
       this.$refs.tree.setCheckedKeys(arr);
     },
     //节点点击 显示详情、
-    jumpToNodeInfo(obj,e,component){
-      this.$router.push('/filestatusinfo')
+    jumpToNodeInfo(...args){
+      this.$router.push('/filestatusinfo?type=status')
+    },
+    //点击空白回状态信息
+    reset(){
+      this.$router.push('/filestatus')
     }
   },
   deactivated() {

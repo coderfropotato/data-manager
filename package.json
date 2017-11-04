@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "author": "HeMang",
   "description": "An electron-vue project",
-  "license": null,
+  "license": "MIT",
   "main": "./dist/electron/main.js",
   "repository": {
     "type": "gitlab",
