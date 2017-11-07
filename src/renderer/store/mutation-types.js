@@ -26,13 +26,34 @@ export const SET_SERIAL_NUMBER = 'setSerialNumber';
 export const SET_NAV_BAR = 'setNavText';
 //设置根路径
 export const SET_ROOT_PATH = 'setRootPath';
-
+//删除面包屑
+export const DELETE_NAV_NAR = 'deleteNavBar';
 
 
 //search
-export const SET_SEARCH_TABLE_DATA  = 'setSearchTableData';
+export const GET_SEARCH_TABLE_DATA  = 'setSearchTableData';
 
 //status
 //获取文件状态树的数据
 export const GET_TREE_DATA = 'getTreeData';
 
+//bottom
+export const SET_TOTAL_COUTN = 'setTotalCount';
+export const SET_SELECTED = 'setSelected';
+
+//设置表格点击选中 历史纪录
+export const SET_ATTR_HISTORY = 'serAttrHistory';
+//获取文件详情
+export const GET_FILE_INFO = 'setFileInfo';
+
+//设置文件详情的双向绑定
+export const UPDATE_MESSAGE = 'updateMessage';
+//保存文件详情
+export const SAVE_FILE_INFO ='saveFileInfo';
+//添加属性
+export const ADD_FILE_INFO = 'addFileInfo';
+//重置文件详情
+export const RESET_FILE_INFO = 'resetFileInfo';
+
+//global
+export const SET_ROUTE_STATUS = 'setRouteStatus';

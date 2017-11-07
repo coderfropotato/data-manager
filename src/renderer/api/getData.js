@@ -33,22 +33,24 @@ let getData = function (API, params) {
     params
   }
   request.send(JSON.stringify(Param))
-  let flag = 0
-  // setTimeout(function () {
-  //   if (flag === 0) {
-  //     console.error('服务器无响应' + '\n API: ' + API)
-  //     bus.$emit('error')
-  //     flag = 0
-  //   }
-  // }, outTime);
   return new Promise((resolve, reject) => {
+    let flag = 0;
+    let timer = setTimeout(function(){
+      if (flag === 0) {
+        console.error('服务器无响应' + '\n API: ' + API)
+        bus.$emit('error',500)
+        flag = 0
+      }else{
+        clearTimeout(timer);
+      }
+    },outTime);
     request.on('message', function (msg) {
       flag = 1
+      clearTimeout(timer);
       let rep = JSON.parse(msg)
       if (rep.status === 200) {
         let data = rep.data;
         resolve(data)
-        request.close()
       } else if (rep.status === 400) {
         bus.$emit('error',rep.status)
         console.error('参数数目错误' + '\n API: ' + API)

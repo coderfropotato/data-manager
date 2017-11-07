@@ -3,6 +3,8 @@
  */
 import fetchData from '@/api'
 import * as types from '@/store/mutation-types'
+//引入bottom  设置bototm vuex
+import bottom from '@/store/modules/bottom'
 const state = {
     searchTableData:[],
     searchRange:[],
@@ -13,19 +15,17 @@ const getters = {
 }
 
 const actions = {
-  setSearchTableData({commit},data){
-      commit(types.SET_SEARCH_TABLE_DATA);
-  },
   getSearchTableData({commit},params){
-      fetchData('search',params).then(res=>{
-          if(res.length===0) res=[];
-          commit(types.SET_SEARCH_TABLE_DATA,res);
+      return new Promise((ersolve,reject)=>{
+          fetchData('',{}).then(res=>{
+              commit(types.GET_SEARCH_TABLE_DATA,res);
+          })
       })
   }
 }
 
 const mutations = {
-    [types.SET_SEARCH_TABLE_DATA](state,data){
+    [types.GET_SEARCH_TABLE_DATA](state,data){
         state.searchTableData = data;
     }
 }

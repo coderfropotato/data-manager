@@ -4,7 +4,7 @@ import getData from './getData'
 import mockData from './easy-mock'
 
 // 是否开启模拟数据
-const simulation = false
+const simulation = false;
 let fetchData = simulation ? mockData : getData
 
 export default fetchData
