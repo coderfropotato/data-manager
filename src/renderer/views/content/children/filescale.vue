@@ -1,7 +1,7 @@
 <template>
   <div id="filescale">
       <ol>
-        <li @click="jumpToSearch(item.alias,item.serialNumber,item.path)" v-for="(item,index) in fileList" :key="index">
+        <li @click="jumpToSearch(item)" v-for="(item,index) in fileList" :key="index">
           <img v-if="!item.isTelnet" src="../../../assets/images/computer.png" />
           <img v-else src="../../../assets/images/disk.png" />
           <p>{{item.alias}}</p>
@@ -28,19 +28,22 @@ export default {
     };
   },
   methods: {
-    jumpToSearch(alias, serialNumber, path) {
+    jumpToSearch(item) {
       //编程式导航
-      this.$router.push(`/searchfiles?type=${serialNumber}`);
-      //设置面包屑
-      this.$store.dispatch("setNavBar", alias);
+      this.$router.push(`/searchfiles?type=${item.serial_number}`);
       //设置序列号
-      this.$store.dispatch("setSerialNumber", serialNumber);
-      //设置根路径
-      this.$store.dispatch("setRootPath", path).then(() => {
-        //获取数据
-        this.$store
-          .dispatch("getDirTree", { type: "root", path, serialNumber })
-          .then(() => {});
+      this.$store.dispatch("setSerialNumber", item.serial_number).then(res => {
+        //设置根路径
+        this.$store.dispatch("setRootPath", item.path).then(res => {
+          //重置fileInfo
+          this.$store.dispatch('resetFileInfo');
+          //获取数据
+          let serialNumber = item.serial_number;
+          this.$store.dispatch("getDirTree", { serialNumber }).then(res => {
+            //设置面包屑
+            this.$store.dispatch("setNavBar", item);
+          });
+        });
       });
     }
   },

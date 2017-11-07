@@ -3,29 +3,26 @@
     <!--固定加载区域-->
     <div class="nav-menu" ref="navMenu">
       <el-col :span="24">
-        <!--router 激活导航，以index为path-->
-        <el-menu class="menu" router>
-          <!-- @click="openFile" -->
-          <el-menu-item index="/files?type=file" >
+        <el-menu  class="menu" router default-active="0">
+          <el-menu-item @click="Jump('0')" index="0" >
             <i class="iconfont icon-wenjian"></i>
             <span>文件</span>
           </el-menu-item>
-          <el-menu-item index="/searchindex?type=search">
+          <el-menu-item  @click="Jump('1')" index="1">
             <i class="iconfont icon-sousuo"></i>
             <span>搜索</span>
           </el-menu-item>
-          <el-menu-item index="/filestatus">
+          <el-menu-item  @click="Jump('2')" index="2">
             <i class="iconfont icon-wenjianzhuangtai"></i>
-            <!--角标，提醒文件更改数量，最大99-->
             <el-badge :value="modifiedFiles" :max="99" class="item">
               <span>文件状态</span>
             </el-badge>
           </el-menu-item>
-          <!-- <el-menu-item index="/collection">
+          <el-menu-item @click="Jump('3')" index="3">
             <i class="iconfont icon-wenjian"></i>
-            <span>收藏</span>
-          </el-menu-item> -->
-          <el-menu-item index="/database">
+            <span>小工具</span>
+          </el-menu-item>
+          <el-menu-item  @click="Jump('4')" index="4">
             <i class="iconfont icon-shujuku"></i>
             <span>数据库</span>
           </el-menu-item>
@@ -60,20 +57,33 @@ export default {
     modifiedFiles: "modifiedNum"
   }),
   methods: {
-    // // 获取文件
-    // openFile() {
-    //   // this.fullScreenLoading = true
-    //   if (
-    //     this.$store.state.files.allFiles.length &&
-    //     Object.keys(this.$store.state.files.categoryDirRowData).length
-    //   ) {
-    //     this.fullScreenLoading = false;
-    //   } else {
-    //     this.$store.dispatch("openFile").then(() => {
-    //       this.fullScreenLoading = false;
-    //     });
-    //   }
-    // }
+    Jump(index) {
+      switch (index) {
+        case "0":
+          this.$store.dispatch("resetFileInfo");
+          this.$store.dispatch("setRouteStatus", "file");
+          this.$router.push("/files");
+          break;
+        case "1":
+          this.$store.dispatch("resetFileInfo");
+          this.$store.dispatch("setRouteStatus", "search");
+          this.$router.push("/searchindex");
+          break;
+        case "2":
+          this.$store.dispatch("resetFileInfo");
+          this.$router.push("/filestatus");
+          this.$store.dispatch("setRouteStatus", "status");
+          break;
+        case "3":
+          this.$router.push("/collection");
+          this.$store.dispatch("setRouteStatus", "tools");
+          break;
+        case "4":
+          this.$router.push("/database");
+          this.$store.dispatch("setRouteStatus", "database");
+          break;
+      }
+    }
   }
 };
 </script>
@@ -83,6 +93,22 @@ $backgroundColor: #f7f9f9;
   position: relative;
   background-color: $backgroundColor;
   height: 100%;
+  ul {
+    width: 100%;
+    li {
+      height: 60px;
+      line-height: 48px;
+      padding: 6px 40px;
+      cursor: pointer;
+      &.active {
+        color: #fff;
+        background: #386cca;
+      }
+      i {
+        margin-right: 12px;
+      }
+    }
+  }
   .nav-menu {
     overflow: hidden;
     height: 45%;

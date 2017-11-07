@@ -4,29 +4,36 @@
       <ol :class="{'height-range':fileList.length>=5 && isShow}">
         <!-- icon-wodeyingpan -->
         <!-- <li @click="jumpToSearch(item.name)" v-for="(item,index) in fileList" :key="index"><i class="iconfont iconfile" :class="{'icon-wodeyingpan':item.isDisk,'icon-diannao':!item.isDisk}"></i>{{item.name}}</li> -->
-        <li @click="jumpToSearch(item.alias,item.serial_number,item.path)" v-for="(item,index) in fileList" :key="index"><i class="iconfile iconfont icon-wodeyingpan"></i>{{item.alias}}</li>
+        <li @contextmenu="contextmenu($event,item)" @click="jumpToSearch(item)" v-for="(item,index) in fileList" :key="index"><i class="iconfile iconfont icon-wodeyingpan"></i>{{item.alias}}</li>
       </ol>
       <p @click="isShow=true;" v-show="fileList.length>5 && !isShow">更多设备&nbsp;></p>
+      <span @click="del" id="delete" ref="del" v-show="deleteShow">删除</span>
   </div>
 </template>
 
 <script>
 import { mapGetters, mapMutations, mapActions } from "vuex";
 import bus from "@/utils/bus";
-
+import $ from "jquery";
+import fetchData from "@/api/getData";
 export default {
   name: "AllFiles",
   data() {
     return {
-      isShow: false,
-      selectedIndex: 0
+      deleteShow: false,
+      isShow: true,
+      selectedIndex: 0,
+      listInfo: {} //当前设备信息
     };
   },
   computed: {
     ...mapGetters(["fileList"])
   },
-  mounted() {},
-  filters: {},
+  created(){
+    document.addEventListener('click',()=>{
+      this.deleteShow = false;
+    })
+  },
   methods: {
     addDevice() {
       this.$electron.ipcRenderer.send("addFile", {
@@ -34,20 +41,57 @@ export default {
         URL: "/newfile/newdiskdir"
       });
     },
-    jumpToSearch(alias, serialNumber, path) {
-      bus.$emit('reciveData');
+    contextmenu(e, item) {
+      let top = e.target.offsetTop;
+      $("#delete").css({ left: 110, top: top +40 });
+      this.deleteShow = true;
+      this.listInfo = item;
+    },
+    del() {
+      this.deleteShow = false;
+      // TODO delete device
+      this.$confirm("此操作将永久删除"+this.listInfo.alias+", 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          fetchData("deleteDisk", {
+            serialNumber: this.listInfo.serial_number,
+            path: this.listInfo.path
+          }).then(() => {
+            this.$message({
+              type: "success",
+              message: "删除成功!"
+            });
+            //删除成功重新获取设备列表 路由跳转到file主页
+            this.$store.dispatch('getImportTargetDisks');
+            this.$router.push('/files');
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除"
+          });
+        });
+    },
+    jumpToSearch(item) {
       //编程式导航
-      this.$router.push(`/searchfiles?type=${serialNumber}`);
-      //设置面包屑
-      this.$store.dispatch("setNavBar", alias);
+      this.$router.push(`/searchfiles?type=${item.serial_number}`);
       //设置序列号
-      this.$store.dispatch("setSerialNumber", serialNumber);
-      //设置根路径
-      this.$store.dispatch("setRootPath", path).then(() => {
-        //获取数据
-        this.$store
-          .dispatch("getDirTree", { type: "root", path, serialNumber })
-          .then(() => {});
+      this.$store.dispatch("setSerialNumber", item.serial_number).then(res => {
+        //设置根路径
+        this.$store.dispatch("setRootPath", item.path).then(res => {
+          //重置fileInfo
+          this.$store.dispatch("resetFileInfo");
+          //获取数据
+          let serialNumber = item.serial_number;
+          this.$store.dispatch("getDirTree", { serialNumber }).then(res => {
+            //设置面包屑
+            this.$store.dispatch("setNavBar", item);
+          });
+        });
       });
     }
   }
@@ -67,6 +111,23 @@ export default {
   color: #48576a;
   box-sizing: border-box;
   overflow-y: visible;
+  span {
+    cursor: pointer;
+    width: 80px;
+    height: 24px;
+    text-align: center;
+    line-height: 24px;
+    background: #fff;
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 1000;
+    border-radius: 4px;
+    &:hover {
+      background: #386cca;
+      color: #fff;
+    }
+  }
   .title {
     display: flex;
     justify-content: space-between;
@@ -76,21 +137,21 @@ export default {
       line-height: 18px;
     }
   }
-  p{
+  p {
     font-size: 12px;
     text-align: right;
-    padding-right:12px;
-    margin-top:12px;
+    padding-right: 12px;
+    margin-top: 12px;
     cursor: pointer;
-    &:hover{
-      color:#386cca;
+    &:hover {
+      color: #386cca;
     }
   }
   ol {
     margin-top: 12px;
     list-style: none;
     position: relative;
-    height:190px;
+    height: 190px;
     overflow: hidden;
     &.height-range {
       height: 80%;
@@ -114,12 +175,6 @@ export default {
       &.active {
         background: #386cca;
         color: #fff;
-      }
-      &:first-child {
-        &:hover {
-          background: #fff;
-          color: #386cca;
-        }
       }
     }
   }

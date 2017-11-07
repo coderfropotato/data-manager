@@ -29,19 +29,34 @@ export default {
     search() {
       if (this.searchVal) {
         let _this = this;
-        this.$router.push("/search");
-
         //设置搜索历史
-        this.searchHistory.unshift(this.searchVal);
-        this.searchHistory.length = 10;
-        this.searchVal = "";
+        let flag = false;
+        let index = null;
+        for(let i =0; i<this.searchHistory.length;i++){
+          if(this.searchHistory[i] === this.searchVal){
+            flag = true;
+            index = i;
+            break;
+          }
+        }
+        if (!flag) {
+          this.searchHistory.unshift(this.searchVal);
+          this.searchHistory.length = 10;
+          this.searchVal = "";
+        } else {
+          let item = this.searchHistory.slice(index, index+1);
+          this.searchHistory.splice(index,1);
+          this.searchHistory.unshift(item[0]);
+        }
         localforage.setItem("searchHistory", _this.searchHistory);
-      }else{
-        this.$message('请输入关键词');
+        this.$router.push("/search");
+      } else {
+        this.$message("请输入关键词");
       }
     },
     deleteHis(index) {
       this.searchHistory.splice(index, 1);
+      localforage.setItem("searchHistory", this.searchHistory);
     }
   },
   activated() {

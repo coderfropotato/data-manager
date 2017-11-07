@@ -2,8 +2,10 @@
   <div id="fileHeader-root">
     <div class="breadcrumb">
      <el-breadcrumb separator=">">
-      <el-breadcrumb-item :to="{ path: '/filescale' }">首页</el-breadcrumb-item>
-      <el-breadcrumb-item v-for="(item,index) in navText" :key="index">{{item}}</el-breadcrumb-item>
+      <el-breadcrumb-item :to="{ path: '/filescale' }">文件</el-breadcrumb-item>
+      <el-breadcrumb-item  v-for="(item,index) in navText" :key="index">
+        <span @click="navBarJump(item,index)">{{item.filename || item.alias}}</span>
+      </el-breadcrumb-item>
     </el-breadcrumb>
     </div>
     <div class="search">
@@ -23,17 +25,23 @@ export default {
   data() {
     return {
       searchValue: "",
-      tags: [
-        { name: "current"}
-      ]
+      tags: [{ name: "current" }]
     };
   },
   computed: {
     ...mapGetters(["navText"])
   },
-  methods:{
-    closeTag(tag,index){
-      tag.name ==='current'?this.tags[0].name = 'global':this.tags[0].name = 'current';
+  methods: {
+    closeTag(tag, index) {
+      tag.name === "current"
+        ? (this.tags[0].name = "global")
+        : (this.tags[0].name = "current");
+    },
+    navBarJump(item, index) {
+      let path = item.path;
+      this.$store.dispatch("getDirTree", { path }).then(res => {
+        this.$store.dispatch("delNavBar", index);
+      });
     }
   }
 };
@@ -70,19 +78,19 @@ export default {
   .search {
     width: 60%;
     position: relative;
-    .el-input__inner{
+    .el-input__inner {
       padding-left: 76px;
       border: none;
-      background:#f5f5f5;
+      background: #f5f5f5;
     }
     .tag-group {
       left: 4px;
       top: 3px;
       position: absolute;
-      .el-tag{
-        background:#fff;
-        border:1px solid #ccc;
-        color:#666;
+      .el-tag {
+        background: #fff;
+        border: 1px solid #ccc;
+        color: #666;
       }
     }
   }

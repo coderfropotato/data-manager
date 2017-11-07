@@ -47,7 +47,7 @@ export default {
       resizeWidth: true,
       resizeHeight: false
     });
-    this.$router.push('/files')
+    this.$router.push('/files?type=file')
   },
   computed: {
     ...mapState(["fileInfo",'bottom'])

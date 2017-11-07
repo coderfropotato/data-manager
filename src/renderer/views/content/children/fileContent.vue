@@ -1,10 +1,10 @@
 <!--加载List或uploadFile组件-->
 <template>
   <div id="fileContent" v-loading="loading">
+    <my-table :table-height="tableheight"></my-table>
     <!-- <router-view></router-view> -->
-    <div class="table-wrap">
-      <!-- 列表模式 -->
-      <el-table ref="table" @selection-change="handleSelectionChange" @row-dblclick="dbClick" @row-click="selectedRow" :height="tableheight" v-show="selectModule==='list'" :data="fileTableData" stripestyle="width: 100%">
+    <!-- <div class="table-wrap">
+      <el-table ref="table" @row-dblclick="dbClick" @selection-change="handleSelectionChange"  @row-click="selectedRow" :height="tableheight" :data="fileTableData" stripestyle="width: 100%">
         <el-table-column type="selection"></el-table-column>
         <el-table-column sortable prop="isdir" label="选择">
           <template scope="scope">
@@ -22,64 +22,25 @@
           </template>
         </el-table-column>
       </el-table>
-      <div v-show="selectModule!=='list'" class="scale">
-        <!-- 平铺模式 -->
-        <ul>
-          <li>123</li>
-        </ul>
-      </div>
-    </div>
+    </div> -->
   </div>
 </template>
 <script>
-import { mapState,mapGetters } from "vuex";
+import { mapState, mapGetters } from "vuex";
 import bus from "@/utils/bus";
 export default {
   name: "fileContent",
   data() {
     return {
       loading: false,
-      selectModule: "list",
-      tableheight: 0,
-      selectCount:0
+      tableheight: 0
     };
-  },
-  computed:{
-    ...mapGetters(['fileTableData'])
   },
   mounted() {
     let _this = this;
     _this.tableheight = document.body.offsetHeight - 66 - 58 - 40 - 2;
     this.$electron.ipcRenderer.on("windowResize", function() {
       _this.tableheight = document.body.offsetHeight - 66 - 58 - 40 - 2;
-    });
-  },
-  methods: {
-    handleSelectionChange(val) {
-      this.selectCount = val.length;
-    },
-    selectedRow(row, event, column){
-      this.$refs.table.toggleRowSelection(row);
-    },
-    dbClick(row,event){
-      this.$refs.table.clearSelection();
-      this.$refs.table.toggleRowSelection(row,true);
-    }
-  },
-  activated() {
-    this.$store.dispatch("showBottom");
-  },
-  deactivated() {
-    this.$store.dispatch("hideBottom");
-  },
-  beforeMount() {
-    bus.$on("loading-content", () => {
-      this.loading = true;
-    });
-    bus.$on("loading-end", () => {
-      this.$nextTick(() => {
-        this.loading = false;
-      });
     });
   }
 };
@@ -89,12 +50,5 @@ export default {
   flex: 1;
   display: flex;
   flex-direction: column;
-  .table-wrap {
-    flex: 1;
-    overflow-y: scroll;
-    el-table {
-      height: 100%;
-    }
-  }
 }
 </style>

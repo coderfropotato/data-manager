@@ -1,48 +1,60 @@
 <template>
-  <div id="fileInfo-root" @mouseleave="saveAttrs">
-    <div v-show="!nodata">
+  <div id="fileInfo-root">
+    <div v-if="fileInfo.basic">
+      <!-- status layout start-->
+      <ol v-if="globalRouteStatus==='status'" class="status-bar">
+        <li>自动识别</li>
+        <li>上一项</li>
+        <li>下一项</li>
+      </ol>
+      <!-- status layout end -->
       <div class="title">
         <p>文件详情</p>
         <span v-if="module=='read'" @click="module='edit'">编辑</span>
         <span v-if="module=='edit'" @click="module='read'">保存</span>
       </div>
       <div class="des">
-        <img src="../../../assets/images/dna.png" alt=""> <span>Gmax-275-Wm82.a2.v1.fa</span>
+        <img v-if="fileInfo.isdir" src="../../../assets/images/dir.png" alt=""> 
+        <img v-else src="../../../assets/images/single.png" alt=""> 
+        <span>{{fileInfo.basic.filename}}</span>
       </div>
       <ul>
         <li>
-          <p>文件类型：<span>参考基因组</span></p>
+          <p>文件类型：<span>{{fileInfo.fileType}}</span></p>
         </li>
         <li>
-          <p>文件大小：<span>900M</span></p>
+          <p>文件大小：<span>{{fileInfo.basic.size | reverseSize}}</span></p>
         </li>
         <li>
-          <p>创建时间：<span>2017-09-27</span></p>
+          <p>创建时间：<span>{{fileInfo.basic.ctime}}</span></p>
         </li>
       </ul>
       <div class="text">
         <h5>数据来源</h5>
-        <p>类别：公共数据</p>
-        <p>类别：<a href="javascript:;">公共数据</a></p>
-        <h5 class="item">参考基因组</h5>
+        <p>类别：{{fileInfo.source.category}}</p>
+        <p>数据源：<a href="javascript:;">{{fileInfo.source.source}}</a></p>
+        <h5 class="item">属性</h5>
         <div class="attrs">
           <span>名称</span>
           <span>详情</span>
         </div>
         <ol class="item-list">
-            <li :class="{'edit':module==='edit'}" v-for="(item,index) in tableInfo" :key="index"><input ref="attrs" v-model="item.name" :diasbled="{true:module!=='edit',false:module==='edit'}" type="text"> ：<input v-model="item.attr" :diasbled="{true:module!=='edit',false:module==='edit'}" type="text"></li>
+            <li :class="{'edit':module==='edit'}" v-for="(val,index) in fileInfo.property" :key="index">
+              <input ref="attrs" :diasbled="{true:module!=='edit',false:module==='edit'}" type="text" @change="updateMessage($event,index,'key')" :value="val.name"> ：
+              <input @change="updateMessage($event,index,'val')" :value="val.attr" :diasbled="{true:module!=='edit',false:module==='edit'}" type="text">
+            </li>
         </ol>
         <!-- add attrs -->
         <!-- <p><input type="text">：<input type="text"></p> -->
         <h5 class="item">备注</h5>
-        <el-input type="textarea" v-model="textarea"></el-input>
+        <textarea :value="fileInfo.remark" @change="updateMessage($event)">></textarea>
       </div>
       <div @click="addAttrs" v-show="module==='edit'" class="add-attrs">
         <i class="iconfont icon-tianjia"></i><span>添加文件属性</span>
       </div>
     </div>
     <!-- nodata -->
-    <div class="no-data" v-show="nodata">
+    <div class="no-data" v-if="!fileInfo.basic">
       <img src="../../../assets/images/nodata.png" alt="">
         <P>暂无文件详情</P>
     </div>
@@ -51,103 +63,36 @@
 <script>
 import { mapGetters } from "vuex";
 import bus from "@/utils/bus";
-
+import $ from "jquery";
 export default {
   name: "FileInfo",
   data() {
     return {
       module: "read",
-      nodata: true,
-      isEdit: false,
-      flag: true,
-      tableInfo: [
-        {
-          name: "属性1",
-          attr: "值1"
-        },
-        {
-          name: "属性2",
-          attr: "值2"
-        },
-        {
-          name: "属性2",
-          attr: "值2"
-        },
-        {
-          name: "属性2",
-          attr: "值2"
-        },
-        {
-          name: "属性2",
-          attr: "值2"
-        },
-        {
-          name: "属性2",
-          attr: "值2"
-        }
-      ],
-      textarea: "textarea"
     };
   },
-  computed: mapGetters([]),
-  created() {
-    //接收获取数据通知
-    bus.$on("reciveData", params => {
-      //get server attrs
-      let res = [{ name: "123", attr: "sd" }];
-      this.tableInfo = res;
-      //初始化状态
-      this.initStatus();
-    });
-    //无详情监听
-    bus.$on('noInfoData',()=>{
-      this.nodata = true;
-      this.initStatus();
-    })
+  computed: {
+    ...mapGetters(["fileInfo","globalRouteStatus"])
   },
-  activated(){
-    console.log(this.$route.query.type)
-  },
-  watch: {
-    tableInfo: {
-      handler: function(val, oldVal) {
-        if (!this.flag) {
-          this.isEdit = true;
-        }
-      },
-      deep: true
-    },
-    textarea: function() {
-      if (!this.flag) this.isEdit = true;
-    }
-  },
-  filters: {},
   methods: {
-    saveAttrs() {
-      //编辑过 并且 不是更新数据的时候
-      if (this.isEdit && !this.flag) {
-        for (let i = 0; i < this.tableInfo.length; i++) {
-          if (!this.tableInfo[i].name) {
-            this.tableInfo.splice(i, 1);
-          } else {
-            continue;
-          }
+    updateMessage(e, index, type) {
+      let params;
+      if (!type) {
+        params = e.target.value;
+      } else {
+        params = {
+          index: index,
+          type: type,
+          val: $.trim(e.target.value)
         }
-        this.isEdit = false;
       }
+      this.$store.dispatch("updateMessage", params).then(res => {
+        //保存数据
+        this.$store.dispatch("saveFileInfo");
+      });
     },
     addAttrs() {
-      this.isEdit = true;
-      this.tableInfo.push({ name: "", attr: "" });
-      let len = this.$refs.attrs.length;
-    },
-    initStatus() {
-      this.flag = true;
-      this.isEdit = false;
-      //接收新的数据的时候 不watch
-      setTimeout(() => {
-        this.flag = false;
-      }, 300);
+      this.$store.dispatch("addFileInfo");
     }
   }
 };
@@ -174,7 +119,6 @@ export default {
     img {
       width: 56px;
       height: 56px;
-      border-radius: 50%;
       display: block;
     }
     span {
@@ -250,6 +194,12 @@ export default {
         font-size: 12px;
       }
     }
+    textarea{
+      width:100%;
+      height:88px;
+      border-radius:4px;
+      outline: none;
+    }
     .item-list {
       max-height: 100px;
       overflow-y: auto;
@@ -283,11 +233,11 @@ export default {
       margin-right: 12px;
     }
   }
-  .no-data{
-    margin-top:40px;
+  .no-data {
+    margin-top: 40px;
     text-align: center;
-    img{
-      width:102px;
+    img {
+      width: 102px;
     }
   }
 }

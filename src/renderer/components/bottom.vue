@@ -1,11 +1,11 @@
 <template>
     <div id="bottom" v-if="bottom.bottomShow">
-        <p>10个项目&emsp;选中1个项目&emsp;文件大小：900M</p>
+        <p>{{totalCount}}个项目&emsp;选中{{selectedCount}}个项目&emsp;文件大小：{{selectedSize | reverseSize}}</p>
     </div>
 </template>
 
 <script>
-import {mapState} from 'vuex'
+import {mapState,mapGetters} from 'vuex'
 export default {
     data(){
         return {
@@ -13,7 +13,8 @@ export default {
         }
     },
     computed:{
-        ...mapState(['bottom'])
+        ...mapState(['bottom']),
+        ...mapGetters(['totalCount','selectedCount','selectedSize'])
     }
 }
 </script>
