@@ -84,7 +84,7 @@ const actions = {
             }else{
                 console.log('searchFile'+JSON.stringify({context,searchRange}))
                 fetchData('searchFile',{context,searchRange,'isglobal':true}).then(res=>{
-                    console.log(res);
+                    console.warn(res);
                     commit(types.GET_SEARCH_TABLE_DATA,res.fileList);
                     resolve(res.fileList);
                 });
