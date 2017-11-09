@@ -45,6 +45,7 @@ const actions = {
         console.log('searchCurrentDisk'+JSON.stringify({context,serialNumber,rootPath,childPath}))
         fetchData('searchCurrentDisk',{context,serialNumber,rootPath,childPath}).then(_=>{
             let data={},list=[];
+            console.log(_)
             for(let i=0;i<_.fileList.length;i++){
                 data = _.fileList[i].basic;
                 data.isdir = _.fileList[i].isdir;
