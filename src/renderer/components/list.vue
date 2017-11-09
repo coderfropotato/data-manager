@@ -158,7 +158,7 @@
         }
       }, false)
       list.addEventListener('dragleave', e => {
-        console.log('leave')
+        //console.log('leave')
         e.preventDefault()
         this.count--
         if (this.count <= 0) {

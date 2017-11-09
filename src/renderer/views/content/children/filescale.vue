@@ -91,6 +91,9 @@ export default {
         margin-top: 12px;
         font-size: 14px;
         text-align: center;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
     }
   }

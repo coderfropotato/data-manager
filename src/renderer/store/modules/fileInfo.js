@@ -48,12 +48,15 @@ const actions = {
       filepath = file.state.tableClickHistory[file.state.tableClickHistory.length-1].path;
     }
      //root path  获取文件详情 childPath = rootPath;
-    // filepath = file.state.rootPath;
     let serialNumber =file.state.serialNumber;
     let rootPath = file.state.rootPath;
     fetchData('getFileInfo',{serialNumber,rootPath,filepath}).then(res=>{
       commit(types.GET_FILE_INFO,res);
     })
+  },
+  //手动设置fileinfo
+  setFileInfo({commit},info){
+    commit(types.SET_FILE_INFO,info);
   },
   //input的绑定
   updateMessage({commit},params){
@@ -79,7 +82,7 @@ const actions = {
     updateList.push(remark);
     let serialNumber =file.state.serialNumber;
     let rootPath = file.state.rootPath; 
-    let filePath =file.state.tableClickHistory[file.state.tableClickHistory.length-1].path;
+    let filePath =file.state.tableClickHistory[file.state.tableClickHistory.length-1].path || file.state.rootPath;
     let param = {
       serialNumber,
       rootPath,
@@ -88,7 +91,7 @@ const actions = {
     }
     return new Promise((resolve,reject)=>{
       fetchData('updateAttribute',param).then(res=>{
-        console.log(res);
+        //console.log(res);
         resolve('success');
         commit(types.SAVE_FILE_INFO,updateList);
       })
@@ -133,6 +136,9 @@ const mutations = {
   },
   [types.ADD_FILE_INFO](state,params){
     state.fileInfo.property.push({'name':"",'attr':""});
+  },
+  [types.SET_FILE_INFO](state,info){
+    state.fileInfo = info;
   }
 }
 

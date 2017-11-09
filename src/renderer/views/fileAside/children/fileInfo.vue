@@ -10,8 +10,8 @@
       <!-- status layout end -->
       <div class="title">
         <p>文件详情</p>
-        <span v-if="module=='read'" @click="module='edit'">编辑</span>
-        <span v-if="module=='edit'" @click="module='read'">保存</span>
+        <span v-show="!module" @click="module=true">保存</span>
+        <span v-show="module" @click="module=false">编辑</span>
       </div>
       <div class="des">
         <img v-if="fileInfo.isdir" src="../../../assets/images/dir.png" alt=""> 
@@ -39,17 +39,16 @@
           <span>详情</span>
         </div>
         <ol class="item-list">
-            <li :class="{'edit':module==='edit'}" v-for="(val,index) in fileInfo.property" :key="index">
-              <input ref="attrs" :diasbled="{true:module!=='edit',false:module==='edit'}" type="text" @change="updateMessage($event,index,'key')" :value="val.name"> ：
-              <input @change="updateMessage($event,index,'val')" :value="val.attr" :diasbled="{true:module!=='edit',false:module==='edit'}" type="text">
+            <li :class="{'edit':!module}" v-for="(val,index) in fileInfo.property" :key="index">
+              <input ref="attrs" :diasbled="module" type="text" @change="updateMessage($event,index,'key')" :value="val.name"> ：
+              <input @change="updateMessage($event,index,'val')" :value="val.attr" :diasbled="module" type="text">
             </li>
         </ol>
         <!-- add attrs -->
-        <!-- <p><input type="text">：<input type="text"></p> -->
         <h5 class="item">备注</h5>
-        <textarea :value="fileInfo.remark" @change="updateMessage($event)">></textarea>
+        <textarea id="texta" :readonly="module"  :value="fileInfo.remark" @change="updateMessage($event)">></textarea>
       </div>
-      <div @click="addAttrs" v-show="module==='edit'" class="add-attrs">
+      <div @click="addAttrs" v-show="!module" class="add-attrs">
         <i class="iconfont icon-tianjia"></i><span>添加文件属性</span>
       </div>
     </div>
@@ -68,11 +67,21 @@ export default {
   name: "FileInfo",
   data() {
     return {
-      module: "read",
+      module: true,
     };
   },
   computed: {
     ...mapGetters(["fileInfo","globalRouteStatus"])
+  },
+  watch:{
+    // 'module':function(val,oldVal){
+    //   console.log(val,oldVal)
+    //   if(val==='read'){
+    //     document.querySelector('#texta').setAttribute('readonly','readonly');
+    //   }else{
+    //     document.querySelector('#texta').removeAttribute('readonly');
+    //   }
+    // }
   },
   methods: {
     updateMessage(e, index, type) {
@@ -87,11 +96,12 @@ export default {
         }
       }
       this.$store.dispatch("updateMessage", params).then(res => {
-        //保存数据
+        //save fileinfo 
         this.$store.dispatch("saveFileInfo");
       });
     },
     addAttrs() {
+      //add file attrs
       this.$store.dispatch("addFileInfo");
     }
   }

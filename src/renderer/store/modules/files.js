@@ -12,7 +12,7 @@ const state = {
   //root path
   rootPath:'',
   //面包屑数组
-  navText:[],
+  navList:[],
   //存序列号
   serialNumber:"",
   //表格选中的历史项，总是显示最后一个的详情
@@ -24,7 +24,7 @@ const state = {
 const getters = {
   fileList: state => state.fileList,
   fileTableData:state=>state.fileTableData,
-  navText:state=>state.navText,
+  navList:state=>state.navList,
   tableClickHistory:state=>state.tableClickHistory
 }
 
@@ -76,8 +76,8 @@ const actions = {
       resolve('success');
     })
   },
-  //设置文件详情
-  setAttrHistory({commit},valList){
+  //set bottom info
+  setBottomInfo({commit},valList){
     return new Promise((resolve,reject)=>{
       let size = 0;
       valList.forEach((val,index)=>{
@@ -115,16 +115,16 @@ const mutations = {
   },
   //设置面包屑
   [types.SET_NAV_BAR](state,item){
-    state.navText.length=0;
-    state.navText.push(item);
+    state.navList.length=0;
+    state.navList.push(item);
   },
   //更新 filetable 面包屑
   [types.UPDATE_FILES_DETAIL](state,item){
-    state.navText.push(item);
+    state.navList.push(item);
   },
   //删除面包屑
   [types.DELETE_NAV_NAR](state,index){
-    state.navText.splice(index+1,1);
+    state.navList.splice(index+1,1);
   },
   //设置序列号
   [types.SET_SERIAL_NUMBER](state,num){

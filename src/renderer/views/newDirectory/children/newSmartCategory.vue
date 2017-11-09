@@ -100,7 +100,7 @@
         this.show.categoryConditions = !this.show.categoryConditions
       },
       addLimitedCondition (e) {
-        console.log(e.target.innerText)
+        //console.log(e.target.innerText)
         let text = e.target.innerText
         let count = 0
         let length = this.limitedConditions.length
@@ -128,13 +128,13 @@
             this.limitedObject.push(object)
           }
         }
-        console.log(this.limitedObject)
+        //console.log(this.limitedObject)
       },
       deleteLimitedCondition (index) {
         this.limitedConditions.splice(index, 1)
       },
       showItem (e) {
-        console.log(e.target.innerText)
+        //console.log(e.target.innerText)
         let text = e.target.innerText
         let count = 0
         let length = this.selectedCondition.length
@@ -152,7 +152,7 @@
             this.selectedCondition.push(text)
           }
         }
-        console.log(this.selectedCondition)
+        //console.log(this.selectedCondition)
       },
       deleteItem (index) {
         this.selectedCondition.splice(index, 1)

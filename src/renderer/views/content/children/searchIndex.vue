@@ -1,9 +1,15 @@
 <template>
+<div>
+  <keep-alive>
+    <router-view></router-view>
+  </keep-alive>
   <div id="searchIndex">
       <div class="search-wrap">
           <div class="search-top">
               <input type="text" v-model.trim="searchVal" placeholder="请输入关键词">
-            <span @click="search">搜索</span>
+              <div class="tag-group" v-if="searchRangeLength!==fileList.length"><el-tag>{{`在${searchRangeLength}个位置搜索`}}</el-tag></div>
+              <div class="tag-group"  v-if="searchRangeLength===fileList.length"><el-tag>{{`在全局搜索`}}</el-tag></div>
+              <em @click="search">搜索</em>
           </div>
           <p>搜索历史记录</p>
           <ul>
@@ -14,16 +20,22 @@
           </ul>
       </div>
   </div>
+</div>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 import localforage from "localforage";
+import bus from "@/utils/bus";
 export default {
   data() {
     return {
       searchVal: "",
       searchHistory: []
     };
+  },
+  computed: {
+    ...mapGetters(["searchRangeLength", "fileList"])
   },
   methods: {
     search() {
@@ -32,8 +44,8 @@ export default {
         //设置搜索历史
         let flag = false;
         let index = null;
-        for(let i =0; i<this.searchHistory.length;i++){
-          if(this.searchHistory[i] === this.searchVal){
+        for (let i = 0; i < this.searchHistory.length; i++) {
+          if (this.searchHistory[i] === this.searchVal) {
             flag = true;
             index = i;
             break;
@@ -44,12 +56,28 @@ export default {
           this.searchHistory.length = 10;
           this.searchVal = "";
         } else {
-          let item = this.searchHistory.slice(index, index+1);
-          this.searchHistory.splice(index,1);
+          let item = this.searchHistory.slice(index, index + 1);
+          this.searchHistory.splice(index, 1);
           this.searchHistory.unshift(item[0]);
         }
         localforage.setItem("searchHistory", _this.searchHistory);
-        this.$router.push("/search");
+        this.$store.dispatch("setSearchValue", this.searchVal);
+        //global
+        let context = this.searchVal;
+        this.$store.dispatch("searchFile", { context }).then(
+          _ => {
+            console.log(_);
+            this.searchVal = '';
+            this.$router.push("/search");
+            this.$store.dispatch("setTotalCount", _.length);
+          },
+          err => {
+            this.$message({
+              message: "请选择一个搜索范围",
+              type: "warning"
+            });
+          }
+        );
       } else {
         this.$message("请输入关键词");
       }
@@ -66,12 +94,18 @@ export default {
         _this.searchHistory = res;
       }
     });
+    this.$store.dispatch("checkAllSwitch", true);
   }
 };
 </script>
 
 <style lang="scss" scoped >
 .search-wrap {
+  .el-tag {
+    position: absolute;
+    left: 0px;
+    top: 6px;
+  }
   width: 520px;
   margin: 120px auto;
   .search-top {
@@ -84,15 +118,16 @@ export default {
       height: 100%;
       outline: none;
       padding-right: 120px;
-      padding-left: 12px;
+      padding-left: 100px;
       border: none;
       background: #f5f5f5;
     }
-    span {
+    em {
       position: absolute;
       width: 110px;
       height: 100%;
       font-size: 14px;
+      font-style: normal;
       color: #fff;
       background: #386cca;
       top: 0;

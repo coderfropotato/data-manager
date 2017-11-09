@@ -79,7 +79,7 @@ const routes = [
       default: Search,
       ContentHeader: SearchIndex,
       FileInfo: FileInfo
-    }
+    },
   },
   {
     path: 'search',

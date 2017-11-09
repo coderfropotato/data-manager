@@ -1,13 +1,14 @@
 <template>
   <div id="file-status-root" @click="reset">
-    <el-tree
+    <el-tree 
       :data="treeData"
       show-checkbox
       default-expand-all
-      node-key="id"
+      :expand-on-click-node="false"
+      node-key="path"
       ref="tree"
-      highlight-current
-      @node-click="jumpToNodeInfo"
+      @check-change = "handlerCheckChange"
+      @node-click="handlerNodeClick"
       :render-content="renderContent"
       :props="defaultProps">
     </el-tree>
@@ -29,8 +30,9 @@ export default {
     return {
       defaultProps: {
         children: "children",
-        label: "label"
-      }
+        label: "alias"
+      },
+      timerList:[]
     };
   },
   methods: {
@@ -71,14 +73,26 @@ export default {
       }
     },
     //通过node-key 选择
-    setCheckedKeys(id) {
+    setCheckedKeys(path) {
       let arr = [];
-      typeof id === "number" ? arr.push(id) : (arr = id);
+      typeof path === "string" ? arr.push(path) : (arr = path);
       this.$refs.tree.setCheckedKeys(arr);
     },
-    //节点点击 显示详情、
-    jumpToNodeInfo(...args){
+    //node clicked
+    handlerNodeClick(...args){
       this.$router.push('/filestatusinfo?type=status')
+    },
+    handlerCheckChange(...args){
+      //always clear other timers and save the last
+      for(var i =0; i<this.timerList.length;i++){
+        clearTimeout(this.timerList[i]);
+      }
+      let timer = null;
+      timer = setTimeout(_=>{
+       console.log(this.$refs.tree.getCheckedNodes(true));
+       //dispatch bottom status
+      },30)
+      this.timerList.push(timer);
     },
     //点击空白回状态信息
     reset(){

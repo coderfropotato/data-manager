@@ -64,7 +64,6 @@ const actions = {
   getFileTree({commit},serialNumber){
     // params =>serialNumber
     fetchData('getFileTree',{serialNumber}).then(data=>{
-      console.log(data);
       commit(types.SET_FILE_TABLE_dATA,data);
     })
   },

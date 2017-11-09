@@ -1,5 +1,5 @@
 <template>
-  <div id="newDiskFile-root">
+  <div id="newDiskFile-root" v-loading.fullscreen.lock="fullscreenLoading">
     <div class="newDiskFile-inner">
       <!--基本设置-->
       <el-form
@@ -49,11 +49,11 @@
           <el-form-item label="密码" prop="password">
             <el-input type="password" v-model="basicForm.password" size="small">
             </el-input>
-            <el-checkbox v-model="useKey" style="margin-left: 1.5em;">使用密钥</el-checkbox>
+            <!-- <el-checkbox v-model="useKey" style="margin-left: 1.5em;">使用密钥</el-checkbox> -->
           </el-form-item>
         </div>
         <!--选择路径-->
-        <el-form-item label="路径" prop="path">
+        <el-form-item  label="路径" prop="path">
           <el-input class="path" v-model="basicForm.path" size="small"></el-input>
           <input class="potatos-btn" type="button" value="浏览"  @click="showPath">
           <!-- <el-button  type="primary" size="small" @click="showPath" style="margin-left: 1.5em;">浏览</el-button> -->
@@ -147,9 +147,11 @@
 <script>
 import { ipcRenderer } from "electron";
 import fetchData from "../../../api/index";
+import bus from "@/utils/bus";
 export default {
   data() {
     return {
+      fullscreenLoading: false,
       dataSourceOptions: [
         {
           value: "localDisk",
@@ -238,6 +240,17 @@ export default {
       showAdvanced: false
     };
   },
+  created() {
+    let _this = this;
+    bus.$on("error", _ => {
+      this.fullscreenLoading = false;
+      this.$message({
+        type: "error",
+        message:"数据读取失败，请重试。",
+        duration: 1000
+      });
+    });
+  },
   methods: {
     // 重置表格数据
     resetForm() {
@@ -264,7 +277,7 @@ export default {
     // 删除自定义文件夹条目
     deleteCustomChoose(index) {
       this.customChoose.splice(index, 1);
-      console.log(this.customChoose);
+      //console.log(this.customChoose);
     },
     // 在输入框显示选择路径
     showPath() {
@@ -287,6 +300,7 @@ export default {
     // 确认添加磁盘目录
     confirmAddDirectory() {
       let _this = this;
+      _this.fullscreenLoading = true;
       this.$refs["basicForm"].validate(valid => {
         if (valid) {
           // 提取项目信息
@@ -331,18 +345,25 @@ export default {
                 params.source.port = _this.basicForm.port;
                 params.source.username = _this.basicForm.username;
                 params.source.password = _this.basicForm.password;
-                params.source.secretKey ='';
+                params.source.secretKey = "";
                 params.source.isSecretKey = false;
-                params.source.protocal =  _this.basicForm.protocol;
+                params.source.protocal = _this.basicForm.protocol;
               }
-              fetchData("addDiskDir", params).then(res => {
-                if(res.result ==='success'){
-                  _this.$message({message:"文件夹添加成功",type:"success"});
-                  _this.$electron.ipcRenderer.send('updateFilesList');
-                }else{
-                  _this.$message({message:"文件夹添加错误 请重试",type:"warning"});
+              fetchData("addDiskDir", params).then(
+                res => {
+                  _this.fullscreenLoading = false;
+                  if (res.result === "success") {
+                    _this.$message({ message: "项目添加成功", type: "success" });
+                    _this.$electron.ipcRenderer.send("updateFilesList");
+                    _this.$electron.ipcRenderer.send("addFile", "close");
+                  } else {
+                    _this.$message({ message: res.result, type: "warning" });
+                  }
+                },
+                err => {
+                  _this.fullscreenLoading = false;
                 }
-              });
+              );
             }
           });
           /* // 判断当前路径是否已经被管理

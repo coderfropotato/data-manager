@@ -18,12 +18,12 @@ var convert = function (data) {
                 list[i].push(obj);
             }
         }
-        console.log(child);
+        //console.log(child);
         if(child.length){
             return; 
             loop(list,child)
         }else{
-            console.log(list)
+            //console.log(list)
             return list;
         }
     }

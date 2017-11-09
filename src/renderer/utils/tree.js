@@ -1,40 +1,79 @@
-let treeData = [
-    {
-        "id":1,
-        "label":"我的电脑",
-        "children":[
-            {
-                "id":4,
-                "label":"C",
-                "status":-1
-            },
-            {
-                "id":5,
-                "label":"D",
-                "status":0
-            }
-        ]
-    },
-    {
-        "id":2,
-        "label":"我的硬盘",
-        "children":[
-            {
-                "id":6,
-                "label":"硬盘1",
-                "status":1
-            },
-            {
-                "id":7,
-                "label":"硬盘2",
-                "status":0
-            },{
-                "id":8,
-                "label":"硬盘3",
-                status:2
-            }
-        ]
-    }
-]
 
-export default treeData
+
+let response = {
+    "status":200,
+    "result":[
+        {
+            "serianNumber":"84ABB9FB",
+            "alias":"computer",
+            "path":"/root",
+            "isdir":"",
+            "modifiedNum":86,
+            "children":[
+                {
+                    "isdir": false,
+                    "alias": "a.fa",
+                    "path": "/a.fa",
+                    "status": 1
+                },
+                {
+                    "isdir": true,
+                    "alias": "fa",
+                    "path":"/qg/34",
+                    "children": [
+                        {
+                            "isdir": false,
+                            "alias": "b.fa",
+                            "path": "/fa/b.fa",
+                            "status": 1
+                        },
+                        {
+                            "isdir": false,
+                            "alias": "c.fa",
+                            "path": "/fa/c.fa",
+                            "status": 1
+                        }
+                    ]
+                }
+            ]
+
+        },
+        {
+            "serialNumber": "666666",
+            "alias":"usb",
+            "path":"/root2",
+            "isDir":"",
+            "modifiedNum":86,
+            "children":[
+                {
+                    "isdir": false,
+                    "alias": "a.fa",
+                    "path": "/a2.fa",
+                    "status": 1
+                },
+                {
+                    "isdir": true,
+                    "alias": "fa",
+                    "path":"/qwd/34",
+                    "children": [
+                        {
+                            "isdir": false,
+                            "alias": "b.fa",
+                            "path": "/fa2/b.fa",
+                            "status": 1
+                        },
+                        {
+                            "isdir": false,
+                            "alias": "c.fa",
+                            "path": "/fa3/c.fa",
+                            "status": 1
+                        }
+                    ]
+                }
+            ]
+
+        }
+    ]
+}
+ 
+export default response['result'];

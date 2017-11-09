@@ -3,45 +3,84 @@
     <div class="breadcrumb">
      <el-breadcrumb separator=">">
       <el-breadcrumb-item :to="{ path: '/filescale' }">文件</el-breadcrumb-item>
-      <el-breadcrumb-item  v-for="(item,index) in navText" :key="index">
+      <el-breadcrumb-item  v-for="(item,index) in navList" :key="index">
         <span @click="navBarJump(item,index)">{{item.filename || item.alias}}</span>
       </el-breadcrumb-item>
     </el-breadcrumb>
     </div>
     <div class="search">
-       <el-input ref="search" size="small" placeholder="请输入关键词" v-model="searchValue">
-          <el-button slot="append" icon="search">搜索</el-button>
+       <el-input ref="search" size="small" placeholder="请输入关键词" v-model.trim="searchValue">
+          <el-button @click="search" slot="append" icon="search">搜索</el-button>
       </el-input>
       <div class="tag-group">
-          <el-tag   v-for="(tag,index) in tags"  @close="closeTag(tag,index)"  :key="tag.name" :closable="true">{{tag.name}}</el-tag>
+          <el-tag  @close="closeTag"  :closable="true">{{tag.name}}</el-tag>
       </div>
     </div>
   </div>
 </template>
 <script>
+import fetchData from "@/api/getData";
 import { mapGetters } from "vuex";
 export default {
   name: "fileHeader",
   data() {
     return {
       searchValue: "",
-      tags: [{ name: "current" }]
+      tag: { name: "current" }
     };
   },
   computed: {
-    ...mapGetters(["navText"])
+    ...mapGetters(["navList"])
+  },
+  activated() {
+    this.tag.name = "current";
   },
   methods: {
-    closeTag(tag, index) {
-      tag.name === "current"
-        ? (this.tags[0].name = "global")
-        : (this.tags[0].name = "current");
+    closeTag() {
+      this.tag.name === "current"
+        ? (this.tag.name = "global")
+        : (this.tag.name = "current");
     },
     navBarJump(item, index) {
       let path = item.path;
       this.$store.dispatch("getDirTree", { path }).then(res => {
         this.$store.dispatch("delNavBar", index);
       });
+    },
+    search() {
+      // isGlobal searchRange content
+      if (!this.searchValue) {
+        this.$message("请输入关键词");
+      } else {
+        switch (this.tag.name) {
+          case "current":
+            //当前搜索
+            this.$store
+              .dispatch("searchCurrentDisk", this.searchValue)
+              .then(_ => {
+                let temp = [];
+                this.searchValue = "";
+                temp.push(this.navList[0]);
+                this.$router.push("/search");
+                this.$store.dispatch("setSearchRange", temp);
+                this.$store.dispatch("setTotalCount", _.total);
+                this.$store.dispatch("resetFileInfo");
+              });
+            break;
+          case "global":
+            //全局搜索
+            let context = this.searchValue;
+            let type = "files";
+            this.$store.dispatch("searchFile", { context, type }).then(_ => {
+              this.$router.push("/search");
+              this.$store.dispatch("checkAllSwitch", true);
+              this.$store.dispatch("setTotalCount", _.length);
+              this.$store.dispatch("resetFileInfo");
+            });
+            break;
+        }
+        this.$store.dispatch("setSearchValue", this.searchValue);
+      }
     }
   }
 };
@@ -82,16 +121,6 @@ export default {
       padding-left: 76px;
       border: none;
       background: #f5f5f5;
-    }
-    .tag-group {
-      left: 4px;
-      top: 3px;
-      position: absolute;
-      .el-tag {
-        background: #fff;
-        border: 1px solid #ccc;
-        color: #666;
-      }
     }
   }
   #scrollBar {

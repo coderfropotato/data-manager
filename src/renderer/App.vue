@@ -49,13 +49,13 @@ export default {
     })
 
     //请求错误监听
-    bus.$on('error',(res)=>{
-      this.$message({
-         type: 'error',
-         message: res+':  数据读取失败，请重试。',
-         duration: 2000
-       })
-    })
+    // bus.$on('error',(res)=>{
+    //   this.$message({
+    //      type: 'error',
+    //      message: res+':  数据读取失败，请重试。',
+    //      duration: 2000
+    //    })
+    // })
   }
 };
 </script>

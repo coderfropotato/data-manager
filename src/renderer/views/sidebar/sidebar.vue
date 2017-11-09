@@ -3,26 +3,26 @@
     <!--固定加载区域-->
     <div class="nav-menu" ref="navMenu">
       <el-col :span="24">
-        <el-menu  class="menu" router default-active="0">
-          <el-menu-item @click="Jump('0')" index="0" >
+        <el-menu  class="menu" router >
+          <el-menu-item @click="Jump('0')" index="/files" >
             <i class="iconfont icon-wenjian"></i>
             <span>文件</span>
           </el-menu-item>
-          <el-menu-item  @click="Jump('1')" index="1">
+          <el-menu-item  @click="Jump('1')" index="/searchindex">
             <i class="iconfont icon-sousuo"></i>
             <span>搜索</span>
           </el-menu-item>
-          <el-menu-item  @click="Jump('2')" index="2">
+          <el-menu-item  @click="Jump('2')" index="/filestatus">
             <i class="iconfont icon-wenjianzhuangtai"></i>
             <el-badge :value="modifiedFiles" :max="99" class="item">
               <span>文件状态</span>
             </el-badge>
           </el-menu-item>
-          <el-menu-item @click="Jump('3')" index="3">
+          <el-menu-item @click="Jump('3')" index="/collection">
             <i class="iconfont icon-wenjian"></i>
             <span>小工具</span>
           </el-menu-item>
-          <el-menu-item  @click="Jump('4')" index="4">
+          <el-menu-item  @click="Jump('4')" index="/database">
             <i class="iconfont icon-shujuku"></i>
             <span>数据库</span>
           </el-menu-item>
@@ -62,24 +62,21 @@ export default {
         case "0":
           this.$store.dispatch("resetFileInfo");
           this.$store.dispatch("setRouteStatus", "file");
-          this.$router.push("/files");
           break;
         case "1":
           this.$store.dispatch("resetFileInfo");
           this.$store.dispatch("setRouteStatus", "search");
-          this.$router.push("/searchindex");
+          //default selected all
+          this.$store.dispatch('checkAllSwitch',true);
           break;
         case "2":
           this.$store.dispatch("resetFileInfo");
-          this.$router.push("/filestatus");
           this.$store.dispatch("setRouteStatus", "status");
           break;
         case "3":
-          this.$router.push("/collection");
           this.$store.dispatch("setRouteStatus", "tools");
           break;
         case "4":
-          this.$router.push("/database");
           this.$store.dispatch("setRouteStatus", "database");
           break;
       }

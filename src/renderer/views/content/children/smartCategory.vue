@@ -41,29 +41,29 @@
     ]),
     methods: {
       addSelect (index, list) {
-//        console.log(index)
-//        console.log(list)
+//        //console.log(index)
+//        //console.log(list)
         // index 是某一列的在smartCategory的索引
         // list是某一列具体一个item的值
         // name 是某一列对应的分类的英文 如 2017 对应的是'year'
         let name = this.categoryOrder[index - 1]
-        console.log(this.categoryOrder[index - 1])
+        //console.log(this.categoryOrder[index - 1])
         // 判断某一项是否重复点击，如果不重复，则请求下一列的数据。
         this.select[name] = list
-        console.log(this.select[name])
+        //console.log(this.select[name])
         this.$store.dispatch('showSmartCategory', {
           'tableName': this.tableName,
           'select': this.select
         })
 //        if (this.select[name] !== list) {
 //          this.select[name] = list
-//          console.log(this.select)
+//          //console.log(this.select)
 //          if (this.index === index || this.index > index) {
 //            this.$store.commit('deleteList', {
 //              'from': index + 1,
 //              'deleteLength': this.smartCategory.length - index
 //            })
-//            console.log(this.smartCategory.length)
+//            //console.log(this.smartCategory.length)
 //          }
 //          this.$store.dispatch('showSmartCategory', {
 //            'tableName': this.tableName,

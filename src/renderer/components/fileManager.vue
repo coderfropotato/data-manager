@@ -286,13 +286,13 @@
         // 父节点信息
         let node = this.currentNode.node
         let nodeObj = this.currentNode.nodeObj
-        console.log(node)
+        //console.log(node)
         // 判断父节点是否存在，即是否选中节点
         if (node) {
           // 判断文件夹名是否重复
           let set = new Set(nodeObj.children)
           if (set.size < nodeObj.children.length) {
-            console.log('文件名重复')
+            //console.log('文件名重复')
             return
           }
           // 获取新建节点的 ID，即路径
@@ -326,7 +326,7 @@
 
       // TODO 确认编辑节点的结果
       confirmEditNode (node, data) {
-        console.log(node.data.label)
+        //console.log(node.data.label)
       },
 
       // 树节点渲染函数 vue-render
@@ -428,7 +428,7 @@
       showSmartCategory (e) {
         let tableName = e.target.innerText
         let select = {}
-        console.log(tableName)
+        //console.log(tableName)
         // 当点击一个新的智能视图时，smartCategory数组会置空，重新向里面push数据
         this.$store.commit('setSmartCategory')
         this.$store.dispatch('showSmartCategory', {

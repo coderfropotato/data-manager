@@ -20,9 +20,11 @@ function createWindow() {
     width: 1200,
     minHeight: 860,
     minWidth: 1200,
-    // frame:false,
+    frame:false,
     skipTaskbar:false,
     useContentSize: true,
+    // titleBarStyle: 'hidden',
+    title: 'Preferences'
   })
   mainWindow.setMinimumSize(1200, 860)
   mainWindow.loadURL(winURL)
@@ -70,7 +72,7 @@ ipcMain.on('change-data', (event, call, data) => {
 ipcMain.on('updateFilesList',(event)=>{
   mainWindow.webContents.send('updateFilesList');
 })
-// 打开添加文件窗口
+// 打开/关闭添加文件窗口
 ipcMain.on('addFile', (event, arg) => {
   if (arg.API === 'open') {
     let URL = arg.URL

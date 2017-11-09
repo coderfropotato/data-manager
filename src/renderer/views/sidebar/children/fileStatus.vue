@@ -2,7 +2,7 @@
   <div id="fileStatus-root">
     <div class="title" @click="handlerAll"><span>所有文件</span></div>
       <ol class="height-range">
-        <li @click="handlerClick(item.id)" v-for="(item,index) in treeSideBar" :key="index"><i class="iconfile iconfont icon-wodeyingpan"></i>{{item.label}}</li>
+        <li @click="handlerClick(item.path)" v-for="(item,index) in treeSideBar" :key="index"><i class="iconfile iconfont icon-wodeyingpan"></i>{{item.alias}}</li>
       </ol>
   </div>
 </template>
@@ -16,20 +16,24 @@ export default {
     return {};
   },
   computed: {
-    ...mapGetters(["treeSideBar"])
+    ...mapGetters(["treeSideBar"]),
   },
   methods: {
-    handlerClick(id) {
-      bus.$emit("statueSideBarClick", id);
+    handlerClick(path) {
+      bus.$emit("statueSideBarClick", path);
     },
     handlerAll() {
-      let idArr = [];
+      let pathArr = [];
       this.treeSideBar.map(val => {
-        idArr.push(val.id);
+        pathArr.push(val.path);
         return '';
       });
-      bus.$emit("statueSideBarClick", idArr);
+      bus.$emit("statueSideBarClick", pathArr);
     }
+  },
+  activated(){
+    //default select all
+    this.handlerAll();
   }
 };
 </script>

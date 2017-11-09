@@ -32,7 +32,11 @@ export const DELETE_NAV_NAR = 'deleteNavBar';
 
 //search
 export const GET_SEARCH_TABLE_DATA  = 'setSearchTableData';
-
+//设置搜索值
+export const SET_SEARCH_VALUE = 'setSearchValue';
+export const REMOVE_SEARCH_RANGE= 'removeSearchRange';
+export const SELECTED_ALL_SEARCH_RANGE= 'selectedAllSearchRange';
+export const SET_SEARCH_RANGE= 'setSearchRange';
 //status
 //获取文件状态树的数据
 export const GET_TREE_DATA = 'getTreeData';
@@ -44,8 +48,9 @@ export const SET_SELECTED = 'setSelected';
 //设置表格点击选中 历史纪录
 export const SET_ATTR_HISTORY = 'serAttrHistory';
 //获取文件详情
-export const GET_FILE_INFO = 'setFileInfo';
-
+export const GET_FILE_INFO = 'getFileInfo';
+//设置文件详情
+export const SET_FILE_INFO = 'setFileInfo';
 //设置文件详情的双向绑定
 export const UPDATE_MESSAGE = 'updateMessage';
 //保存文件详情

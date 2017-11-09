@@ -142,7 +142,7 @@
               directoryList.push(directoryInfo)
             }
           }
-          console.log(directoryList)
+          //console.log(directoryList)
           this.$store.commit('addImportFiles', directoryList)
           // 刷新文件夹列表数据
           this.getImportFileList()

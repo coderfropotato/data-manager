@@ -1,32 +1,45 @@
 <template>
   <div id="search-root">
-    <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">搜索范围</el-checkbox>
-    <div style="margin: 15px 0;"></div>
-    <el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
-      <el-checkbox v-for="city in cities" :label="city" :key="city"><i class="iconfile iconfont icon-wodeyingpan"></i>{{city}}</el-checkbox>
-    </el-checkbox-group>
+      <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
+  <div style="margin: 15px 0;"></div>
+  <el-checkbox-group v-model="searchRange" @change="handlerCheckedChange">
+    <el-checkbox v-for="(item,index) in fileList" :label="item" :key="index">{{item.alias}}</el-checkbox>
+  </el-checkbox-group>
   </div>
 </template>
 <script>
+import {mapGetters} from 'vuex'
 export default {
   data() {
     return {
       checkAll: true,
-      checkedCities: ["C", "D"],
-      cities: ["C", "D", "E", "F"],
       isIndeterminate: true
     };
   },
+  computed:{
+    ...mapGetters(['fileList',]),
+    searchRange:{
+      get(){
+        return this.$store.state.search.searchRange;
+      },
+      set(val){
+        this.$store.dispatch('setSearchRange',val);
+      }
+    }
+  },
   methods: {
     handleCheckAllChange(event) {
-      this.checkedCities = event.target.checked ? this.cities : [];
+      let flag = event.target.checked;
+      this.searchRange = flag ? this.fileList : [];
       this.isIndeterminate = false;
+      this.$store.dispatch('checkAllSwitch',flag);
     },
-    handleCheckedCitiesChange(value) {
+    handlerCheckedChange(value) {
       let checkedCount = value.length;
-      this.checkAll = checkedCount === this.cities.length;
+      this.checkAll = checkedCount === this.fileList.length;
       this.isIndeterminate =
-        checkedCount > 0 && checkedCount < this.cities.length;
+        checkedCount > 0 && checkedCount < this.fileList.length;
+      this.$store.dispatch('setSearchRange',value);
     }
   }
 };
@@ -34,16 +47,16 @@ export default {
 <style lang="scss" scoped>
 #search-root {
   padding: 12px 20px;
-  .el-checkbox-group{
+  .el-checkbox-group {
     padding-left: 20px;
-    .el-checkbox{
+    .el-checkbox {
       display: block;
       width: 100%;
     }
   }
-  
-  .iconfile{
-    margin-right:10px;
+
+  .iconfile {
+    margin-right: 10px;
   }
 }
 </style>
