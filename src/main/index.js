@@ -20,7 +20,7 @@ function createWindow() {
     width: 1200,
     minHeight: 860,
     minWidth: 1200,
-    frame:false,
+    // frame:false,
     skipTaskbar:false,
     useContentSize: true,
     // titleBarStyle: 'hidden',

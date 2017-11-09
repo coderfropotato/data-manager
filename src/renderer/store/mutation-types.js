@@ -62,3 +62,4 @@ export const RESET_FILE_INFO = 'resetFileInfo';
 
 //global
 export const SET_ROUTE_STATUS = 'setRouteStatus';
+export const SET_GLOBAL_TYPE = 'setGlobalTypes';

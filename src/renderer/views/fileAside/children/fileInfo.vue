@@ -67,21 +67,11 @@ export default {
   name: "FileInfo",
   data() {
     return {
-      module: true,
+      module: true
     };
   },
   computed: {
-    ...mapGetters(["fileInfo","globalRouteStatus"])
-  },
-  watch:{
-    // 'module':function(val,oldVal){
-    //   console.log(val,oldVal)
-    //   if(val==='read'){
-    //     document.querySelector('#texta').setAttribute('readonly','readonly');
-    //   }else{
-    //     document.querySelector('#texta').removeAttribute('readonly');
-    //   }
-    // }
+    ...mapGetters(["fileInfo", "globalRouteStatus", "globalType"])
   },
   methods: {
     updateMessage(e, index, type) {
@@ -93,11 +83,13 @@ export default {
           index: index,
           type: type,
           val: $.trim(e.target.value)
-        }
+        };
       }
+
       this.$store.dispatch("updateMessage", params).then(res => {
-        //save fileinfo 
-        this.$store.dispatch("saveFileInfo");
+        //save fileinfo
+        // type 区分是file 还是search 的文件详情保存
+        this.$store.dispatch("saveFileInfo",this.globalType);
       });
     },
     addAttrs() {
@@ -204,10 +196,10 @@ export default {
         font-size: 12px;
       }
     }
-    textarea{
-      width:100%;
-      height:88px;
-      border-radius:4px;
+    textarea {
+      width: 100%;
+      height: 88px;
+      border-radius: 4px;
       outline: none;
     }
     .item-list {

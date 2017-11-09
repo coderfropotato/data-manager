@@ -65,6 +65,7 @@ export default {
                 this.$store.dispatch("setSearchRange", temp);
                 this.$store.dispatch("setTotalCount", _.total);
                 this.$store.dispatch("resetFileInfo");
+                this.$store.dispatch("setGlobalType", "search");
               });
             break;
           case "global":
@@ -76,6 +77,7 @@ export default {
               this.$store.dispatch("checkAllSwitch", true);
               this.$store.dispatch("setTotalCount", _.length);
               this.$store.dispatch("resetFileInfo");
+              this.$store.dispatch("setGlobalType", "search");
             });
             break;
         }

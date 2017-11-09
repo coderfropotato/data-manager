@@ -24,11 +24,23 @@ export default {
   data() {
     return {};
   },
-  props: ["tableHeight","tableData"],
+  props: ["tableHeight", "tableData"],
   methods: {
     // handlerSelectionChange to parent
     handleSelectionChange(val) {
-      this.$emit('selectchange',val);
+      //fileInfo params from the row if rootPath param in row
+      if(!val.length) return;
+      if(!val[0].rootPath){
+        //file list clicked
+        this.$emit("selectchange", val);
+      }else{
+        //search list clicked
+        let serialNumber = val.serialNumber;
+        let rootPath = val.rootPath;
+        let filepath = val.path;
+        let params ={"collection":val,"par":{serialNumber,rootPath,filepath}}
+        this.$emit("searchlistclicked",params);
+      }
     },
     //select current row
     selectedRow(row, event, column) {
@@ -44,7 +56,7 @@ export default {
         let path = row.path;
         //clicked into dir . it's not nesscnecessary.
         //parent component listens('intodir') for events as needed
-        this.$emit('intodir',{path,row});
+        this.$emit("intodir", { path, row });
       }
     }
   }

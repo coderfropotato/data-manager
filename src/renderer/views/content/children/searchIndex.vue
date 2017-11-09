@@ -67,7 +67,8 @@ export default {
         this.$store.dispatch("searchFile", { context }).then(
           _ => {
             console.log(_);
-            this.searchVal = '';
+            this.searchVal = "";
+            this.$store.dispatch("setGlobalType",'search');
             this.$router.push("/search");
             this.$store.dispatch("setTotalCount", _.length);
           },

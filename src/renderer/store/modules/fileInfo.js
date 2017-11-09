@@ -40,12 +40,11 @@ const actions = {
   //获取文件详情
   getFileInfo({commit}){
     //root 区分是否跟路径
-    let filepath;
     if(!file.state.tableClickHistory.length){
       bus.$emit('noInfoData');
       return;
     }else{
-      filepath = file.state.tableClickHistory[file.state.tableClickHistory.length-1].path;
+     var filepath = file.state.tableClickHistory[file.state.tableClickHistory.length-1].path;
     }
      //root path  获取文件详情 childPath = rootPath;
     let serialNumber =file.state.serialNumber;
@@ -53,6 +52,21 @@ const actions = {
     fetchData('getFileInfo',{serialNumber,rootPath,filepath}).then(res=>{
       commit(types.GET_FILE_INFO,res);
     })
+  },
+  //获取搜索列表的单个文件的文件详情
+  getSearchFileInfo({commit}){
+    //root 区分是否跟路径
+    if(!file.state.tableClickHistory.length){
+      bus.$emit('noInfoData');
+      return;
+    }else{
+      let filepath = file.state.tableClickHistory[file.state.tableClickHistory.length-1].path;
+      let serialNumber =file.state.tableClickHistory[file.state.tableClickHistory.length-1].serialNumber;
+      let rootPath = file.state.tableClickHistory[file.state.tableClickHistory.length-1].rootPath;
+      fetchData('getFileInfo',{serialNumber,rootPath,filepath}).then(res=>{
+        commit(types.GET_FILE_INFO,res);
+      })
+    }
   },
   //手动设置fileinfo
   setFileInfo({commit},info){
@@ -66,7 +80,7 @@ const actions = {
     })
   }, 
   //保存数据之前校验key是否存在
-  saveFileInfo({commit},params){
+  saveFileInfo({commit},type){
     let updateList = state.fileInfo.property.concat();
     for(let i=0;i<updateList.length;i++){
       for(let key in updateList[i]){
@@ -80,14 +94,19 @@ const actions = {
     }
     let remark = {name:"remark",attr:state.fileInfo.remark};
     updateList.push(remark);
-    let serialNumber =file.state.serialNumber;
-    let rootPath = file.state.rootPath; 
-    let filePath =file.state.tableClickHistory[file.state.tableClickHistory.length-1].path || file.state.rootPath;
-    let param = {
-      serialNumber,
-      rootPath,
-      filePath,
-      updateList
+    if(type==='file'){
+      //文件列表保存详情
+      let serialNumber =file.state.serialNumber;
+      let rootPath = file.state.rootPath; 
+      let filePath =file.state.tableClickHistory[file.state.tableClickHistory.length-1].path || file.state.rootPath;
+      var param = {serialNumber,rootPath,filePath,updateList}
+    }else if(type==='search'){
+      //搜索列表保存详情
+      if(!file.state.tableClickHistory.length) return;
+      let serialNumber =file.state.tableClickHistory[file.state.tableClickHistory.length-1].serialNumber;
+      let rootPath =file.state.tableClickHistory[file.state.tableClickHistory.length-1].rootPath;
+      let filePath =file.state.tableClickHistory[file.state.tableClickHistory.length-1].path;
+      var param = {serialNumber,rootPath,filePath,updateList}
     }
     return new Promise((resolve,reject)=>{
       fetchData('updateAttribute',param).then(res=>{

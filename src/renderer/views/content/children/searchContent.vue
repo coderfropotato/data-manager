@@ -1,6 +1,6 @@
 <template>
   <div id="searchContent">
-    <my-table @selectchange="childSelectedChange" :tableHeight="tableheight" :tableData="searchTableData"></my-table>
+    <my-table @searchlistclicked="childSelectedChange" :tableHeight="tableheight" :tableData="searchTableData"></my-table>
   </div>
 </template>
 <script>
@@ -25,9 +25,10 @@ export default {
   },
   methods: {
      //table's component selectChange event
-    childSelectedChange(selectedCollection) {
-      this.$store.dispatch("setBottomInfo", selectedCollection).then(_=>{
-        this.$store.dispatch("getFileInfo");
+    childSelectedChange(params) {
+      console.log(params)
+      this.$store.dispatch("setBottomInfo", params.collection).then(_=>{
+        this.$store.dispatch("getSearchFileInfo",params.par);
       })
     },
   },

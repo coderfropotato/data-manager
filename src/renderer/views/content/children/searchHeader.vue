@@ -6,13 +6,6 @@
         <div class="tag-group"  v-if="searchRangeLength===fileList.length"><el-tag>{{`在全局搜索`}}</el-tag></div>
         <em @click="search">搜索</em>
     </div>
-    <!-- <div class="search">
-      <div class="tag-group" v-if="searchRangeLength!==fileList.length"><el-tag>{{`在${searchRangeLength}个位置搜索`}}</el-tag></div>
-      <div class="tag-group"  v-if="searchRangeLength===fileList.length"><el-tag>{{`在全局搜索`}}</el-tag></div>
-       <el-input size="small" placeholder="请输入关键词" v-model.trim="searchValue">
-          <el-button slot="append" icon="search">搜索</el-button>
-      </el-input>
-    </div> -->
   </div>
 </template>
 <script>
@@ -21,8 +14,7 @@ import { mapGetters } from "vuex";
 export default {
   name: "SearchHeader",
   data() {
-    return {
-    };
+    return {};
   },
   computed: {
     searchValue: {
@@ -47,8 +39,8 @@ export default {
         _ => {
           console.log(_);
           this.searchVal = "";
-          this.$router.push("/search");
           this.$store.dispatch("setTotalCount", _.length);
+          this.$store.dispatch("setGlobalType", "search");
         },
         err => {
           this.$message({

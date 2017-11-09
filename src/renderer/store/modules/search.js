@@ -61,6 +61,7 @@ const actions = {
         //{context,type}
         //params：context searchRange[{serialNumber,path}];
         let context = params.context;
+        let isglobal = false;
         let searchRange = [];
         if(params.type ==='files'){
             //fileList
@@ -79,12 +80,13 @@ const actions = {
                 searchRange.push(obj);
             }
         }
+        searchRange.length === files.state.fileList?isglobal = true:isglobal = false;
         return new Promise((resolve,reject)=>{
             if(!searchRange.length){
                 reject('err');
             }else{
-                console.log('searchFile'+JSON.stringify({context,searchRange}))
-                fetchData('searchFile',{context,searchRange,'isglobal':true}).then(res=>{
+                console.log('searchFile'+JSON.stringify({context,searchRange,isglobal}))
+                fetchData('searchFile',{context,searchRange,isglobal}).then(res=>{
                     console.warn(res);
                     commit(types.GET_SEARCH_TABLE_DATA,res.fileList);
                     resolve(res.fileList);
