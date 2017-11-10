@@ -1,6 +1,6 @@
 <template>
     <div class="table-wrap">
-      <el-table  ref="table" @row-dblclick="dbClick" @selection-change="handleSelectionChange"  @row-click="selectedRow" :height="tableHeight" :data="tableData | limit" stripestyle="width: 100%">
+      <el-table  ref="table" @row-dblclick="dbClick" @selection-change="handleSelectionChange"  @row-click="selectedRow" :height="tableHeight" :data="loadData" stripestyle="width: 100%">
         <el-table-column type="selection"></el-table-column>
         <el-table-column sortable prop="isdir" label="选择">
           <template scope="scope">
@@ -25,20 +25,57 @@ export default {
     return {
       data: [],
       loadData: [],
-      loadNumber: 30
+      loadNumber: 30,
+      loadCount:0,
+      isLoading:false,
+      over:false,
     };
+  },
+  updated(){
+      let _this = this;
+        try{
+          document.querySelector('.el-table__body-wrapper').addEventListener('scroll',_=>{
+            let boxH = document.querySelector('.el-table__body-wrapper').offsetHeight;
+            let scrollH = document.querySelector('.el-table__body-wrapper').scrollTop;
+            let total = document.querySelector('.el-table__body').offsetHeight;
+            if(scrollH+boxH+10>=total && !_this.isLoading && !_this.over){
+              _this.isLoading = true;
+              _this.loadCount++;
+              _this.loadData =_this.loadData.concat(_this.data.slice(_this.loadNumber*_this.loadCount,(_this.loadCount+1)*_this.loadNumber))
+              _this.$nextTick(_=>{
+                _this.isLoading = false;
+                if(_this.loadData.length===_this.data.length) _this.over = true;
+              })
+            }
+          },false)
+        }catch(e){}
+  },
+  watch:{
+    tableData:{
+      handler:function(val,oldVal){
+        this.init();
+        this.data =this.tableData;
+        //首次加载
+        this.loadData = this.data.slice(0,this.loadNumber);
+        if(this.loadData.length === this.data.length) this.over = true;
+        //滚动置顶
+        try{
+          document.querySelector('.el-table__body-wrapper').scrollTop = 0;
+        }catch(e){}
+      },
+      deep:true
+    }
   },
   props: ["tableHeight", "tableData"],
   methods: {
     init() {
-      this.data = [];
-      this.loadData = [];
       this.loadCount = 0;
+      this.isLoading = false;
+      this.over = false;
     },
     // handlerSelectionChange to parent
     handleSelectionChange(val) {
       //fileInfo params from the row if rootPath param in row
-      //if(!val.length) return;
       if (val.length) {
         if (!val[0].rootPath) {
         //file list clicked
