@@ -37,7 +37,7 @@ export default {
       let context = this.searchValue;
       this.$store.dispatch("searchFile", { context }).then(
         _ => {
-          console.log(_);
+          //console.log(_);
           this.searchVal = "";
           this.$store.dispatch("setTotalCount", _.length);
           this.$store.dispatch("setGlobalType", "search");

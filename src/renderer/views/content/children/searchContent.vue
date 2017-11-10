@@ -1,6 +1,6 @@
 <template>
   <div id="searchContent">
-    <my-table @searchlistclicked="childSelectedChange" :tableHeight="tableheight" :tableData="searchTableData"></my-table>
+    <my-table @nochecked="noCheck" @searchlistclicked="childSelectedChange" :tableHeight="tableheight" :tableData="searchTableData"></my-table>
   </div>
 </template>
 <script>
@@ -25,12 +25,15 @@ export default {
   },
   methods: {
      //table's component selectChange event
-    childSelectedChange(params) {
-      console.log(params)
-      this.$store.dispatch("setBottomInfo", params.collection).then(_=>{
-        this.$store.dispatch("getSearchFileInfo",params.par);
+    childSelectedChange(val) {
+      //console.log(params)
+      this.$store.dispatch("setBottomInfo", val).then(_=>{
+        this.$store.dispatch("getSearchFileInfo");
       })
     },
+    noCheck(){
+      this.$store.dispatch('setBottomInfo',[]);
+    }
   },
   activated() {
     this.$store.dispatch("showBottom");

@@ -63,6 +63,7 @@ const actions = {
       let filepath = file.state.tableClickHistory[file.state.tableClickHistory.length-1].path;
       let serialNumber =file.state.tableClickHistory[file.state.tableClickHistory.length-1].serialNumber;
       let rootPath = file.state.tableClickHistory[file.state.tableClickHistory.length-1].rootPath;
+      //console.log({serialNumber,rootPath,filepath});
       fetchData('getFileInfo',{serialNumber,rootPath,filepath}).then(res=>{
         commit(types.GET_FILE_INFO,res);
       })

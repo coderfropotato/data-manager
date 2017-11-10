@@ -3,7 +3,7 @@
     <!--固定加载区域-->
     <div class="nav-menu" ref="navMenu">
       <el-col :span="24">
-        <el-menu  class="menu" router >
+        <!-- <el-menu  class="menu" router >
           <el-menu-item @click="Jump('0')" index="/files" >
             <i class="iconfont icon-wenjian"></i>
             <span>文件</span>
@@ -26,7 +26,31 @@
             <i class="iconfont icon-shujuku"></i>
             <span>数据库</span>
           </el-menu-item>
-        </el-menu>
+        </el-menu> -->
+        <ul>
+          <li :class="{'active':globalNavIndex===1}" @click="jump(1)" >
+            <i class="iconfont icon-wenjian"></i>
+            <span>文件</span>
+          </li>
+          <li :class="{'active':globalNavIndex===2}" @click="jump(2)">
+            <i class="iconfont icon-sousuo"></i>
+            <span>搜索</span>          
+          </li>
+          <li :class="{'active':globalNavIndex===3}" @click="jump(3)">
+            <i class="iconfont icon-wenjianzhuangtai"></i>
+            <el-badge :value="modifiedNum" :max="99" class="item">
+              <span>文件状态</span>
+            </el-badge>
+          </li>
+          <li :class="{'active':globalNavIndex===4}" @click="jump(4)">
+            <i class="iconfont icon-wenjian"></i>
+            <span>小工具</span>
+          </li>
+          <li :class="{'active':globalNavIndex===5}" @click="jump(5)">
+            <i class="iconfont icon-shujuku"></i>
+            <span>数据库</span>
+          </li>
+        </ul>
       </el-col>
     </div>
 
@@ -45,7 +69,7 @@
 import { ipcRenderer } from "electron";
 import bus from "@/utils/bus";
 import { mapGetters } from "vuex";
-
+import $ from "jquery";
 export default {
   name: "Sidebar",
   data() {
@@ -53,33 +77,55 @@ export default {
       fullScreenLoading: false
     };
   },
-  computed: mapGetters({
-    modifiedFiles: "modifiedNum"
-  }),
+  computed: {
+    ...mapGetters(["modifiedNum","globalNavIndex"]),
+  },
+  mounted() {
+    $(".nav-menu ul li")
+      .on("mouseover", function() {
+        if ($(this).hasClass("active")) {
+          $(".nav-menu ul li").removeClass("hover");
+          return;
+        } else {
+          $(".nav-menu ul li").removeClass("hover");
+          $(this).addClass("hover");
+        }
+      })
+      .on("mouseout", function() {
+        $(".nav-menu ul li").removeClass("hover");
+      });
+  },
   methods: {
-    Jump(index) {
-      switch (index) {
-        case "0":
-          this.$store.dispatch("resetFileInfo");
-          this.$store.dispatch("setRouteStatus", "file");
-          break;
-        case "1":
-          this.$store.dispatch("resetFileInfo");
-          this.$store.dispatch("setRouteStatus", "search");
-          //default selected all
-          this.$store.dispatch('checkAllSwitch',true);
-          break;
-        case "2":
-          this.$store.dispatch("resetFileInfo");
-          this.$store.dispatch("setRouteStatus", "status");
-          break;
-        case "3":
-          this.$store.dispatch("setRouteStatus", "tools");
-          break;
-        case "4":
-          this.$store.dispatch("setRouteStatus", "database");
-          break;
-      }
+    jump(index) {
+      this.$store.dispatch("setGlobalNavIndex", index).then(_ => {
+        switch (this.globalNavIndex) {
+          case 1:
+            this.$router.push("/files");
+            this.$store.dispatch("resetFileInfo");
+            this.$store.dispatch("setRouteStatus", "file");
+            break;
+          case 2:
+            this.$router.push("/searchindex");
+            this.$store.dispatch("resetFileInfo");
+            this.$store.dispatch("setRouteStatus", "search");
+            //default selected all
+            this.$store.dispatch("checkAllSwitch", true);
+            break;
+          case 3:
+            this.$router.push("/filestatus");
+            this.$store.dispatch("resetFileInfo");
+            this.$store.dispatch("setRouteStatus", "status");
+            break;
+          case 4:
+            this.$router.push("/collection");
+            this.$store.dispatch("setRouteStatus", "tools");
+            break;
+          case 5:
+            this.$router.push("/database");
+            this.$store.dispatch("setRouteStatus", "database");
+            break;
+        }
+      });
     }
   }
 };
@@ -100,6 +146,12 @@ $backgroundColor: #f7f9f9;
       &.active {
         color: #fff;
         background: #386cca;
+        span {
+          color: #fff;
+        }
+      }
+      &.hover {
+        background-color: #d1dbe5;
       }
       i {
         margin-right: 12px;

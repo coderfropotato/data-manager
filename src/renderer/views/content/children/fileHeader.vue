@@ -64,7 +64,6 @@ export default {
                 this.$router.push("/search");
                 this.$store.dispatch("setSearchRange", temp);
                 this.$store.dispatch("setTotalCount", _.total);
-                this.$store.dispatch("resetFileInfo");
                 this.$store.dispatch("setGlobalType", "search");
               });
             break;
@@ -76,11 +75,12 @@ export default {
               this.$router.push("/search");
               this.$store.dispatch("checkAllSwitch", true);
               this.$store.dispatch("setTotalCount", _.length);
-              this.$store.dispatch("resetFileInfo");
               this.$store.dispatch("setGlobalType", "search");
             });
             break;
         }
+        this.$store.dispatch("setGlobalNavIndex", 2);
+        this.$store.dispatch("resetFileInfo");
         this.$store.dispatch("setSearchValue", this.searchValue);
       }
     }

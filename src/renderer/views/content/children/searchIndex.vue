@@ -66,7 +66,7 @@ export default {
         let context = this.searchVal;
         this.$store.dispatch("searchFile", { context }).then(
           _ => {
-            console.log(_);
+            //console.log(_);
             this.searchVal = "";
             this.$store.dispatch("setGlobalType",'search');
             this.$router.push("/search");
@@ -93,6 +93,8 @@ export default {
     this.searchHistory = localforage.getItem("searchHistory", (err, res) => {
       if (!err) {
         _this.searchHistory = res;
+      }else{
+        localforage.setItem("searchHistory",[]);
       }
     });
     this.$store.dispatch("checkAllSwitch", true);

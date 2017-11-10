@@ -89,7 +89,7 @@ export default {
       }
       let timer = null;
       timer = setTimeout(_=>{
-       console.log(this.$refs.tree.getCheckedNodes(true));
+       //console.log(this.$refs.tree.getCheckedNodes(true));
        //dispatch bottom status
       },30)
       this.timerList.push(timer);

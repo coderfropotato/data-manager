@@ -41,8 +41,6 @@
     ]),
     methods: {
       addSelect (index, list) {
-//        //console.log(index)
-//        //console.log(list)
         // index 是某一列的在smartCategory的索引
         // list是某一列具体一个item的值
         // name 是某一列对应的分类的英文 如 2017 对应的是'year'

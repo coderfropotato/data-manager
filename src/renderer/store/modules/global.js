@@ -6,12 +6,14 @@ const state = {
     // file search status database
     globalRouteStatus:'file',
     //save file info search or file 
-    globalType:"file"
+    globalType:"file",
+    //global nav index
+    globalNavIndex:1
 }
-
 const getters = {
     globalRouteStatus:state=>state.globalRouteStatus,
-    globalType:state=>state.globalType
+    globalType:state=>state.globalType,
+    globalNavIndex:state=>state.globalNavIndex
 }
 
 const actions = {
@@ -20,6 +22,12 @@ const actions = {
   },
   setGlobalType({commit},type){
       commit(types.SET_GLOBAL_TYPE,type);
+  },
+  setGlobalNavIndex({commit},index){
+    return new Promise((resolve,reject)=>{
+        commit(types.SET_GLOBAL_NAV_INDEX,index);
+        resolve('success');
+    })
   }
 }
 
@@ -29,6 +37,9 @@ const mutations = {
     },
     [types.SET_GLOBAL_TYPE](state,type){
         state.globalType = type;
+    },
+    [types.SET_GLOBAL_NAV_INDEX](state,index){
+        state.globalNavIndex = index;
     }
 }
 

@@ -42,10 +42,10 @@ const actions = {
         let serialNumber = files.state.serialNumber;
         let rootPath = files.state.rootPath;
         let childPath = files.state.navList[files.state.navList.length-1].path;
-        console.log('searchCurrentDisk'+JSON.stringify({context,serialNumber,rootPath,childPath}))
+        //console.log('searchCurrentDisk'+JSON.stringify({context,serialNumber,rootPath,childPath}))
         fetchData('searchCurrentDisk',{context,serialNumber,rootPath,childPath}).then(_=>{
             let data={},list=[];
-            console.log(_)
+            //console.log(_)
             for(let i=0;i<_.fileList.length;i++){
                 data = _.fileList[i].basic;
                 data.isdir = _.fileList[i].isdir;
@@ -80,12 +80,12 @@ const actions = {
                 searchRange.push(obj);
             }
         }
-        searchRange.length === files.state.fileList?isglobal = true:isglobal = false;
+        searchRange.length === files.state.fileList.length?isglobal = true:isglobal = false;
         return new Promise((resolve,reject)=>{
             if(!searchRange.length){
                 reject('err');
             }else{
-                console.log('searchFile'+JSON.stringify({context,searchRange,isglobal}))
+                //console.log('searchFile'+JSON.stringify({context,searchRange,isglobal}))
                 fetchData('searchFile',{context,searchRange,isglobal}).then(res=>{
                     console.warn(res);
                     commit(types.GET_SEARCH_TABLE_DATA,res.fileList);

@@ -1,6 +1,6 @@
 <template>
     <div class="table-wrap">
-      <el-table ref="table" @row-dblclick="dbClick" @selection-change="handleSelectionChange"  @row-click="selectedRow" :height="tableHeight" :data="tableData" stripestyle="width: 100%">
+      <el-table  ref="table" @row-dblclick="dbClick" @selection-change="handleSelectionChange"  @row-click="selectedRow" :height="tableHeight" :data="tableData | limit" stripestyle="width: 100%">
         <el-table-column type="selection"></el-table-column>
         <el-table-column sortable prop="isdir" label="选择">
           <template scope="scope">
@@ -22,24 +22,33 @@
 <script>
 export default {
   data() {
-    return {};
+    return {
+      data: [],
+      loadData: [],
+      loadNumber: 30
+    };
   },
   props: ["tableHeight", "tableData"],
   methods: {
+    init() {
+      this.data = [];
+      this.loadData = [];
+      this.loadCount = 0;
+    },
     // handlerSelectionChange to parent
     handleSelectionChange(val) {
       //fileInfo params from the row if rootPath param in row
-      if(!val.length) return;
-      if(!val[0].rootPath){
+      //if(!val.length) return;
+      if (val.length) {
+        if (!val[0].rootPath) {
         //file list clicked
-        this.$emit("selectchange", val);
-      }else{
-        //search list clicked
-        let serialNumber = val.serialNumber;
-        let rootPath = val.rootPath;
-        let filepath = val.path;
-        let params ={"collection":val,"par":{serialNumber,rootPath,filepath}}
-        this.$emit("searchlistclicked",params);
+          this.$emit("selectchange", val);
+        } else {
+          //search list clicked
+          this.$emit("searchlistclicked", val);
+        }
+      } else {
+        this.$emit('nochecked');
       }
     },
     //select current row
@@ -58,6 +67,11 @@ export default {
         //parent component listens('intodir') for events as needed
         this.$emit("intodir", { path, row });
       }
+    }
+  },
+  filters: {
+    limit(val) {
+      return val.slice(0, 100);
     }
   }
 };

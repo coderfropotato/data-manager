@@ -1,6 +1,6 @@
 <template>
   <div id="fileContent" v-loading="loading">
-    <my-table @selectchange="childSelectedChange" @intodir="intoDir"  :tableHeight="tableheight" :tableData="fileTableData"></my-table>
+    <my-table @nochecked="noChecked" @selectchange="childSelectedChange" @intodir="intoDir"  :tableHeight="tableheight" :tableData="fileTableData"></my-table>
   </div>
 </template>
 <script>
@@ -32,6 +32,9 @@ export default {
         this.$store.dispatch("getFileInfo");
       });
     },
+    noChecked(){
+      this.$store.dispatch('setBottomInfo',[]);
+    },  
     //table's component dbclick into dir event
     intoDir({ path, row }) {
       //get table data
