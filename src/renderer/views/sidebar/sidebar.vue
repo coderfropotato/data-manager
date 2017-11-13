@@ -115,6 +115,7 @@ export default {
             this.$router.push("/filestatus");
             this.$store.dispatch("resetFileInfo");
             this.$store.dispatch("setRouteStatus", "status");
+            this.$store.dispatch('getModifiedFiles');
             break;
           case 4:
             this.$router.push("/collection");

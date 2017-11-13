@@ -4,9 +4,10 @@
       :data="treeData"
       show-checkbox
       default-expand-all
-      :expand-on-click-node="false"
+      :expand-on-click-node="true"
       node-key="path"
       ref="tree"
+      :highlight-current="true"
       @check-change = "handlerCheckChange"
       @node-click="handlerNodeClick"
       :render-content="renderContent"
@@ -18,10 +19,11 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 import bus from "@/utils/bus";
+import fetchData from "@/api/getData";
 export default {
   name: "fileStatus",
   activated() {
-    this.$store.dispatch("showBottom");
+    // this.$store.dispatch("showBottom");
   },
   computed: {
     ...mapGetters(["treeData"])
@@ -32,7 +34,7 @@ export default {
         children: "children",
         label: "alias"
       },
-      timerList:[]
+      timerList: []
     };
   },
   methods: {
@@ -72,35 +74,43 @@ export default {
         return h("span", [h("span", node.label)]);
       }
     },
-    //通过node-key 选择
+    //side bar clicked
     setCheckedKeys(path) {
       let arr = [];
       typeof path === "string" ? arr.push(path) : (arr = path);
       this.$refs.tree.setCheckedKeys(arr);
     },
     //node clicked
-    handlerNodeClick(...args){
-      this.$router.push('/filestatusinfo?type=status')
+    handlerNodeClick(...args) {
+      console.log(args[0]);
+      // save savefileInfo params then getFileInfo last save
+      // getFileInfo  serialNumber, rootPath, filepath
+      this.$store.dispatch("commitSaveFileParams", params).then(_ => {
+        this.$store.dispatch("getStatusFileInfo").then(_ => {
+          this.$router.push("/filestatusinfo?type=status");
+        });
+      });
     },
-    handlerCheckChange(...args){
+    handlerCheckChange(...args) {
       //always clear other timers and save the last
-      for(var i =0; i<this.timerList.length;i++){
+      for (var i = 0; i < this.timerList.length; i++) {
         clearTimeout(this.timerList[i]);
       }
       let timer = null;
-      timer = setTimeout(_=>{
-       //console.log(this.$refs.tree.getCheckedNodes(true));
-       //dispatch bottom status
-      },30)
+      timer = setTimeout(_ => {
+        console.log(args);
+        //console.log(this.$refs.tree.getCheckedNodes(true));
+        //dispatch bottom status
+      }, 30);
       this.timerList.push(timer);
     },
     //点击空白回状态信息
-    reset(){
-      this.$router.push('/filestatus')
+    reset() {
+      this.$router.push("/filestatus");
     }
   },
   deactivated() {
-    this.$store.dispatch("hideBottom");
+    // this.$store.dispatch("hideBottom");
   },
   created() {
     //接收sidebar的点击事件

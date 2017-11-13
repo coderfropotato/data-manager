@@ -1,12 +1,17 @@
 <template>
   <div id="fileHeader-root">
     <div class="breadcrumb">
-     <el-breadcrumb separator=">">
+     <!-- <el-breadcrumb separator=">">
       <el-breadcrumb-item :to="{ path: '/filescale' }">文件</el-breadcrumb-item>
       <el-breadcrumb-item  v-for="(item,index) in navList" :key="index">
         <span @click="navBarJump(item,index)">{{item.filename || item.alias}}</span>
       </el-breadcrumb-item>
-    </el-breadcrumb>
+    </el-breadcrumb> -->
+    <div class="bread-wrap"></div>
+    <p>
+      <router-link tag="span" :to="{path:'/filescale'}">文件</router-link>
+      <span @click="navBarJump(item,index)" v-for="(item,index) in navList" :key="index"><em>&nbsp;<&nbsp;</em>{{item.filename || item.alias}}</span>
+    </p>
     </div>
     <div class="search">
        <el-input ref="search" size="small" placeholder="请输入关键词" v-model.trim="searchValue">
@@ -21,6 +26,7 @@
 <script>
 import fetchData from "@/api/getData";
 import { mapGetters } from "vuex";
+import $ from "jquery";
 export default {
   name: "fileHeader",
   data() {
@@ -31,6 +37,27 @@ export default {
   },
   computed: {
     ...mapGetters(["navList"])
+  },
+  mounted() {
+    let x = 0;
+    let oWidth,oInner,scale;
+    $(".bread-wrap")
+      .on("mousemove", function(e) {
+        oWidth = $(".bread-wrap").outerWidth();
+        oInner = $(".breadcrumb > p").width();
+        if (oInner <= oWidth) return;
+        x = e.pageX - $(this).offset().left;
+        scale = x / oWidth;
+        let pos = scale * oInner;
+        $(".breadcrumb > p").css({ left: -scale * (oInner - oWidth) });
+      })
+      .on('mouseleave',function(){
+        if(oInner > oWidth){
+          $(".breadcrumb > p").css({ left: -x / oWidth * (oInner - oWidth)});
+        }else{
+          $(".breadcrumb > p").css({ left: 0 });
+        }
+      })
   },
   activated() {
     this.tag.name = "current";
@@ -94,7 +121,7 @@ export default {
 
 #fileHeader-root {
   display: flex;
-  padding: 12px 12px;
+  padding: 0 12px;
   height: 58px;
   .el-input-group__append {
     background-color: #386cca !important;
@@ -105,18 +132,43 @@ export default {
     }
   }
   .breadcrumb {
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+    .bread-wrap {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      overflow: hidden;
+      z-index: 20;
+    }
     p {
-      line-height: 35px;
+      position: absolute;
+      z-index: 30;
+      left: 0;
+      top: 0;
+      line-height:14px;
+      margin-top:22px;
       font-size: 14px;
       white-space: nowrap;
-      overflow-x: hidden;
-      text-overflow: ellipsis;
+      -webkit-user-select: none;
+      user-select: none;
+      span {
+        cursor: pointer;
+        &:hover{
+          color:#386cca;
+        }
+      }
     }
     width: 40%;
     padding-right: 12px;
     box-sizing: border-box;
   }
   .search {
+    margin-top:12px;
+    padding-bottom: 12px;
     width: 60%;
     position: relative;
     .el-input__inner {

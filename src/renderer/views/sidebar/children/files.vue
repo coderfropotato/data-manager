@@ -1,12 +1,15 @@
 <template>
   <div id="directory-root">
       <div class="title">所有文件</span><i @click="addDevice" class="iconfont icon-tianjia"></i></div>
-      <ol :class="{'height-range':fileList.length>=5 && isShow}">
-        <!-- icon-wodeyingpan -->
-        <!-- <li @click="jumpToSearch(item.name)" v-for="(item,index) in fileList" :key="index"><i class="iconfont iconfile" :class="{'icon-wodeyingpan':item.isDisk,'icon-diannao':!item.isDisk}"></i>{{item.name}}</li> -->
-        <li @contextmenu="contextmenu($event,item)" @click="jumpToSearch(item)" v-for="(item,index) in fileList" :key="index"><i class="iconfile iconfont icon-wodeyingpan"></i>{{item.alias}}</li>
-      </ol>
-      <p @click="isShow=true;" v-show="fileList.length>5 && !isShow">更多设备&nbsp;></p>
+      <div v-if="fileList.length" class="list">
+        <ol :class="{'height-range':fileList.length>=5 && isShow}">
+          <!-- icon-wodeyingpan -->
+          <!-- <li @click="jumpToSearch(item.name)" v-for="(item,index) in fileList" :key="index"><i class="iconfont iconfile" :class="{'icon-wodeyingpan':item.isDisk,'icon-diannao':!item.isDisk}"></i>{{item.name}}</li> -->
+          <li @contextmenu="contextmenu($event,item)" @click="jumpToSearch(item)" v-for="(item,index) in fileList" :key="index"><i class="iconfile iconfont icon-wodeyingpan"></i>{{item.alias}}</li>
+        </ol>
+        <p @click="isShow=true;" v-show="fileList.length>5 && !isShow">更多设备&nbsp;></p>
+      </div>
+      <p class="no-data" v-if="!fileList.length">暂无设备</p>
       <span @click="del" id="delete" ref="del" v-show="deleteShow">删除</span>
   </div>
 </template>
@@ -29,10 +32,10 @@ export default {
   computed: {
     ...mapGetters(["fileList"])
   },
-  created(){
-    document.addEventListener('click',()=>{
+  created() {
+    document.addEventListener("click", () => {
       this.deleteShow = false;
-    })
+    });
   },
   methods: {
     addDevice() {
@@ -43,14 +46,14 @@ export default {
     },
     contextmenu(e, item) {
       let top = e.target.offsetTop;
-      $("#delete").css({ left: 110, top: top +40 });
+      $("#delete").css({ left: 110, top: top + 40 });
       this.deleteShow = true;
       this.listInfo = item;
     },
     del() {
       this.deleteShow = false;
       // TODO delete device
-      this.$confirm("此操作将永久删除"+this.listInfo.alias+", 是否继续?", "提示", {
+      this.$confirm("此操作将永久删除" + this.listInfo.alias + ", 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
@@ -65,8 +68,8 @@ export default {
               message: "删除成功!"
             });
             //删除成功重新获取设备列表 路由跳转到file主页
-            this.$store.dispatch('getImportTargetDisks');
-            this.$router.push('/files');
+            this.$store.dispatch("getImportTargetDisks");
+            this.$router.push("/files");
           });
         })
         .catch(() => {
@@ -111,6 +114,9 @@ export default {
   color: #48576a;
   box-sizing: border-box;
   overflow-y: visible;
+  .no-data{
+    text-align:center;
+  }
   span {
     cursor: pointer;
     width: 80px;

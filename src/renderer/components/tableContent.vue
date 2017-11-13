@@ -26,44 +26,55 @@ export default {
       data: [],
       loadData: [],
       loadNumber: 30,
-      loadCount:0,
-      isLoading:false,
-      over:false,
+      loadCount: 0,
+      isLoading: false,
+      over: false
     };
   },
-  updated(){
-      let _this = this;
-        try{
-          document.querySelector('.el-table__body-wrapper').addEventListener('scroll',_=>{
-            let boxH = document.querySelector('.el-table__body-wrapper').offsetHeight;
-            let scrollH = document.querySelector('.el-table__body-wrapper').scrollTop;
-            let total = document.querySelector('.el-table__body').offsetHeight;
-            if(scrollH+boxH+10>=total && !_this.isLoading && !_this.over){
-              _this.isLoading = true;
-              _this.loadCount++;
-              _this.loadData =_this.loadData.concat(_this.data.slice(_this.loadNumber*_this.loadCount,(_this.loadCount+1)*_this.loadNumber))
-              _this.$nextTick(_=>{
-                _this.isLoading = false;
-                if(_this.loadData.length===_this.data.length) _this.over = true;
-              })
-            }
-          },false)
-        }catch(e){}
+  created() {
+    //首次加载
+    this.firstLoad();
   },
-  watch:{
-    tableData:{
-      handler:function(val,oldVal){
+  updated() {
+    let _this = this;
+    try {
+      document.querySelector(".el-table__body-wrapper").addEventListener(
+        "scroll",
+        _ => {
+          let boxH = document.querySelector(".el-table__body-wrapper")
+            .offsetHeight;
+          let scrollH = document.querySelector(".el-table__body-wrapper")
+            .scrollTop;
+          let total = document.querySelector(".el-table__body").offsetHeight;
+          if (scrollH + boxH + 10 >= total && !_this.isLoading && !_this.over) {
+            _this.isLoading = true;
+            _this.loadCount++;
+            _this.loadData = _this.loadData.concat(
+              _this.data.slice(
+                _this.loadNumber * _this.loadCount,
+                (_this.loadCount + 1) * _this.loadNumber
+              )
+            );
+            _this.$nextTick(_ => {
+              _this.isLoading = false;
+              if (_this.loadData.length === _this.data.length)
+                _this.over = true;
+            });
+          }
+        },
+        false
+      );
+    } catch (e) {}
+  },
+  watch: {
+    tableData: {
+      handler: function(val, oldVal) {
         this.init();
-        this.data =this.tableData;
-        //首次加载
-        this.loadData = this.data.slice(0,this.loadNumber);
-        if(this.loadData.length === this.data.length) this.over = true;
-        //滚动置顶
-        try{
-          document.querySelector('.el-table__body-wrapper').scrollTop = 0;
-        }catch(e){}
+        this.data = this.tableData;
+        //改变数据源的第一次加载
+        this.firstLoad();
       },
-      deep:true
+      deep: true
     }
   },
   props: ["tableHeight", "tableData"],
@@ -73,19 +84,27 @@ export default {
       this.isLoading = false;
       this.over = false;
     },
+    firstLoad() {
+      this.data = this.tableData;
+      this.loadData = this.data.slice(0, this.loadNumber);
+      if (this.loadData.length === this.data.length) this.over = true;
+      try {
+        document.querySelector(".el-table__body-wrapper").scrollTop = 0;
+      } catch (e) {}
+    },
     // handlerSelectionChange to parent
     handleSelectionChange(val) {
       //fileInfo params from the row if rootPath param in row
       if (val.length) {
         if (!val[0].rootPath) {
-        //file list clicked
+          //file list clicked
           this.$emit("selectchange", val);
         } else {
           //search list clicked
           this.$emit("searchlistclicked", val);
         }
       } else {
-        this.$emit('nochecked');
+        this.$emit("nochecked");
       }
     },
     //select current row
