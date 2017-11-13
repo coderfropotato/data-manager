@@ -40,6 +40,7 @@ export const SET_SEARCH_RANGE= 'setSearchRange';
 //status
 //获取文件状态树的数据
 export const GET_TREE_DATA = 'getTreeData';
+export const COMMIT_SAVE_FILE_PARAMS = "commitSaveFileParams";
 
 //bottom
 export const SET_TOTAL_COUTN = 'setTotalCount';
@@ -64,3 +65,4 @@ export const RESET_FILE_INFO = 'resetFileInfo';
 export const SET_ROUTE_STATUS = 'setRouteStatus';
 export const SET_GLOBAL_TYPE = 'setGlobalTypes';
 export const SET_GLOBAL_NAV_INDEX = 'setGlobalNavIndex';
+

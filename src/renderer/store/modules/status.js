@@ -1,14 +1,18 @@
 /*
  * 文件状态
  */
-import fetchData from '@/api'
-import * as types from '@/store/mutation-types'
-import treeData from '@/utils/tree'
+import fetchData from '@/api';
+import * as types from '@/store/mutation-types';
+import treeData from '@/utils/tree';
+import file from '@/store/modules/files';
 
 const test = true;
 const state = {
     //状态树数据
     treeData:treeData,
+    checkedData:[],
+    //测试 serialNumber
+    serialNumber:["84ABB9FB", "6666"]
 }
 
 //树的侧边栏列表 信息从treeData获取 ->getter
@@ -29,9 +33,18 @@ const getters = {
 
 const actions = {
     //获取文件状态树
-    getTreeData({commit}){
-        fetchData('getTreeData',{}).then(()=>{
+    getModifiedFiles({commit}){
+        let serialNumber = state.serialNumber;
+        let params={};
+        params.serialNumbers = serialNumber
+        fetchData('getModifiedFiles',params).then((res)=>{
             commit(types.GET_TREE_DATA,res);
+        })
+    },
+    // 接受所有变更
+    reciveAll({commit}){
+        new Promise((resolve,reject)=>{
+            fetchData('');
         })
     }
 }
