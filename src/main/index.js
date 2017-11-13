@@ -4,7 +4,7 @@ import { app, BrowserWindow, ipcMain, dialog, Tray ,Menu,nativeImage } from 'ele
 if (process.env.NODE_ENV !== 'development') {
   global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\')
 }
-let trayIcon = nativeImage.createFromPath(__dirname+'/256x256.png');
+let trayIcon = nativeImage.createFromPath(__dirname+'/icon.png');
 let mainWindow
 const winURL = process.env.NODE_ENV === 'development'
   ? `http://localhost:9080/#`
@@ -20,10 +20,10 @@ function createWindow() {
     width: 1200,
     minHeight: 860,
     minWidth: 1200,
-    // frame:false,
-    skipTaskbar:false,
+    frame: false,
+    skipTaskbar: false,
     useContentSize: true,
-    // titleBarStyle: 'hidden',
+    titleBarStyle: 'customButtonsOnHover',
     title: 'Preferences'
   })
   mainWindow.setMinimumSize(1200, 860)
