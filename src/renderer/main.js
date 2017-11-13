@@ -44,6 +44,7 @@ Vue.filter('reverseSize',(val)=>{
     return Math.round(val/1024/1024/1024*100)/100+'T';
   }
 })
+
 new Vue({
   router,
   store,
