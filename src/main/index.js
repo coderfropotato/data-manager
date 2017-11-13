@@ -124,10 +124,11 @@ ipcMain.on('window-all-closed', () => {
   //   // if(process.platform!=='darwin')
   //   if (index == 0) app.quit()
   // })
+  //TODO: 关闭与最小化表现一致, 要加上will-quit事件？让app关闭python
   mainWindow.minimize();
   mainWindow.setSkipTaskbar(true)
 });
-//小化
+//最小化
 ipcMain.on('hide-window', (ev) => {
   mainWindow.minimize();
   mainWindow.setSkipTaskbar(false)
