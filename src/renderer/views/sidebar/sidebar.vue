@@ -38,7 +38,7 @@
           </li>
           <li :class="{'active':globalNavIndex===3}" @click="jump(3)">
             <i class="iconfont icon-wenjianzhuangtai"></i>
-            <el-badge :value="modifiedNum" :max="99" class="item">
+            <el-badge :value="modifiedNumber" :max="99" class="item">
               <span>文件状态</span>
             </el-badge>
           </li>
@@ -78,7 +78,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["modifiedNum","globalNavIndex"]),
+    ...mapGetters(["modifiedNumber","globalNavIndex"]),
   },
   mounted() {
     $(".nav-menu ul li")

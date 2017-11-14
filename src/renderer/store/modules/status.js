@@ -3,13 +3,13 @@
  */
 import fetchData from '@/api';
 import * as types from '@/store/mutation-types';
-import treeData from '@/utils/tree';
+// import treeData from '@/utils/tree';
 import file from '@/store/modules/files';
 
 const test = true;
 const state = {
     //状态树数据
-    treeData:treeData,
+    treeData:[],
     checkedData:[],
 }
 
@@ -26,6 +26,13 @@ const getters = {
             temp.push(item);
         }
         return temp
+    },
+    modifiedNumber:state=>{
+        let count = 0;
+        for(let i=0;i<state.treeData.length;i++){
+            count+=state.treeData[i].modifiedNum;
+        }
+        return count;
     }
 }
 
@@ -39,6 +46,7 @@ const actions = {
         }
         params.serialNumbers = serialNumber
         fetchData('getModifiedFiles',params).then((res)=>{
+            console.log(res);
             commit(types.GET_TREE_DATA,res);
         })
     },

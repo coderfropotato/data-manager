@@ -5,7 +5,7 @@
       show-checkbox
       default-expand-all
       :expand-on-click-node="true"
-      node-key="path"
+      node-key="mark"
       ref="tree"
       :highlight-current="true"
       @check-change = "handlerCheckChange"
@@ -31,29 +31,37 @@ export default {
   data() {
     return {
       defaultProps: {
-        children: "children",
-        label: "alias"
+        children: "tree",
+        label: "name"
       },
       timerList: []
     };
   },
   methods: {
     renderContent(h, { node, data }) {
+      /* 1最近新增add
+      2最近移动move	
+      3已打标签lable
+      4最近删除delete
+      5最近修改modified */
       if (data.status != null) {
         let color = null;
         let tag = null;
-        if (data.status === -1) {
+        if (data.status === 4) {
           color = "red";
           tag = "最近删除";
-        } else if (data.status === 0) {
+        } else if (data.status === 5) {
           color = "gray";
           tag = "最近修改";
         } else if (data.status === 1) {
           color = "green";
           tag = "最近新增";
-        } else if (data.status === 2) {
+        } else if (data.status === 3) {
           color = "orange";
           tag = "已打标签";
+        } else if(data.status === 2){
+          color = "#f60",
+          tag = "最近移动"
         }
 
         return h("span", [
@@ -75,9 +83,9 @@ export default {
       }
     },
     //side bar clicked
-    setCheckedKeys(path) {
+    setCheckedKeys(mark) {
       let arr = [];
-      typeof path === "string" ? arr.push(path) : (arr = path);
+      typeof mark === "number" ? arr.push(mark) : (arr = mark);
       this.$refs.tree.setCheckedKeys(arr);
     },
     //node clicked
@@ -114,8 +122,8 @@ export default {
   },
   created() {
     //接收sidebar的点击事件
-    bus.$on("statueSideBarClick", id => {
-      this.setCheckedKeys(id);
+    bus.$on("statueSideBarClick", mark => {
+      this.setCheckedKeys(mark);
     });
   }
 };
