@@ -11,8 +11,6 @@ const state = {
     //状态树数据
     treeData:treeData,
     checkedData:[],
-    //测试 serialNumber
-    serialNumber:["84ABB9FB", "6666"]
 }
 
 //树的侧边栏列表 信息从treeData获取 ->getter
@@ -34,8 +32,11 @@ const getters = {
 const actions = {
     //获取文件状态树
     getModifiedFiles({commit}){
-        let serialNumber = state.serialNumber;
         let params={};
+        let serialNumber = [];
+        for(var i=0;i<file.fileList.length;i++){
+            serialNumber.push(file.fileList[i].serial_number);
+        }
         params.serialNumbers = serialNumber
         fetchData('getModifiedFiles',params).then((res)=>{
             commit(types.GET_TREE_DATA,res);
