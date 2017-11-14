@@ -34,7 +34,7 @@ const actions = {
     getModifiedFiles({commit}){
         let params={};
         let serialNumber = [];
-        for(var i=0;i<file.fileList.length;i++){
+        for(var i=0;i<file.state.fileList.length;i++){
             serialNumber.push(file.fileList[i].serial_number);
         }
         params.serialNumbers = serialNumber
