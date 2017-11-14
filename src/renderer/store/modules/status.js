@@ -35,7 +35,7 @@ const actions = {
         let params={};
         let serialNumber = [];
         for(var i=0;i<file.state.fileList.length;i++){
-            serialNumber.push(file.fileList[i].serial_number);
+            serialNumber.push(file.state.fileList[i].serial_number);
         }
         params.serialNumbers = serialNumber
         fetchData('getModifiedFiles',params).then((res)=>{
