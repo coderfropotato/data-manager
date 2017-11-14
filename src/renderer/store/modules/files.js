@@ -31,8 +31,11 @@ const getters = {
 const actions = {
   //获取文件列表
   getImportTargetDisks({commit}){
-    fetchData('getImportTargetDisks',{}).then((data)=>{
-      commit(types.SET_FILE_LIST,data.disks)
+    return new Promise((resolve,reject)=>{
+      fetchData('getImportTargetDisks',{}).then((data)=>{
+        commit(types.SET_FILE_LIST,data.disks);
+        resolve('success');
+      })
     })
   },
   getDirTree({commit},params){
