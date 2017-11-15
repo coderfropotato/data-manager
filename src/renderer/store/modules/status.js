@@ -6,6 +6,7 @@ import * as types from '@/store/mutation-types';
 // import treeData from '@/utils/tree';
 import file from '@/store/modules/files';
 import bus from '@/utils/bus';
+import unique from '@/utils/tools'
 
 const test = true;
 const state = {
@@ -45,7 +46,7 @@ const actions = {
         for(var i=0;i<file.state.fileList.length;i++){
             serialNumber.push(file.state.fileList[i].serial_number);
         }
-        params.serialNumbers = serialNumber
+        params.serialNumbers = unique(serialNumber);
         fetchData('getModifiedFiles',params).then((res)=>{
             console.log(res);
             //默认全选
