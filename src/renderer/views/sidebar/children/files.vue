@@ -70,6 +70,8 @@ export default {
             //删除成功重新获取设备列表 路由跳转到file主页
             this.$store.dispatch("getImportTargetDisks");
             this.$router.push("/files");
+            //reset file info
+            this.$store.dispatch('resetFileInfo');
           });
         })
         .catch(() => {
