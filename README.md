@@ -285,3 +285,16 @@ setTimeout(Raven.wrap(doIt), 1000)
 ```
 
 
+pack command
+依赖于：`git`, `virtualenv`
+```shell
+rm -rf .
+
+git clone git@54.223.70.246:data-management/data-manager-back-end.git src/backend
+virtualenv src/backend/venv
+source src/backend/venv/bin/activate
+pip install -i https://pypi.tuna.tsinghua.edu.cn/simple -r src/backend/requirements.txt
+cd src/backend && venv/bin/pyinstaller --add-data 'config/*:config' --distpath '../../dist' -y -n backend  ./run.py
+
+../../dist/backend/backend
+```
