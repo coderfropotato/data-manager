@@ -48,8 +48,13 @@ const actions = {
     }
     return new Promise((resolve,reiect)=>{
       fetchData('getDirTree',parm).then(data=>{
-        commit(types.SET_TOTAL_COUTN,data.length);
-        commit(types.SET_FILE_TABLE_dATA,data);
+        if(!data || !data.length){
+          commit(types.SET_TOTAL_COUTN,0);
+          commit(types.SET_FILE_TABLE_dATA,[]);
+        }else{
+          commit(types.SET_TOTAL_COUTN,data.length);
+          commit(types.SET_FILE_TABLE_dATA,data);
+        }
         resolve('success');
       })
     })
