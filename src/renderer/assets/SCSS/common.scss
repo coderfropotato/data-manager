@@ -14,6 +14,7 @@ body{
   text-align: left;
   height: 100%;
   width: 100%;
+  background: #fff;
 }
 
 * {
@@ -52,6 +53,12 @@ body{
 
 .el-popover {
   padding: 0 !important;
+}
+.el-checkbox__input.is-focus .el-checkbox__inner{
+  border-color: #bfcbd9;
+  &:hover{
+  border-color: #20a0ff;
+  }
 }
 #search-root{
   .el-checkbox{
@@ -170,7 +177,9 @@ body{
 .el-badge__content{
   border:none;
 }
-
+.el-table .cell{
+  white-space: nowrap;
+}
 .tag-group {
   left: 4px;
   top: 3px;
@@ -180,6 +189,10 @@ body{
     border: 1px solid #ccc;
     color: #666;
   }
+}
+//select font family 
+.el-select-dropdown__item  span{
+  font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "\5FAE\8F6F\96C5\9ED1", Arial, sans-serif
 }
 ::-webkit-scrollbar-thumb {
   border-radius: 3px;
