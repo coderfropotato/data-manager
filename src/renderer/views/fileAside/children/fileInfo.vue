@@ -103,7 +103,6 @@ export default {
 #fileInfo-root {
   height: 100%;
   width: 100%;
-  background-color: rgba(242, 242, 242, 0.6);
   padding: 2em;
   font-size: 14px;
   overflow-y: scroll;
@@ -111,8 +110,16 @@ export default {
     display: flex;
     justify-content: space-between;
     span {
-      color: #386cca;
+      color: #fff;
+      background: #386cca;
+      padding:4px 12px;
+      border-radius: 2px;
       cursor: pointer;
+      user-select: none;
+      opacity: 1;
+      &:hover{
+        opacity: 0.8;
+      }
     }
   }
   .des {
@@ -122,6 +129,7 @@ export default {
       width: 56px;
       height: 56px;
       display: block;
+      user-select: none;
     }
     span {
       line-height: 56px;

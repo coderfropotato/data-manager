@@ -1,12 +1,15 @@
 <template>
   <div id="filescale">
-      <ol>
+      <ol v-if="fileList.length">
         <li @click="jumpToSearch(item)" v-for="(item,index) in fileList" :key="index">
           <img v-if="!item.isTelnet" src="../../../assets/images/computer.png" />
           <img v-else src="../../../assets/images/disk.png" />
           <p>{{item.alias}}</p>
         </li>
       </ol>
+      <div v-if="!fileList.length" class="no-data">
+        <p>您还没有添加任何设备，赶紧去<span @click="addDevice">添加</span>吧</p>
+      </div>
   </div>
 </template>
 
@@ -45,7 +48,13 @@ export default {
           });
         });
       });
-    }
+    },
+    addDevice() {
+      this.$electron.ipcRenderer.send("addFile", {
+        API: "open",
+        URL: "/newfile/newdiskdir"
+      });
+    },
   },
   computed: {
     ...mapGetters(["fileList"])
@@ -56,6 +65,17 @@ export default {
 <style lang="scss" scoped>
 #filescale {
   height: 100%;
+  .no-data{
+    text-align: center;
+    margin-top:200px;
+    span{
+      color:#386cca;
+      cursor: pointer;
+      &:hover{
+        text-decoration: underline;
+      }
+    }
+  }
   i {
     font-size: 80px;
   }

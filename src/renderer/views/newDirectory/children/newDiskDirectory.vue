@@ -1,5 +1,5 @@
 <template>
-  <div id="newDiskFile-root" v-loading.fullscreen.lock="fullscreenLoading">
+  <div id="newDiskFile-root" v-loading.lock="fullscreenLoading" element-loading-text="正在扫面磁盘文件，请稍候">
     <div class="newDiskFile-inner">
       <!--基本设置-->
       <el-form
@@ -250,6 +250,18 @@ export default {
         duration: 1000
       });
     });
+  },
+  watch:{
+    basicForm:{
+      handler:function(val,oldVal){
+        if(val.dataSource !== "localDisk" ){
+          this.$electron.ipcRenderer.send('resetWinSize',[700,680])
+        }else{
+          this.$electron.ipcRenderer.send('resetWinSize',[700,500])
+        }
+      },
+      deep:true
+    }
   },
   methods: {
     // 重置表格数据
@@ -503,7 +515,7 @@ export default {
   }
   .potatos-btn {
     width: 60px;
-    height: 32px;
+    height: 31px;
     outline: none;
     color: #fff;
     border: none;
@@ -511,7 +523,7 @@ export default {
     background: #20a0ff;
     position: absolute;
     right: 54px;
-    top: 2px;
+    top: 3px;
     cursor: pointer;
     &:hover {
       background: #4db3ff;

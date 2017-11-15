@@ -114,9 +114,7 @@ export default {
   color: #48576a;
   box-sizing: border-box;
   overflow-y: visible;
-  .no-data{
-    text-align:center;
-  }
+
   span {
     cursor: pointer;
     width: 80px;
@@ -151,6 +149,15 @@ export default {
     cursor: pointer;
     &:hover {
       color: #386cca;
+    }
+  }
+  .no-data {
+    text-align: center;
+    font-size: 14px;
+    cursor: default;
+    margin-top: 40px;
+    &:hover {
+      color: #48576a;
     }
   }
   ol {

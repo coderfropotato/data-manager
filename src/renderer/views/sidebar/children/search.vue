@@ -2,9 +2,9 @@
   <div id="search-root">
       <el-checkbox v-if="fileList.length>0" :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
   <div style="margin: 15px 0;"></div>
-  <el-checkbox-group v-model="searchRange" @change="handlerCheckedChange">
-    <el-checkbox v-for="(item,index) in fileList" :label="item" :key="index">{{item.alias}}</el-checkbox>
-  </el-checkbox-group>
+      <el-checkbox-group v-model="searchRange" @change="handlerCheckedChange">
+        <el-checkbox v-for="(item,index) in fileList" :label="item" :key="index">{{item.alias}}</el-checkbox>
+      </el-checkbox-group>
   </div>
 </template>
 <script>
