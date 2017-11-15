@@ -27,14 +27,15 @@ export default {
   methods: {
     //table's component selectChange event
     childSelectedChange(val) {
+      console.log(val);
       this.$store.dispatch("setBottomInfo", val).then(res => {
         //always get the last detail
         this.$store.dispatch("getFileInfo");
       });
     },
-    noChecked(){
-      this.$store.dispatch('setBottomInfo',[]);
-    },  
+    noChecked() {
+      this.$store.dispatch("setBottomInfo", []);
+    },
     //table's component dbclick into dir event
     intoDir({ path, row }) {
       //get table data

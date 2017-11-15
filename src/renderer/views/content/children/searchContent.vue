@@ -10,7 +10,7 @@ export default {
   name: "fileContent",
   data() {
     return {
-      tableheight: 0,
+      tableheight: 0
     };
   },
   mounted() {
@@ -20,19 +20,19 @@ export default {
       _this.tableheight = document.body.offsetHeight - 66 - 82 - 40 - 1;
     });
   },
-  computed:{
-    ...mapGetters(['searchTableData']),
+  computed: {
+    ...mapGetters(["searchTableData"])
   },
   methods: {
-     //table's component selectChange event
+    //table's component selectChange event
     childSelectedChange(val) {
       //console.log(params)
-      this.$store.dispatch("setBottomInfo", val).then(_=>{
+      this.$store.dispatch("setBottomInfo", val).then(_ => {
         this.$store.dispatch("getSearchFileInfo");
-      })
+      });
     },
-    noCheck(){
-      this.$store.dispatch('setBottomInfo',[]);
+    noCheck() {
+      this.$store.dispatch("setBottomInfo", []);
     }
   },
   activated() {

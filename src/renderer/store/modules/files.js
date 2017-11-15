@@ -2,8 +2,9 @@
  * 管理后台传送的文件分类
  * 即侧边栏的所有文件夹中的文件
  */
-import fetchData from '@/api'
-import * as types from '@/store/mutation-types'
+import fetchData from '@/api';
+import * as types from '@/store/mutation-types';
+import bus from '@/utils/bus';
 const state = {
   // 记录当前的文件列表（列表展示）
   fileList: [],
@@ -88,6 +89,7 @@ const actions = {
       });
       let count = valList.length;
       commit(types.SET_SELECTED,{count,size})
+      if(valList.length===0) bus.$emit('no-data');
       commit(types.SET_ATTR_HISTORY,valList);
       resolve('success')
     })

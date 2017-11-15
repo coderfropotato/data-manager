@@ -70,6 +70,11 @@ export default {
       module: true
     };
   },
+  created(){
+    bus.$on('no-data',_=>{
+      this.$store.dispatch('resetFileInfo');
+    })
+  },
   computed: {
     ...mapGetters(["fileInfo", "globalRouteStatus", "globalType"])
   },

@@ -86,6 +86,7 @@ const actions = {
   },
   //保存数据之前校验key是否存在
   saveFileInfo({ commit }, type) {
+    debugger;
     let updateList = state.fileInfo.property.concat();
     for (let i = 0; i < updateList.length; i++) {
       for (let key in updateList[i]) {
@@ -103,11 +104,16 @@ const actions = {
       //文件列表保存详情
       let serialNumber = file.state.serialNumber;
       let rootPath = file.state.rootPath;
-      let filePath = file.state.tableClickHistory[file.state.tableClickHistory.length - 1].path || file.state.rootPath;
+      let filePath;
+      //into dir nochecked
+      if(file.state.tableClickHistory.length===0){
+        filePath = file.state.navList[file.state.navList.length-1].path;
+      }else{
+        filePath = file.state.tableClickHistory[file.state.tableClickHistory.length - 1].path;
+      }
       var param = { serialNumber, rootPath, filePath, updateList }
     } else if (type === 'search') {
       //搜索列表保存详情
-      if (!file.state.tableClickHistory.length) return;
       let serialNumber = file.state.tableClickHistory[file.state.tableClickHistory.length - 1].serialNumber;
       let rootPath = file.state.tableClickHistory[file.state.tableClickHistory.length - 1].rootPath;
       let filePath = file.state.tableClickHistory[file.state.tableClickHistory.length - 1].path;

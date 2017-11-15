@@ -45,23 +45,23 @@ export default {
       4最近删除delete
       5最近修改modified */
       if (data.status != null) {
+        let num = Number(data.status);
         let color = null;
         let tag = null;
-        if (data.status === 4) {
+        if (num === 4) {
           color = "red";
           tag = "最近删除";
-        } else if (data.status === 5) {
+        } else if (num === 5) {
           color = "gray";
           tag = "最近修改";
-        } else if (data.status === 1) {
+        } else if (num === 1) {
           color = "green";
           tag = "最近新增";
-        } else if (data.status === 3) {
+        } else if (num === 3) {
           color = "orange";
           tag = "已打标签";
-        } else if(data.status === 2){
-          color = "#f60",
-          tag = "最近移动"
+        } else if (num === 2) {
+          (color = "#f60"), (tag = "最近移动");
         }
 
         return h("span", [
