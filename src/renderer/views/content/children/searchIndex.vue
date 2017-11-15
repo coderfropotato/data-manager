@@ -44,8 +44,8 @@ export default {
         //设置搜索历史
         let flag = false;
         let index = null;
-        for (let i = 0; i < this.searchHistory.length; i++) {
-          if (this.searchHistory[i] === this.searchVal) {
+        for (var i = 0; i < _this.searchHistory.length; i++) {
+          if (_this.searchHistory[i] === _this.searchVal) {
             flag = true;
             index = i;
             break;
@@ -91,9 +91,10 @@ export default {
   activated() {
     let _this = this;
     this.searchHistory = localforage.getItem("searchHistory", (err, res) => {
-      if (!err) {
+      if (res!=null) {
         _this.searchHistory = res;
       }else{
+        _this.searchHistory = [];
         localforage.setItem("searchHistory",[]);
       }
     });
