@@ -79,8 +79,7 @@ ipcMain.on('addFile', (event, arg) => {
     newWin = new BrowserWindow({
       height: 500,
       width: 700,
-      minHeight:500,
-      minWidth:700
+      resizable:false
     })
     newWin.setMenu(null);
     newWin.loadURL(baseURL + URL)
@@ -115,18 +114,22 @@ app.on('ready', createWindow)
 
 //关闭app
 ipcMain.on('window-all-closed', () => {
-  // dialog.showMessageBox({
-  //   type: "question",
-  //   title: "提示信息",
-  //   buttons: ['确定', 'cancel'],
-  //   message: '点击"确定"退出程序'
-  // }, function (index) {
-  //   // if(process.platform!=='darwin')
-  //   if (index == 0) app.quit()
-  // })
+  dialog.showMessageBox({
+    type: "question",
+    title: "提示信息",
+    buttons: ['确定', 'cancel'],
+    message: '点击"确定"退出程序'
+  }, function (index) {
+    // if(process.platform!=='darwin')
+    if (index == 0) app.quit()
+  })
   //TODO: 关闭与最小化表现一致, 要加上will-quit事件？让app关闭python
-  mainWindow.minimize();
+  // mainWindow.minimize();
   mainWindow.setSkipTaskbar(true)
+});
+//new window dom resize 
+ipcMain.on('resetWinSize',(ev,args)=>{
+  newWin.setSize(args[0],args[1]);
 });
 //最小化
 ipcMain.on('hide-window', (ev) => {
