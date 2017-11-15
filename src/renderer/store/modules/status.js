@@ -5,6 +5,7 @@ import fetchData from '@/api';
 import * as types from '@/store/mutation-types';
 // import treeData from '@/utils/tree';
 import file from '@/store/modules/files';
+import bus from '@/utils/bus';
 
 const test = true;
 const state = {
@@ -47,6 +48,12 @@ const actions = {
         params.serialNumbers = serialNumber
         fetchData('getModifiedFiles',params).then((res)=>{
             console.log(res);
+            //默认全选
+            let rootMarkArr = [];
+            for(var i=0;i<res.length;i++){
+                rootMarkArr.push(res[i].mark);
+            }
+            bus.$emit('statueSideBarClick',rootMarkArr);
             commit(types.GET_TREE_DATA,res);
         })
     },

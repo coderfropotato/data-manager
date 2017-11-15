@@ -31,7 +31,7 @@ export default {
   data() {
     return {
       defaultProps: {
-        children: "tree",
+        children: "children",
         label: "name"
       },
       timerList: []
@@ -93,11 +93,11 @@ export default {
       console.log(args[0]);
       // save savefileInfo params then getFileInfo last save
       // getFileInfo  serialNumber, rootPath, filepath
-      this.$store.dispatch("commitSaveFileParams", params).then(_ => {
-        this.$store.dispatch("getStatusFileInfo").then(_ => {
-          this.$router.push("/filestatusinfo?type=status");
-        });
-      });
+      // this.$store.dispatch("commitSaveFileParams", params).then(_ => {
+      //   this.$store.dispatch("getStatusFileInfo").then(_ => {
+      //     this.$router.push("/filestatusinfo?type=status");
+      //   });
+      // });
     },
     handlerCheckChange(...args) {
       //always clear other timers and save the last

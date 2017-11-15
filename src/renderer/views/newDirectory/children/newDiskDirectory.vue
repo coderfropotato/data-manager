@@ -353,9 +353,10 @@ export default {
                 res => {
                   _this.fullscreenLoading = false;
                   if (res.result === "success") {
-                    _this.$message({ message: "项目添加成功", type: "success" });
+                    _this.$message({ message: "项目添加成功", type: "success",onClose:_=>{
+                      _this.$electron.ipcRenderer.send("addFile",{"API":'close'});
+                    }});
                     _this.$electron.ipcRenderer.send("updateFilesList");
-                    _this.$electron.ipcRenderer.send("addFile", "close");
                   } else {
                     _this.$message({ message: res.result, type: "warning" });
                   }
