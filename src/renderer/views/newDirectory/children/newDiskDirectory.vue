@@ -1,5 +1,5 @@
 <template>
-  <div id="newDiskFile-root" v-loading.lock="fullscreenLoading" element-loading-text="正在扫面磁盘文件，请稍候">
+  <div id="newDiskFile-root" v-loading.lock="fullscreenLoading" element-loading-text="正在扫描磁盘文件，请稍候">
     <div class="newDiskFile-inner">
       <!--基本设置-->
       <el-form
