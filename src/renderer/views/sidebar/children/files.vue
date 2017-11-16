@@ -68,10 +68,12 @@ export default {
               message: "删除成功!"
             });
             //删除成功重新获取设备列表 路由跳转到file主页
-            this.$store.dispatch("getImportTargetDisks");
+            this.$store.dispatch("getImportTargetDisks").then(_ => {
+              this.$store.dispatch("getModifiedFiles");
+            });
             this.$router.push("/files");
             //reset file info
-            this.$store.dispatch('resetFileInfo');
+            this.$store.dispatch("resetFileInfo");
           });
         })
         .catch(() => {
