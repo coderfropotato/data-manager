@@ -70,10 +70,10 @@ export default {
       module: true
     };
   },
-  created(){
-    bus.$on('no-data',_=>{
-      this.$store.dispatch('resetFileInfo');
-    })
+  created() {
+    bus.$on("no-data", _ => {
+      this.$store.dispatch("resetFileInfo");
+    });
   },
   computed: {
     ...mapGetters(["fileInfo", "globalRouteStatus"])
@@ -90,10 +90,7 @@ export default {
           val: $.trim(e.target.value)
         };
       }
-
       this.$store.dispatch("updateMessage", params).then(res => {
-        //save fileinfo
-        // type 区分是file 还是search 的文件详情保存
         this.$store.dispatch("saveFileInfo");
       });
     },
@@ -111,18 +108,38 @@ export default {
   padding: 2em;
   font-size: 14px;
   overflow-y: scroll;
+  .status-bar {
+    display: flex;
+    justify-content: space-around;
+    list-style: none;
+    margin-bottom: 20px;
+    li {
+      width: 76px;
+      height: 28px;
+      text-align: center;
+      line-height: 28px;
+      border-radius: 4px;
+      color: #333;
+      background: #f5f5f5;
+      cursor: pointer;
+      &:hover{
+        color: #fff;
+        background: #386cca;
+      }
+    }
+  }
   .title {
     display: flex;
     justify-content: space-between;
     span {
       color: #fff;
       background: #386cca;
-      padding:4px 12px;
+      padding: 4px 12px;
       border-radius: 2px;
       cursor: pointer;
       user-select: none;
       opacity: 1;
-      &:hover{
+      &:hover {
         opacity: 0.8;
       }
     }
