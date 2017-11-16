@@ -76,7 +76,7 @@ export default {
     })
   },
   computed: {
-    ...mapGetters(["fileInfo", "globalRouteStatus", "globalType"])
+    ...mapGetters(["fileInfo", "globalRouteStatus"])
   },
   methods: {
     updateMessage(e, index, type) {
@@ -94,7 +94,7 @@ export default {
       this.$store.dispatch("updateMessage", params).then(res => {
         //save fileinfo
         // type 区分是file 还是search 的文件详情保存
-        this.$store.dispatch("saveFileInfo",this.globalType);
+        this.$store.dispatch("saveFileInfo");
       });
     },
     addAttrs() {

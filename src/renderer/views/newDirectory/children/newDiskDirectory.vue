@@ -377,6 +377,9 @@ export default {
                   _this.fullscreenLoading = false;
                 }
               );
+            }else{
+              _this.$message({ message: "文件名重复，请重试", type: "warning"});
+              _this.fullscreenLoading = false;
             }
           });
           /* // 判断当前路径是否已经被管理

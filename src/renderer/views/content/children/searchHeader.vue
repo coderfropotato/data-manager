@@ -40,7 +40,7 @@ export default {
           //console.log(_);
           this.searchVal = "";
           this.$store.dispatch("setTotalCount", _.length);
-          this.$store.dispatch("setGlobalType", "search");
+          this.$store.dispatch("setRouteStatus", "search");
         },
         err => {
           this.$message({

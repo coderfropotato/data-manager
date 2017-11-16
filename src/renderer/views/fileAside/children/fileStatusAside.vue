@@ -2,38 +2,45 @@
   <div id="file-status-info-root">
     <div class="status-top">
       <img src="../../../assets/images/dir.png" alt="">
-      <p>已选中99个文件</p>
+      <p>已选中{{checkedData.length}}个文件</p>
       <el-button>接受所有文件变更</el-button>
     </div>
     <div class="advance">
       <p class="title">高级选项</p>
       <ul>
-        <li>
-          <p>其中22个最近新增文件</p>
+        <li v-if="treeCat.add.length">
+          <p>其中{{treeCat.add.length}}个最近新增文件</p>
           <div class="btn-group">
             <span>自动扫描</span>
             <span @click="jumpToStatusInfo">编辑新增文件</span>
           </div>
         </li>
-        <li>
-          <p>其中22个最近删除文件</p>
+        <li v-if="treeCat.delete.length">
+          <p>其中{{treeCat.delete.length}}个最近删除文件</p>
           <div class="btn-group">
             <span>保留标签信息</span>
             <span class="warning">彻底删除</span>
           </div>
         </li>
-        <li>
-          <p>其中22个最近修改文件</p>
+        <li v-if="treeCat.modified.length">
+          <p>其中{{treeCat.modified.length}}个最近修改文件</p>
           <div class="btn-group">
             <span>重新扫描</span>
           </div>
         </li>
-        <li>
-          <p>其中22个最近移动文件</p>
+        <li v-if="treeCat.move.length">
+          <p>其中{{treeCat.move.length}}个最近移动文件</p>
           <div class="btn-group">
             <span>继承信息</span>
             <span class="warning">不继承信息</span>
           </div>
+        </li>
+        <li v-if="treeCat.label.length">
+          <p>其中{{treeCat.label.length}}个已打标签文件</p>
+          <!-- <div class="btn-group">
+            <span>继承信息</span>
+            <span class="warning">不继承信息</span>
+          </div> -->
         </li>
       </ul>
     </div>
@@ -49,6 +56,7 @@ export default {
     return {}
   },
   computed: {
+    ...mapGetters(['checkedData','treeCat'])
   },
   methods: {
     jumpToStatusInfo(){

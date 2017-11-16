@@ -89,15 +89,18 @@ export default {
       this.$refs.tree.setCheckedKeys(arr);
     },
     //node clicked
-    handlerNodeClick(...args) {
-      console.log(args[0]);
+    handlerNodeClick({isdir,path,root_path,serialNumber},e,o) {
+      if(isdir) return;
+      let rootPath = root_path;
+      let filepath = path;
+      let params = {serialNumber,rootPath,filepath};
       // save savefileInfo params then getFileInfo last save
       // getFileInfo  serialNumber, rootPath, filepath
-      // this.$store.dispatch("commitSaveFileParams", params).then(_ => {
-      //   this.$store.dispatch("getStatusFileInfo").then(_ => {
-      //     this.$router.push("/filestatusinfo?type=status");
-      //   });
-      // });
+      this.$store.dispatch("commitSaveFileParams", params).then(_ => {
+        this.$store.dispatch("getStatusFileInfo").then(_ => {
+          this.$router.push("/filestatusinfo?type=status");
+        });
+      });
     },
     handlerCheckChange(...args) {
       //always clear other timers and save the last
@@ -106,8 +109,8 @@ export default {
       }
       let timer = null;
       timer = setTimeout(_ => {
-        console.log(args);
-        //console.log(this.$refs.tree.getCheckedNodes(true));
+        let checked = this.$refs.tree.getCheckedNodes(true);
+        this.$store.dispatch('setCheckedData',checked);
         //dispatch bottom status
       }, 30);
       this.timerList.push(timer);

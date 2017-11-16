@@ -91,7 +91,7 @@ export default {
                 this.$router.push("/search");
                 this.$store.dispatch("setSearchRange", temp);
                 this.$store.dispatch("setTotalCount", _.total);
-                this.$store.dispatch("setGlobalType", "search");
+                this.$store.dispatch("setRouteStatus", "search");
               });
             break;
           case "global":
@@ -102,7 +102,7 @@ export default {
               this.$router.push("/search");
               this.$store.dispatch("checkAllSwitch", true);
               this.$store.dispatch("setTotalCount", _.length);
-              this.$store.dispatch("setGlobalType", "search");
+              this.$store.dispatch("setRouteStatus", "search");
             });
             break;
         }

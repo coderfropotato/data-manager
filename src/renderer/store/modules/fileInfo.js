@@ -5,6 +5,7 @@
 import fetchData from '@/api'
 import * as types from '@/store/mutation-types'
 import file from '@/store/modules/files'
+import global from '@/store/modules/global'
 import bus from '@/utils/bus'
 const state = {
   show: false,
@@ -85,7 +86,7 @@ const actions = {
     })
   },
   //保存数据之前校验key是否存在
-  saveFileInfo({ commit }, type) {
+  saveFileInfo({ commit }) {
     let updateList = state.fileInfo.property.concat();
     for (let i = 0; i < updateList.length; i++) {
       for (let key in updateList[i]) {
@@ -99,7 +100,7 @@ const actions = {
     }
     let remark = { name: "remark", attr: state.fileInfo.remark };
     updateList.push(remark);
-    if (type === 'file') {
+    if (global.state.globalRouteStatus === 'file') {
       //文件列表保存详情
       let serialNumber = file.state.serialNumber;
       let rootPath = file.state.rootPath;
@@ -111,16 +112,20 @@ const actions = {
         filePath = file.state.tableClickHistory[file.state.tableClickHistory.length - 1].path;
       }
       var param = { serialNumber, rootPath, filePath, updateList }
-    } else if (type === 'search') {
+    } else if (global.state.globalRouteStatus === 'search') {
       //搜索列表保存详情
       let serialNumber = file.state.tableClickHistory[file.state.tableClickHistory.length - 1].serialNumber;
       let rootPath = file.state.tableClickHistory[file.state.tableClickHistory.length - 1].rootPath;
       let filePath = file.state.tableClickHistory[file.state.tableClickHistory.length - 1].path;
       var param = { serialNumber, rootPath, filePath, updateList }
-    } else if (type === 'status') {
-      var param = bottomFileInfoParams;
+    } else if (global.state.globalRouteStatus === 'status') {
+      let serialNumber = state.bottomFileInfoParams.serialNumber;
+      let rootPath = state.bottomFileInfoParams.rootPath;
+      let filePath = state.bottomFileInfoParams.filepath;
+      var param = {serialNumber,rootPath,filePath,updateList}
     }
     return new Promise((resolve, reject) => {
+      console.log(param)
       fetchData('updateAttribute', param).then(res => {
         resolve('success');
         commit(types.SAVE_FILE_INFO, updateList);
@@ -132,13 +137,13 @@ const actions = {
   },
   commitSaveFileParams({ commit }, params) {
     return new Promise((resolve, reject) => {
-      commit(types.COMMIT_SAVE_FILE_PARAMS)
+      commit(types.COMMIT_SAVE_FILE_PARAMS,params)
       resolve('success');
     })
   },
   getStatusFileInfo({ commit }) {
     return new Promise((resolve,reject)=>{
-      fetchData('getFileInfo', bottomFileInfoParams).then(res => {
+      fetchData('getFileInfo', state.bottomFileInfoParams).then(res => {
         commit(types.GET_FILE_INFO,res);
         resolve('success');
       })

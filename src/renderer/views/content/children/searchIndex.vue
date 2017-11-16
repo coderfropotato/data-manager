@@ -68,7 +68,7 @@ export default {
           _ => {
             //console.log(_);
             this.searchVal = "";
-            this.$store.dispatch("setGlobalType",'search');
+            this.$store.dispatch("setRouteStatus",'search');
             this.$router.push("/search");
             this.$store.dispatch("setTotalCount", _.length);
           },

@@ -41,6 +41,7 @@ export const SET_SEARCH_RANGE= 'setSearchRange';
 //获取文件状态树的数据
 export const GET_TREE_DATA = 'getTreeData';
 export const COMMIT_SAVE_FILE_PARAMS = "commitSaveFileParams";
+export const SET_CHECKED_DATA = 'setCheckedData';
 
 //bottom
 export const SET_TOTAL_COUTN = 'setTotalCount';
