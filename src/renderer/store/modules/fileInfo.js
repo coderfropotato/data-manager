@@ -86,7 +86,6 @@ const actions = {
   },
   //保存数据之前校验key是否存在
   saveFileInfo({ commit }, type) {
-    debugger;
     let updateList = state.fileInfo.property.concat();
     for (let i = 0; i < updateList.length; i++) {
       for (let key in updateList[i]) {
