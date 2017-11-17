@@ -104,26 +104,26 @@ export default {
             this.$store.dispatch("resetFileInfo");
             this.$store.dispatch("setRouteStatus", "file");
             //重新获取设备列表
-            this.$store.dispatch("getImportTargetDisks");
+            //this.$store.dispatch("getImportTargetDisks");
             break;
           case 2:
             this.$router.push("/searchindex");
             this.$store.dispatch("resetFileInfo");
             this.$store.dispatch("setRouteStatus", "search");
             //重新获取设备列表
-            this.$store.dispatch("getImportTargetDisks").then(_ => {
+            //this.$store.dispatch("getImportTargetDisks").then(_ => {
               //default selected all
               this.$store.dispatch("checkAllSwitch", true);
-            });
+            //});
             break;
           case 3:
             this.$router.push("/filestatus");
             this.$store.dispatch("resetFileInfo");
             this.$store.dispatch("setRouteStatus", "status");
             //重新获取设备列表
-            this.$store.dispatch("getImportTargetDisks").then(_ => {
-              this.$store.dispatch("getModifiedFiles");
-            });
+            this.$store.dispatch("getImportTargetDisks").then(_=>{
+              this.$store.dispatch('getModifiedFiles')
+            })
             break;
           case 4:
             this.$router.push("/collection");

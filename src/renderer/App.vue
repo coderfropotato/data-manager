@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" v-loading.lock="loading" element-loading-text="正在初始化，请稍候...">
     <keep-alive>
       <router-view></router-view>
     </keep-alive>
@@ -9,11 +9,18 @@
 import bus from '@/utils/bus';
 export default {
   name: "data-manager-desktop",
+  data(){
+    return {
+      loading:true
+    }
+  },
   mounted() {
     //默认获取文件列表
     this.$store.dispatch('getImportTargetDisks').then(_=>{
       //默认获取文件状态
-      this.$store.dispatch('getModifiedFiles');
+      this.$store.dispatch('getModifiedFiles').then(_=>{
+        this.loading = false;
+      }).catch(_=>{this.loading= false})
     })
     // 禁用浏览器默认拖拽事件，防止用户拖拽的文件被打开
     document.addEventListener(
@@ -48,9 +55,10 @@ export default {
   created(){
     this.$electron.ipcRenderer.on('updateFilesList',()=>{
       //被管理的设备添加成功后 重新获取设备列表
-      this.$store.dispatch('getImportTargetDisks')
+      this.$store.dispatch('getImportTargetDisks').then(_=>{
+        this.$store.dispatch('getModifiedFiles')
+      })
     })
-
     //请求错误监听
     bus.$on('error',(res)=>{
       this.$message({

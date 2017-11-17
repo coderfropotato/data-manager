@@ -1,6 +1,6 @@
 <!--划分三栏组件-->
 <template>
-  <div id='index-root'>
+  <div id='index-root' >
     <div class="header-wrap">
       <Header></Header>
     </div>

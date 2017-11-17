@@ -71,6 +71,11 @@ export default {
             this.$store.dispatch("getImportTargetDisks").then(_ => {
               this.$store.dispatch("getModifiedFiles");
             });
+            //删除状态
+            this.$store.dispatch("deleteSatatus", {
+              serialNumber: this.listInfo.serial_number,
+              path: this.listInfo.path
+            });
             this.$router.push("/files");
             //reset file info
             this.$store.dispatch("resetFileInfo");

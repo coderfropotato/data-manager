@@ -54,7 +54,6 @@ export default {
         if (!flag) {
           this.searchHistory.unshift(this.searchVal);
           this.searchHistory.length = 10;
-          this.searchVal = "";
         } else {
           let item = this.searchHistory.slice(index, index + 1);
           this.searchHistory.splice(index, 1);
@@ -68,7 +67,7 @@ export default {
           _ => {
             //console.log(_);
             this.searchVal = "";
-            this.$store.dispatch("setRouteStatus",'search');
+            this.$store.dispatch("setRouteStatus", "search");
             this.$router.push("/search");
             this.$store.dispatch("setTotalCount", _.length);
           },
@@ -91,11 +90,11 @@ export default {
   activated() {
     let _this = this;
     this.searchHistory = localforage.getItem("searchHistory", (err, res) => {
-      if (res!=null) {
+      if (res != null) {
         _this.searchHistory = res;
-      }else{
+      } else {
         _this.searchHistory = [];
-        localforage.setItem("searchHistory",[]);
+        localforage.setItem("searchHistory", []);
       }
     });
     this.$store.dispatch("checkAllSwitch", true);

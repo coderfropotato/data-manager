@@ -27,7 +27,6 @@ export default {
   methods: {
     //table's component selectChange event
     childSelectedChange(val) {
-      console.log(val);
       this.$store.dispatch("setBottomInfo", val).then(res => {
         //always get the last detail
         this.$store.dispatch("getFileInfo");

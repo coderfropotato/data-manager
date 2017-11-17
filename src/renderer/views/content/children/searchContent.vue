@@ -10,7 +10,7 @@ export default {
   name: "fileContent",
   data() {
     return {
-      tableheight: 0
+      tableheight: 0,
     };
   },
   mounted() {

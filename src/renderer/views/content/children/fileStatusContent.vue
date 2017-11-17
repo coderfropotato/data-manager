@@ -1,4 +1,5 @@
 <template>
+<!-- v-loading="true" element-loading-text="拼命加载中" -->
   <div id="file-status-root" @click="reset">
     <el-tree 
       :data="treeData"
@@ -26,7 +27,7 @@ export default {
     // this.$store.dispatch("showBottom");
   },
   computed: {
-    ...mapGetters(["treeData"])
+    ...mapGetters(["treeData","curStatus","curData"])
   },
   data() {
     return {
@@ -89,7 +90,7 @@ export default {
       this.$refs.tree.setCheckedKeys(arr);
     },
     //node clicked
-    handlerNodeClick({isdir,path,root_path,serialNumber},e,o) {
+    handlerNodeClick({isdir,path,root_path,serialNumber,status,mark},e,o) {
       if(isdir) return;
       let rootPath = root_path;
       let filepath = path;
@@ -101,6 +102,11 @@ export default {
           this.$router.push("/filestatusinfo?type=status");
         });
       });
+      //update cur status and reset index
+      if(status){
+        this.$store.dispatch('setCurStatus',status);
+        this.$store.dispatch('setCurIndex',mark);
+      }
     },
     handlerCheckChange(...args) {
       //always clear other timers and save the last

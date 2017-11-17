@@ -4,8 +4,8 @@
       <!-- status layout start-->
       <ol v-if="globalRouteStatus==='status'" class="status-bar">
         <li>自动识别</li>
-        <li>上一项</li>
-        <li>下一项</li>
+        <li @click="getPre">上一项</li>
+        <li @click="getNext">下一项</li>
       </ol>
       <!-- status layout end -->
       <div class="title">
@@ -76,7 +76,7 @@ export default {
     });
   },
   computed: {
-    ...mapGetters(["fileInfo", "globalRouteStatus"])
+    ...mapGetters(["fileInfo", "globalRouteStatus", "curData", "curIndex"])
   },
   methods: {
     updateMessage(e, index, type) {
@@ -97,6 +97,36 @@ export default {
     addAttrs() {
       //add file attrs
       this.$store.dispatch("addFileInfo");
+    },
+    getPre() {
+      if (this.curData[this.curIndex - 1]) {
+        let rootPath = this.curData[this.curIndex - 1].root_path;
+        let filepath = this.curData[this.curIndex - 1].path;
+        let serialNumber = this.curData[this.curIndex - 1].serialNumber;
+        let params = { serialNumber, rootPath, filepath };
+        this.$store.dispatch("commitSaveFileParams", params).then(_ => {
+          this.$store.dispatch("getStatusFileInfo").then(_ => {
+            this.$store.dispatch('reduceCurIndex')
+          });
+        });
+      } else {
+        this.$message("到头了，亲");
+      }
+    },
+    getNext() {
+      if (this.curData[this.curIndex + 1]) {
+        let rootPath = this.curData[this.curIndex + 1].root_path;
+        let filepath = this.curData[this.curIndex + 1].path;
+        let serialNumber = this.curData[this.curIndex + 1].serialNumber;
+        let params = { serialNumber, rootPath, filepath };
+        this.$store.dispatch("commitSaveFileParams", params).then(_ => {
+          this.$store.dispatch("getStatusFileInfo").then(_ => {
+            this.$store.dispatch('addCurIndex')
+          });
+        });
+      } else {
+        this.$message("已经是最后一个了，亲");
+      }
     }
   }
 };
@@ -122,7 +152,7 @@ export default {
       color: #333;
       background: #f5f5f5;
       cursor: pointer;
-      &:hover{
+      &:hover {
         color: #fff;
         background: #386cca;
       }
