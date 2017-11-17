@@ -42,6 +42,8 @@ export const SET_SEARCH_RANGE= 'setSearchRange';
 export const GET_TREE_DATA = 'getTreeData';
 export const COMMIT_SAVE_FILE_PARAMS = "commitSaveFileParams";
 export const SET_CHECKED_DATA = 'setCheckedData';
+export const SET_MODIFIED_NUM = 'setModifiedNum';
+export const SET_CHECED_DATA = 'setCheckedData';
 
 //bottom
 export const SET_TOTAL_COUTN = 'setTotalCount';

@@ -2,7 +2,7 @@
   <div id="file-status-info-root">
     <div class="status-top">
       <img src="../../../assets/images/dir.png" alt="">
-      <p>已选中{{checkedData.length}}个文件</p>
+      <p>已选中{{modifiedNum}}个文件</p>
       <el-button>接受所有文件变更</el-button>
     </div>
     <div class="advance">
@@ -56,7 +56,7 @@ export default {
     return {}
   },
   computed: {
-    ...mapGetters(['checkedData','treeCat'])
+    ...mapGetters(['checkedData','treeCat','modifiedNum'])
   },
   methods: {
     jumpToStatusInfo(){

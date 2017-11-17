@@ -19,11 +19,13 @@ const test = true;
 const state = {
     //状态树数据
     treeData:[],
-    checkedData:[]
+    checkedData:[],
+    modifiedNumber:0,
 }
 
 //树的侧边栏列表 信息从treeData获取 ->getter
 const getters = {
+    modifiedNumber:state=>state.modifiedNumber,
     treeData:state=>state.treeData,
     treeSideBar:(state)=>{
         let temp = [];
@@ -37,13 +39,6 @@ const getters = {
         return temp
     },
     checkedData:state=>state.checkedData,
-    modifiedNumber:state=>{
-        let count = 0;
-        for(let i=0;i<state.treeData.length;i++){
-            count+=state.treeData[i].modifiedNum;
-        }
-        return count;
-    },
     treeCat:state=>{
         let obj = {"add":[],"move":[],"label":[],"delete":[],"modified":[]};
         for(let j=0;j<state.checkedData.length;j++){
@@ -65,10 +60,15 @@ const actions = {
     getModifiedFiles({commit}){
         let params={};
         let serialNumber = [];
+        if(!file.state.fileList.length) return;
+        params.dirs = [];
         for(var i=0;i<file.state.fileList.length;i++){
-            serialNumber.push(file.state.fileList[i].serial_number);
+            let obj = {};
+            obj.serialNumber = file.state.fileList[i].serial_number;
+            obj.root_path = file.state.fileList[i].path;
+            params.dirs.push(obj);
         }
-        params.serialNumbers = unique(serialNumber);
+        console.log(params)
         fetchData('getModifiedFiles',params).then((res)=>{
             let rootMarkArr = [];
             for(var i=0;i<res.length;i++){
@@ -93,7 +93,11 @@ const actions = {
                 loop(arr);
                 return files;
             }
-            state.checkedData = loop(res);
+            let list =loop(res); 
+            //默认全选的length
+            commit(types.SET_CHECED_DATA,list);
+            //修改的总数
+            commit(types.SET_MODIFIED_NUM,list.length)
             //tree data
             commit(types.GET_TREE_DATA,res);
         })
@@ -115,6 +119,12 @@ const mutations = {
     },
     [types.SET_CHECKED_DATA](state,arr){
         state.checkedData = arr;
+    },
+    [types.SET_CHECED_DATA](state,data){
+        state.checkedData = data;
+    },
+    [types.SET_MODIFIED_NUM](state,len){
+        state.modifiedNumber = len;
     }
 }
 
