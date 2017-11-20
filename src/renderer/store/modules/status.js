@@ -113,12 +113,6 @@ const actions = {
             })
         })
     },
-    // 接受所有变更
-    reciveAll({ commit }) {
-        new Promise((resolve, reject) => {
-            fetchData('');
-        })
-    },
     setCheckedData({ commit }, arr) {
         commit(types.SET_CHECKED_DATA, arr);
     },
@@ -179,6 +173,98 @@ const actions = {
     },
     reduceCurIndex({ commit }) {
         commit(types.REDUCE_CUR_INDEX);
+    },
+    //接受所有文件
+    reciveAll({ commit }) {
+        return new Promise((resolve, reject) => {
+            let files=[];
+            state.checkedData.forEach((val,index)=>{
+                let obj = {};
+                obj.serial_number = val.serialNumber;
+                obj.path = val.path;
+                files.push(obj)
+            })
+            fetchData('submitAllFileInfo', {files}).then(res => {
+                let rootMarkArr = [];
+                for (var i = 0; i < res.length; i++) {
+                    rootMarkArr.push(res[i].mark);
+                }
+                bus.$emit('statueSideBarClick', rootMarkArr);
+                let list = loop(res);
+                commit(types.SET_CHECED_DATA, list);
+                commit(types.SET_MODIFIED_NUM, list.length)
+                commit(types.GET_TREE_DATA, res);
+                resolve('success');
+            })
+        })
+    },
+    //保留标签信息
+    saveTagAttrs({ commit }) {
+        return new Promise((resolve, reject) => {
+            fetchData('apiname', params).then(res => {
+                let rootMarkArr = [];
+                for (var i = 0; i < res.length; i++) {
+                    rootMarkArr.push(res[i].mark);
+                }
+                bus.$emit('statueSideBarClick', rootMarkArr);
+                let list = loop(res);
+                commit(types.SET_CHECED_DATA, list);
+                commit(types.SET_MODIFIED_NUM, list.length)
+                commit(types.GET_TREE_DATA, res);
+                resolve('success');
+            })
+        })
+    },
+    //彻底删除
+    delete({ commit }) {
+        return new Promise((resolve, reject) => {
+            fetchData('apiname', params).then(res => {
+                let rootMarkArr = [];
+                for (var i = 0; i < res.length; i++) {
+                    rootMarkArr.push(res[i].mark);
+                }
+                bus.$emit('statueSideBarClick', rootMarkArr);
+                let list = loop(res);
+                commit(types.SET_CHECED_DATA, list);
+                commit(types.SET_MODIFIED_NUM, list.length)
+                commit(types.GET_TREE_DATA, res);
+                resolve('success');
+            })
+        })
+    },
+    //继承信息
+    inheritInfo({ commit }) {
+        return new Promise((resolve, reject) => {
+            fetchData('apiname', params).then(res => {
+                let rootMarkArr = [];
+                for (var i = 0; i < res.length; i++) {
+                    rootMarkArr.push(res[i].mark);
+                }
+                bus.$emit('statueSideBarClick', rootMarkArr);
+                let list = loop(res);
+                commit(types.SET_CHECED_DATA, list);
+                commit(types.SET_MODIFIED_NUM, list.length)
+                commit(types.GET_TREE_DATA, res);
+                resolve('success');
+            })
+        })
+    },
+    //不继承信息
+    noInheritInfo({ commit }) {
+        return new Promise((resolve, reject) => {
+            fetchData('apiname', params).then(res => {
+                let rootMarkArr = [];
+                for (var i = 0; i < res.length; i++) {
+                    rootMarkArr.push(res[i].mark);
+                }
+                bus.$emit('statueSideBarClick', rootMarkArr);
+                let list = loop(res);
+                commit(types.SET_CHECED_DATA, list);
+                commit(types.SET_MODIFIED_NUM, list.length)
+                commit(types.GET_TREE_DATA, res);
+                resolve('success');
+            })
+        })
     }
 }
 

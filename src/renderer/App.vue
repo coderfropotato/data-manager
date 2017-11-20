@@ -1,5 +1,6 @@
 <template>
-  <div id="app" v-loading.lock="loading" element-loading-text="正在初始化，请稍候...">
+<!--  v-loading.lock="loading" element-loading-text="正在初始化，请稍候..." -->
+  <div id="app">
     <keep-alive>
       <router-view></router-view>
     </keep-alive>
@@ -15,13 +16,6 @@ export default {
     }
   },
   mounted() {
-    //默认获取文件列表
-    this.$store.dispatch('getImportTargetDisks').then(_=>{
-      //默认获取文件状态
-      this.$store.dispatch('getModifiedFiles').then(_=>{
-        this.loading = false;
-      }).catch(_=>{this.loading= false})
-    })
     // 禁用浏览器默认拖拽事件，防止用户拖拽的文件被打开
     document.addEventListener(
       "drop",

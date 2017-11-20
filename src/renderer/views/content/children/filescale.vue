@@ -30,6 +30,20 @@ export default {
       ]
     };
   },
+  created() {
+    //默认获取文件列表
+    this.$store.dispatch("getImportTargetDisks").then(_ => {
+      //默认获取文件状态
+      this.$store
+        .dispatch("getModifiedFiles")
+        .then(_ => {
+          this.loading = false;
+        })
+        .catch(_ => {
+          this.loading = false;
+        });
+    });
+  },
   methods: {
     jumpToSearch(item) {
       //编程式导航
@@ -39,7 +53,7 @@ export default {
         //设置根路径
         this.$store.dispatch("setRootPath", item.path).then(res => {
           //重置fileInfo
-          this.$store.dispatch('resetFileInfo');
+          this.$store.dispatch("resetFileInfo");
           //获取数据
           let serialNumber = item.serial_number;
           this.$store.dispatch("getDirTree", { serialNumber }).then(res => {
@@ -54,7 +68,7 @@ export default {
         API: "open",
         URL: "/newfile/newdiskdir"
       });
-    },
+    }
   },
   computed: {
     ...mapGetters(["fileList"])
@@ -65,13 +79,13 @@ export default {
 <style lang="scss" scoped>
 #filescale {
   height: 100%;
-  .no-data{
+  .no-data {
     text-align: center;
-    margin-top:200px;
-    span{
-      color:#386cca;
+    margin-top: 200px;
+    span {
+      color: #386cca;
       cursor: pointer;
-      &:hover{
+      &:hover {
         text-decoration: underline;
       }
     }

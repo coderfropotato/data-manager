@@ -2,7 +2,7 @@
   <div id="fileInfo-root">
     <div v-if="fileInfo.basic">
       <!-- status layout start-->
-      <ol v-if="globalRouteStatus==='status'" class="status-bar">
+      <ol v-if="globalRouteStatus==='status' && topShow" class="status-bar">
         <li>自动识别</li>
         <li @click="getPre">上一项</li>
         <li @click="getNext">下一项</li>
@@ -67,13 +67,18 @@ export default {
   name: "FileInfo",
   data() {
     return {
-      module: true
+      module: true,
+      topShow:true
     };
   },
   created() {
     bus.$on("no-data", _ => {
       this.$store.dispatch("resetFileInfo");
     });
+    // 是否显示上一个下一个
+    bus.$on('topshow',_=>{
+      this.topShow = _;
+    })
   },
   computed: {
     ...mapGetters(["fileInfo", "globalRouteStatus", "curData", "curIndex"])

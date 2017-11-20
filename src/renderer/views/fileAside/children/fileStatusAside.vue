@@ -3,39 +3,44 @@
     <div class="status-top">
       <img src="../../../assets/images/dir.png" alt="">
       <p>已选中{{checkedData.length}}个文件</p>
-      <el-button>接受所有文件变更</el-button>
+      <el-button @click="reciveAll">接受所有文件变更</el-button>
     </div>
     <div class="advance">
       <p class="title">高级选项</p>
       <ul>
-        <li v-if="treeCat.add.length">
+        <!-- v-if="treeCat.add.length" -->
+        <li >
           <p>其中{{treeCat.add.length}}个最近新增文件</p>
           <div class="btn-group">
             <span>自动扫描</span>
             <span @click="jumpToStatusInfo">编辑新增文件</span>
           </div>
         </li>
-        <li v-if="treeCat.delete.length">
+        <!-- v-if="treeCat.delete.length" -->
+        <li >
           <p>其中{{treeCat.delete.length}}个最近删除文件</p>
           <div class="btn-group">
             <span>保留标签信息</span>
             <span class="warning">彻底删除</span>
           </div>
         </li>
-        <li v-if="treeCat.modified.length">
+        <!--  v-if="treeCat.modified.length" -->
+        <li>
           <p>其中{{treeCat.modified.length}}个最近修改文件</p>
           <div class="btn-group">
             <span>重新扫描</span>
           </div>
         </li>
-        <li v-if="treeCat.move.length">
+        <!--  v-if="treeCat.move.length" -->
+        <li>
           <p>其中{{treeCat.move.length}}个最近移动文件</p>
           <div class="btn-group">
             <span>继承信息</span>
             <span class="warning">不继承信息</span>
           </div>
         </li>
-        <li v-if="treeCat.label.length">
+        <!--  v-if="treeCat.label.length" -->
+        <li>
           <p>其中{{treeCat.label.length}}个已打标签文件</p>
           <!-- <div class="btn-group">
             <span>继承信息</span>
@@ -53,14 +58,39 @@ import { mapGetters, mapActions } from "vuex";
 export default {
   name: "FileStatusAside",
   data() {
-    return {}
+    return {};
   },
   computed: {
-    ...mapGetters(['checkedData','treeCat','modifiedNum'])
+    ...mapGetters(["checkedData", "treeCat", "modifiedNum"])
   },
   methods: {
-    jumpToStatusInfo(){
-      this.$router.push('/filestatusinfo')
+    jumpToStatusInfo() {
+      if (this.treeCat.add.length) {
+        let filepath = this.treeCat.add[0].path;
+        let rootPath = this.treeCat.add[0].root_path;
+        let serialNumber = this.treeCat.add[0].serialNumber;
+        this.$store
+          .dispatch("commitSaveFileParams", {
+            filepath,
+            rootPath,
+            serialNumber
+          })
+          .then(_ => {
+            this.$store.dispatch("getStatusFileInfo").then(_ => {
+              this.$router.push("/filestatusinfo");
+            });
+          });
+        //update cur status and reset index
+        if (this.treeCat.add[0].status) {
+          this.$store.dispatch("setCurStatus", this.treeCat.add[0].status);
+          this.$store.dispatch("setCurIndex", this.treeCat.add[0].mark);
+        }
+      } else {
+        this.$message("请先选择需要编辑的新增文件");
+      }
+    },
+    reciveAll() {
+      this.$store.dispatch("reciveAll");
     }
   }
 };
@@ -96,30 +126,30 @@ export default {
     ul {
       list-style: none;
       li {
-        margin-top:30px;
-        p{
+        margin-top: 30px;
+        p {
           line-height: 1;
-          margin-bottom:10px;
+          margin-bottom: 10px;
         }
-        .btn-group{
-          margin-top:12px;
-          span{
+        .btn-group {
+          margin-top: 12px;
+          span {
             display: inline-block;
-            padding:8px 20px;
-            background:#f5f5f5;
-            font-size:14px;
-            border-radius:6px;
+            padding: 8px 20px;
+            background: #f5f5f5;
+            font-size: 14px;
+            border-radius: 6px;
             cursor: pointer;
             opacity: 0.8;
-            &:hover{
+            &:hover {
               opacity: 1;
             }
-            &.warning{
+            &.warning {
               background: #f74a4a;
-              color:#fff;
+              color: #fff;
             }
-            &:first-child{
-              margin-right:12px;
+            &:first-child {
+              margin-right: 12px;
             }
           }
         }

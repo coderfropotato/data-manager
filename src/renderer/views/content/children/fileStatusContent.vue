@@ -1,5 +1,5 @@
 <template>
-<!-- v-loading="true" element-loading-text="拼命加载中" -->
+<!-- v-loading="true" element-loading-text="拼命加载中" :highlight-current="true" -->
   <div id="file-status-root" @click="reset">
     <el-tree 
       :data="treeData"
@@ -8,7 +8,6 @@
       :expand-on-click-node="true"
       node-key="mark"
       ref="tree"
-      :highlight-current="true"
       @check-change = "handlerCheckChange"
       @node-click="handlerNodeClick"
       :render-content="renderContent"
@@ -27,7 +26,7 @@ export default {
     // this.$store.dispatch("showBottom");
   },
   computed: {
-    ...mapGetters(["treeData","curStatus","curData"])
+    ...mapGetters(["treeData", "curStatus", "curData"])
   },
   data() {
     return {
@@ -90,22 +89,44 @@ export default {
       this.$refs.tree.setCheckedKeys(arr);
     },
     //node clicked
-    handlerNodeClick({isdir,path,root_path,serialNumber,status,mark},e,o) {
-      if(isdir) return;
+    handlerNodeClick(
+      { isdir, path, root_path, serialNumber, status, mark },
+      e,
+      o
+    ) {
+      //文件夹和最近删除没有详情
+      if (isdir || status==4) return;
       let rootPath = root_path;
       let filepath = path;
-      let params = {serialNumber,rootPath,filepath};
-      // save savefileInfo params then getFileInfo last save
-      // getFileInfo  serialNumber, rootPath, filepath
+      let params = { serialNumber, rootPath, filepath };
+      // toggle checked current item
+      // if (e.checked) {
+      //   for(var j=0;j<Beforechecked.length;j++){
+      //     if(Beforechecked[j].mark === mark){
+      //       Beforechecked.splice(j,1);
+      //       break;
+      //     }
+      //   }
+      // }else{
+      //   Beforechecked.push(arguments[0]);
+      // }
+      // // save savefileInfo params then getFileInfo last save
+      // // getFileInfo  serialNumber, rootPath, filepath
+      // 如果没有选中  文件详情就不显示 上一个下一个
+      if(!e.checked){
+        bus.$emit('topshow',false);
+      }else{
+        bus.$emit('topshow',true);
+      }
       this.$store.dispatch("commitSaveFileParams", params).then(_ => {
         this.$store.dispatch("getStatusFileInfo").then(_ => {
           this.$router.push("/filestatusinfo?type=status");
         });
       });
       //update cur status and reset index
-      if(status){
-        this.$store.dispatch('setCurStatus',status);
-        this.$store.dispatch('setCurIndex',mark);
+      if (status) {
+        this.$store.dispatch("setCurStatus", status);
+        this.$store.dispatch("setCurIndex", mark);
       }
     },
     handlerCheckChange(...args) {
@@ -116,8 +137,8 @@ export default {
       let timer = null;
       timer = setTimeout(_ => {
         let checked = this.$refs.tree.getCheckedNodes(true);
-        this.$store.dispatch('setCheckedData',checked);
-        //dispatch bottom status
+        this.$store.dispatch("setCheckedData", checked);
+        this.$router.push("/filestatus");
       }, 30);
       this.timerList.push(timer);
     },
@@ -130,7 +151,7 @@ export default {
     // this.$store.dispatch("hideBottom");
   },
   created() {
-    //接收sidebar的点击事件
+    //side bar clicked  and default select all
     bus.$on("statueSideBarClick", mark => {
       this.setCheckedKeys(mark);
     });
@@ -146,6 +167,11 @@ export default {
   overflow-x: hidden;
   .el-tree {
     border: none;
+  }
+  .el-tree-node__content{
+    span{
+      user-select: none!important;
+    }
   }
 }
 </style>
