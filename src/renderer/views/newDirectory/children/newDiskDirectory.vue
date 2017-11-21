@@ -246,21 +246,21 @@ export default {
       this.fullscreenLoading = false;
       this.$message({
         type: "error",
-        message:"数据读取失败，请重试。",
+        message: "数据读取失败，请重试。",
         duration: 1000
       });
     });
   },
-  watch:{
-    basicForm:{
-      handler:function(val,oldVal){
-        if(val.dataSource !== "localDisk" ){
-          this.$electron.ipcRenderer.send('resetWinSize',[700,680])
-        }else{
-          this.$electron.ipcRenderer.send('resetWinSize',[700,500])
+  watch: {
+    basicForm: {
+      handler: function(val, oldVal) {
+        if (val.dataSource !== "localDisk") {
+          this.$electron.ipcRenderer.send("resetWinSize", [700, 680]);
+        } else {
+          this.$electron.ipcRenderer.send("resetWinSize", [700, 500]);
         }
       },
-      deep:true
+      deep: true
     }
   },
   methods: {
@@ -312,9 +312,9 @@ export default {
     // 确认添加磁盘目录
     confirmAddDirectory() {
       let _this = this;
-      _this.fullscreenLoading = true;
       this.$refs["basicForm"].validate(valid => {
         if (valid) {
+          _this.fullscreenLoading = true;
           // 提取项目信息
           let formData = this.basicForm;
           let projectInfo = [];
@@ -365,9 +365,15 @@ export default {
                 res => {
                   _this.fullscreenLoading = false;
                   if (res.result === "success") {
-                    _this.$message({ message: "项目添加成功", type: "success",onClose:_=>{
-                      _this.$electron.ipcRenderer.send("addFile",{"API":'close'});
-                    }});
+                    _this.$message({
+                      message: "项目添加成功",
+                      type: "success",
+                      onClose: _ => {
+                        _this.$electron.ipcRenderer.send("addFile", {
+                          API: "close"
+                        });
+                      }
+                    });
                     _this.$electron.ipcRenderer.send("updateFilesList");
                   } else {
                     _this.$message({ message: res.result, type: "warning" });
@@ -377,8 +383,8 @@ export default {
                   _this.fullscreenLoading = false;
                 }
               );
-            }else{
-              _this.$message({ message: "文件名重复，请重试", type: "warning"});
+            } else {
+              _this.$message({ message: "文件名重复，请重试", type: "warning" });
               _this.fullscreenLoading = false;
             }
           });
