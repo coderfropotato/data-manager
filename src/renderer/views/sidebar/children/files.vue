@@ -65,20 +65,22 @@ export default {
           }).then(() => {
             this.$message({
               type: "success",
-              message: "删除成功!"
+              message: "删除成功!",
+              onClose:()=>{
+                //删除成功重新获取设备列表 路由跳转到file主页
+                this.$store.dispatch("getImportTargetDisks").then(_ => {
+                  this.$store.dispatch("getModifiedFiles");
+                });
+                //删除状态
+                this.$store.dispatch("deleteSatatus", {
+                  serialNumber: this.listInfo.serial_number,
+                  path: this.listInfo.path
+                });
+                this.$router.push("/files");
+                //reset file info
+                this.$store.dispatch("resetFileInfo");
+              }
             });
-            //删除成功重新获取设备列表 路由跳转到file主页
-            this.$store.dispatch("getImportTargetDisks").then(_ => {
-              this.$store.dispatch("getModifiedFiles");
-            });
-            //删除状态
-            this.$store.dispatch("deleteSatatus", {
-              serialNumber: this.listInfo.serial_number,
-              path: this.listInfo.path
-            });
-            this.$router.push("/files");
-            //reset file info
-            this.$store.dispatch("resetFileInfo");
           });
         })
         .catch(() => {
