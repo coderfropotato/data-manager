@@ -68,7 +68,10 @@ const actions = {
   },
   //设置面包屑
   setNavBar({commit},item){
-    commit(types.SET_NAV_BAR,item)
+    return new Promise((resolve,reject)=>{
+      commit(types.SET_NAV_BAR,item);
+      resolve('success');
+    })
   },
   //增加面包屑 
   updateNavBar({commit},item){
@@ -76,7 +79,7 @@ const actions = {
   },
   //删除面包屑
   delNavBar({commit},index){
-    commit(types.DELETE_NAV_NAR,index)
+    commit(types.DELETE_NAV_NAR,state.navList.slice(0,index+1))
   },
   //设置序列号
   setSerialNumber({commit},num){
@@ -94,9 +97,15 @@ const actions = {
       });
       let count = valList.length;
       commit(types.SET_SELECTED,{count,size})
-      if(valList.length===0) bus.$emit('no-data');
       commit(types.SET_ATTR_HISTORY,valList);
       resolve('success')
+    })
+  },
+  // reset table click history
+  resetTableClickHistory({commit}){
+    return new Promise((resolve,reject)=>{
+      commit(types.RESER_TABLE_CLICK_HISTORY);
+      resolve('success');
     })
   }
 }
@@ -133,8 +142,8 @@ const mutations = {
     state.navList.push(item);
   },
   //删除面包屑
-  [types.DELETE_NAV_NAR](state,index){
-    state.navList.splice(index+1,1);
+  [types.DELETE_NAV_NAR](state,temp){
+    state.navList = temp;
   },
   //设置序列号
   [types.SET_SERIAL_NUMBER](state,num){
@@ -142,9 +151,12 @@ const mutations = {
   },
   [types.SET_ATTR_HISTORY](state,arr){
     state.tableClickHistory = arr;
-  }
+  },
   //设置详情点击历史 总是查看最后一个点击的详情 取消点击 按选择顺序查看详情
-
+  // reset table click history
+  [types.RESER_TABLE_CLICK_HISTORY](state){
+    state.tableClickHistory = [];
+  }
 }
 
 export default {

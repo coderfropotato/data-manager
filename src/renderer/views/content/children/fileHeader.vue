@@ -9,7 +9,8 @@
     </el-breadcrumb> -->
     <div class="bread-wrap"></div>
     <p>
-      <router-link tag="span" :to="{path:'/filescale'}">文件</router-link>
+      <!-- <router-link tag="span" :to="{path:'/filescale'}">文件</router-link> -->
+      <span @click="jumotoindex">文件</span>
       <span @click="navBarJump(item,index)" v-for="(item,index) in navList" :key="index"><em>&nbsp;<&nbsp;</em>{{item.filename || item.alias}}</span>
     </p>
     </div>
@@ -32,7 +33,7 @@ export default {
   data() {
     return {
       searchValue: "",
-      tag: { name: "current" }
+      tag: { name: "在当前搜索" }
     };
   },
   computed: {
@@ -40,7 +41,7 @@ export default {
   },
   mounted() {
     let x = 0;
-    let oWidth,oInner,scale;
+    let oWidth, oInner, scale;
     $(".bread-wrap")
       .on("mousemove", function(e) {
         oWidth = $(".bread-wrap").outerWidth();
@@ -51,28 +52,36 @@ export default {
         let pos = scale * oInner;
         $(".breadcrumb > p").css({ left: -scale * (oInner - oWidth) });
       })
-      .on('mouseleave',function(){
-        if(oInner > oWidth){
-          $(".breadcrumb > p").css({ left: -x / oWidth * (oInner - oWidth)});
-        }else{
+      .on("mouseleave", function() {
+        if (oInner > oWidth) {
+          $(".breadcrumb > p").css({ left: -x / oWidth * (oInner - oWidth) });
+        } else {
           $(".breadcrumb > p").css({ left: 0 });
         }
-      })
+      });
   },
   activated() {
-    this.tag.name = "current";
+    this.tag.name = "在当前搜索";
   },
   methods: {
     closeTag() {
-      this.tag.name === "current"
-        ? (this.tag.name = "global")
-        : (this.tag.name = "current");
+      this.tag.name === "在当前搜索"
+        ? (this.tag.name = "在全局搜索")
+        : (this.tag.name = "在当前搜索");
     },
     navBarJump(item, index) {
       let path = item.path;
       this.$store.dispatch("getDirTree", { path }).then(res => {
-        this.$store.dispatch("delNavBar", index);
+        this.$store.dispatch("resetTableClickHistory").then(_ => {
+          this.$store.dispatch("delNavBar", index);
+          this.$store.dispatch("getFileInfo");
+          this.$store.dispatch("setSelected", { count: 0, size: 0 });
+        });
       });
+    },
+    jumotoindex() {
+      this.$store.dispatch("resetFileInfo");
+      this.$router.push("/filescale");
     },
     search() {
       // isGlobal searchRange content
@@ -80,7 +89,7 @@ export default {
         this.$message("请输入关键词");
       } else {
         switch (this.tag.name) {
-          case "current":
+          case "在当前搜索":
             //当前搜索
             this.$store
               .dispatch("searchCurrentDisk", this.searchValue)
@@ -88,18 +97,19 @@ export default {
                 let temp = [];
                 this.searchValue = "";
                 temp.push(this.navList[0]);
-                this.$router.push("/search");
+                this.$router.push("/search?type=current");
                 this.$store.dispatch("setSearchRange", temp);
                 this.$store.dispatch("setTotalCount", _.total);
                 this.$store.dispatch("setRouteStatus", "search");
               });
             break;
-          case "global":
+          case "在全局搜索":
             //全局搜索
             let context = this.searchValue;
             let type = "files";
+            this.searchValue = "";
             this.$store.dispatch("searchFile", { context, type }).then(_ => {
-              this.$router.push("/search");
+              this.$router.push("/search?type=global");
               this.$store.dispatch("checkAllSwitch", true);
               this.$store.dispatch("setTotalCount", _.length);
               this.$store.dispatch("setRouteStatus", "search");
@@ -149,16 +159,16 @@ export default {
       z-index: 30;
       left: 0;
       top: 0;
-      line-height:14px;
-      margin-top:22px;
+      line-height: 14px;
+      margin-top: 22px;
       font-size: 14px;
       white-space: nowrap;
       -webkit-user-select: none;
       user-select: none;
       span {
         cursor: pointer;
-        &:hover{
-          color:#386cca;
+        &:hover {
+          color: #386cca;
         }
       }
     }
@@ -167,12 +177,12 @@ export default {
     box-sizing: border-box;
   }
   .search {
-    margin-top:12px;
+    margin-top: 12px;
     padding-bottom: 12px;
     width: 60%;
     position: relative;
     .el-input__inner {
-      padding-left: 76px;
+      padding-left: 100px;
       border: none;
       background: #f5f5f5;
     }

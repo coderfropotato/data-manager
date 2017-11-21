@@ -2,7 +2,7 @@
     <div class="table-wrap">
       <el-table  ref="table" @row-dblclick="dbClick" @selection-change="handleSelectionChange"  @row-click="selectedRow" :height="tableHeight" :data="loadData" stripestyle="width: 100%">
         <el-table-column type="selection"></el-table-column>
-        <el-table-column sortable prop="isdir" label="选择">
+        <el-table-column  prop="isdir" label="选择">
           <template scope="scope">
             <img v-if="!scope.row.isdir" src="../assets/images/single.png"/>
             <img v-else src="../assets/images/dir.png"/>
@@ -28,7 +28,8 @@ export default {
       loadNumber: 30,
       loadCount: 0,
       isLoading: false,
-      over: false
+      over: false,
+      timerList: []
     };
   },
   created() {
@@ -95,17 +96,22 @@ export default {
     // handlerSelectionChange to parent
     handleSelectionChange(val) {
       //fileInfo params from the row if rootPath param in row
-      if (val.length) {
-        if (!val[0].rootPath) {
-          //file list clicked
-          this.$emit("selectchange", val);
-        } else {
-          //search list clicked
-          this.$emit("searchlistclicked", val);
-        }
-      } else {
-        this.$emit("nochecked");
+      for (var i = 0; i < this.timerList.length; i++) {
+        clearTimeout(this.timerList[i]);
       }
+      let timer = null;
+      timer = setTimeout(_ => {
+        if (val.length) {
+          if (!val[0].rootPath) {
+            this.$emit("selectchange", val);
+          } else {
+            this.$emit("searchlistclicked", val);
+          }
+        } else {
+          this.$emit("nochecked");
+        }
+      }, 30);
+      this.timerList.push(timer);
     },
     //select current row
     selectedRow(row, event, column) {
@@ -119,7 +125,7 @@ export default {
       if (row.isdir) {
         //getting the data based on childPath
         let path = row.path;
-        //clicked into dir . it's not nesscnecessary.
+        //clicked into dir . it's not necessary.
         //parent component listens('intodir') for events as needed
         this.$emit("intodir", { path, row });
       }

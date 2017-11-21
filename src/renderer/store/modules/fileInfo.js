@@ -40,16 +40,18 @@ const actions = {
   },
   //设置文件详情
   resetFileInfo({ commit }) {
-    commit(types.RESET_FILE_INFO);
+    return new Promise((resolve,reject)=>{
+      commit(types.RESET_FILE_INFO);
+      resolve('success');
+    })
   },
   //获取文件详情
   getFileInfo({ commit }) {
-    //root 区分是否跟路径
+    let filepath;
     if (!file.state.tableClickHistory.length) {
-      bus.$emit('noInfoData');
-      return;
+      filepath = file.state.navList[file.state.navList.length-1].path;
     } else {
-      var filepath = file.state.tableClickHistory[file.state.tableClickHistory.length - 1].path;
+      filepath = file.state.tableClickHistory[file.state.tableClickHistory.length - 1].path;
     }
     //root path  获取文件详情 childPath = rootPath;
     let serialNumber = file.state.serialNumber;
@@ -92,9 +94,10 @@ const actions = {
       for (let key in updateList[i]) {
         if (!updateList[i].name) {
           updateList.splice(i, 1);
+          bus.$emit('saveAttrEmptyError');
+          return;
           i--;
-        } else {
-          continue;
+          break;
         }
       }
     }
@@ -149,7 +152,7 @@ const actions = {
         resolve('success');
       })
     })
-  },
+  }
 }
 
 const mutations = {
@@ -192,6 +195,9 @@ const mutations = {
   },
   [types.COMMIT_SAVE_FILE_PARAMS](state, params) {
     state.bottomFileInfoParams = params;
+  },
+  [types.SET_FILEINFO_PROPERTY](state,arr){
+    state.fileInfo.property = arr;
   }
 }
 

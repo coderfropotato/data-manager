@@ -7,7 +7,8 @@ const Files = r => require.ensure([], () => r(require('@/views/sidebar/children/
 const FileStatus = r => require.ensure([], () => r(require('@/views/sidebar/children/fileStatus')), 'fileStatus')
 // const FileManager = r => require.ensure([], () => r(require('@/components/fileManager')), 'fileManager')
 const Search = r => require.ensure([], () => r(require('@/views/sidebar/children/search')), 'search')
-const Collection = r => require.ensure([], () => r(require('@/views/sidebar/children/collection')), 'collection')
+const ToolsIndex = r => require.ensure([], () => r(require('@/views/content/children/toolsIndex')), 'ToolsIndex')
+const ToolsDetail = r => require.ensure([], () => r(require('@/views/content/children/toolsDetail')), 'ToolsDetail')
 const Database = r => require.ensure([], () => r(require('@/views/content/children/database')), 'Database')
 // content 的组件
 const FileStatusContent = r => require.ensure([], () => r(require('@/views/content/children/fileStatusContent')), 'fileStatusContent')
@@ -110,10 +111,17 @@ const routes = [
     }
   },
   {
-    path: 'collection',
-    name: 'Collection',
+    path: 'toolsIndex',
+    name: 'ToolsIndex',
     components: {
-      default: Collection
+      ContentHeader: ToolsIndex
+    }
+  },
+  {
+    path: 'toolsDetail',
+    name: 'ToolsDetail',
+    components: {
+      ContentHeader: ToolsDetail
     }
   },
   {

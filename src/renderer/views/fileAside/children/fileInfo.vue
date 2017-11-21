@@ -39,9 +39,10 @@
           <span>详情</span>
         </div>
         <ol class="item-list">
-            <li :class="{'edit':!module}" v-for="(val,index) in fileInfo.property" :key="index">
-              <input ref="attrs" :diasbled="module" type="text" @change="updateMessage($event,index,'key')" :value="val.name"> ：
-              <input @change="updateMessage($event,index,'val')" :value="val.attr" :diasbled="module" type="text">
+          <!-- :class="{'edit':!module}" -->
+            <li class="edit" v-for="(val,index) in fileInfo.property" :key="index">
+              <input ref="attrs" :readonly="module" type="text" maxLength="50"  @change="updateMessage($event,index,'key')" :value="val.name"> ：
+              <input @change="updateMessage($event,index,'val')" maxLength="50"  :value="val.attr" :readonly="module" type="text">
             </li>
         </ol>
         <!-- add attrs -->
@@ -72,10 +73,9 @@ export default {
     };
   },
   created() {
-    bus.$on("no-data", _ => {
-      this.$store.dispatch("resetFileInfo");
-    });
-    // 是否显示上一个下一个
+    bus.$on('saveAttrEmptyError',_=>{
+      this.$message('属性名称不能为空')
+    }),
     bus.$on('topshow',_=>{
       this.topShow = _;
     })

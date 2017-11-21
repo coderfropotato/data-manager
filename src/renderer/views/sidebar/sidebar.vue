@@ -126,7 +126,7 @@ export default {
             })
             break;
           case 4:
-            this.$router.push("/collection");
+            this.$router.push("/toolsIndex");
             this.$store.dispatch("setRouteStatus", "tools");
             break;
           case 5:

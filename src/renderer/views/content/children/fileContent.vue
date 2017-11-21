@@ -33,13 +33,15 @@ export default {
       });
     },
     noChecked() {
-      this.$store.dispatch("setBottomInfo", []);
+      this.$store.dispatch("setBottomInfo", []).then(res => {
+        this.$store.dispatch("getFileInfo");
+      });
     },
     //table's component dbclick into dir event
     intoDir({ path, row }) {
       //get table data
       this.$store.dispatch("getDirTree", { path }).then(res => {
-        //push crumbs
+        this.$store.dispatch("setSelected", { count: 0, size: 0 });
         this.$store.dispatch("updateNavBar", row);
       });
     }

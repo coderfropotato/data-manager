@@ -14,6 +14,7 @@
           <div class="btn-group">
             <span>自动扫描</span>
             <span @click="jumpToStatusInfo">编辑新增文件</span>
+            <span class="success">处理完毕</span>
           </div>
         </li>
         <!-- v-if="treeCat.delete.length" -->
@@ -21,6 +22,7 @@
           <p>其中{{treeCat.delete.length}}个最近删除文件</p>
           <div class="btn-group">
             <span>保留标签信息</span>
+            <span class="success">处理完毕</span>
             <span class="warning">彻底删除</span>
           </div>
         </li>
@@ -29,6 +31,7 @@
           <p>其中{{treeCat.modified.length}}个最近修改文件</p>
           <div class="btn-group">
             <span>重新扫描</span>
+            <span class="success">处理完毕</span>
           </div>
         </li>
         <!--  v-if="treeCat.move.length" -->
@@ -36,16 +39,16 @@
           <p>其中{{treeCat.move.length}}个最近移动文件</p>
           <div class="btn-group">
             <span>继承信息</span>
+            <span class="success">处理完毕</span>
             <span class="warning">不继承信息</span>
           </div>
         </li>
         <!--  v-if="treeCat.label.length" -->
         <li>
           <p>其中{{treeCat.label.length}}个已打标签文件</p>
-          <!-- <div class="btn-group">
-            <span>继承信息</span>
-            <span class="warning">不继承信息</span>
-          </div> -->
+          <div class="btn-group">
+            <span class="success">处理完毕</span>
+          </div>
         </li>
       </ul>
     </div>
@@ -135,11 +138,13 @@ export default {
           margin-top: 12px;
           span {
             display: inline-block;
-            padding: 8px 20px;
-            background: #f5f5f5;
-            font-size: 14px;
-            border-radius: 6px;
+            padding: 4px 6px;
+            background: #ddd;
+            font-size: 12px;
+            border-radius: 0px;
             cursor: pointer;
+            margin-right: 12px;
+            border-radius: 4px;
             opacity: 0.8;
             &:hover {
               opacity: 1;
@@ -148,8 +153,12 @@ export default {
               background: #f74a4a;
               color: #fff;
             }
-            &:first-child {
-              margin-right: 12px;
+            &.success{
+              color: #fff;
+              background-color:#386cca;
+            }
+            &:last-child {
+              margin-right:0;
             }
           }
         }

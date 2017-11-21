@@ -1,9 +1,11 @@
 import Vue from 'vue'
 // import Raven from 'raven-js'
 // import RavenVue from 'raven-js/plugins/vue'
-
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-default/index.css'
+
+import tools from '../../static/tools'
+Vue.prototype.tools = tools;
 
 import App from './App'
 import router from './router'
@@ -11,7 +13,6 @@ import store from './store'
 import Header from './components/header'
 import Bottom from './components/bottom'
 import TableContent from './components/tableContent'
-
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
 // Vue.http = Vue.prototype.$http = axios
 Vue.config.productionTip = false

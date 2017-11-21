@@ -52,13 +52,14 @@ export default {
       this.$store.dispatch("setSerialNumber", item.serial_number).then(res => {
         //设置根路径
         this.$store.dispatch("setRootPath", item.path).then(res => {
-          //重置fileInfo
-          this.$store.dispatch("resetFileInfo");
           //获取数据
           let serialNumber = item.serial_number;
           this.$store.dispatch("getDirTree", { serialNumber }).then(res => {
             //设置面包屑
-            this.$store.dispatch("setNavBar", item);
+            this.$store.dispatch("setNavBar", item).then(_ => {
+              //重置fileInfo
+              this.$store.dispatch("getFileInfo");
+            });
           });
         });
       });
