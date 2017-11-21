@@ -32,6 +32,18 @@ function loop(arr) {
     loop(arr);
     return files;
 }
+const subParams = (type)=>{
+    let dirs = [];
+    for(var i=0;i<file.state.fileList.length;i++){
+        let obj = {};
+        obj.root_path = file.state.fileList[i].path;
+        obj.serial_number = file.state.fileList[i].serial_number;
+        dirs.push(obj);
+    }
+    let all = getters.treeCat(state);
+    let files = all[type];
+    return {files,dirs};
+}
 
 const state = {
     //状态树数据
@@ -103,7 +115,7 @@ const actions = {
                 //按状态分类
                 let list = loop(res);
                 //默认全选的length
-                commit(types.SET_CHECED_DATA, list);
+                commit(types.SET_CHECKED_DATA, list);
                 //修改的总数
                 commit(types.SET_MODIFIED_NUM, list.length)
                 //tree data
@@ -177,38 +189,71 @@ const actions = {
     //接受所有文件
     reciveAll({ commit }) {
         return new Promise((resolve, reject) => {
-            let files=[];
-            state.checkedData.forEach((val,index)=>{
-                let obj = {};
-                obj.serial_number = val.serialNumber;
-                obj.path = val.path;
-                files.push(obj)
-            })
-            fetchData('submitAllFileInfo', {files}).then(res => {
+            let treeCat = getters.treeCat(state);
+            let add_files = treeCat.add;
+            let modify_files = treeCat.modified;
+            let del_files = treeCat.delete;
+            let move_files = treeCat.move;
+            let tag_files = treeCat.label;
+            console.log({add_files,modify_files,del_files,move_files,tag_files});
+            fetchData('submitAllFileInfo', {add_files,modify_files,del_files,move_files,tag_files}).then(res => {
                 let rootMarkArr = [];
                 for (var i = 0; i < res.length; i++) {
                     rootMarkArr.push(res[i].mark);
                 }
                 bus.$emit('statueSideBarClick', rootMarkArr);
                 let list = loop(res);
-                commit(types.SET_CHECED_DATA, list);
+                commit(types.SET_CHECKED_DATA, list);
                 commit(types.SET_MODIFIED_NUM, list.length)
                 commit(types.GET_TREE_DATA, res);
                 resolve('success');
             })
         })
     },
-    //保留标签信息
-    saveTagAttrs({ commit }) {
+    
+    /**
+     * 最近新增
+     * 
+     * @param {any} {commit} 
+     * @returns 
+     */
+    submitAddFileInfo({commit}){
         return new Promise((resolve, reject) => {
-            fetchData('apiname', params).then(res => {
+            let params = subParams('add');
+            console.log(params)
+            fetchData('submitAddFileInfo', params).then(res => {
                 let rootMarkArr = [];
                 for (var i = 0; i < res.length; i++) {
                     rootMarkArr.push(res[i].mark);
                 }
                 bus.$emit('statueSideBarClick', rootMarkArr);
                 let list = loop(res);
-                commit(types.SET_CHECED_DATA, list);
+                commit(types.SET_CHECKED_DATA, list);
+                commit(types.SET_MODIFIED_NUM, list.length)
+                commit(types.GET_TREE_DATA, res);
+                resolve('success');
+            })
+        })
+    },
+    
+    /**
+     * 最近删除 (差处理完毕)
+     * 
+     * @param {any} { commit } 
+     * @returns 
+     */
+    //保留标签信息
+    saveDelFileAttr({ commit }) {
+        return new Promise((resolve, reject) => {
+            let params = subParams('delete')
+            fetchData('saveDelFileAttr', params).then(res => {
+                let rootMarkArr = [];
+                for (var i = 0; i < res.length; i++) {
+                    rootMarkArr.push(res[i].mark);
+                }
+                bus.$emit('statueSideBarClick', rootMarkArr);
+                let list = loop(res);
+                commit(types.SET_CHECKED_DATA, list);
                 commit(types.SET_MODIFIED_NUM, list.length)
                 commit(types.GET_TREE_DATA, res);
                 resolve('success');
@@ -216,33 +261,65 @@ const actions = {
         })
     },
     //彻底删除
-    delete({ commit }) {
+    delDelFileAttr({ commit }) {
         return new Promise((resolve, reject) => {
-            fetchData('apiname', params).then(res => {
+            let params = subParams('delete')
+            fetchData('delDelFileAttr', params).then(res => {
                 let rootMarkArr = [];
                 for (var i = 0; i < res.length; i++) {
                     rootMarkArr.push(res[i].mark);
                 }
                 bus.$emit('statueSideBarClick', rootMarkArr);
                 let list = loop(res);
-                commit(types.SET_CHECED_DATA, list);
+                commit(types.SET_CHECKED_DATA, list);
                 commit(types.SET_MODIFIED_NUM, list.length)
                 commit(types.GET_TREE_DATA, res);
                 resolve('success');
             })
         })
     },
-    //继承信息
-    inheritInfo({ commit }) {
+    
+    /**
+     * 最近修改
+     * 
+     * @param {any} { commit } 
+     * @returns 
+     */
+    submitModifyFileInfo({ commit }) {
         return new Promise((resolve, reject) => {
-            fetchData('apiname', params).then(res => {
+            let params = subParams('modified')
+            fetchData('delDelFileAttr', params).then(res => {
                 let rootMarkArr = [];
                 for (var i = 0; i < res.length; i++) {
                     rootMarkArr.push(res[i].mark);
                 }
                 bus.$emit('statueSideBarClick', rootMarkArr);
                 let list = loop(res);
-                commit(types.SET_CHECED_DATA, list);
+                commit(types.SET_CHECKED_DATA, list);
+                commit(types.SET_MODIFIED_NUM, list.length)
+                commit(types.GET_TREE_DATA, res);
+                resolve('success');
+            })
+        })
+    },
+    /**
+     * 最近移动 (差处理完毕)
+     * 
+     * @param {any} { commit } 
+     * @returns 
+     */
+    //继承移动信息
+    saveMoveFileAttr({ commit }) {
+        return new Promise((resolve, reject) => {
+            let params = subParams('move')
+            fetchData('saveMoveFileAttr', params).then(res => {
+                let rootMarkArr = [];
+                for (var i = 0; i < res.length; i++) {
+                    rootMarkArr.push(res[i].mark);
+                }
+                bus.$emit('statueSideBarClick', rootMarkArr);
+                let list = loop(res);
+                commit(types.SET_CHECKED_DATA, list);
                 commit(types.SET_MODIFIED_NUM, list.length)
                 commit(types.GET_TREE_DATA, res);
                 resolve('success');
@@ -252,20 +329,48 @@ const actions = {
     //不继承信息
     noInheritInfo({ commit }) {
         return new Promise((resolve, reject) => {
-            fetchData('apiname', params).then(res => {
+            let params = subParams('move')
+            fetchData('delMoveFileAttr', params).then(res => {
                 let rootMarkArr = [];
                 for (var i = 0; i < res.length; i++) {
                     rootMarkArr.push(res[i].mark);
                 }
                 bus.$emit('statueSideBarClick', rootMarkArr);
                 let list = loop(res);
-                commit(types.SET_CHECED_DATA, list);
+                commit(types.SET_CHECKED_DATA, list);
                 commit(types.SET_MODIFIED_NUM, list.length)
                 commit(types.GET_TREE_DATA, res);
                 resolve('success');
             })
         })
-    }
+    },
+    //处理完毕
+
+
+    /**
+     * 已打标签
+     * 
+     * @param {any} { commit } 
+     * @returns 
+     */
+    submitTaggedFileInfo({ commit }) {
+        return new Promise((resolve, reject) => {
+            let params = subParams('label')
+            fetchData('submitTaggedFileInfo', params).then(res => {
+                let rootMarkArr = [];
+                for (var i = 0; i < res.length; i++) {
+                    rootMarkArr.push(res[i].mark);
+                }
+                bus.$emit('statueSideBarClick', rootMarkArr);
+                let list = loop(res);
+                commit(types.SET_CHECKED_DATA, list);
+                commit(types.SET_MODIFIED_NUM, list.length)
+                commit(types.GET_TREE_DATA, res);
+                resolve('success');
+            })
+        })
+    },
+    
 }
 
 const mutations = {
@@ -274,9 +379,6 @@ const mutations = {
     },
     [types.SET_CHECKED_DATA](state, arr) {
         state.checkedData = arr;
-    },
-    [types.SET_CHECED_DATA](state, data) {
-        state.checkedData = data;
     },
     [types.SET_MODIFIED_NUM](state, len) {
         state.modifiedNumber = len;

@@ -8,46 +8,41 @@
     <div class="advance">
       <p class="title">高级选项</p>
       <ul>
-        <!-- v-if="treeCat.add.length" -->
-        <li >
+        <li v-if="treeCat.add.length">
           <p>其中{{treeCat.add.length}}个最近新增文件</p>
           <div class="btn-group">
-            <span>自动扫描</span>
+            <!-- <span>自动扫描</span> -->
             <span @click="jumpToStatusInfo">编辑新增文件</span>
-            <span class="success">处理完毕</span>
+            <span @click="submitAddFileInfo" class="success">处理完毕</span>
           </div>
         </li>
-        <!-- v-if="treeCat.delete.length" -->
-        <li >
+        <li  v-if="treeCat.delete.length">
           <p>其中{{treeCat.delete.length}}个最近删除文件</p>
           <div class="btn-group">
-            <span>保留标签信息</span>
+            <span @click="saveDelFileAttr">保留标签信息</span>
             <span class="success">处理完毕</span>
-            <span class="warning">彻底删除</span>
+            <span @click="delDelFileAttr" class="warning">彻底删除</span>
           </div>
         </li>
-        <!--  v-if="treeCat.modified.length" -->
-        <li>
+        <li v-if="treeCat.modified.length">
           <p>其中{{treeCat.modified.length}}个最近修改文件</p>
           <div class="btn-group">
-            <span>重新扫描</span>
-            <span class="success">处理完毕</span>
+            <!-- <span>重新扫描</span> -->
+            <span @click="submitModifyFileInfo" class="success">处理完毕</span>
           </div>
         </li>
-        <!--  v-if="treeCat.move.length" -->
-        <li>
+        <li v-if="treeCat.move.length">
           <p>其中{{treeCat.move.length}}个最近移动文件</p>
           <div class="btn-group">
-            <span>继承信息</span>
+            <span @click="saveMoveFileAttr">继承信息</span>
             <span class="success">处理完毕</span>
-            <span class="warning">不继承信息</span>
+            <span @click="noInheritInfo" class="warning">不继承信息</span>
           </div>
         </li>
-        <!--  v-if="treeCat.label.length" -->
-        <li>
+        <li v-if="treeCat.label.length">
           <p>其中{{treeCat.label.length}}个已打标签文件</p>
           <div class="btn-group">
-            <span class="success">处理完毕</span>
+            <span @click="submitTaggedFileInfo" class="success">处理完毕</span>
           </div>
         </li>
       </ul>
@@ -92,8 +87,29 @@ export default {
         this.$message("请先选择需要编辑的新增文件");
       }
     },
-    reciveAll() {
-      this.$store.dispatch("reciveAll");
+    reciveAll(){
+      this.$store.dispatch('reciveAll')
+    },
+    submitAddFileInfo(){
+      this.$store.dispatch('submitAddFileInfo');
+    },
+    saveDelFileAttr(){
+      this.$store.dispatch('saveDelFileAttr')
+    },
+    delDelFileAttr(){
+      this.$store.dispatch('delDelFileAttr')
+    },
+    submitModifyFileInfo(){
+      this.$store.dispatch('submitModifyFileInfo')
+    },
+    saveMoveFileAttr(){
+      this.$store.dispatch('saveMoveFileAttr')
+    },
+    noInheritInfo(){
+      this.$store.dispatch('noInheritInfo')
+    },
+    submitTaggedFileInfo(){
+      this.$store.dispatch('submitTaggedFileInfo')
     }
   }
 };
