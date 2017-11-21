@@ -43,7 +43,7 @@
             </el-badge>
           </li>
           <li :class="{'active':globalNavIndex===4}" @click="jump(4)">
-            <i class="iconfont icon-wenjian"></i>
+            <i class="iconfont icon-gongju"></i>
             <span>小工具</span>
           </li>
           <li :class="{'active':globalNavIndex===5}" @click="jump(5)">
