@@ -100,7 +100,7 @@ const actions = {
         params.dirs = [];
         for (var i = 0; i < file.state.fileList.length; i++) {
             let obj = {};
-            obj.serialNumber = file.state.fileList[i].serial_number;
+            obj.serial_number = file.state.fileList[i].serial_number;
             obj.root_path = file.state.fileList[i].path;
             params.dirs.push(obj);
         }
