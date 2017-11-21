@@ -45,7 +45,7 @@ const actions = {
         fetchData('searchCurrentDisk',{context,serialNumber,rootPath,childPath}).then(res=>{
             let data={},list=[];
             commit(types.GET_SEARCH_TABLE_DATA,res);
-            resolve(list);
+            resolve(res);
         })
       })
     },
@@ -80,6 +80,7 @@ const actions = {
             }else{
                 //console.log('searchFile'+JSON.stringify({context,searchRange,isglobal}))
                 fetchData('searchFile',{context,searchRange,isglobal}).then(res=>{
+                    console.log(res);
                     commit(types.GET_SEARCH_TABLE_DATA,res.fileList);
                     resolve(res.fileList);
                 });

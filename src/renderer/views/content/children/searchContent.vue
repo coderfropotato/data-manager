@@ -32,7 +32,6 @@ export default {
       });
     },
     noCheck() {
-      console.log(1)
       this.$store.dispatch("setBottomInfo", []).then(res => {
         this.$store.dispatch("resetFileInfo");
       });

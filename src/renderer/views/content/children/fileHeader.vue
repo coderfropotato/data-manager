@@ -99,7 +99,7 @@ export default {
                 temp.push(this.navList[0]);
                 this.$router.push("/search?type=current");
                 this.$store.dispatch("setSearchRange", temp);
-                this.$store.dispatch("setTotalCount", _.total);
+                this.$store.dispatch("setTotalCount", _.length);
                 this.$store.dispatch("setRouteStatus", "search");
               });
             break;
