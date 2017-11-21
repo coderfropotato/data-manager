@@ -195,7 +195,7 @@ const actions = {
             let del_files = treeCat.delete;
             let move_files = treeCat.move;
             let tag_files = treeCat.label;
-            console.log({add_files,modify_files,del_files,move_files,tag_files});
+            // console.log({add_files,modify_files,del_files,move_files,tag_files});
             fetchData('submitAllFileInfo', {add_files,modify_files,del_files,move_files,tag_files}).then(res => {
                 let rootMarkArr = [];
                 for (var i = 0; i < res.length; i++) {
@@ -220,7 +220,7 @@ const actions = {
     submitAddFileInfo({commit}){
         return new Promise((resolve, reject) => {
             let params = subParams('add');
-            console.log(params)
+            // console.log(params)
             fetchData('submitAddFileInfo', params).then(res => {
                 let rootMarkArr = [];
                 for (var i = 0; i < res.length; i++) {

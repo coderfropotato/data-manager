@@ -32,7 +32,10 @@ export default {
       });
     },
     noCheck() {
-      this.$store.dispatch("setBottomInfo", []);
+      console.log(1)
+      this.$store.dispatch("setBottomInfo", []).then(res => {
+        this.$store.dispatch("resetFileInfo");
+      });
     }
   },
   activated() {

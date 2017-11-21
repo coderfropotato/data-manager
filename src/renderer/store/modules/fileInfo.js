@@ -62,11 +62,6 @@ const actions = {
   },
   //获取搜索列表的单个文件的文件详情
   getSearchFileInfo({ commit }) {
-    //root 区分是否跟路径
-    if (!file.state.tableClickHistory.length) {
-      bus.$emit('noInfoData');
-      return;
-    } else {
       let filepath = file.state.tableClickHistory[file.state.tableClickHistory.length - 1].path;
       let serialNumber = file.state.tableClickHistory[file.state.tableClickHistory.length - 1].serialNumber;
       let rootPath = file.state.tableClickHistory[file.state.tableClickHistory.length - 1].rootPath;
@@ -74,7 +69,6 @@ const actions = {
       fetchData('getFileInfo', { serialNumber, rootPath, filepath }).then(res => {
         commit(types.GET_FILE_INFO, res);
       })
-    }
   },
   //手动设置fileinfo
   setFileInfo({ commit }, info) {
