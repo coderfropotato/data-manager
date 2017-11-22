@@ -201,6 +201,14 @@ export default {
               Next.addEventListener('click',function(){history.forward()},false);
               document.body.appendChild(Pre);
               document.body.appendChild(Next);
+              $.ajax({
+                url: "/j_spring_security_check",
+                type: "POST",
+                data: {
+                  username: "h5",
+                  password: "222"
+                }
+              })
             `
           )
         });
