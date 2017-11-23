@@ -14,7 +14,7 @@
                     <el-form :inline="true" label-width="72px">
                       <!-- 项目名称 -->
                       <el-form-item label="项目名称" >
-                        <el-input maxlength="50" v-model="formData.projectName" size="small" type="text"></el-input>
+                        <el-input type="text" :maxlength="50" v-model="formData.projectName" size="small"></el-input>
                       </el-form-item>
                       <!-- 选择文件 -->
                       <el-form-item label="选择文件" >
@@ -31,7 +31,7 @@
                     <el-form  label-width="116px">
                       <!-- 选择作图列 -->
                       <el-form-item label="选择用于作图的列">
-                        <el-input maxlength="50" size="small" type="text" v-model.trim="formData.columns" placeholder="如2,3,6,9"></el-input>
+                        <el-input type="text" :maxlength="50" size="small"  v-model.trim="formData.columns" placeholder="如2,3,6,9"></el-input>
                       </el-form-item>
                     </el-form>
                       <p style="margin:12px 0;">选择用于作图的行：（a.可以输入数字代表前多少行用于作图.b.输入一个基因名列表文件，用文件里的基因名对应行作图）</p>
@@ -41,7 +41,7 @@
                             <el-form  label-width="110px">
                               <!-- 作图使用前多少行 -->
                               <el-form-item label="作图使用前(行)">
-                                <el-input maxlength="50" size="small" v-model.trim="formData.drawRows" placeholder="默认选择所有行进行聚类分析"></el-input>
+                                <el-input :maxlength="50" size="small" v-model.trim="formData.drawRows" placeholder="默认选择所有行进行聚类分析"></el-input>
                               </el-form-item>
                           </el-form>
                         </el-tab-pane>
@@ -113,10 +113,10 @@
                     </el-form>
                     <el-form :inline="true">
                       <el-form-item label="字体大小">
-                        <el-input maxlength="50" size="small" type="number" v-model="drawOptions.fontSize" placeholder="请输入字体大小"></el-input>
+                        <el-input :maxlength="50" size="small" type="number"  v-model="drawOptions.fontSize" placeholder="请输入字体大小"></el-input>
                       </el-form-item>
                       <el-form-item label="格子的长度*高度">
-                        <el-input maxlength="50" size="small" type="text" v-model="drawOptions.cubeSize" placeholder="如20*12"></el-input>
+                        <el-input :maxlength="50" size="small" type="text" v-model="drawOptions.cubeSize" placeholder="如20*12"></el-input>
                       </el-form-item>
                       <el-form-item label="画出格子的边界">
                         <el-select size="small" v-model="drawOptions.drawBorder">

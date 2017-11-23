@@ -9,7 +9,7 @@
           label-position="left"
           label-width="80px">
         <el-form-item label="别名" prop="alias"> 
-          <el-input maxlength="50" v-model.trim="basicForm.alias" size="small"></el-input>
+          <el-input :maxlength="50" v-model.trim="basicForm.alias" size="small"></el-input>
         </el-form-item>
         <el-form-item label="数据源" required>
           <el-select v-model="basicForm.dataSource" size="small" clearable>

@@ -120,12 +120,12 @@ export default {
       this.checkUrl(type, anchorClick);
       if (type === "all") {
         if (!this.searchVal.length || this.searchVal.length > 50) {
-          this.$message("写点东西，小伙子");
+          this.$message("请输入搜索关键字");
           return;
         }
       } else if (type === "reg") {
         if (this.regOne === "" || this.regTwo === "") {
-          this.$message("填点东西，小伙子");
+          this.$message("请输入搜索关键字");
           return;
         }
       }
@@ -162,7 +162,6 @@ export default {
           );
         });
         content.on("dom-ready", () => {
-          //TODO add historyRecord
           content.executeJavaScript(
             `
               var Pre = document.createElement('div');
@@ -223,7 +222,7 @@ export default {
           _this.isShow = false;
         });
       } else {
-        _this.$message("老铁，把新打开的窗口关了，再来一试，ok？");
+        _this.$message("有未关闭的新窗口，请先关闭，再试一次");
       }
     },
     checkUrl(type) {
