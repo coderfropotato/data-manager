@@ -1,10 +1,8 @@
-import config from '../static/configs';
 import drawFunc from '../static/func';
 
 function Tools (){
     this.type = '';
     this.wrap = '';
-    this.config = config;
     this.drawFunc = drawFunc;
 }
 Tools.prototype.config = function(options){
@@ -16,10 +14,6 @@ Tools.prototype.setType = function(type){
 }
 Tools.prototype.setWrap = function(wrap){
     this.wrap = typeof wrap==='string'?document.querySelector(wrap):wrap;
-}
-Tools.prototype.getBaseConfig = function(){
-    let config = this.config;
-    return {config};
 }
 Tools.prototype.getOptions = function(){
     let type = this.type;
