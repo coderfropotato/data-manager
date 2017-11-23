@@ -10,7 +10,7 @@
       <!-- status layout end -->
       <div class="title">
         <p>文件详情</p>
-        <span v-show="!module" @click="module=true">保存</span>
+        <span v-show="!module" @click="module=true">完成</span>
         <span v-show="module" @click="module=false">编辑</span>
       </div>
       <div class="des">
