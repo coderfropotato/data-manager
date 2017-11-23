@@ -37,7 +37,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["navList","searchTableData"])
+    ...mapGetters(["navList", "searchTableData", "history"])
   },
   mounted() {
     let x = 0;
@@ -83,7 +83,7 @@ export default {
       this.$store.dispatch("resetFileInfo");
       this.$router.push("/filescale");
       //文件历史记录
-      this.$store.dispatch('setGlobalHistory',false);
+      this.$store.dispatch("setGlobalHistory", false);
     },
     search() {
       // isGlobal searchRange content
@@ -101,7 +101,13 @@ export default {
                 temp.push(this.navList[0]);
                 this.$router.push("/search?type=current");
                 this.$store.dispatch("setSearchRange", temp);
-                this.$store.dispatch("setTotalCount", _.length);
+                //设置bottom info
+                this.$store.dispatch(
+                  "setTotalCount",
+                  this.searchTableData.length
+                );
+                this.$store.dispatch("setSelected", { count: 0, size: 0 });
+                
                 this.$store.dispatch("setRouteStatus", "search");
               });
             break;
@@ -113,7 +119,12 @@ export default {
             this.$store.dispatch("searchFile", { context, type }).then(_ => {
               this.$router.push("/search?type=global");
               this.$store.dispatch("checkAllSwitch", true);
-              this.$store.dispatch("setTotalCount", _.length);
+              //设置bottom info
+              this.$store.dispatch(
+                "setTotalCount",
+                this.searchTableData.length
+              );
+              this.$store.dispatch("setSelected", { count: 0, size: 0 });
               this.$store.dispatch("setRouteStatus", "search");
             });
             break;
@@ -121,9 +132,6 @@ export default {
         this.$store.dispatch("setGlobalNavIndex", 2);
         this.$store.dispatch("resetFileInfo");
         this.$store.dispatch("setSearchValue", this.searchValue);
-        //设置bottom info
-        this.$store.dispatch('setTotalCount',this.searchTableData.length);
-        this.$store.dispatch('setSelected',{count:0,size:0});
       }
     }
   }
