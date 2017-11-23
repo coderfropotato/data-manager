@@ -35,7 +35,7 @@ export default {
   methods: {
     toolDetail(type) {
       this.$store.dispatch("setToolType", type).then(_ => {
-        this.$router.push("./toolsDetail");
+        this.$router.push(`./toolsDetail?type=${type}`);
       });
     }
   },

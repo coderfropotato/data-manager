@@ -5,7 +5,7 @@ function Tools (){
     this.type = '';
     this.wrap = '';
     this.config = config;
-    this.draw = drawFunc;
+    this.drawFunc = drawFunc;
 }
 Tools.prototype.config = function(options){
     this.type = options.type || '';
@@ -29,8 +29,8 @@ Tools.prototype.getOptions = function(){
 Tools.prototype.getCurrentType = function(){
     return this.type;
 }
-Tools.prototype.draw = function(newConfig){
-    this.draw[type](newConfig);
+Tools.prototype.draw = function(data,newConfig){
+    this.drawFunc[this.type](data,newConfig,this.wrap);
 }
 
 export default new Tools();

@@ -109,7 +109,15 @@ ipcMain.on('open-file-dialog', function (event, type, target) {
     }
   })
 })
-
+// 选择文件
+ipcMain.on('selectFile',(e,ename)=>{  dialog.showOpenDialog({
+    properties:['openFile']
+  }, function (path) {
+    if (path) {
+      e.sender.send(ename, path)
+    }
+  })
+})
 app.on('ready', createWindow)
 
 //关闭app

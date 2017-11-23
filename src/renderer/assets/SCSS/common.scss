@@ -113,7 +113,17 @@ body{
     // color: #000;
   }
 }
-
+.el-button span{
+  font-size: 12px;
+}
+.el-tabs__item{
+  font-size: 13px;
+}
+#toolsDetail{
+  .el-form-item{
+    margin-bottom: 12px;
+  }
+}
 // 设置添加分类的弹出窗中的选框向右浮动，fileInfo.vue
 .popover-category-tree{
   .el-checkbox{
@@ -180,6 +190,12 @@ body{
 .el-table .cell{
   white-space: nowrap;
 }
+.el-form-item__label{
+  font-size: 13px;
+}
+.el-color-picker__trigger{
+  margin-left: 12px;
+}
 .tag-group {
   left: 4px;
   top: 3px;
@@ -208,5 +224,23 @@ body{
   height: 4px;
 }
 
+#svg_cyjjfx_clusterpic{
+  .heatmaplink {
+    fill: none;
+    stroke: #333;
+    stroke-width: 1px;
+  }
+  .heatmap_rect:hover {
+      opacity: 0.5;
+      stroke: #FFF;
+      stroke-width: 2px;
+  }
+  .heatmapaxis text{
+      font-size: 12px;
+  }
+  .heatmapaxis line, .heatmapaxis path{
+      stroke: #ccc
+  }
+}
 
 
