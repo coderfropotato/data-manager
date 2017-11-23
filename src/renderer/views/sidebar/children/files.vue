@@ -108,6 +108,9 @@ export default {
           });
         });
       });
+      this.$store.dispatch('resetTableClickHistory');
+      // 文件有历史记录
+      this.$store.dispatch('setGlobalHistory',true);
     }
   }
 };

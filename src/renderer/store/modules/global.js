@@ -6,11 +6,14 @@ const state = {
     // file search status database
     globalRouteStatus:'file',
     //global nav index
-    globalNavIndex:1
+    globalNavIndex:1,
+    // view history
+    history:false
 }
 const getters = {
     globalRouteStatus:state=>state.globalRouteStatus,
-    globalNavIndex:state=>state.globalNavIndex
+    globalNavIndex:state=>state.globalNavIndex,
+    history:state=>state.history
 }
 
 const actions = {
@@ -22,6 +25,9 @@ const actions = {
         commit(types.SET_GLOBAL_NAV_INDEX,index);
         resolve('success');
     })
+  },
+  setGlobalHistory({commit},boolean){
+      commit(types.SET_GLOBAL_HISTORY,boolean);
   }
 }
 
@@ -31,6 +37,9 @@ const mutations = {
     },
     [types.SET_GLOBAL_NAV_INDEX](state,index){
         state.globalNavIndex = index;
+    },
+    [types.SET_GLOBAL_HISTORY](state,boolean){
+        state.history = boolean;
     }
 }
 

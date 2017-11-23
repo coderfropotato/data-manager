@@ -37,7 +37,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["navList"])
+    ...mapGetters(["navList","searchTableData"])
   },
   mounted() {
     let x = 0;
@@ -82,6 +82,8 @@ export default {
     jumotoindex() {
       this.$store.dispatch("resetFileInfo");
       this.$router.push("/filescale");
+      //文件历史记录
+      this.$store.dispatch('setGlobalHistory',false);
     },
     search() {
       // isGlobal searchRange content
@@ -119,6 +121,9 @@ export default {
         this.$store.dispatch("setGlobalNavIndex", 2);
         this.$store.dispatch("resetFileInfo");
         this.$store.dispatch("setSearchValue", this.searchValue);
+        //设置bottom info
+        this.$store.dispatch('setTotalCount',this.searchTableData.length);
+        this.$store.dispatch('setSelected',{count:0,size:0});
       }
     }
   }

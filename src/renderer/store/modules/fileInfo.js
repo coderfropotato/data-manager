@@ -62,9 +62,9 @@ const actions = {
   },
   //获取搜索列表的单个文件的文件详情
   getSearchFileInfo({ commit }) {
-      let filepath = file.state.tableClickHistory[file.state.tableClickHistory.length - 1].path;
-      let serialNumber = file.state.tableClickHistory[file.state.tableClickHistory.length - 1].serialNumber;
-      let rootPath = file.state.tableClickHistory[file.state.tableClickHistory.length - 1].rootPath;
+      let filepath = file.state.searchTableClickHistory[file.state.searchTableClickHistory.length - 1].path;
+      let serialNumber = file.state.searchTableClickHistory[file.state.searchTableClickHistory.length - 1].serialNumber;
+      let rootPath = file.state.searchTableClickHistory[file.state.searchTableClickHistory.length - 1].rootPath;
       //console.log({serialNumber,rootPath,filepath});
       fetchData('getFileInfo', { serialNumber, rootPath, filepath }).then(res => {
         commit(types.GET_FILE_INFO, res);
@@ -111,9 +111,9 @@ const actions = {
       var param = { serialNumber, rootPath, filePath, updateList }
     } else if (global.state.globalRouteStatus === 'search') {
       //搜索列表保存详情
-      let serialNumber = file.state.tableClickHistory[file.state.tableClickHistory.length - 1].serialNumber;
-      let rootPath = file.state.tableClickHistory[file.state.tableClickHistory.length - 1].rootPath;
-      let filePath = file.state.tableClickHistory[file.state.tableClickHistory.length - 1].path;
+      let serialNumber = file.state.searchTableClickHistory[file.state.searchTableClickHistory.length - 1].serialNumber;
+      let rootPath = file.state.searchTableClickHistory[file.state.searchTableClickHistory.length - 1].rootPath;
+      let filePath = file.state.searchTableClickHistory[file.state.searchTableClickHistory.length - 1].path;
       var param = { serialNumber, rootPath, filePath, updateList }
     } else if (global.state.globalRouteStatus === 'status') {
       //文件状态保存详情

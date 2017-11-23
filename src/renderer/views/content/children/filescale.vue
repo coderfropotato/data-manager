@@ -63,6 +63,9 @@ export default {
           });
         });
       });
+      // 文件历史纪录
+      this.$store.dispatch('setGlobalHistory',true);
+      this.$store.dispatch('resetTableClickHistory');
     },
     addDevice() {
       this.$electron.ipcRenderer.send("addFile", {

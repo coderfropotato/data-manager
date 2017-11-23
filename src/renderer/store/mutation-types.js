@@ -29,6 +29,7 @@ export const SET_NAV_BAR = 'setNavText';
 export const SET_ROOT_PATH = 'setRootPath';
 //删除面包屑
 export const DELETE_NAV_NAR = 'deleteNavBar';
+export const SET_SEARCH_TABLE_CLICK = 'setSearchTableClick';
 
 
 //search
@@ -50,6 +51,7 @@ export const SET_CUR_INDEX = 'setCurIndex';
 export const SET_CUR_DATA = 'setCurData';
 export const REDUCE_CUR_INDEX = 'reduceCurIndex';
 export const ADD_CUR_INDEX = 'addCurIndex';
+
 
 //bottom
 export const SET_TOTAL_COUTN = 'setTotalCount';
@@ -78,4 +80,4 @@ export const SET_TOOL_TYPE = "setToolType";
 export const SET_ROUTE_STATUS = 'setRouteStatus';
 export const SET_GLOBAL_TYPE = 'setGlobalTypes';
 export const SET_GLOBAL_NAV_INDEX = 'setGlobalNavIndex';
-
+export const SET_GLOBAL_HISTORY ='setGlobalHistory';

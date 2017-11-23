@@ -5,6 +5,7 @@
 import fetchData from '@/api';
 import * as types from '@/store/mutation-types';
 import bus from '@/utils/bus';
+import global from '@/store/modules/global';
 const state = {
   // 记录当前的文件列表（列表展示）
   fileList: [],
@@ -18,6 +19,7 @@ const state = {
   serialNumber:"",
   //表格选中的历史项，总是显示最后一个的详情
   tableClickHistory :[],
+  searchTableClickHistory:[],
   //文件路径
   filePath:""
 }
@@ -26,7 +28,8 @@ const getters = {
   fileList: state => state.fileList,
   fileTableData:state=>state.fileTableData,
   navList:state=>state.navList,
-  tableClickHistory:state=>state.tableClickHistory
+  tableClickHistory:state=>state.tableClickHistory,
+  searchTableClickHistory:state=>state.searchTableClickHistory
 }
 
 const actions = {
@@ -96,8 +99,14 @@ const actions = {
         size+=val.size;
       });
       let count = valList.length;
+      if(global.state.globalRouteStatus ==='file'){
+        //file
+        commit(types.SET_ATTR_HISTORY,valList);
+      }else{
+        // search
+        commit(types.SET_SEARCH_TABLE_CLICK,valList)
+      }
       commit(types.SET_SELECTED,{count,size})
-      commit(types.SET_ATTR_HISTORY,valList);
       resolve('success')
     })
   },
@@ -151,6 +160,9 @@ const mutations = {
   },
   [types.SET_ATTR_HISTORY](state,arr){
     state.tableClickHistory = arr;
+  },
+  [types.SET_SEARCH_TABLE_CLICK](state,arr){
+    state.searchTableClickHistory = arr;
   },
   //设置详情点击历史 总是查看最后一个点击的详情 取消点击 按选择顺序查看详情
   // reset table click history

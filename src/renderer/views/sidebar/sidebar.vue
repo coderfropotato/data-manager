@@ -78,7 +78,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["modifiedNumber", "globalNavIndex"])
+    ...mapGetters(["modifiedNumber", "globalNavIndex","history","tableClickHistory","fileTableData"])
   },
   mounted() {
     $(".nav-menu ul li")
@@ -100,8 +100,17 @@ export default {
       this.$store.dispatch("setGlobalNavIndex", index).then(_ => {
         switch (this.globalNavIndex) {
           case 1:
-            this.$router.push("/files");
-            this.$store.dispatch("resetFileInfo");
+            if(this.history){
+              this.$router.push("/searchfiles");
+              // 获取file info 或者文件夹fileinfo 设置底部信息
+              this.$store.dispatch('setBottomInfo',this.tableClickHistory).then(_=>{
+                this.$store.dispatch('getFileInfo');
+                this.$store.dispatch('setTotalCount',this.fileTableData.length)
+              })
+            }else{
+              this.$router.push("/files");
+              this.$store.dispatch("resetFileInfo");
+            }
             this.$store.dispatch("setRouteStatus", "file");
             //重新获取设备列表
             //this.$store.dispatch("getImportTargetDisks");
