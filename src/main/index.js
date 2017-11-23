@@ -20,7 +20,7 @@ function createWindow() {
     width: 1200,
     minHeight: 860,
     minWidth: 1200,
-    frame: false,
+    // frame: false,
     skipTaskbar: false,
     useContentSize: true,
     titleBarStyle: 'customButtonsOnHover',
@@ -169,6 +169,8 @@ const path = require('path')
 const PY_DIST_FOLDER = 'dist'
 const PY_FOLDER = 'backend'
 const PY_MODULE = 'backend' // without .py suffix
+const WIN_SOURCE_PATH = 'resources';
+const WIN_APP_PATH = 'app';
 const PY_PORT = 4242
 
 let pyProc = null
@@ -184,7 +186,7 @@ const getScriptPath = () => {
     return path.join(__dirname, PY_FOLDER, PY_MODULE + '.py')
   }
   if (process.platform === 'win32') {
-    return path.join(__dirname, PY_DIST_FOLDER, PY_MODULE, PY_MODULE + '.exe')
+    return path.join(__dirname,WIN_SOURCE_PATH, WIN_APP_PATH, PY_DIST_FOLDER, PY_MODULE, PY_MODULE + '.exe')
   }
   return path.join(__dirname, PY_DIST_FOLDER, PY_MODULE, PY_MODULE)
 }
