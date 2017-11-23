@@ -4,7 +4,7 @@ import Vue from 'vue'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-default/index.css'
 
-import tools from '../../static/tools'
+import tools from '@/assets/JS/tools'
 Vue.prototype.tools = tools;
 
 import App from './App'
