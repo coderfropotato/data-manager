@@ -193,12 +193,18 @@ export default {
               Next.style.fontSize="30px";
               Pre.style.color="#fff";
               Next.style.color="#fff";
+              Pre.style.opacity=0.5;
+              Next.style.opacity=0.5;
               Pre.style.cursor="pointer";
               Next.style.cursor="pointer";
               Pre.style.zIndex="1000000";
               Next.style.zIndex="1000000";
               Pre.addEventListener('click',function(){history.back()},false);
               Next.addEventListener('click',function(){history.forward()},false);
+              Pre.addEventListener('mouseover',function(){this.style.opacity=1},false);
+              Pre.addEventListener('mouseout',function(){this.style.opacity=0.5},false);
+              Next.addEventListener('mouseover',function(){this.style.opacity=1},false);
+              Next.addEventListener('mouseout',function(){this.style.opacity=0.5},false);
               document.body.appendChild(Pre);
               document.body.appendChild(Next);
               $.ajax({
