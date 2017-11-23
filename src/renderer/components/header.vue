@@ -4,11 +4,11 @@
           <img src="../assets/images/logo.png" alt="">
             <span>数据管理系统</span>
       </div>
-      <ol class="right">
+      <!-- <ol class="right">
           <li @click="hide"></li>
           <li @click="zoom"></li>
           <li @click="close"></li>
-      </ol>
+      </ol> -->
   </div>
 </template>
 
