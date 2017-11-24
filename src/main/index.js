@@ -31,7 +31,9 @@ function createWindow() {
   mainWindow.setMenu(null)
   mainWindow.webContents.openDevTools()
   mainWindow.on('closed', () => {
-    mainWindow = null
+    mainWindow = null;
+    tray = null;
+    app.quit();
   })
   mainWindow.on('resize',(ev)=>{
     ev.sender.send('windowResize')
