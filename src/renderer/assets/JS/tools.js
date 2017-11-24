@@ -1,4 +1,5 @@
-const func = {
+let d3 = require('d3');
+var func = {
     heatmap(data, config, wrap) {
         var cluster_json = data.zxtData;
         var heatmap_json = data.heatmap;
@@ -10,7 +11,7 @@ const func = {
         var colorArr = config.colors;
         let temp = config.cubeSize.split('*');
         var cubeSize;
-        if (config.cubeSize.length && config.cubeSize.indexOf('*') !== -1 && temp.length == 2 && Number(temp[0])!==0 && Number(temp[1])!==0) {
+        if (config.cubeSize.length && config.cubeSize.indexOf('*') !== -1 && temp.length == 2 && Number(temp[0]) !== 0 && Number(temp[1]) !== 0) {
             cubeSize = config.cubeSize.split('*')
         } else {
             cubeSize = false;
@@ -32,8 +33,8 @@ const func = {
         svg.selectAll("g").remove();
 
         draw_chart_title();
-        draw_cluster_pic(cluster_json,'left');
-        draw_cluster_pic(cluster_json,'top');
+        draw_cluster_pic(cluster_json, 'left');
+        draw_cluster_pic(cluster_json, 'top');
         draw_heatmap(heatmap_json, valuemax, valuemin);
         //画标题
         function draw_chart_title() {
@@ -46,14 +47,14 @@ const func = {
                 .style('font-size', fontSize + 'px');
         }
         //画聚类折线图
-        function draw_cluster_pic(json,pos) {
-            var cluster_height,cluster_width;
-            if(pos==='left'){
-                cluster_height = height - 40-height*0.1;
-                cluster_width = width*0.1;
-            }else{
-                cluster_height = height*0.1;
-                cluster_width =  width * 0.68-40;
+        function draw_cluster_pic(json, pos) {
+            var cluster_height, cluster_width;
+            if (pos === 'left') {
+                cluster_height = height - 40 - height * 0.1;
+                cluster_width = width * 0.1;
+            } else {
+                cluster_height = height * 0.1;
+                cluster_width = width * 0.68 - 40;
             }
 
             var cluster = d3
@@ -62,18 +63,18 @@ const func = {
                 .separation(function () {
                     return 1;
                 });
-            if(pos==='left'){
+            if (pos === 'left') {
                 // left
                 var svg_cluster_g = svg
-                .append("g")
-                .attr("class", pos+"-cluster")
-                .attr("transform", "translate(0,"+ (height*0.1+40)+")");
-            }else{
+                    .append("g")
+                    .attr("class", pos + "-cluster")
+                    .attr("transform", "translate(0," + (height * 0.1 + 40) + ")");
+            } else {
                 // top
                 var svg_cluster_g = svg
-                .append("g")
-                .attr("class", pos+"-cluster")
-                .attr("transform", "translate("+ (width * 0.1+8+20)+",40)");
+                    .append("g")
+                    .attr("class", pos + "-cluster")
+                    .attr("transform", "translate(" + (width * 0.1 + 8 + 20) + ",40)");
             }
 
             //根据数据建立模型
@@ -123,7 +124,7 @@ const func = {
                 //定义热图宽度
                 heatmap_width = width * 0.68;
                 //定义热图高度
-                heatmap_height = height - 40-height*0.1;
+                heatmap_height = height - 40 - height * 0.1;
                 //计算单个rect长和宽
                 heatmap_one_rect_width = heatmap_width / jsonarray.length;
                 heatmap_one_rect_height = heatmap_height / jsonarray[0].geneList.length;
@@ -133,7 +134,7 @@ const func = {
             var svg_heatmap_g = svg
                 .append("g")
                 .attr("class", "heatmap")
-                .attr("transform", "translate(" + (width * 0.1 + 8) + ","+ (height*0.1+40)+")");
+                .attr("transform", "translate(" + (width * 0.1 + 8) + "," + (height * 0.1 + 40) + ")");
 
             //定义热图图例宽度
             var heatmap_legend_width = 18;
@@ -250,5 +251,31 @@ const func = {
         }
     },
 }
+function Tools() {
+    this.type = '';
+    this.wrap = '';
+    this.drawFunc = func;
+}
+Tools.prototype.config = function (options) {
+    this.type = options.type || '';
+    this.wrap = typeof options['wrap'] === 'string' ? document.querySelector(options['wrap']) : options['wrap'];
+}
+Tools.prototype.setType = function (type) {
+    this.type = type;
+}
+Tools.prototype.setWrap = function (wrap) {
+    this.wrap = typeof wrap === 'string' ? document.querySelector(wrap) : wrap;
+}
+Tools.prototype.getOptions = function () {
+    let type = this.type;
+    let wrap = this.wrap;
+    return { type, wrap };
+}
+Tools.prototype.getCurrentType = function () {
+    return this.type;
+}
+Tools.prototype.draw = function (data, newConfig) {
+    this.drawFunc[this.type](data, newConfig, this.wrap);
+}
 
-export default func;
+module.exports = new Tools();

@@ -4,7 +4,7 @@ import { app, BrowserWindow, ipcMain, dialog, Tray ,Menu,nativeImage } from 'ele
 if (process.env.NODE_ENV !== 'development') {
   global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\')
 }
-let trayIcon = nativeImage.createFromPath(__dirname+'/icon.png');
+let trayIcon = nativeImage.createFromPath(__dirname+'/static/icon.png');
 let mainWindow
 const winURL = process.env.NODE_ENV === 'development'
   ? `http://localhost:9080/#`
@@ -40,7 +40,7 @@ function createWindow() {
   // //系统托盘图标
   let tray = new Tray(trayIcon)
   //tip
-  tray.setToolTip('gooalgene-data-manager')
+  tray.setToolTip('数据管理系统')
   //双击icon 显示窗口
   tray.on('double-click', () => {
     mainWindow.show();
@@ -196,10 +196,10 @@ const createPyProc = () => {
     // pyProc = require('child_process').spawn('python', [script, port])
   // }
  
-  if (pyProc != null) {
-    console.log(pyProc)
-    console.log('child process success on port ' + port)  // 启动失败也会打印
-  }
+  // if (pyProc != null) {
+  //   console.log(pyProc)
+  //   console.log('child process success on port ' + port)  // 启动失败也会打印
+  // }
 }
 
 const exitPyProc = () => {
