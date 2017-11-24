@@ -31,7 +31,7 @@
                     <el-form  label-width="116px">
                       <!-- 选择作图列 -->
                       <el-form-item label="选择用于作图的列">
-                        <el-input type="text" :maxlength="50" size="small"  v-model.trim="formData.columns" placeholder="如2,3,6,9"></el-input>
+                        <el-input type="text" :maxlength="50" size="small"  v-model.trim="formData.drawColumns" placeholder="如2,3,6,9"></el-input>
                       </el-form-item>
                     </el-form>
                       <p style="margin:12px 0;">选择用于作图的行：（a.可以输入数字代表前多少行用于作图.b.输入一个基因名列表文件，用文件里的基因名对应行作图）</p>
