@@ -85,14 +85,14 @@
                       </el-form-item>
                       <el-form-item label="行聚类">
                         <!-- 行聚类 -->
-                        <el-select size="small" v-model="formData.rowNormal">
+                        <el-select size="small" v-model="formData.rowCluster">
                           <el-option label="yes" value="true"></el-option>
                           <el-option label="no" value=""></el-option>
                         </el-select>
                       </el-form-item>
                       <el-form-item label="列聚类">
                         <!-- 列聚类 -->
-                        <el-select size="small" v-model="formData.columnNormal">
+                        <el-select size="small" v-model="formData.columnCluster">
                           <el-option label="yes" value="true"></el-option>
                           <el-option label="no" value=""></el-option>
                         </el-select>
@@ -165,6 +165,7 @@
 </template>
 
 <script>
+import fetchData from "@/api/getData";
 import { mapGetters } from "vuex";
 export default {
   data() {
@@ -173,19 +174,19 @@ export default {
         //项目名称
         projectName: "heatmap5698c9",
         //文件路径
-        filePath: "",
+        filePath: "D:\data\data-manager-back-end\app\tools\heatmap.rpkm",
         //用于作图的列
         drawColumns: "",
         //用于作图的行
         drawRows: "",
         //基因列表文件
-        fileOptionPath: "",
+        fileOptionPath: "D:\data\data-manager-back-end\app\tools\gene",
         //归一化
         normalization: "row",
         //行聚类
-        rowNormal: "",
+        rowCluster: "",
         //列聚类
-        columnNormal: "",
+        columnCluster: "",
         //邮件通知
         email: false
       },
@@ -194,11 +195,11 @@ export default {
         fontSize: 16,
         cubeSize: "",
         drawBorder: "yes",
-        showRowName: "true",
+        showRowName: "true"
       },
       activeName: "text",
-      tabList:['预览','说明','例子'],
-      activeIndex:0
+      tabList: ["预览", "说明", "例子"],
+      activeIndex: 0
     };
   },
   created() {},
@@ -396,9 +397,14 @@ export default {
           }
         ]
       };
-      this.tools.setWrap("#svg_cyjjfx_clusterpic");
-      this.tools.setType(this.$route.query.type);
-      this.tools.draw(json, this.drawOptions);
+      let formData = this.formData;
+      fetchData("heatMap", { formData }).then(res => {
+        console.log(res);
+        return;
+        this.tools.setWrap("#svg_cyjjfx_clusterpic");
+        this.tools.setType(this.$route.query.type);
+        this.tools.draw(json, this.drawOptions);
+      });
     },
     toTools() {
       this.$router.push("./toolsIndex");
@@ -406,7 +412,7 @@ export default {
     handleClick(tab, event) {
       console.log(tab, event);
     },
-    tab(index){
+    tab(index) {
       this.activeIndex = index;
     },
     selectFile() {

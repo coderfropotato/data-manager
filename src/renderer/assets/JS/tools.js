@@ -55,6 +55,8 @@ var func = {
             } else {
                 cluster_height = height * 0.1;
                 cluster_width = width * 0.68 - 40;
+                // cluster_height = width * 0.68 - 40;
+                // cluster_width = height * 0.1;
             }
 
             var cluster = d3
@@ -74,9 +76,9 @@ var func = {
                 var svg_cluster_g = svg
                     .append("g")
                     .attr("class", pos + "-cluster")
-                    .attr("transform", "translate(" + (width * 0.1 + 8 + 20) + ",40)");
+                    .attr("transform", "translate(" + (width * 0.1 + 8 + 20 + cluster_width / 2) + ",40) ")
             }
-
+            svg_cluster_g.append('rect').attr('x', 0).attr('y', 0).attr('fill', '#f60').attr('width', 20).attr('height', 20)
             //根据数据建立模型
             var root = d3.hierarchy(json);
             cluster(root);
