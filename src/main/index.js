@@ -29,6 +29,7 @@ function createWindow() {
   mainWindow.setMinimumSize(1200, 860)
   mainWindow.loadURL(winURL)
   mainWindow.setMenu(null)
+  mainWindow.webContents.openDevTools()
   mainWindow.on('closed', () => {
     mainWindow = null
   })
@@ -174,30 +175,26 @@ const PY_PORT = 4242
 let pyProc = null
 let pyPort = null
 
-const guessPackaged = () => {
-  const fullPath = path.join(__dirname, PY_DIST_FOLDER)
-  return require('fs').existsSync(fullPath)
-}
-
 const getScriptPath = () => {
-  if (!guessPackaged()) {
-    return path.join(__dirname, PY_FOLDER, PY_MODULE + '.py')
-  }
+  // if (process.env.NODE_ENV !== 'production') {
+  //   return path.join(__dirname, 'backend', 'run.py')    // 这个路径应该请求不到，调试时后端需要手工启动
+  // }
   if (process.platform === 'win32') {
-    return path.join(__dirname,PY_DIST_FOLDER, PY_MODULE, PY_MODULE + '.exe')
+    return path.join(__dirname, '..', 'backend', 'backend.exe')
   }
-  return path.join(__dirname, PY_DIST_FOLDER, PY_MODULE, PY_MODULE)
+  return path.join(__dirname, '..', 'backend', 'backend')
 }
 
 const createPyProc = () => {
   let script = getScriptPath()
   let port = '' + PY_PORT
-
-  if (guessPackaged()) {
+  
+  // if (process.env.NODE_ENV === 'production') {
+    // dialog.showErrorBox('title', process.env.NODE_ENV + '|\n' + script)
     pyProc = require('child_process').execFile(script, [port])
-  } else {
-    pyProc = require('child_process').spawn('python', [script, port])
-  }
+  // } else {
+    // pyProc = require('child_process').spawn('python', [script, port])
+  // }
  
   if (pyProc != null) {
     console.log(pyProc)
