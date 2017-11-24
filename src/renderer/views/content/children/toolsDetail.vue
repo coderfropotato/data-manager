@@ -398,7 +398,7 @@ export default {
         ]
       };
       let formData = this.formData;
-      fetchData("heatMap", { formData }).then(res => {
+      fetchData("heatMap", formData).then(res => {
         console.log(res);
         return;
         this.tools.setWrap("#svg_cyjjfx_clusterpic");
