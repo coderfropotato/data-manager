@@ -174,13 +174,13 @@ export default {
         //项目名称
         projectName: "heatmap5698c9",
         //文件路径
-        filePath: "D:\data\data-manager-back-end\app\tools\heatmap.rpkm",
+        filePath: "",
         //用于作图的列
         drawColumns: "",
         //用于作图的行
         drawRows: "",
         //基因列表文件
-        fileOptionPath: "D:\data\data-manager-back-end\app\tools\gene",
+        fileOptionPath: "",
         //归一化
         normalization: "row",
         //行聚类
