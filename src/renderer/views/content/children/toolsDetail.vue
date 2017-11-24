@@ -191,7 +191,7 @@ export default {
       },
       drawOptions: {
         colors: ["#ff0000", "#92d050", "#000000"],
-        fontSize: 14,
+        fontSize: 16,
         cubeSize: "",
         drawBorder: "yes",
         showRowName: "true",

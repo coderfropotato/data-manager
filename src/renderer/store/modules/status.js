@@ -6,7 +6,6 @@ import * as types from '@/store/mutation-types';
 // import treeData from '@/utils/tree';
 import file from '@/store/modules/files';
 import bus from '@/utils/bus';
-import unique from '@/utils/tools'
 
 /* 
 1最近新增add

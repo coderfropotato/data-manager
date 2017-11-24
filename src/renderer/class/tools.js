@@ -1,4 +1,4 @@
-import drawFunc from '@/assets/js/func';
+import drawFunc from '@/class/func';
 
 function Tools (){
     this.type = '';
