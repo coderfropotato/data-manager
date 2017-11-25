@@ -115,9 +115,9 @@
                       <el-form-item label="字体大小">
                         <el-input :maxlength="50" size="small" type="number"  v-model="drawOptions.fontSize" placeholder="请输入字体大小"></el-input>
                       </el-form-item>
-                      <el-form-item label="格子的长度*高度">
+                      <!-- <el-form-item label="格子的长度*高度">
                         <el-input :maxlength="50" size="small" type="text" v-model="drawOptions.cubeSize" placeholder="如20*12"></el-input>
-                      </el-form-item>
+                      </el-form-item> -->
                       <el-form-item label="画出格子的边界">
                         <el-select size="small" v-model="drawOptions.drawBorder">
                           <el-option label="yes" value="true"></el-option>
@@ -195,7 +195,8 @@ export default {
         fontSize: 16,
         cubeSize: "",
         drawBorder: "yes",
-        showRowName: "true"
+        showRowName: "true",
+        projectName: ""
       },
       activeName: "text",
       tabList: ["预览", "说明", "例子"],
@@ -397,14 +398,15 @@ export default {
           }
         ]
       };
-      let formData = this.formData;
-      fetchData("heatMap", formData).then(res => {
-        console.log(res);
-        return;
-        this.tools.setWrap("#svg_cyjjfx_clusterpic");
-        this.tools.setType(this.$route.query.type);
-        this.tools.draw(json, this.drawOptions);
-      });
+      // let formData = this.formData;
+      // fetchData("heatMap", formData).then(res => {
+      //   console.log(res);
+      //   return;
+      // });
+      this.drawOptions.projectName = this.formData.projectName;
+      this.tools.setWrap("#svg_cyjjfx_clusterpic");
+      this.tools.setType(this.$route.query.type);
+      this.tools.draw(json, this.drawOptions);
     },
     toTools() {
       this.$router.push("./toolsIndex");
