@@ -31,7 +31,7 @@
                     <el-form  label-width="116px">
                       <!-- 选择作图列 -->
                       <el-form-item label="选择用于作图的列">
-                        <el-input type="text" :maxlength="50" size="small"  v-model.trim="formData.columns" placeholder="如2,3,6,9"></el-input>
+                        <el-input type="text" :maxlength="50" size="small"  v-model.trim="formData.drawColumns" placeholder="如2,3,6,9"></el-input>
                       </el-form-item>
                     </el-form>
                       <p style="margin:12px 0;">选择用于作图的行：（a.可以输入数字代表前多少行用于作图.b.输入一个基因名列表文件，用文件里的基因名对应行作图）</p>
@@ -85,14 +85,14 @@
                       </el-form-item>
                       <el-form-item label="行聚类">
                         <!-- 行聚类 -->
-                        <el-select size="small" v-model="formData.rowNormal">
+                        <el-select size="small" v-model="formData.rowCluster">
                           <el-option label="yes" value="true"></el-option>
                           <el-option label="no" value=""></el-option>
                         </el-select>
                       </el-form-item>
                       <el-form-item label="列聚类">
                         <!-- 列聚类 -->
-                        <el-select size="small" v-model="formData.columnNormal">
+                        <el-select size="small" v-model="formData.columnCluster">
                           <el-option label="yes" value="true"></el-option>
                           <el-option label="no" value=""></el-option>
                         </el-select>
@@ -115,9 +115,9 @@
                       <el-form-item label="字体大小">
                         <el-input :maxlength="50" size="small" type="number"  v-model="drawOptions.fontSize" placeholder="请输入字体大小"></el-input>
                       </el-form-item>
-                      <el-form-item label="格子的长度*高度">
+                      <!-- <el-form-item label="格子的长度*高度">
                         <el-input :maxlength="50" size="small" type="text" v-model="drawOptions.cubeSize" placeholder="如20*12"></el-input>
-                      </el-form-item>
+                      </el-form-item> -->
                       <el-form-item label="画出格子的边界">
                         <el-select size="small" v-model="drawOptions.drawBorder">
                           <el-option label="yes" value="true"></el-option>
@@ -165,6 +165,7 @@
 </template>
 
 <script>
+import fetchData from "@/api/getData";
 import { mapGetters } from "vuex";
 export default {
   data() {
@@ -183,9 +184,9 @@ export default {
         //归一化
         normalization: "row",
         //行聚类
-        rowNormal: "",
+        rowCluster: "",
         //列聚类
-        columnNormal: "",
+        columnCluster: "",
         //邮件通知
         email: false
       },
@@ -195,10 +196,11 @@ export default {
         cubeSize: "",
         drawBorder: "yes",
         showRowName: "true",
+        projectName: ""
       },
       activeName: "text",
-      tabList:['预览','说明','例子'],
-      activeIndex:0
+      tabList: ["预览", "说明", "例子"],
+      activeIndex: 0
     };
   },
   created() {},
@@ -396,6 +398,12 @@ export default {
           }
         ]
       };
+      // let formData = this.formData;
+      // fetchData("heatMap", formData).then(res => {
+      //   console.log(res);
+      //   return;
+      // });
+      this.drawOptions.projectName = this.formData.projectName;
       this.tools.setWrap("#svg_cyjjfx_clusterpic");
       this.tools.setType(this.$route.query.type);
       this.tools.draw(json, this.drawOptions);
@@ -406,7 +414,7 @@ export default {
     handleClick(tab, event) {
       console.log(tab, event);
     },
-    tab(index){
+    tab(index) {
       this.activeIndex = index;
     },
     selectFile() {

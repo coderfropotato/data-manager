@@ -287,7 +287,7 @@ const actions = {
     submitModifyFileInfo({ commit }) {
         return new Promise((resolve, reject) => {
             let params = subParams('modified')
-            fetchData('delDelFileAttr', params).then(res => {
+            fetchData('submitModifyFileInfo', params).then(res => {
                 let rootMarkArr = [];
                 for (var i = 0; i < res.length; i++) {
                     rootMarkArr.push(res[i].mark);
