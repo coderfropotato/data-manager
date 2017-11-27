@@ -42,7 +42,8 @@ export default {
       this.$router.push('./toolsExcel')
     },
     toVenn(){
-      this.$router.push('./toolsVenn')
+      this.$message('开发中...')
+      // this.$router.push('./toolsVenn')
     }
   },
   created() {},

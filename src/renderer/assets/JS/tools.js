@@ -1,8 +1,10 @@
 let d3 = require('d3');
 var func = {
     heatmap(data, config, wrap) {
-        var cluster_json = data.zxtData;
-        var heatmap_json = data.heatmap;
+        console.log(data);
+        var cluster_left = data.topTree || null;
+        var cluster_top = data.leftTree || null;
+        var heatmap_json = data.list;
         var valuemax = data.Max;
         var valuemin = data.Min;
         //apply config
@@ -12,19 +14,17 @@ var func = {
         var colorArr = config.colors;
         let temp = config.cubeSize.split('*');
         var cubeSize;
-        if (config.cubeSize.length && config.cubeSize.indexOf('*') !== -1 && temp.length == 2 && Number(temp[0]) !== 0 && Number(temp[1]) !== 0) {
-            cubeSize = config.cubeSize.split('*')
-        } else {
-            cubeSize = false;
-        }
+        // if (config.cubeSize.length && config.cubeSize.indexOf('*') !== -1 && temp.length == 2 && Number(temp[0]) !== 0 && Number(temp[1]) !== 0) {
+        //     cubeSize = config.cubeSize.split('*')
+        // } else {
+        cubeSize = false;
+        // }
         var drawBorder = config.drawBorder;
         var showRowName = !!config.showRowName;
-        //判断svg width
         var oWidth = document.querySelector('.draw-area').offsetWidth - 80;
         var oHeight = document.querySelector('.draw-area').offsetHeight - 80;
-        var width = oWidth * 0.85;
+        var width = oWidth * 0.95;
         var height = oHeight * 0.9;
-        //文字超长添加的高度
         var height_add = 50;
         var svg = d3
             .select(wrap)
@@ -34,10 +34,9 @@ var func = {
         svg.selectAll("g").remove();
 
         draw_chart_title();
-        draw_cluster_pic(cluster_json, 'left');
-        draw_cluster_pic(cluster_json, 'top');
-         draw_heatmap(heatmap_json, valuemax, valuemin);
-        //画标题
+        draw_cluster_pic(cluster_left, 'left');
+        draw_cluster_pic(cluster_top, 'top');
+        draw_heatmap(heatmap_json, valuemax, valuemin);
         function draw_chart_title() {
             svg
                 .append("g")
@@ -45,107 +44,102 @@ var func = {
                 .append("text")
                 .text(projectName)
                 .attr("text-anchor", "middle")
-                .style('font-size', fontSize + 'px');
+                .style('font-size','16px');
         }
-        //画聚类折线图
         function draw_cluster_pic(json, pos) {
-            var cluster_height, cluster_width;
-            if (pos === 'left') {
-                cluster_height = height - 40 - height * 0.1;
-                cluster_width = width * 0.1;
-            } else {
-                cluster_height =width * 0.6-40;
-                cluster_width =50;
-            }
+            if (json) {
+                var cluster_height, cluster_width;
+                if (pos === 'left') {
+                    cluster_height =(height-90);
+                    console.log((height-90)/heatmap_json.length/2)
+                    console.log(height-90-cluster_height);
+                    cluster_width = width * 0.1;
+                } else {
+                    cluster_height = width * 0.6;
+                    cluster_width = 50;
+                }
+                var cluster = d3
+                    .cluster()
+                    .size([cluster_height, cluster_width])
+                    .separation(function () {
+                        return 1;
+                    });
+                if (pos === 'left') {
+                    // left
+                    var svg_cluster_g = svg
+                        .append("g")
+                        .attr("class", pos + "-cluster")
+                        .attr("transform", "translate(0,96)");
+                } else {
+                    // top
+                    var svg_cluster_g = svg
+                        .append("g")
+                        .attr("class", pos + "-cluster")
+                        .attr("transform", "translate(" + (width * 0.1 + 8 + width * 0.6 / 2 + cluster_height / 2) + ",40) rotate(90)")
+                }
+                var root = d3.hierarchy(json);
+                cluster(root);
+                console.log(root.links());
+                var link = svg_cluster_g
+                    .selectAll(".heatmaplink")
+                    .data(root.links())
+                    .enter()
+                    .append("path")
+                    .attr("class", "heatmaplink")
+                    .attr("d", elbow);
 
-            var cluster = d3
-                .cluster()
-                .size([cluster_height, cluster_width])
-                .separation(function () {
-                    return 1;
-                });
-            if (pos === 'left') {
-                // left
-                var svg_cluster_g = svg
+                var node = svg_cluster_g
+                    .selectAll(".node")
+                    .data(root.descendants())
+                    .enter()
                     .append("g")
-                    .attr("class", pos + "-cluster")
-                    .attr("transform", "translate(0,96)");
-            } else {
-                // top
-                var svg_cluster_g = svg
-                    .append("g")
-                    .attr("class", pos + "-cluster")
-                    .attr("transform", "translate(" + (width * 0.1 + 8  + width*0.6 / 2+cluster_height/2) + ",40) rotate(90)")
-            }
-            //根据数据建立模型
-            var root = d3.hierarchy(json);
-            cluster(root);
-            var link = svg_cluster_g
-                .selectAll(".heatmaplink")
-                .data(root.links())
-                .enter()
-                .append("path")
-                .attr("class", "heatmaplink")
-                .attr("d", elbow);
+                    .attr("class", "node")
+                    .attr("transform", function (d) {
+                        return "translate(" + d.y + "," + d.x + ")";
+                    });
 
-            var node = svg_cluster_g
-                .selectAll(".node")
-                .data(root.descendants())
-                .enter()
-                .append("g")
-                .attr("class", "node")
-                .attr("transform", function (d) {
-                    return "translate(" + d.y + "," + d.x + ")";
-                });
-
-            function elbow(d, i) {
-                return (
-                    "M" +
-                    d.source.y +
-                    "," +
-                    d.source.x +
-                    "V" +
-                    d.target.x +
-                    "H" +
-                    d.target.y
-                );
+                function elbow(d, i) {
+                    return (
+                        "M" +
+                        d.source.y +
+                        "," +
+                        d.source.x +
+                        "V" +
+                        d.target.x +
+                        "H" +
+                        d.target.y
+                    );
+                }
             }
         }
         function draw_heatmap(jsonarray, max, min) {
-            //定义渐变颜色
             var colorarray = colors.concat();
             var heatmap_width, heatmap_height, heatmap_one_rect_width, heatmap_one_rect_height;
             if (cubeSize) {
                 heatmap_one_rect_width = cubeSize[0];
                 heatmap_one_rect_height = cubeSize[1];
                 heatmap_width = heatmap_one_rect_width * jsonarray.length;
-                heatmap_height = heatmap_one_rect_height * jsonarray[0].geneList.length;
+                heatmap_height = heatmap_one_rect_height * jsonarray[0].list.length;
             } else {
-                //定义热图宽度
                 heatmap_width = width * 0.60;
-                //定义热图高度
                 heatmap_height = height - 40 - 50;
-                //计算单个rect长和宽
                 heatmap_one_rect_width = heatmap_width / jsonarray.length;
-                heatmap_one_rect_height = heatmap_height / jsonarray[0].geneList.length;
+                heatmap_one_rect_height = heatmap_height / jsonarray[0].list.length;
             }
 
-            //距离左边; top 预留50给title
             var svg_heatmap_g = svg
                 .append("g")
                 .attr("class", "heatmap")
                 .attr("transform", "translate(" + (width * 0.1 + 8) + ",96)");
 
-            //定义热图图例宽度
             var heatmap_legend_width = 18;
-            //定义热图图例高度
             var heatmap_legend_height = 200;
             var svg_heatmap_legend_g = svg
                 .append("g")
                 .attr("class", "heatmaplegend")
+                /* width - 40 */
                 .attr("transform", "translate(" + (heatmap_width + width * 0.1 + 40) + "," + (height / 2) + ")");
 
-            //颜色比例尺(根据value值填充rect的颜色)
             var colorscale = d3
                 .scaleLinear()
                 .domain([min, (min + max) / 2, max])
@@ -157,7 +151,6 @@ var func = {
                 var svg_g_temp = svg_heatmap_g
                     .append("g")
                     .attr("class", jsonarray[i].sampleName);
-                //添加样本名称
                 if (showRowName) {
                     svg_g_temp
                         .append("g")
@@ -172,13 +165,11 @@ var func = {
                         .append("text")
                         .style('font-size', fontSize + 'px')
                         .text(jsonarray[i].sampleName)
-                        // .attr("transform", "rotate(-45)")
+                        .attr("transform", "rotate(-45)")
                         .attr("text-anchor", "middle");
                 }
-                //是否画出border
                 let isDrawBorderStatus = drawBorder ? '#ccc' : 'none';
-                for (var j = 0; j < jsonarray[i].geneList.length; j++) {
-                    //计算每个rect的位置并根据value填充颜色
+                for (var j = 0; j < jsonarray[i].list.length; j++) {
                     svg_g_temp
                         .append("rect")
                         .attr("class", "heatmap_rect")
@@ -186,21 +177,19 @@ var func = {
                         .attr("y", 0 + j * heatmap_one_rect_height)
                         .attr("width", heatmap_one_rect_width)
                         .attr("height", heatmap_one_rect_height)
-                        .attr("fill", colorscale(jsonarray[i].geneList[j].value))
+                        .attr("fill", colorscale(jsonarray[i].list[j].value))
                         .style('stroke', isDrawBorderStatus)
                         .append("title")
                         .text(
-                        "gene: " +
-                        jsonarray[i].geneList[j].geneID +
+                        "name: " +
+                        jsonarray[i].list[j].name +
                         "\n" +
                         "value: " +
-                        jsonarray[i].geneList[j].value
+                        jsonarray[i].list[j].value
                         );
                 }
             }
 
-            //画图例
-            //为图例定义线性填充模型
             var linearGradient = svg_heatmap_legend_g
                 .append("defs")
                 .append("linearGradient")
@@ -225,20 +214,16 @@ var func = {
                 .attr("offset", "100%")
                 .style("stop-color", colorarray[0]);
 
-            //画图例矩形
             svg_heatmap_legend_g
                 .append("rect")
                 .attr("width", heatmap_legend_width)
                 .attr("height", heatmap_legend_height)
                 .attr("fill", "url(#" + linearGradient.attr("id") + ")");
-            //根据高度定义Y轴缩放比例尺
             var yScale = d3
                 .scaleLinear()
                 .range([heatmap_legend_height - 1, 0])
                 .clamp(true)
-                //设置定义域
                 .domain([min, max]);
-            //根据数据设置Y轴
             var yAxis = d3
                 .axisRight(yScale)
                 .tickSizeOuter(0)

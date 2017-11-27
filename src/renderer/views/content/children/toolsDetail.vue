@@ -1,5 +1,5 @@
 <template>
-    <div id="toolsDetail">
+    <div id="toolsDetail" class="drawWrap">
         <p>
           <span @click="toTools" style="cursor:pointer;">工具</span>
           <span> > 热力图</span>
@@ -188,7 +188,7 @@ export default {
         //行聚类
         rowCluster: "",
         //列聚类
-        columnCluster: "",
+        columnCluster: "true",
         //邮件通知
         email: false
       },
@@ -197,7 +197,7 @@ export default {
         fontSize: 16,
         cubeSize: "",
         drawBorder: "yes",
-        showRowName: "true",
+        showRowName: "",
         projectName: ""
       },
       activeName: "text",
@@ -215,195 +215,6 @@ export default {
   },
   methods: {
     sub() {
-      var json = {
-        zxtData: {
-          name: "TN6",
-          children: [
-            {
-              name: "ath-miR5643a"
-            },
-            {
-              name: "TN5",
-              children: [
-                {
-                  name: "TN3",
-                  children: [
-                    {
-                      name: "ath-miR162a-3p"
-                    },
-                    {
-                      name: "TN1",
-                      children: [
-                        {
-                          name: "ath-miR399c-5p"
-                        },
-                        {
-                          name: "ath-miR408-3p"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  name: "TN4",
-                  children: [
-                    {
-                      name: "ath-miR319a"
-                    },
-                    {
-                      name: "TN2",
-                      children: [
-                        {
-                          name: "ath-miR399f"
-                        },
-                        {
-                          name: "ath-miR396b-5p"
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        },
-        Max: 1,
-        Min: -1,
-        heatmap: [
-          {
-            sampleName: "e5-3",
-            geneList: [
-              {
-                geneID: "ath-miR5643a",
-                value: -0.3268156806279887
-              },
-              {
-                geneID: "ath-miR162a-3p",
-                value: 0.4087987305375783
-              },
-              {
-                geneID: "ath-miR399c-5p",
-                value: 0.6989775909499162
-              },
-              {
-                geneID: "ath-miR408-3p",
-                value: 0.5560398159829242
-              },
-              {
-                geneID: "ath-miR319a",
-                value: -0.017543456914489084
-              },
-              {
-                geneID: "ath-miR399f",
-                value: 0.09509506490533441
-              },
-              {
-                geneID: "ath-miR396b-5p",
-                value: 0.09445452073808591
-              }
-            ]
-          },
-          {
-            sampleName: "e5-4",
-            geneList: [
-              {
-                geneID: "ath-miR5643a",
-                value: -0.3268156806279887
-              },
-              {
-                geneID: "ath-miR162a-3p",
-                value: 0.43706989532498874
-              },
-              {
-                geneID: "ath-miR399c-5p",
-                value: 0.71419091732121
-              },
-              {
-                geneID: "ath-miR408-3p",
-                value: 0.5663692235336549
-              },
-              {
-                geneID: "ath-miR319a",
-                value: -0.015356130235247374
-              },
-              {
-                geneID: "ath-miR399f",
-                value: 0.07396082282276462
-              },
-              {
-                geneID: "ath-miR396b-5p",
-                value: 0.08286032417909267
-              }
-            ]
-          },
-          {
-            sampleName: "Col-0-1",
-            geneList: [
-              {
-                geneID: "ath-miR5643a",
-                value: 0.36258138488824243
-              },
-              {
-                geneID: "ath-miR162a-3p",
-                value: -0.4229343129312836
-              },
-              {
-                geneID: "ath-miR399c-5p",
-                value: -0.7065842541355629
-              },
-              {
-                geneID: "ath-miR408-3p",
-                value: -0.5612045197582896
-              },
-              {
-                geneID: "ath-miR319a",
-                value: 0.015237218154275077
-              },
-              {
-                geneID: "ath-miR399f",
-                value: -0.08452794386404949
-              },
-              {
-                geneID: "ath-miR396b-5p",
-                value: -0.08865742245858929
-              }
-            ]
-          },
-          {
-            sampleName: "Col-0-2",
-            geneList: [
-              {
-                geneID: "ath-miR5643a",
-                value: 0.291049976367735
-              },
-              {
-                geneID: "ath-miR162a-3p",
-                value: -0.4229343129312836
-              },
-              {
-                geneID: "ath-miR399c-5p",
-                value: -0.7065842541355629
-              },
-              {
-                geneID: "ath-miR408-3p",
-                value: -0.5612045197582896
-              },
-              {
-                geneID: "ath-miR319a",
-                value: 0.017662368995461298
-              },
-              {
-                geneID: "ath-miR399f",
-                value: -0.08452794386404949
-              },
-              {
-                geneID: "ath-miR396b-5p",
-                value: -0.08865742245858929
-              }
-            ]
-          }
-        ]
-      };
       this.$refs.project.validate(valid => {
         if (valid) {
           // file path
@@ -417,13 +228,16 @@ export default {
             ? (formData["fileOptionPath"] = "")
             : (formData["drawRows"] = "");
           fetchData("heatMap", formData).then(res => {
-            console.log(res);
-            return;
-            // draw config
-            this.drawOptions.projectName = this.formData.projectName;
-            this.tools.setWrap("#svg_cyjjfx_clusterpic");
-            this.tools.setType(this.$route.query.type);
-            this.tools.draw(json, this.drawOptions);
+            console.log(res)
+            if(typeof res['result'] === 'string'){
+              this.$message(res['result']);
+            }else{
+              // draw config
+              this.drawOptions.projectName = this.formData.projectName;
+              this.tools.setWrap("#svg_cyjjfx_clusterpic");
+              this.tools.setType(this.$route.query.type);
+              this.tools.draw(res.result, this.drawOptions);
+            }
           });
         } else {
           this.$message("请填写项目名称");
@@ -473,107 +287,5 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-#toolsDetail {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  .selectPath {
-    cursor: pointer;
-    line-height: 36px;
-    white-space: nowrap;
-    overflow-x: hidden;
-    text-overflow: ellipsis;
-    word-break: break-word;
-    &:hover {
-      color: #386cca;
-    }
-  }
-  & > p {
-    padding: 0 16px;
-    line-height: 36px;
-    border-bottom: 1px solid #ccc;
-  }
-  #tools_draw_context {
-    padding: 20px;
-    display: flex;
-    width: 100%;
-    height: 100%;
-    .options {
-      padding-right: 20px;
-      max-width: 380px;
-      width: 380px;
-      height: 100%;
-      overflow-y: auto;
-      .el-form {
-        font-size: 12px;
-      }
-      ul {
-        li {
-          list-style: none;
-          border: 2px solid #ccc;
-          border-radius: 8px;
-          margin-bottom: 26px;
-          box-shadow: 1px 1px 10px #ccc;
-          &:last-child {
-            margin-bottom: none;
-          }
-          .title {
-            font-family: "Helvetica Neue", Helvetica, "PingFang SC",
-              "Hiragino Sans GB", "Microsoft YaHei", "\5FAE\8F6F\96C5\9ED1",
-              Arial, sans-serif;
-            padding: 12px;
-            font-size: 14px;
-            line-height: 1;
-            border-bottom: 1px solid #ccc;
-          }
-          .context {
-            padding: 6px 12px;
-            & > p {
-              font-size: 13px;
-            }
-          }
-        }
-      }
-    }
-    .draw-content {
-      flex: 1;
-      margin-left: 20px;
-      border: 2px solid #ccc;
-      overflow-x: auto;
-      overflow-y: hidden;
-      ul {
-        list-style: none;
-        &:after {
-          content: "";
-          display: block;
-          clear: both;
-        }
-        li {
-          float: left;
-          width: 74px;
-          height: 24px;
-          text-align: center;
-          line-height: 24px;
-          background: #386cca;
-          color: #fff;
-          opacity: 0.5;
-          margin-right: 6px;
-          cursor: pointer;
-          &.active {
-            opacity: 1;
-          }
-          &:last-child {
-            margin-right: 0;
-          }
-        }
-      }
-      .tab {
-        padding: 40px;
-        height: calc(100% - 24px);
-        background: #fff;
-      }
-    }
-  }
-}
+<style lang="scss">
 </style>
