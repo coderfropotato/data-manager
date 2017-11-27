@@ -11,15 +11,17 @@
                 <li>
                   <p class="title">输入文件</p>
                   <div class="context">
-                    <el-form :inline="true" label-width="72px">
+                    <el-form  ref="project" label-width="80px" :model="formData" >
                       <!-- 项目名称 -->
-                      <el-form-item label="项目名称" >
+                      <el-form-item label="项目名称" prop="projectName" :rules="[
+                            { required: true, message: '项目名不能为空'}
+                          ]" >
                         <el-input type="text" :maxlength="50" v-model="formData.projectName" size="small"></el-input>
                       </el-form-item>
                       <!-- 选择文件 -->
                       <el-form-item label="选择文件" >
                         <el-button v-if="!formData.filePath.length" @click="selectFile" type="primary" size="mini">点击选择文件</el-button>
-                        <p class="selectPath" v-if="formData.filePath.length">{{formData.filePath}}</p>
+                        <p @click="selectFile" :title="formData.filePath" class="selectPath" v-if="formData.filePath.length">{{formData.filePath}}</p>
                       </el-form-item>
                     </el-form>
                   </div>
@@ -46,11 +48,11 @@
                           </el-form>
                         </el-tab-pane>
                         <el-tab-pane label="选择基因列表文件" name="file">
-                          <el-form :inline="true">
+                          <el-form>
                             <!-- 选择基因列表文件 -->
                             <el-form-item label="选择文件" >
                               <el-button v-if="!formData.fileOptionPath.length" @click="selectFileOption" type="primary" size="mini">点击选择文件</el-button>
-                              <p class="selectPath" v-if="formData.fileOptionPath.length">{{formData.fileOptionPath}}</p>
+                              <p @click="selectFileOption" :title="formData.fileOptionPath" class="selectPath" v-if="formData.fileOptionPath.length">{{formData.fileOptionPath}}</p>
                             </el-form-item>
                           </el-form>
                         </el-tab-pane>
@@ -200,7 +202,11 @@ export default {
       },
       activeName: "text",
       tabList: ["预览", "说明", "例子"],
-      activeIndex: 0
+      activeIndex: 0,
+      tabIndex: "0",
+      rules: {
+        alias: [{ required: true, message: "请输入项目名称", trigger: "blur" }]
+      }
     };
   },
   created() {},
@@ -398,21 +404,38 @@ export default {
           }
         ]
       };
-      // let formData = this.formData;
-      // fetchData("heatMap", formData).then(res => {
-      //   console.log(res);
-      //   return;
-      // });
-      this.drawOptions.projectName = this.formData.projectName;
-      this.tools.setWrap("#svg_cyjjfx_clusterpic");
-      this.tools.setType(this.$route.query.type);
-      this.tools.draw(json, this.drawOptions);
+      this.$refs.project.validate(valid => {
+        if (valid) {
+          // file path
+          if (!this.formData.filePath) {
+            this.$message("请上传数据文件");
+            return;
+          }
+          let formData = this.formData;
+          // actived tab
+          this.tabIndex === "0"
+            ? (formData["fileOptionPath"] = "")
+            : (formData["drawRows"] = "");
+          fetchData("heatMap", formData).then(res => {
+            console.log(res);
+            return;
+            // draw config
+            this.drawOptions.projectName = this.formData.projectName;
+            this.tools.setWrap("#svg_cyjjfx_clusterpic");
+            this.tools.setType(this.$route.query.type);
+            this.tools.draw(json, this.drawOptions);
+          });
+        } else {
+          this.$message("请填写项目名称");
+        }
+      });
+      return;
     },
     toTools() {
       this.$router.push("./toolsIndex");
     },
     handleClick(tab, event) {
-      console.log(tab, event);
+      this.tabIndex = tab.index;
     },
     tab(index) {
       this.activeIndex = index;
@@ -457,7 +480,10 @@ export default {
   height: 100%;
   .selectPath {
     cursor: pointer;
-    line-height: 1;
+    line-height: 36px;
+    white-space: nowrap;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
     word-break: break-word;
     &:hover {
       color: #386cca;
