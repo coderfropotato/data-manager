@@ -13,3 +13,5 @@ thumbs.db
 .vscode
 db
 dist
+pack.sh
+font.bat
