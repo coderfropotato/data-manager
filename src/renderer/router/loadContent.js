@@ -17,6 +17,8 @@ const FileContent = r => require.ensure([], () => r(require('@/views/content/chi
 const FileScale = r => require.ensure([], () => r(require('@/views/content/children/fileScale')), 'fileScale')
 const SearchHeader = r => require.ensure([], () => r(require('@/views/content/children/searchHeader')), 'searchHeader')
 const SearchIndex = r => require.ensure([], () => r(require('@/views/content/children/searchIndex')), 'searchIndex')
+const ToolsExcel = r => require.ensure([], () => r(require('@/views/content/children/toolsExcel')), 'toolsExcel');
+const ToolsVenn = r => require.ensure([], () => r(require('@/views/content/children/toolsVenn')), 'toolsVenn');
 
 const SearchContent = r => require.ensure([], () => r(require('@/views/content/children/searchContent')), 'searchContent')
 const ImportFile = r => require.ensure([], () => r(require('@/views/content/children/importFile')), 'importFile')
@@ -122,6 +124,20 @@ const routes = [
     name: 'ToolsDetail',
     components: {
       ContentHeader: ToolsDetail
+    }
+  },
+  {
+    path:"toolsExcel",
+    name:"ToolsExcel",
+    components:{
+      ContentHeader: ToolsExcel
+    }
+  },
+  {
+    path:"toolsVenn",
+    name:"ToolsVenn",
+    components:{
+      ContentHeader: ToolsVenn
     }
   },
   {

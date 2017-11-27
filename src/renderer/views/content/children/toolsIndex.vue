@@ -9,14 +9,14 @@
                     <span>简介：将表格数据绘制成一个热图。</span>
                 </div>
             </li>
-            <li @click="toolDetail('excel')">
+            <li @click="toExcel">
                 <img src="../../../assets/images/excelfilter.png" alt="">
                 <div class="desc">
                     <p>表格筛选</p>
                     <span>简介：从源表格包含的所有属性中，筛选出所关注样本的信息。</span>
                 </div>
             </li>
-            <li @click="toolDetail('pathway')">
+            <li @click="toVenn">
                 <img src="../../../assets/images/pathway.png" alt="">
                 <div class="desc">
                     <p>PathWay富集分析</p>
@@ -37,6 +37,12 @@ export default {
       this.$store.dispatch("setToolType", type).then(_ => {
         this.$router.push(`./toolsDetail?type=${type}`);
       });
+    },
+    toExcel(){
+      this.$router.push('./toolsExcel')
+    },
+    toVenn(){
+      this.$router.push('./toolsVenn')
     }
   },
   created() {},
