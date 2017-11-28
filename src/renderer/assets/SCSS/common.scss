@@ -224,201 +224,212 @@ body{
   height: 4px;
 }
 
-#svg_cyjjfx_clusterpic{
-  .heatmaplink {
-    fill: none;
-    stroke: #333;
-    stroke-width: 1px;
-  }
-  .heatmap_rect:hover {
-      opacity: 0.5;
-      stroke: #FFF;
-      stroke-width: 2px;
-  }
-  .heatmapaxis text{
-      font-size: 12px;
-  }
-  .heatmapaxis line, .heatmapaxis path{
-      stroke: #ccc
-  }
-}
+// #svg_cyjjfx_clusterpic{
+//   .heatmaplink {
+//     fill: none;
+//     stroke: #333;
+//     stroke-width: 1px;
+//   }
+//   .heatmap_rect:hover {
+//       opacity: 0.5;
+//       stroke: #FFF;
+//       stroke-width: 2px;
+//   }
+//   .heatmapaxis text{
+//       font-size: 12px;
+//   }
+//   .heatmapaxis line, .heatmapaxis path{
+//       stroke: #ccc
+//   }
+// }
 
-.drawWrap {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  .selectPath {
-    cursor: pointer;
-    line-height: 36px;
-    white-space: nowrap;
-    overflow-x: hidden;
-    text-overflow: ellipsis;
-    word-break: break-word;
-    &:hover {
-      color: #386cca;
-    }
-  }
-  & > p {
-    padding: 0 16px;
-    line-height: 36px;
-    border-bottom: 1px solid #ccc;
-    span{
-      &:last-child{
-        color: #386cca;
-      }
-      &:first-child{
-        &:hover{
-          color: #386cca;
-        }
-      }
-    }
-  }
-  .el-button--primary{
-    background-color:#386cca;
-    border-color:#386cca;
-  }
-  .el-radio__input.is-checked .el-radio__inner{
-    border-color: #386cca;
-    background: #386cca;
-  }
-  .el-tabs__item.is-active{
-    color: #386cca;
-  }
-  .el-tabs__active-bar{
-    background-color: #386cca;
-  }
-  .el-checkbox__input.is-checked .el-checkbox__inner{
-    background-color: #386cca;
-    border-color: #386cca;
-  }
-  .el-textarea__inner:focus{
-    border-color: #386cca;
-  }
-  .el-select-dropdown__item{
-    &.selected{
-      &.hover{
-        background-color:#386cca!important;
-      }
-    }
-  }
-  .el-select-dropdown__item.selected{
-    background-color:#386cca;
-  }
-  .el-input__inner:focus{
-    border-color: #386cca;
-  }
-  #tools_draw_context {
-    padding: 20px;
-    display: flex;
-    width: 100%;
-    height: 100%;
-    .options {
-      padding-right: 20px;
-      max-width: 380px;
-      width: 380px;
-      height: 100%;
-      overflow-y: auto;
-      .el-form {
-        font-size: 12px;
-      }
-      ul {
-        li {
-          list-style: none;
-          border: 2px solid #ccc;
-          border-radius: 8px;
-          margin-bottom: 26px;
-          box-shadow: 1px 1px 10px #ccc;
-          &:last-child {
-            margin-bottom: none;
-          }
-          .title {
-            font-family: "Helvetica Neue", Helvetica, "PingFang SC",
-              "Hiragino Sans GB", "Microsoft YaHei", "\5FAE\8F6F\96C5\9ED1",
-              Arial, sans-serif;
-            padding: 12px;
-            font-size: 14px;
-            line-height: 1;
-            border-bottom: 1px solid #ccc;
-          }
-          .context {
-            padding: 6px 12px;
-            & > p {
-              font-size: 13px;
-            }
-          }
-        }
-      }
-    }
-    .draw-content {
-      flex: 1;
-      margin-left: 20px;
-      border: 2px solid #ccc;
-      overflow-x: auto;
-      overflow-y: hidden;
-      ul {
-        list-style: none;
-        &:after {
-          content: "";
-          display: block;
-          clear: both;
-        }
-        li {
-          float: left;
-          width: 74px;
-          height: 24px;
-          text-align: center;
-          line-height: 24px;
-          background: #386cca;
-          color: #fff;
-          opacity: 0.5;
-          margin-right: 6px;
-          cursor: pointer;
-          &.active {
-            opacity: 1;
-          }
-          &:last-child {
-            margin-right: 0;
-          }
-        }
-      }
-      .tab {
-        padding: 40px;
-        height: calc(100% - 24px);
-        background: #fff;
-      }
-    }
-  }
-  .el-button, .el-textarea__inner{
-    font-size: 13px;
+// .drawWrap {
+//   display: flex;
+//   flex-direction: column;
+//   height: 100%;
+//   .selectPath {
+//     cursor: pointer;
+//     line-height: 36px;
+//     white-space: nowrap;
+//     overflow-x: hidden;
+//     text-overflow: ellipsis;
+//     word-break: break-word;
+//     &:hover {
+//       color: #386cca;
+//     }
+//   }
+//   & > p {
+//     padding: 0 16px;
+//     line-height: 36px;
+//     border-bottom: 1px solid #ccc;
+//     span{
+//       &:last-child{
+//         color: #386cca;
+//       }
+//       &:first-child{
+//         &:hover{
+//           color: #386cca;
+//         }
+//       }
+//     }
+//   }
+//   .el-button--primary{
+//     background-color:#386cca;
+//     border-color:#386cca;
+//   }
+//   .el-radio__input.is-checked .el-radio__inner{
+//     border-color: #386cca;
+//     background: #386cca;
+//   }
+//   .el-tabs__item.is-active{
+//     color: #386cca;
+//   }
+//   .el-tabs__active-bar{
+//     background-color: #386cca;
+//   }
+//   .el-checkbox__input.is-checked .el-checkbox__inner{
+//     background-color: #386cca;
+//     border-color: #386cca;
+//   }
+//   .el-textarea__inner:focus{
+//     border-color: #386cca;
+//   }
+//   .el-select-dropdown__item{
+//     &.selected{
+//       &.hover{
+//         background-color:#386cca!important;
+//       }
+//     }
+//   }
+//   .el-select-dropdown__item.selected{
+//     background-color:#386cca;
+//   }
+//   .el-input__inner:focus{
+//     border-color: #386cca;
+//   }
+//   #tools_draw_context {
+//     padding: 20px;
+//     display: flex;
+//     width: 100%;
+//     height: 100%;
+//     .options {
+//       padding-right: 20px;
+//       max-width: 380px;
+//       width: 380px;
+//       height: 100%;
+//       overflow-y: auto;
+//       .el-form {
+//         font-size: 12px;
+//       }
+//       ul {
+//         li {
+//           list-style: none;
+//           border: 2px solid #ccc;
+//           border-radius: 8px;
+//           margin-bottom: 26px;
+//           box-shadow: 1px 1px 10px #ccc;
+//           &:last-child {
+//             margin-bottom: none;
+//           }
+//           .title {
+//             font-family: "Helvetica Neue", Helvetica, "PingFang SC",
+//               "Hiragino Sans GB", "Microsoft YaHei", "\5FAE\8F6F\96C5\9ED1",
+//               Arial, sans-serif;
+//             padding: 12px;
+//             font-size: 14px;
+//             line-height: 1;
+//             border-bottom: 1px solid #ccc;
+//           }
+//           .context {
+//             padding: 6px 12px;
+//             & > p {
+//               font-size: 13px;
+//             }
+//           }
+//         }
+//       }
+//     }
+//     .draw-content {
+//       flex: 1;
+//       margin-left: 20px;
+//       border: 2px solid #ccc;
+//       overflow-x: auto;
+//       overflow-y: hidden;
+//       ul {
+//         list-style: none;
+//         &:after {
+//           content: "";
+//           display: block;
+//           clear: both;
+//         }
+//         li {
+//           float: left;
+//           width: 74px;
+//           height: 24px;
+//           text-align: center;
+//           line-height: 24px;
+//           background: #386cca;
+//           color: #fff;
+//           opacity: 0.5;
+//           margin-right: 6px;
+//           cursor: pointer;
+//           &.active {
+//             opacity: 1;
+//           }
+//           &:last-child {
+//             margin-right: 0;
+//           }
+//         }
+//       }
+//       .tab {
+//         padding: 40px;
+//         height: calc(100% - 24px);
+//         background: #fff;
+//       }
+//     }
+//   }
+//   .el-button, .el-textarea__inner{
+//     font-size: 13px;
+//   }
+// }
+// .form-row-radio{
+//   .el-radio+.el-radio{
+//     margin-left: 0;
+//   }
+//   .el-radio{
+//     margin-top: 12px;
+//     color: #48576a;
+//   }
+//   .el-radio__label{
+//     color: #48576a;
+//     font-size: 13px!important;  
+//   }
+// }
+// .el-radio__label{
+//   font-size: 13px;
+//   color: #48576a;
+// }
+// .el-select-dropdown__item.selected.hover{
+//   background-color:#386cca;
+// }
+// .el-select-dropdown__item.selected{
+//   background-color:#386cca;
+// }
+// .el-checkbox__inner:hover{
+//   border-color:#386cca;
+// }
+// .el-checkbox__input.isfocus .el-checkbox__inner:hover{
+//   border-color: #386cca;
+// }
+.el-table__header-wrapper{
+  table{
+    width: 100%!important;
   }
 }
-.form-row-radio{
-  .el-radio+.el-radio{
-    margin-left: 0;
-  }
-  .el-radio{
-    margin-top: 12px;
-    color: #48576a;
-  }
-  .el-radio__label{
-    color: #48576a;
-    font-size: 13px!important;  
+.el-table__body-wrapper{
+  overflow-y: scroll!important;
+  height: calc(100% - 40px)!important;
+  table{
+    width: 100%!important;
   }
 }
-.el-radio__label{
-  font-size: 13px;
-  color: #48576a;
-}
-.el-select-dropdown__item.selected.hover{
-  background-color:#386cca;
-}
-.el-select-dropdown__item.selected{
-  background-color:#386cca;
-}
-.el-checkbox__inner:hover{
-  border-color:#386cca;
-}
-.el-checkbox__input.isfocus .el-checkbox__inner:hover{
-  border-color: #386cca;
-}
-

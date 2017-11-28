@@ -24,7 +24,6 @@ function createWindow() {
     skipTaskbar: false,
     useContentSize: true,
     titleBarStyle: 'customButtonsOnHover',
-    title: 'Preferences'
   })
   mainWindow.setMinimumSize(1200, 860)
   mainWindow.loadURL(winURL)
@@ -148,7 +147,7 @@ ipcMain.on('hide-window', (ev) => {
   mainWindow.setSkipTaskbar(false)
 });
 //最大化
-ipcMain.on('show-window', () => {
+ipcMain.on('show-window', (ev) => {
   mainWindow.maximize();
   mainWindow.setSkipTaskbar(false)
 });

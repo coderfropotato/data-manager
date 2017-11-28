@@ -10,14 +10,14 @@ export default {
   name: "fileContent",
   data() {
     return {
-      tableheight: 0,
+      tableheight: 0
     };
   },
   mounted() {
     let _this = this;
-    _this.tableheight = document.body.offsetHeight - 66 - 82 - 40 - 1;
+    _this.tableheight = document.body.offsetHeight - 66 - 82 - 40  - 1;
     this.$electron.ipcRenderer.on("windowResize", function() {
-      _this.tableheight = document.body.offsetHeight - 66 - 82 - 40 - 1;
+      _this.tableheight = document.body.offsetHeight - 66 - 82 - 40  - 1;
     });
   },
   computed: {
@@ -38,7 +38,7 @@ export default {
     }
   },
   activated() {
-    console.log(this.$route.query.type)
+
     this.$store.dispatch("showBottom");
   },
   deactivated() {

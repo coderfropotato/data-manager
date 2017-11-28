@@ -46,8 +46,10 @@ export default {
             .offsetHeight;
           let scrollH = document.querySelector(".el-table__body-wrapper")
             .scrollTop;
+          console.log(scrollH);
           let total = document.querySelector(".el-table__body").offsetHeight;
-          if (scrollH + boxH + 10 >= total && !_this.isLoading && !_this.over) {
+          console.log(scrollH + boxH, total);
+          if (scrollH + boxH + 50 >= total && !_this.isLoading && !_this.over) {
             _this.isLoading = true;
             _this.loadCount++;
             _this.loadData = _this.loadData.concat(
