@@ -157,16 +157,16 @@ var func = {
                         .attr(
                         "transform",
                         "translate(" +
-                        (i + 0.5) * heatmap_one_rect_width +
+                        (i ) * heatmap_one_rect_width +
                         "," +
-                        (heatmap_height + 20) +
+                        (heatmap_height ) +
                         ")"
                         )
                         .append("text")
                         .style('font-size', fontSize + 'px')
                         .text(jsonarray[i].sampleName)
-                        .attr("transform", "rotate(-45)")
-                        .attr("text-anchor", "middle");
+                        .attr("transform", "rotate(90)")
+                        .attr("text-anchor", "left");
                 }
                 let isDrawBorderStatus = drawBorder ? '#ccc' : 'none';
                 for (var j = 0; j < jsonarray[i].list.length; j++) {
