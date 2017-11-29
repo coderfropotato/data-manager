@@ -1,6 +1,6 @@
 <template>
   <div id="fileStatus-root">
-    <div class="title" @click="handlerAll"><span>所有文件</span></div>
+    <div class="title" @click="handlerAll"><span v-if="treeSideBar.length">所有文件</span></div>
       <ol class="height-range">
         <li @click="handlerClick(item.mark)" v-for="(item,index) in treeSideBar" :key="index"><i class="iconfile iconfont icon-wodeyingpan"></i>{{item.name}}</li>
       </ol>

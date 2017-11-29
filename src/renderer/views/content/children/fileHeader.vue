@@ -96,9 +96,9 @@ export default {
             this.$store
               .dispatch("searchCurrentDisk", this.searchValue)
               .then(_ => {
-                let temp = [];
+                let temp;
                 this.searchValue = "";
-                temp.push(this.navList[0]);
+                temp = this.navList[0].alias;
                 this.$router.push("/search?type=current");
                 this.$store.dispatch("setSearchRange", temp);
                 //设置bottom info
@@ -107,8 +107,8 @@ export default {
                   this.searchTableData.length
                 );
                 this.$store.dispatch("setSelected", { count: 0, size: 0 });
-                
                 this.$store.dispatch("setRouteStatus", "search");
+                this.$store.dispatch('setSearchPos',this.navList[this.navList.length-1].filename || this.navList[this.navList.length-1].alias)
               });
             break;
           case "在全局搜索":
@@ -157,7 +157,6 @@ export default {
   .breadcrumb {
     overflow: hidden;
     position: relative;
-    cursor: pointer;
     .bread-wrap {
       width: 100%;
       height: 100%;

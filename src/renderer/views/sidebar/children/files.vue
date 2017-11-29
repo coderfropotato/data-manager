@@ -10,7 +10,7 @@
         <p @click="isShow=true;" v-show="fileList.length>5 && !isShow">更多设备&nbsp;></p>
       </div>
       <p class="no-data" v-if="!fileList.length">暂无设备</p>
-      <span @click="del" id="delete" ref="del" v-show="deleteShow">删除</span>
+      <span @click.stop="del" id="delete" ref="del" v-show="deleteShow">删除</span>
   </div>
 </template>
 
@@ -24,7 +24,7 @@ export default {
   data() {
     return {
       deleteShow: false,
-      isShow: true,
+      isShow: false,
       selectedIndex: 0,
       listInfo: {} //当前设备信息
     };
@@ -57,38 +57,34 @@ export default {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
-      })
-        .then(() => {
-          fetchData("deleteDisk", {
+      }).then(() => {
+        fetchData("deleteDisk", {
+          serialNumber: this.listInfo.serial_number,
+          path: this.listInfo.path
+        }).then(() => {
+
+          //删除成功重新获取设备列表 路由跳转到file主页
+          this.$store.dispatch("getImportTargetDisks").then(_ => {
+            this.$store.dispatch("getModifiedFiles");
+          });
+
+          //删除状态
+          this.$store.dispatch("deleteSatatus", {
             serialNumber: this.listInfo.serial_number,
             path: this.listInfo.path
-          }).then(() => {
-            this.$router.push("/files");
-
-            //删除成功重新获取设备列表 路由跳转到file主页
-            this.$store.dispatch("getImportTargetDisks").then(_ => {
-              this.$store.dispatch("getModifiedFiles");
-            });
-            //删除状态
-            this.$store.dispatch("deleteSatatus", {
-              serialNumber: this.listInfo.serial_number,
-              path: this.listInfo.path
-            });
-            //reset file info
-            this.$store.dispatch("resetFileInfo");
-
-            this.$message({
-              type: "success",
-              message: "删除成功!"
-            });
           });
-        })
-        .catch(() => {
+
+          // //reset file info && global history
+          this.$store.dispatch("resetFileInfo");
+          this.$store.dispatch("setGlobalHistory", false);
+
           this.$message({
-            type: "info",
-            message: "已取消删除"
+            type: "success",
+            message: "删除成功!"
           });
+          this.$router.push("/files");
         });
+      });
     },
     jumpToSearch(item) {
       //编程式导航
@@ -108,9 +104,9 @@ export default {
           });
         });
       });
-      this.$store.dispatch('resetTableClickHistory');
+      this.$store.dispatch("resetTableClickHistory");
       // 文件有历史记录
-      this.$store.dispatch('setGlobalHistory',true);
+      this.$store.dispatch("setGlobalHistory", true);
     }
   }
 };

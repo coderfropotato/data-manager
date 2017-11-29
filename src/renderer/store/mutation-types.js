@@ -34,6 +34,8 @@ export const SET_SEARCH_TABLE_CLICK = 'setSearchTableClick';
 
 //search
 export const GET_SEARCH_TABLE_DATA = 'setSearchTableData';
+export const SET_SEARCH_RANGE_LIST = 'setSearchRangeList';
+export const SET_SEARCH_POS = "setSearchPos";
 //设置搜索值
 export const SET_SEARCH_VALUE = 'setSearchValue';
 export const REMOVE_SEARCH_RANGE = 'removeSearchRange';

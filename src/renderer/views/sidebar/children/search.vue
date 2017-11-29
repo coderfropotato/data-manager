@@ -1,30 +1,36 @@
 <template>
   <div id="search-root">
       <el-checkbox v-if="fileList.length>0" :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
-  <div style="margin: 15px 0;"></div>
+      <div style="margin: 15px 0;"></div>
       <el-checkbox-group v-model="searchRange" @change="handlerCheckedChange">
-        <el-checkbox v-for="(item,index) in fileList" :label="item" :key="index">{{item.alias}}</el-checkbox>
+        <el-checkbox v-for="(item,index) in fileList" :label="item.alias" :key="index">{{item.alias}}</el-checkbox>
       </el-checkbox-group>
   </div>
 </template>
 <script>
-import {mapGetters} from 'vuex'
+import { mapGetters } from "vuex";
 export default {
   data() {
     return {
-      checkAll: true,
-      isIndeterminate: true
+      checkAll: true
+      // isIndeterminate: false
     };
   },
-  computed:{
-    ...mapGetters(['fileList',]),
-    searchRange:{
-      get(){
+  computed: {
+    ...mapGetters(["fileList"]),
+    searchRange: {
+      get() {
         return this.$store.state.search.searchRange;
       },
-      set(val){
-        this.$store.dispatch('setSearchRange',val);
+      set(val) {
+        this.$store.dispatch("setSearchRangeList", val);
       }
+    },
+    isIndeterminate: {
+      get() {
+        return this.searchRange.length !== this.fileList.length;
+      },
+      set(val) {}
     }
   },
   methods: {
@@ -32,14 +38,18 @@ export default {
       let flag = event.target.checked;
       this.searchRange = flag ? this.fileList : [];
       this.isIndeterminate = false;
-      this.$store.dispatch('checkAllSwitch',flag);
+      this.$store.dispatch("checkAllSwitch", flag);
+      // reset searchpos
+      this.$store.dispatch("setSearchPos", "");
     },
     handlerCheckedChange(value) {
       let checkedCount = value.length;
       this.checkAll = checkedCount === this.fileList.length;
       this.isIndeterminate =
         checkedCount > 0 && checkedCount < this.fileList.length;
-      this.$store.dispatch('setSearchRange',value);
+      this.$store.dispatch("setSearchRangeList", value);
+      // reset searchpos
+      this.$store.dispatch("setSearchPos", "");
     }
   }
 };

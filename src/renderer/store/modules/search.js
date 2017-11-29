@@ -11,9 +11,11 @@ const state = {
     searchTableData:[],
     searchRange:[],
     searchValue:"",
+    searchPos:"",
 }
 
 const getters = {
+    searchPos:state=>state.searchPos,
     searchTableData:state=>state.searchTableData,
     searchValue:state=>state.searchValue,
     searchRange:state=>state.searchRange,
@@ -67,9 +69,14 @@ const actions = {
         }else{
             //searchRange
             for(let i=0;i<state.searchRange.length;i++){
-                let obj={};
-                obj.serialNumber = state.searchRange[i].serial_number;
-                obj.path = state.searchRange[i].path;
+                let obj = {};
+                for(let j=0;j<files.state.fileList.length;j++){
+                    if(state.searchRange[i] === files.state.fileList[j].alias){
+                        obj.serialNumber = files.state.fileList[j].serial_number;
+                        obj.path = files.state.fileList[j].path;
+                        break;
+                    }
+                }
                 searchRange.push(obj);
             }
         }
@@ -80,7 +87,6 @@ const actions = {
             }else{
                 //console.log('searchFile'+JSON.stringify({context,searchRange,isglobal}))
                 fetchData('searchFile',{context,searchRange,isglobal}).then(res=>{
-                    console.log(res);
                     commit(types.GET_SEARCH_TABLE_DATA,res.fileList);
                     resolve(res.fileList);
                 });
@@ -93,6 +99,12 @@ const actions = {
     },
     setSearchRange({commit},val){
         commit(types.SET_SEARCH_RANGE,val);
+    },
+    setSearchRangeList({commit},list){
+        commit(types.SET_SEARCH_RANGE_LIST,list);
+    },
+    setSearchPos({commit},pos){
+        commit(types.SET_SEARCH_POS,pos);
     }
 }
 
@@ -107,10 +119,19 @@ const mutations = {
         state.searchRange = [];
     },
     [types.SELECTED_ALL_SEARCH_RANGE](state){
-        state.searchRange = files.state.fileList;
+        state.searchRange = [];
+        files.state.fileList.forEach((val,index)=>{
+            state.searchRange.push(val.alias);
+        })
     },
-    [types.SET_SEARCH_RANGE](state,list){
+    [types.SET_SEARCH_RANGE](state,str){
+        state.searchRange = [str];
+    },
+    [types.SET_SEARCH_RANGE_LIST](state,list){
         state.searchRange = list;
+    },
+    [types.SET_SEARCH_POS](state,pos){
+        state.searchPos = pos;
     }
 }
 

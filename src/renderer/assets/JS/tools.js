@@ -1,4 +1,5 @@
 let d3 = require('d3');
+let venn = require('venn');
 var func = {
     heatmap(data, config, wrap) {
         console.log(data);
@@ -44,15 +45,15 @@ var func = {
                 .append("text")
                 .text(projectName)
                 .attr("text-anchor", "middle")
-                .style('font-size','16px');
+                .style('font-size', '16px');
         }
         function draw_cluster_pic(json, pos) {
             if (json) {
                 var cluster_height, cluster_width;
                 if (pos === 'left') {
-                    cluster_height =(height-90);
-                    console.log((height-90)/heatmap_json.length/2)
-                    console.log(height-90-cluster_height);
+                    cluster_height = (height - 90);
+                    console.log((height - 90) / heatmap_json.length / 2)
+                    console.log(height - 90 - cluster_height);
                     cluster_width = width * 0.1;
                 } else {
                     cluster_height = width * 0.6;
@@ -157,9 +158,9 @@ var func = {
                         .attr(
                         "transform",
                         "translate(" +
-                        (i ) * heatmap_one_rect_width +
+                        (i) * heatmap_one_rect_width +
                         "," +
-                        (heatmap_height ) +
+                        (heatmap_height) +
                         ")"
                         )
                         .append("text")
@@ -235,6 +236,14 @@ var func = {
                 .call(yAxis);
         }
     },
+    venn(data,wrap) {
+        let sets = [{ sets: ['A'], size: 12 },
+        { sets: ['B'], size: 12 },
+        { sets: ['A', 'B'], size: 2 }];
+
+        var chart = venn.VennDiagram()
+        d3.select(wrap).datum(sets).call(chart);
+    }
 }
 function Tools() {
     this.type = '';

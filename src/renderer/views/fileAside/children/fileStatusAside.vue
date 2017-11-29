@@ -1,5 +1,5 @@
 <template>
-  <div id="file-status-info-root">
+  <div id="file-status-info-root" v-if="treeSideBar.length">
     <div class="status-top">
       <img src="../../../assets/images/dir.png" alt="">
       <p>已选中{{checkedData.length}}个文件</p>
@@ -20,7 +20,7 @@
           <p>其中{{treeCat.delete.length}}个最近删除文件</p>
           <div class="btn-group">
             <span @click="saveDelFileAttr">保留标签信息</span>
-            <span class="success">处理完毕</span>
+            <!-- <span class="success">处理完毕</span> -->
             <span @click="delDelFileAttr" class="warning">彻底删除</span>
           </div>
         </li>
@@ -35,7 +35,7 @@
           <p>其中{{treeCat.move.length}}个最近移动文件</p>
           <div class="btn-group">
             <span @click="saveMoveFileAttr">继承信息</span>
-            <span class="success">处理完毕</span>
+            <!-- <span class="success">处理完毕</span> -->
             <span @click="noInheritInfo" class="warning">不继承信息</span>
           </div>
         </li>
@@ -59,7 +59,7 @@ export default {
     return {};
   },
   computed: {
-    ...mapGetters(["checkedData", "treeCat", "modifiedNum"])
+    ...mapGetters(["checkedData", "treeCat", "modifiedNum","treeSideBar"])
   },
   methods: {
     jumpToStatusInfo() {

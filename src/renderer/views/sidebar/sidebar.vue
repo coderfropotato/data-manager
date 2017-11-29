@@ -4,7 +4,7 @@
     <div class="nav-menu" ref="navMenu">
       <el-col :span="24">
         <!-- <el-menu  class="menu" router >
-          <el-menu-item @click="Jump('0')" index="/files" >
+          <el-menu-item @click="Jump(0)" index="/files" >
             <i class="iconfont icon-wenjian"></i>
             <span>文件</span>
           </el-menu-item>
@@ -78,7 +78,13 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["modifiedNumber", "globalNavIndex","history","tableClickHistory","fileTableData"])
+    ...mapGetters([
+      "modifiedNumber",
+      "globalNavIndex",
+      "history",
+      "tableClickHistory",
+      "fileTableData"
+    ])
   },
   mounted() {
     $(".nav-menu ul li")
@@ -100,15 +106,20 @@ export default {
       this.$store.dispatch("setGlobalNavIndex", index).then(_ => {
         switch (this.globalNavIndex) {
           case 1:
-            if(this.history){
-              this.$router.push("/searchfiles");
+            if (this.history) {
+              this.$router.replace("/searchfiles");
               // 获取file info 或者文件夹fileinfo 设置底部信息
-              this.$store.dispatch('setBottomInfo',this.tableClickHistory).then(_=>{
-                this.$store.dispatch('getFileInfo');
-                this.$store.dispatch('setTotalCount',this.fileTableData.length)
-              })
-            }else{
-              this.$router.push("/files");
+              this.$store
+                .dispatch("setBottomInfo", this.tableClickHistory)
+                .then(_ => {
+                  this.$store.dispatch("getFileInfo");
+                  this.$store.dispatch(
+                    "setTotalCount",
+                    this.fileTableData.length
+                  );
+                });
+            } else {
+              this.$router.replace("/files");
               this.$store.dispatch("resetFileInfo");
             }
             this.$store.dispatch("setRouteStatus", "file");
@@ -116,30 +127,30 @@ export default {
             //this.$store.dispatch("getImportTargetDisks");
             break;
           case 2:
-            this.$router.push("/searchindex");
+            this.$router.replace("/searchindex");
             this.$store.dispatch("resetFileInfo");
             this.$store.dispatch("setRouteStatus", "search");
             //重新获取设备列表
             //this.$store.dispatch("getImportTargetDisks").then(_ => {
-              //default selected all
-              this.$store.dispatch("checkAllSwitch", true);
+            //default selected all
+            this.$store.dispatch("checkAllSwitch", true);
             //});
             break;
           case 3:
-            this.$router.push("/filestatus");
+            this.$router.replace("/filestatus");
             this.$store.dispatch("resetFileInfo");
             this.$store.dispatch("setRouteStatus", "status");
             //重新获取设备列表
-            this.$store.dispatch("getImportTargetDisks").then(_=>{
-              this.$store.dispatch('getModifiedFiles')
-            })
+            this.$store.dispatch("getImportTargetDisks").then(_ => {
+              this.$store.dispatch("getModifiedFiles");
+            });
             break;
           case 4:
-            this.$router.push("/toolsIndex");
+            this.$router.replace("/toolsIndex");
             this.$store.dispatch("setRouteStatus", "tools");
             break;
           case 5:
-            this.$router.push("/database");
+            this.$router.replace("/database");
             this.$store.dispatch("setRouteStatus", "database");
             break;
         }

@@ -433,3 +433,18 @@ body{
     width: 100%!important;
   }
 }
+.el-table__empty-block{
+  width: 100%!important;
+}
+#searchHeader-root{
+  background-color:#fff;
+  .search-top{
+    display: flex;
+    background-color:#fff;
+    .tag-group{
+      background-color: #fff;
+      position: static;
+      padding-top: 5px;
+    }
+  }
+}
