@@ -1,7 +1,7 @@
 <template>
   <div id="searchHeader-root">
     <div class="search-top">
-        <div class="tag-group" v-if="searchPos"><el-tag>{{`在${searchPos}搜索`}}</el-tag></div>
+        <div class="tag-group" v-if="searchPos"><el-tag @close="curClose" :closable="true">{{`在${searchPos}搜索`}}</el-tag></div>
         <div class="tag-group" v-if="searchRangeLength!==fileList.length && !searchPos"><el-tag>{{`在${searchRangeLength}个位置搜索`}}</el-tag></div>
         <div class="tag-group"  v-if="searchRangeLength===fileList.length && !searchPos"><el-tag>{{`在全局搜索`}}</el-tag></div>
         <input type="text" v-model.trim="searchValue" placeholder="请输入关键词">
@@ -34,6 +34,9 @@ export default {
     // 重置列表数据，防止和文件组件数据混合
   },
   methods: {
+    curClose(){
+      this.$store.dispatch('setSearchPos','');
+    },
     search() {
       let context = this.searchValue;
       if (this.searchPos) {

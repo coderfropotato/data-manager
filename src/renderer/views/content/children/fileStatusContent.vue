@@ -8,6 +8,7 @@
       :expand-on-click-node="true"
       node-key="mark"
       ref="tree"
+      :highlight-current="true"
       @check-change = "handlerCheckChange"
       @node-click="handlerNodeClick"
       :render-content="renderContent"
