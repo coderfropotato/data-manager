@@ -69,16 +69,16 @@ export default {
   data() {
     return {
       module: true,
-      topShow:true
+      topShow: true
     };
   },
   created() {
-    bus.$on('saveAttrEmptyError',_=>{
-      this.$message('属性名称不能为空')
+    bus.$on("saveAttrEmptyError", _ => {
+      this.$message("属性名称不能为空");
     }),
-    bus.$on('topshow',_=>{
-      this.topShow = _;
-    })
+      bus.$on("topshow", _ => {
+        this.topShow = _;
+      });
   },
   computed: {
     ...mapGetters(["fileInfo", "globalRouteStatus", "curData", "curIndex"])
@@ -105,33 +105,45 @@ export default {
     },
     getPre() {
       if (this.curData[this.curIndex - 1]) {
+        let mark = this.curData[this.curIndex - 1].mark;
         let rootPath = this.curData[this.curIndex - 1].root_path;
         let filepath = this.curData[this.curIndex - 1].path;
         let serialNumber = this.curData[this.curIndex - 1].serialNumber;
         let params = { serialNumber, rootPath, filepath };
         this.$store.dispatch("commitSaveFileParams", params).then(_ => {
           this.$store.dispatch("getStatusFileInfo").then(_ => {
-            this.$store.dispatch('reduceCurIndex')
+            this.$store.dispatch("reduceCurIndex");
           });
         });
+        this.addHighLight(mark);
       } else {
         this.$message("到头了，亲");
       }
     },
     getNext() {
       if (this.curData[this.curIndex + 1]) {
+        let mark = this.curData[this.curIndex + 1].mark;
         let rootPath = this.curData[this.curIndex + 1].root_path;
         let filepath = this.curData[this.curIndex + 1].path;
         let serialNumber = this.curData[this.curIndex + 1].serialNumber;
         let params = { serialNumber, rootPath, filepath };
         this.$store.dispatch("commitSaveFileParams", params).then(_ => {
           this.$store.dispatch("getStatusFileInfo").then(_ => {
-            this.$store.dispatch('addCurIndex')
+            this.$store.dispatch("addCurIndex");
           });
         });
+        this.addHighLight(mark);
       } else {
         this.$message("已经是最后一个了，亲");
       }
+    },
+    addHighLight(mark) {
+      $(".el-tree-node").removeClass("is-current");
+      $("#" + mark)
+        .parent()
+        .parent()
+        .parent()
+        .addClass("is-current");
     }
   }
 };

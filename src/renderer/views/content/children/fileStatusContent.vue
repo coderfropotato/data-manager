@@ -21,6 +21,7 @@
 import { mapGetters, mapActions } from "vuex";
 import bus from "@/utils/bus";
 import fetchData from "@/api/getData";
+import $ from "jquery";
 export default {
   name: "fileStatus",
   activated() {
@@ -48,6 +49,7 @@ export default {
       if (data.status != null) {
         let num = Number(data.status);
         let color = null;
+        let mark = data.mark;
         let tag = null;
         if (num === 4) {
           color = "red";
@@ -73,6 +75,9 @@ export default {
               style: {
                 backgroundColor: color,
                 marginLeft: "12px"
+              },
+              attrs: {
+                id: mark
               }
             },
             tag
@@ -95,29 +100,24 @@ export default {
       e,
       o
     ) {
+      $(".el-tree-node").removeClass("is-current");
       //文件夹和最近删除没有详情
-      if (isdir || status==4) return;
+      if (isdir) {
+        this.$router.push("/filestatus");
+        return;
+      }else if(status === 4 ){
+        return;
+      }
       let rootPath = root_path;
       let filepath = path;
       let params = { serialNumber, rootPath, filepath };
-      // toggle checked current item
-      // if (e.checked) {
-      //   for(var j=0;j<Beforechecked.length;j++){
-      //     if(Beforechecked[j].mark === mark){
-      //       Beforechecked.splice(j,1);
-      //       break;
-      //     }
-      //   }
-      // }else{
-      //   Beforechecked.push(arguments[0]);
-      // }
-      // // save savefileInfo params then getFileInfo last save
-      // // getFileInfo  serialNumber, rootPath, filepath
+      // save savefileInfo params then getFileInfo last save
+      // getFileInfo  serialNumber, rootPath, filepath
       // 如果没有选中  文件详情就不显示 上一个下一个
-      if(!e.checked){
-        bus.$emit('topshow',false);
-      }else{
-        bus.$emit('topshow',true);
+      if (!e.checked) {
+        bus.$emit("topshow", false);
+      } else {
+        bus.$emit("topshow", true);
       }
       this.$store.dispatch("commitSaveFileParams", params).then(_ => {
         this.$store.dispatch("getStatusFileInfo").then(_ => {
@@ -169,9 +169,9 @@ export default {
   .el-tree {
     border: none;
   }
-  .el-tree-node__content{
-    span{
-      user-select: none!important;
+  .el-tree-node__content {
+    span {
+      user-select: none !important;
     }
   }
 }
