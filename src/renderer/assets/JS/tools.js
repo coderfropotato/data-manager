@@ -2,7 +2,6 @@ let d3 = require('d3');
 let venn = require('venn');
 var func = {
     heatmap(data, config, wrap) {
-        console.log(data);
         var cluster_left = data.leftTree || null;
         var cluster_top = data.topTree || null;
         var heatmap_json = data.list;
@@ -78,7 +77,6 @@ var func = {
                 }
                 var root = d3.hierarchy(json);
                 cluster(root);
-                console.log(root.links());
                 var link = svg_cluster_g
                     .selectAll(".heatmaplink")
                     .data(root.links())
@@ -98,7 +96,6 @@ var func = {
                     });
 
                 function elbow(d, i) {
-                    console.log(d)
                     return (
                         "M" +
                         d.source.y +

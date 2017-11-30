@@ -38,7 +38,7 @@
                     </el-form>
                       <p style="margin:12px 0;">选择用于作图的行：（a.可以输入数字代表前多少行用于作图.b.输入一个基因名列表文件，用文件里的基因名对应行作图）</p>
                       <!-- type="card" -->
-                      <el-tabs v-model="activeName"  @tab-click="handleClick">
+                      <el-tabs v-model="formData.activeName"  @tab-click="handleClick">
                         <el-tab-pane label="输入数字" name="text">
                             <el-form  label-width="110px">
                               <!-- 作图使用前多少行 -->
@@ -190,7 +190,9 @@ export default {
         //列聚类
         columnCluster: "true",
         //邮件通知
-        email: false
+        email: false,
+        //tab
+        activeName: "text"
       },
       drawOptions: {
         colors: ["#1a79de", "#fafcf8", "#d94335"],
@@ -200,7 +202,6 @@ export default {
         showRowName: "",
         projectName: ""
       },
-      activeName: "text",
       tabList: ["预览", "说明", "例子"],
       activeIndex: 0,
       tabIndex: "0",
@@ -208,7 +209,7 @@ export default {
         alias: [{ required: true, message: "请输入项目名称", trigger: "blur" }]
       },
       serverOptionsChange: true,
-      drawData:{}
+      drawData: {}
     };
   },
   computed: {
@@ -275,7 +276,7 @@ export default {
         this.formData.fileOptionPath = path[0];
       });
     },
-    initStatus(){
+    initStatus() {
       this.serverOptionsChange = false;
     }
   },

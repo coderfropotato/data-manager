@@ -171,7 +171,6 @@ const mutations = {
   },
 
   [types.TOGGLE_TREE_NODE_DISPLAY] (state, payload) {
-    console.log(state.node.data)
     state.node.data.inputShow = payload.inputShow
     state.node.data.labelShow = payload.labelShow
   },

@@ -16,7 +16,6 @@ const actions = {
     //   commit(types.GET_AUTHORS,data)
     // })
     let data = authors
-    console.log(data)
     commit(types.GET_AUTHORS, data)
   }
 }

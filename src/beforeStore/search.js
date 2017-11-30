@@ -58,7 +58,6 @@ const actions = {
     // TODO 添加搜索范围
     return new Promise((resolve, reject) => {
       fetchData('searchContext', value).then((data) => {
-        console.log(data)
       })
     })
   }
