@@ -3,8 +3,8 @@ let venn = require('venn');
 var func = {
     heatmap(data, config, wrap) {
         console.log(data);
-        var cluster_left = data.topTree || null;
-        var cluster_top = data.leftTree || null;
+        var cluster_left = data.leftTree || null;
+        var cluster_top = data.topTree || null;
         var heatmap_json = data.list;
         var valuemax = data.Max;
         var valuemin = data.Min;
@@ -51,9 +51,7 @@ var func = {
             if (json) {
                 var cluster_height, cluster_width;
                 if (pos === 'left') {
-                    cluster_height = (height - 90);
-                    console.log((height - 90) / heatmap_json.length / 2)
-                    console.log(height - 90 - cluster_height);
+                    cluster_height = (height*0.85 - 90);
                     cluster_width = width * 0.1;
                 } else {
                     cluster_height = width * 0.6;
@@ -100,6 +98,7 @@ var func = {
                     });
 
                 function elbow(d, i) {
+                    console.log(d)
                     return (
                         "M" +
                         d.source.y +
@@ -123,9 +122,9 @@ var func = {
                 heatmap_height = heatmap_one_rect_height * jsonarray[0].list.length;
             } else {
                 heatmap_width = width * 0.60;
-                heatmap_height = height - 40 - 50;
-                heatmap_one_rect_width = heatmap_width / jsonarray.length;
-                heatmap_one_rect_height = heatmap_height / jsonarray[0].list.length;
+                heatmap_height = height*0.85 - 40 - 50;
+                heatmap_one_rect_width = heatmap_width / jsonarray[0].list.length;
+                heatmap_one_rect_height = heatmap_height / jsonarray.length;
             }
 
             var svg_heatmap_g = svg
@@ -138,8 +137,8 @@ var func = {
             var svg_heatmap_legend_g = svg
                 .append("g")
                 .attr("class", "heatmaplegend")
-                /* width - 40 */
-                .attr("transform", "translate(" + (heatmap_width + width * 0.1 + 40) + "," + (height / 2) + ")");
+                /* width - 40   (heatmap_width + width * 0.1 + 40) */
+                .attr("transform", "translate(" + (width - 50) + "," + (height / 2) + ")");
 
             var colorscale = d3
                 .scaleLinear()
@@ -152,30 +151,14 @@ var func = {
                 var svg_g_temp = svg_heatmap_g
                     .append("g")
                     .attr("class", jsonarray[i].sampleName);
-                if (showRowName) {
-                    svg_g_temp
-                        .append("g")
-                        .attr(
-                        "transform",
-                        "translate(" +
-                        (i) * heatmap_one_rect_width +
-                        "," +
-                        (heatmap_height) +
-                        ")"
-                        )
-                        .append("text")
-                        .style('font-size', fontSize + 'px')
-                        .text(jsonarray[i].sampleName)
-                        .attr("transform", "rotate(90)")
-                        .attr("text-anchor", "left");
-                }
-                let isDrawBorderStatus = drawBorder ? '#ccc' : 'none';
+
+                var isDrawBorderStatus = drawBorder ? '#ccc' : 'none';
                 for (var j = 0; j < jsonarray[i].list.length; j++) {
                     svg_g_temp
                         .append("rect")
                         .attr("class", "heatmap_rect")
-                        .attr("x", 0 + i * heatmap_one_rect_width)
-                        .attr("y", 0 + j * heatmap_one_rect_height)
+                        .attr("x", 0 + j * heatmap_one_rect_width)
+                        .attr("y", 0 + i * heatmap_one_rect_height)
                         .attr("width", heatmap_one_rect_width)
                         .attr("height", heatmap_one_rect_height)
                         .attr("fill", colorscale(jsonarray[i].list[j].value))
@@ -190,7 +173,54 @@ var func = {
                         );
                 }
             }
+            //row name
+            if (showRowName) {
+                var svg_sampleName = svg
+                    .append("g")
+                    .attr("class", "samplename")
+                    .attr("transform", "translate(" + (width * 0.1 + 8 + width * 0.60 + 8) + ",98)");
+                for (var i = 0; i < jsonarray.length; i++) {
+                    svg_sampleName.append('text')
+                        .attr('x', 0)
+                        .attr('y', i * heatmap_one_rect_height + heatmap_one_rect_height / 2)
+                        .style('font-size', fontSize + 'px')
+                        .style('dominant-baseline', 'middle')
+                        .text(jsonarray[i].sampleName)
+                }
+            }
+            // column name
+            var svg_column = svg
+            .append("g")
+            .attr("class", "samplename")
+            .attr("transform", "translate(" +  (width * 0.1 + 8) + ","+(heatmap_height+96+8)+")");
 
+            for(var k=0;k<jsonarray[0].list.length;k++){
+                svg_column.append('g')
+                    .attr('transform',"translate("+(k*heatmap_one_rect_width+heatmap_one_rect_width/2)+", 0)")    
+                    .append('text')
+                    .attr("transform","rotate(90)")
+                    .style('text-anchor','left')
+                    .style('font-size',fontSize+'px')
+                    .style('dominant-baseline','middle')
+                    .text(jsonarray[0].list[k].name)
+            }
+
+            // var svg_column = svg
+            //     .append("g")
+            //     .attr(
+            //     "transform",
+            //     "translate(" +
+            //     (i) * heatmap_one_rect_width +
+            //     "," +
+            //     (heatmap_height) +
+            //     ")"
+            //     )
+            //     .append("text")
+            //     .style('font-size', fontSize + 'px')
+            //     .text(jsonarray[i].sampleName)
+            //     .attr("transform", "rotate(90)")
+            //     .attr("text-anchor", "middle");
+            // legend
             var linearGradient = svg_heatmap_legend_g
                 .append("defs")
                 .append("linearGradient")
@@ -235,8 +265,9 @@ var func = {
                 .attr("transform", "translate(" + heatmap_legend_width + ",0)")
                 .call(yAxis);
         }
+
     },
-    venn(data,wrap) {
+    venn(data, wrap) {
         let sets = [{ sets: ['A'], size: 12 },
         { sets: ['B'], size: 12 },
         { sets: ['A', 'B'], size: 2 }];

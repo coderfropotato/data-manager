@@ -115,7 +115,7 @@
                     </el-form>
                     <el-form :inline="true">
                       <el-form-item label="字体大小">
-                        <el-input :maxlength="50" size="small" type="number"  v-model="drawOptions.fontSize" placeholder="请输入字体大小"></el-input>
+                        <el-input :maxlength="50" size="small" type="number"  v-model.number="drawOptions.fontSize" placeholder="请输入字体大小"></el-input>
                       </el-form-item>
                       <!-- <el-form-item label="格子的长度*高度">
                         <el-input :maxlength="50" size="small" type="text" v-model="drawOptions.cubeSize" placeholder="如20*12"></el-input>
@@ -193,8 +193,8 @@ export default {
         email: false
       },
       drawOptions: {
-        colors: ["#ff0000", "#92d050", "#000000"],
-        fontSize: 16,
+        colors: ["#1a79de", "#fafcf8", "#d94335"],
+        fontSize: 14,
         cubeSize: "",
         drawBorder: "yes",
         showRowName: "",
@@ -206,10 +206,11 @@ export default {
       tabIndex: "0",
       rules: {
         alias: [{ required: true, message: "请输入项目名称", trigger: "blur" }]
-      }
+      },
+      serverOptionsChange: true,
+      drawData:{}
     };
   },
-  created() {},
   computed: {
     ...mapGetters(["toolType"])
   },
@@ -227,18 +228,26 @@ export default {
           this.tabIndex === "0"
             ? (formData["fileOptionPath"] = "")
             : (formData["drawRows"] = "");
-          fetchData("heatMap", formData).then(res => {
-            console.log(res)
-            if(typeof res['result'] === 'string'){
-              this.$message(res['result']);
-            }else{
-              // draw config
-              this.drawOptions.projectName = this.formData.projectName;
-              this.tools.setWrap("#svg_cyjjfx_clusterpic");
-              this.tools.setType(this.$route.query.type);
-              this.tools.draw(res.result, this.drawOptions);
-            }
-          });
+          if (this.serverOptionsChange) {
+            fetchData("heatMap", formData).then(res => {
+              if (typeof res["result"] === "string") {
+                this.$message(res["result"]);
+              } else {
+                this.drawData = res.result;
+                // draw config
+                this.drawOptions.projectName = this.formData.projectName;
+                this.tools.setWrap("#svg_cyjjfx_clusterpic");
+                this.tools.setType(this.$route.query.type);
+                this.tools.draw(this.drawData, this.drawOptions);
+              }
+            });
+          } else {
+            this.drawOptions.projectName = this.formData.projectName;
+            this.tools.setWrap("#svg_cyjjfx_clusterpic");
+            this.tools.setType(this.$route.query.type);
+            this.tools.draw(this.drawData, this.drawOptions);
+          }
+          this.initStatus();
         } else {
           this.$message("请填写项目名称");
         }
@@ -266,16 +275,16 @@ export default {
         this.formData.fileOptionPath = path[0];
       });
     },
-    handleRemove(file, fileList) {
-      console.log(file, fileList);
-    },
-    handlePreview(file) {
-      console.log(file);
+    initStatus(){
+      this.serverOptionsChange = false;
     }
   },
   watch: {
-    filePath: function() {
-      console.log(1);
+    formData: {
+      handler: function() {
+        this.serverOptionsChange = true;
+      },
+      deep: true
     }
   },
   activated() {
@@ -288,4 +297,5 @@ export default {
 </script>
 
 <style lang="scss">
+
 </style>
