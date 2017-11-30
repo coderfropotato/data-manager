@@ -230,7 +230,7 @@ export default {
             : (formData["drawRows"] = "");
           // if (this.serverOptionsChange) {
           fetchData("heatMap", formData).then(res => {
-            if (typeof res["result"] === "string") {
+            if (res.Error) {
               this.$message(res["result"]);
             } else {
               this.drawData = res.result;
