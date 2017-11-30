@@ -38,7 +38,7 @@
                     </el-form>
                       <p style="margin:12px 0;">选择用于作图的行：（a.可以输入数字代表前多少行用于作图.b.输入一个基因名列表文件，用文件里的基因名对应行作图）</p>
                       <!-- type="card" -->
-                      <el-tabs v-model="formData.activeName"  @tab-click="handleClick">
+                      <el-tabs v-model="activeName"  @tab-click="handleClick">
                         <el-tab-pane label="输入数字" name="text">
                             <el-form  label-width="110px">
                               <!-- 作图使用前多少行 -->
@@ -190,9 +190,7 @@ export default {
         //列聚类
         columnCluster: "true",
         //邮件通知
-        email: false,
-        //tab
-        activeName: "text"
+        email: false
       },
       drawOptions: {
         colors: ["#1a79de", "#fafcf8", "#d94335"],
@@ -205,10 +203,11 @@ export default {
       tabList: ["预览", "说明", "例子"],
       activeIndex: 0,
       tabIndex: "0",
+      activeName: "text",
       rules: {
         alias: [{ required: true, message: "请输入项目名称", trigger: "blur" }]
       },
-      serverOptionsChange: true,
+      // serverOptionsChange: true,
       drawData: {}
     };
   },
@@ -229,26 +228,26 @@ export default {
           this.tabIndex === "0"
             ? (formData["fileOptionPath"] = "")
             : (formData["drawRows"] = "");
-          if (this.serverOptionsChange) {
-            fetchData("heatMap", formData).then(res => {
-              if (typeof res["result"] === "string") {
-                this.$message(res["result"]);
-              } else {
-                this.drawData = res.result;
-                // draw config
-                this.drawOptions.projectName = this.formData.projectName;
-                this.tools.setWrap("#svg_cyjjfx_clusterpic");
-                this.tools.setType(this.$route.query.type);
-                this.tools.draw(this.drawData, this.drawOptions);
-              }
-            });
-          } else {
-            this.drawOptions.projectName = this.formData.projectName;
-            this.tools.setWrap("#svg_cyjjfx_clusterpic");
-            this.tools.setType(this.$route.query.type);
-            this.tools.draw(this.drawData, this.drawOptions);
-          }
-          this.initStatus();
+          // if (this.serverOptionsChange) {
+          fetchData("heatMap", formData).then(res => {
+            if (typeof res["result"] === "string") {
+              this.$message(res["result"]);
+            } else {
+              this.drawData = res.result;
+              // draw config
+              this.drawOptions.projectName = this.formData.projectName;
+              this.tools.setWrap("#svg_cyjjfx_clusterpic");
+              this.tools.setType(this.$route.query.type);
+              this.tools.draw(this.drawData, this.drawOptions);
+            }
+          });
+          // } else {
+          //   this.drawOptions.projectName = this.formData.projectName;
+          //   this.tools.setWrap("#svg_cyjjfx_clusterpic");
+          //   this.tools.setType(this.$route.query.type);
+          //   this.tools.draw(this.drawData, this.drawOptions);
+          // }
+          // this.initStatus();
         } else {
           this.$message("请填写项目名称");
         }
@@ -281,12 +280,12 @@ export default {
     }
   },
   watch: {
-    formData: {
-      handler: function() {
-        this.serverOptionsChange = true;
-      },
-      deep: true
-    }
+    // formData: {
+    //   handler: function() {
+    //     this.serverOptionsChange = true;
+    //   },
+    //   deep: true
+    // }
   },
   activated() {
     this.$store.dispatch("removeRightView", true);
