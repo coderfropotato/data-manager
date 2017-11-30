@@ -231,7 +231,7 @@ export default {
           // if (this.serverOptionsChange) {
           fetchData("heatMap", formData).then(res => {
             if (res.Error) {
-              this.$message(res["result"]);
+              this.$message(res.Error);
             } else {
               this.drawData = res.result;
               // draw config

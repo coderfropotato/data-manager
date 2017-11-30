@@ -105,29 +105,30 @@ export default {
       if (isdir) {
         this.$router.push("/filestatus");
         return;
-      }else if(status === 4 ){
+      } else if (status === 4) {
         return;
-      }
-      let rootPath = root_path;
-      let filepath = path;
-      let params = { serialNumber, rootPath, filepath };
-      // save savefileInfo params then getFileInfo last save
-      // getFileInfo  serialNumber, rootPath, filepath
-      // 如果没有选中  文件详情就不显示 上一个下一个
-      if (!e.checked) {
-        bus.$emit("topshow", false);
       } else {
-        bus.$emit("topshow", true);
-      }
-      this.$store.dispatch("commitSaveFileParams", params).then(_ => {
-        this.$store.dispatch("getStatusFileInfo").then(_ => {
-          this.$router.push("/filestatusinfo?type=status");
+        let rootPath = root_path;
+        let filepath = path;
+        let params = { serialNumber, rootPath, filepath };
+        // save savefileInfo params then getFileInfo last save
+        // getFileInfo  serialNumber, rootPath, filepath
+        // 如果没有选中  文件详情就不显示 上一个下一个
+        if (!e.checked) {
+          bus.$emit("topshow", false);
+        } else {
+          bus.$emit("topshow", true);
+        }
+        this.$store.dispatch("commitSaveFileParams", params).then(_ => {
+          this.$store.dispatch("getStatusFileInfo").then(_ => {
+            this.$router.push("/filestatusinfo?type=status");
+          });
         });
-      });
-      //update cur status and reset index
-      if (status) {
-        this.$store.dispatch("setCurStatus", status);
-        this.$store.dispatch("setCurIndex", mark);
+        //update cur status and reset index
+        if (status) {
+          this.$store.dispatch("setCurStatus", status);
+          this.$store.dispatch("setCurIndex", mark);
+        }
       }
     },
     handlerCheckChange(...args) {
