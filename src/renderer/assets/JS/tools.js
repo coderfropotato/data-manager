@@ -1,6 +1,6 @@
 let d3 = require('d3');
 let venn = require('venn');``
-var func = {
+let func = {
     heatmap(data, config, wrap) {
         var cluster_left = data.leftTree || null;
         var cluster_top = data.topTree || null;
@@ -269,7 +269,7 @@ var func = {
         { sets: ['B'], size: 12 },
         { sets: ['A', 'B'], size: 2 }];
 
-        var chart = venn.VennDiagram()
+        var chart = venn.VennDiagram();
         d3.select(wrap).datum(sets).call(chart);
     }
 }
