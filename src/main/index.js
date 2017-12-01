@@ -28,7 +28,6 @@ function createWindow() {
   mainWindow.setMinimumSize(1200, 860)
   mainWindow.loadURL(winURL)
   mainWindow.setMenu(null)
-  mainWindow.webContents.openDevTools()
   mainWindow.on('closed', () => {
     mainWindow = null;
     tray = null;
