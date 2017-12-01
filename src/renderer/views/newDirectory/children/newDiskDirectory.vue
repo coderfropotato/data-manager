@@ -367,6 +367,7 @@ export default {
                   if (res.result === "success") {
                     _this.$message({
                       message: "项目添加成功",
+                      duration:1200,
                       type: "success",
                       onClose: _ => {
                         _this.$electron.ipcRenderer.send("addFile", {

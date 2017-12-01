@@ -1,6 +1,9 @@
 <template>
+<!-- @row-click="selectedRow" @row-contextmenu="selectedRow" -->
     <div class="table-wrap">
-      <el-table  ref="table" @row-dblclick="dbClick" @selection-change="handleSelectionChange"  @row-click="selectedRow" :height="tableHeight" :data="loadData" stripestyle="width: 100%">
+      <el-table  ref="table" @select="checkbox($event)" @row-dblclick="dbClick" @selection-change="handleSelectionChange" 
+      @cell-click="cellClick"
+      :height="tableHeight" :data="loadData" stripestyle="width: 100%">
         <el-table-column type="selection"></el-table-column>
         <el-table-column  prop="isdir" label="选择">
           <template scope="scope">
@@ -114,9 +117,17 @@ export default {
       this.timerList.push(timer);
     },
     //select current row
-    selectedRow(row, event, column) {
-      // selected current
-      this.$refs.table.toggleRowSelection(row);
+    // selectedRow(row, event, column) {
+    //   // selected current
+    //   this.$refs.table.clearSelection();
+    //   this.$refs.table.toggleRowSelection(row);
+    // },
+    cellClick(row, column, cell, event) {
+      if (column.label) {
+        // 不是checkbox cell
+        this.$refs.table.clearSelection();
+        this.$refs.table.toggleRowSelection(row);
+      }
     },
     //dbclick into dir
     dbClick(row, event) {
