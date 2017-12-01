@@ -442,3 +442,6 @@ body{
 .el-tree--highlight-current .el-tree-node.is-current>.el-tree-node__content{
   background-color:#e4e8f1;
 }
+.el-checkbox-button__original, .el-pagination--small .arrow.disabled, .el-table .hidden-columns, .el-table td.is-hidden>*, .el-table th.is-hidden>*, .el-table--hidden{
+  visibility: visible;
+}
