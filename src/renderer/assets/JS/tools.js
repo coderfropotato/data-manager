@@ -1,5 +1,5 @@
 let d3 = require('d3');
-let venn = require('venn');
+let venn = require('venn.js');
 let func = {
     heatmap(data, config, wrap) {
         var cluster_left = data.leftTree || null;

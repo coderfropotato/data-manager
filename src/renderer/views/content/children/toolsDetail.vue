@@ -190,7 +190,7 @@ export default {
         //列聚类
         columnCluster: "true",
         //邮件通知
-        // email: false
+        email: false
       },
       drawOptions: {
         colors: ["#1a79de", "#fafcf8", "#d94335"],
