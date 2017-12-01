@@ -132,11 +132,11 @@
                           <el-option label="no" value=""></el-option>
                         </el-select>
                       </el-form-item>
-                      <el-form-item label="任务完成后发邮件通知我">
+                      <!-- <el-form-item label="任务完成后发邮件通知我">
                         <el-checkbox-group v-model="formData.email">
                           <el-checkbox></el-checkbox>
                         </el-checkbox-group>
-                      </el-form-item>
+                      </el-form-item> -->
                       <br>
                       <el-form-item>
                         <el-button type="primary" @click="sub">提交</el-button>
@@ -190,7 +190,7 @@ export default {
         //列聚类
         columnCluster: "true",
         //邮件通知
-        email: false
+        // email: false
       },
       drawOptions: {
         colors: ["#1a79de", "#fafcf8", "#d94335"],
