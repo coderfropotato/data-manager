@@ -3,7 +3,7 @@
     <div v-if="fileInfo.basic">
       <!-- status layout start-->
       <ol v-if="globalRouteStatus==='status' && topShow" class="status-bar">
-        <li>自动识别</li>
+        <!-- <li>自动识别</li> -->
         <li @click="getPre">上一项</li>
         <li @click="getNext">下一项</li>
       </ol>
