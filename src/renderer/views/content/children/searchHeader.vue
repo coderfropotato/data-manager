@@ -12,6 +12,8 @@
 <script>
 import scrollBar from "@/utils/searchScrollbar";
 import { mapGetters } from "vuex";
+import $ from "jquery";
+import bus from "@/utils/bus";
 export default {
   name: "SearchHeader",
   data() {
@@ -28,14 +30,21 @@ export default {
     },
     ...mapGetters(["searchRangeLength", "fileList", "searchPos"])
   },
-
   mounted() {
-    // scrollBar()
-    // 重置列表数据，防止和文件组件数据混合
+    bus.$on("computedInput", _ => {
+      this.computedInput();
+    });
+  },
+  activated() {
+    this.computedInput();
   },
   methods: {
-    curClose(){
-      this.$store.dispatch('setSearchPos','');
+    curClose() {
+      this.$store.dispatch("setSearchPos", "");
+      // computed input padding
+      this.$nextTick(_ => {
+        bus.$emit("computedInput");
+      });
     },
     search() {
       let context = this.searchValue;
@@ -61,6 +70,13 @@ export default {
           }
         );
       }
+    },
+    computedInput() {
+      let oW = $("#searchHeader-root .tag-group").width();
+      $("#searchHeader-root .search-top input").css(
+        "padding-left",
+        oW + 10 + "px"
+      );
     }
   }
 };
@@ -103,25 +119,25 @@ export default {
       border-radius: 0 4px 4px 0;
     }
   }
-  // .tag-group {
-  //   position: absolute;
-  // }
-  // .el-button {
-  //   border-radius: 0;
-  //   color: #fff !important;
-  // }
-  // .el-input-group__append {
-  //   background: #386cca;
-  //   border: none;
-  // }
-  // .search {
-  //   position: relative;
-  //   width: 60%;
-  //   margin: 0 auto;
-  //   .el-input__inner {
-  //     border: none;
-  //     background: #f5f5f5;
-  //   }
-  // }
+  .tag-group {
+    position: absolute;
+  }
+  .el-button {
+    border-radius: 0;
+    color: #fff !important;
+  }
+  .el-input-group__append {
+    background: #386cca;
+    border: none;
+  }
+  .search {
+    position: relative;
+    width: 60%;
+    margin: 0 auto;
+    .el-input__inner {
+      border: none;
+      background: #f5f5f5;
+    }
+  }
 }
 </style>

@@ -9,6 +9,7 @@
 </template>
 <script>
 import { mapGetters } from "vuex";
+import bus from "@/utils/bus";
 export default {
   data() {
     return {
@@ -17,7 +18,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["fileList"]),
+    ...mapGetters(["fileList", "searchPos"]),
     searchRange: {
       get() {
         return this.$store.state.search.searchRange;
@@ -41,6 +42,10 @@ export default {
       this.$store.dispatch("checkAllSwitch", flag);
       // reset searchpos
       this.$store.dispatch("setSearchPos", "");
+      // computed input padding
+      this.$nextTick(_ => {
+        bus.$emit("computedInput");
+      });
     },
     handlerCheckedChange(value) {
       let checkedCount = value.length;
@@ -50,6 +55,10 @@ export default {
       this.$store.dispatch("setSearchRangeList", value);
       // reset searchpos
       this.$store.dispatch("setSearchPos", "");
+      // computed input padding
+      this.$nextTick(_ => {
+        bus.$emit("computedInput");
+      });
     }
   }
 };
