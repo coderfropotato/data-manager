@@ -1,5 +1,6 @@
 let d3 = require('d3');
 let venn = require('venn.js');
+let $ = require('jquery');
 let func = {
     heatmap(data, config, wrap) {
         var cluster_left = data.leftTree || null;
@@ -11,14 +12,8 @@ let func = {
         var projectName = config.projectName || "cluster"
         var colors = config.colors;
         var fontSize = config.fontSize || 12;
-        var colorArr = config.colors;
         let temp = config.cubeSize.split('*');
-        var cubeSize;
-        // if (config.cubeSize.length && config.cubeSize.indexOf('*') !== -1 && temp.length == 2 && Number(temp[0]) !== 0 && Number(temp[1]) !== 0) {
-        //     cubeSize = config.cubeSize.split('*')
-        // } else {
-        cubeSize = false;
-        // }
+
         var drawBorder = config.drawBorder;
         var showRowName = !!config.showRowName;
         var oWidth = document.querySelector('.draw-area').offsetWidth - 80;
@@ -50,7 +45,7 @@ let func = {
             if (json) {
                 var cluster_height, cluster_width;
                 if (pos === 'left') {
-                    cluster_height = (height*0.85 - 90);
+                    cluster_height = (height * 0.85 - 90);
                     cluster_width = width * 0.1;
                 } else {
                     cluster_height = width * 0.6;
@@ -112,17 +107,11 @@ let func = {
         function draw_heatmap(jsonarray, max, min) {
             var colorarray = colors.concat();
             var heatmap_width, heatmap_height, heatmap_one_rect_width, heatmap_one_rect_height;
-            if (cubeSize) {
-                heatmap_one_rect_width = cubeSize[0];
-                heatmap_one_rect_height = cubeSize[1];
-                heatmap_width = heatmap_one_rect_width * jsonarray.length;
-                heatmap_height = heatmap_one_rect_height * jsonarray[0].list.length;
-            } else {
-                heatmap_width = width * 0.60;
-                heatmap_height = height*0.85 - 40 - 50;
-                heatmap_one_rect_width = heatmap_width / jsonarray[0].list.length;
-                heatmap_one_rect_height = heatmap_height / jsonarray.length;
-            }
+
+            heatmap_width = width * 0.60;
+            heatmap_height = height * 0.85 - 40 - 50;
+            heatmap_one_rect_width = heatmap_width / jsonarray[0].list.length;
+            heatmap_one_rect_height = heatmap_height / jsonarray.length;
 
             var svg_heatmap_g = svg
                 .append("g")
@@ -187,37 +176,21 @@ let func = {
             }
             // column name
             var svg_column = svg
-            .append("g")
-            .attr("class", "samplename")
-            .attr("transform", "translate(" +  (width * 0.1 + 8) + ","+(heatmap_height+96+8)+")");
+                .append("g")
+                .attr("class", "samplename")
+                .attr("transform", "translate(" + (width * 0.1 + 8) + "," + (heatmap_height + 96 + 8) + ")");
 
-            for(var k=0;k<jsonarray[0].list.length;k++){
+            for (var k = 0; k < jsonarray[0].list.length; k++) {
                 svg_column.append('g')
-                    .attr('transform',"translate("+(k*heatmap_one_rect_width+heatmap_one_rect_width/2)+", 0)")    
+                    .attr('transform', "translate(" + (k * heatmap_one_rect_width + heatmap_one_rect_width / 2) + ", 0)")
                     .append('text')
-                    .attr("transform","rotate(90)")
-                    .style('text-anchor','left')
-                    .style('font-size',fontSize+'px')
-                    .style('dominant-baseline','middle')
+                    .attr("transform", "rotate(90)")
+                    .style('text-anchor', 'left')
+                    .style('font-size', fontSize + 'px')
+                    .style('dominant-baseline', 'middle')
                     .text(jsonarray[0].list[k].name)
             }
 
-            // var svg_column = svg
-            //     .append("g")
-            //     .attr(
-            //     "transform",
-            //     "translate(" +
-            //     (i) * heatmap_one_rect_width +
-            //     "," +
-            //     (heatmap_height) +
-            //     ")"
-            //     )
-            //     .append("text")
-            //     .style('font-size', fontSize + 'px')
-            //     .text(jsonarray[i].sampleName)
-            //     .attr("transform", "rotate(90)")
-            //     .attr("text-anchor", "middle");
-            // legend
             var linearGradient = svg_heatmap_legend_g
                 .append("defs")
                 .append("linearGradient")
@@ -264,13 +237,46 @@ let func = {
         }
 
     },
-    venn(data, wrap) {
-        let sets = [{ sets: ['A'], size: 12 },
-        { sets: ['B'], size: 12 },
-        { sets: ['A', 'B'], size: 2 }];
+    venn(data, config, wrap) {
+        console.table(data);
+        var title = config.projectName || 'venn';
+        var div = d3.select(wrap)
+        var chart = venn.VennDiagram().width($(wrap).width()*.6).height($(wrap).height()*.6);
+        div.datum(data).call(chart);
 
-        var chart = venn.VennDiagram();
-        d3.select(wrap).datum(sets).call(chart);
+        var tooltip = d3.select(wrap).append("div")
+            .attr("class", "venntooltip");
+        div.selectAll("g")
+            .on("mouseover", function (d, i) {
+                venn.sortAreas(div, d);
+                tooltip.transition().duration(400).style("opacity", .9);
+                tooltip.text(d.size);
+                var selection = d3.select(this).transition("tooltip").duration(400);
+                selection.select("path")
+                    .style("stroke-width", 3)
+                    .style('stroke', '#fff')
+                    .style("fill-opacity", 0.5)
+                    .style("stroke-opacity", 1);
+            })
+
+            .on("mousemove", function () {
+                tooltip.style("left", (d3.event.pageX) + "px")
+                    .style("top", (d3.event.pageY - 28) + "px");
+            })
+
+            .on("mouseout", function (d, i) {
+                tooltip.transition().duration(400).style("opacity", 0);
+                var selection = d3.select(this).transition("tooltip").duration(400);
+                selection.select("path")
+                    .style("stroke-width", 0)
+                    .style("fill-opacity", d.sets.length == 1 ? .25 : .0)
+                    .style("stroke-opacity", 0);
+            })
+
+            .on('click',function(d,i){
+                config.callback && config.callback(d,i);
+            })
+
     }
 }
 function Tools() {

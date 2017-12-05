@@ -2,7 +2,7 @@
     <div id="toolsDetail" class="drawWrap">
         <p>
           <span @click="toTools" style="cursor:pointer;">工具</span>
-          <span> > 热力图</span>
+          <span> > 热图</span>
         </p>
         <div id="tools_draw_context">
             <div class="options">

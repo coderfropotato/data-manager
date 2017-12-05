@@ -5,7 +5,7 @@
             <li @click="toolDetail('heatmap')">
                 <img src="../../../assets/images/heatmap.png" alt="">
                 <div class="desc">
-                    <p>热力图</p>
+                    <p>热图</p>
                     <span>简介：将表格数据绘制成一个热图。</span>
                 </div>
             </li>
@@ -19,7 +19,7 @@
             <li @click="toVenn">
                 <img src="../../../assets/images/pathway.png" alt="">
                 <div class="desc">
-                    <p>PathWay富集分析</p>
+                    <p>韦恩图</p>
                     <span>简介：应用超几何检验，找出与整个基因组背景相比，在差异表达基因中显著性富集的PathWay。</span>
                 </div>
             </li>
@@ -43,7 +43,7 @@ export default {
     },
     toVenn(){
       // this.$message('开发中...')
-      this.$router.push('./toolsVenn')
+      this.$router.push('./toolsVenn?type=venn')
     }
   },
   created() {},

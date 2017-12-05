@@ -26,7 +26,7 @@
                     </el-form>
                     <el-form label-width="0">
                       <el-form-item>
-                        <el-input type="textarea" placeholder="或手动输入矩阵文件"></el-input>
+                        <el-input type="textarea" placeholder="或手动输入矩阵文件" v-model="form.arrayFile"></el-input>
                       </el-form-item>
                     </el-form>
                     <el-form>
@@ -49,9 +49,8 @@
               <ul>
                 <li v-for="(item,index) in tabList" :key="index" @click="tab(index)"  :class="{'active':activeIndex==index}">{{item}}</li>
               </ul>
-              <div v-show="activeIndex==0" class="draw-area tab">
-                <svg id="svg_Venn" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="display: block;margin: 0 auto;">
-                </svg>
+              <div v-show="activeIndex==0" class="draw-area tab venn">
+                <!-- venn area -->
               </div>
               <div v-show="activeIndex==1" class="tab">
                 <p>说明</p>
@@ -75,9 +74,13 @@ export default {
         projectName: "venn5698c9",
         //文件路径
         filePath: "",
+        // 手动数据矩阵
+        arrayFile: "",
         //邮件通知
-        email: false,
-        listPath:""
+        email: false
+      },
+      drawOptions: {
+        projectName: ""
       },
       activeName: "text",
       tabList: ["预览", "说明", "例子"],
@@ -101,25 +104,24 @@ export default {
             this.$message("请上传数据文件");
             return;
           }
-          let form = this.form;
-          // actived tab
-          this.tabIndex === "0"
-            ? (form["fileOptionPath"] = "")
-            : (form["drawRows"] = "");
-          fetchData("heatMap", form).then(res => {
-            console.log(res);
-            return;
+          let filePath = this.form.filePath;
+          let arrayFile = this.form.arrayFile;
+          fetchData("getVenefigureDate", { filePath, arrayFile }).then(res => {
             // draw config
             this.drawOptions.projectName = this.form.projectName;
-            this.tools.setWrap("#svg_cyjjfx_clusterpic");
-            this.tools.setType(this.$route.query.type);
-            this.tools.draw(json, this.drawOptions);
+            this.drawOptions.callback = this.callback;
+            this.tools.setWrap(".venn");
+            this.tools.setType("venn");
+            this.tools.draw(res.result, this.drawOptions);
           });
         } else {
           this.$message("请填写项目名称");
         }
       });
       return;
+    },
+    callback(d,i){
+      console.log(d,i);
     },
     toTools() {
       this.$router.push("./toolsIndex");
@@ -143,5 +145,23 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
+.venn {
+  text-align: center;
+  svg{
+    width:80%;
+    height:80%;
+  }
+}
+.venntooltip {
+  position: absolute;
+  text-align: center;
+  width: 128px;
+  height: 16px;
+  background: #333;
+  color: #ddd;
+  padding: 2px;
+  border: 0px;
+  border-radius: 8px;
+}
 </style>
