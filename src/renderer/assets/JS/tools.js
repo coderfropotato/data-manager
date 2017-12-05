@@ -241,16 +241,26 @@ let func = {
         console.table(data);
         var title = config.projectName || 'venn';
         var div = d3.select(wrap)
-        var chart = venn.VennDiagram().width($(wrap).width()*.6).height($(wrap).height()*.6);
+        var width = $(wrap).width()*0.6;
+        var height = $(wrap).height()*0.7;
+        var chart = venn.VennDiagram().width(width).height(height);
         div.datum(data).call(chart);
 
         var tooltip = d3.select(wrap).append("div")
             .attr("class", "venntooltip");
+
+        div.select('svg .venn_title').remove();
+        div.select('svg').append('text')
+            .attr('x',width/2).attr('y',20)
+            .attr('class','venn_title')
+            .attr('text-anchor','middle')
+            .text(title);
+            
         div.selectAll("g")
             .on("mouseover", function (d, i) {
                 venn.sortAreas(div, d);
                 tooltip.transition().duration(400).style("opacity", .9);
-                tooltip.text(d.size);
+                tooltip.text('size:'+d.size);
                 var selection = d3.select(this).transition("tooltip").duration(400);
                 selection.select("path")
                     .style("stroke-width", 3)
@@ -260,8 +270,8 @@ let func = {
             })
 
             .on("mousemove", function () {
-                tooltip.style("left", (d3.event.pageX) + "px")
-                    .style("top", (d3.event.pageY - 28) + "px");
+                tooltip.style("left", (d3.event.pageX-200) + "px")
+                    .style("top", (d3.event.pageY-60) + "px");
             })
 
             .on("mouseout", function (d, i) {

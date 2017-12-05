@@ -145,7 +145,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .venn {
   text-align: center;
   svg{
@@ -156,12 +156,12 @@ export default {
 .venntooltip {
   position: absolute;
   text-align: center;
-  width: 128px;
-  height: 16px;
+  width: auto;
   background: #333;
   color: #ddd;
-  padding: 2px;
+  padding:4px 8px;
   border: 0px;
+  opacity: 0;
   border-radius: 8px;
 }
 </style>
