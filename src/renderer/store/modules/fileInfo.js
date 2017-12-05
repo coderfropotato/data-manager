@@ -95,6 +95,15 @@ const actions = {
         }
       }
     }
+    //检查key 是否重复
+    for(var i =0;i<updateList.length;i++){
+      for(var j=0;j<updateList.length;j++){
+        if(updateList[i].name === updateList[j].name && i!==j){
+          bus.$emit('saveAttrNameSame');
+          return;
+        }
+      }
+    }
     let remark = { name: "remark", attr: state.fileInfo.remark };
     updateList.push(remark);
     if (global.state.globalRouteStatus === 'file') {

@@ -75,10 +75,13 @@ export default {
   created() {
     bus.$on("saveAttrEmptyError", _ => {
       this.$message("属性名称不能为空");
-    }),
-      bus.$on("topshow", _ => {
-        this.topShow = _;
-      });
+    });
+    bus.$on("topshow", _ => {
+      this.topShow = _;
+    });
+    bus.$on("saveAttrNameSame", _ => {
+      this.$message("属性名不能重复");
+    });
   },
   computed: {
     ...mapGetters(["fileInfo", "globalRouteStatus", "curData", "curIndex"])
