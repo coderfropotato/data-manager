@@ -282,6 +282,8 @@ export default {
     .item-list {
       max-height: 100px;
       overflow-y: auto;
+      -webkit-user-select: element;
+      user-select: element;
       li {
         width: 100%;
         display: flex;

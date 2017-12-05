@@ -1,7 +1,7 @@
 <template>
 <!-- @row-click="selectedRow" @row-contextmenu="selectedRow" -->
     <div class="table-wrap">
-      <el-table  ref="table" @select="checkbox($event)" @row-dblclick="dbClick" @selection-change="handleSelectionChange" 
+      <el-table  ref="table"  @row-dblclick="dbClick" @selection-change="handleSelectionChange" 
       @cell-click="cellClick"
       :height="tableHeight" :data="loadData" stripestyle="width: 100%">
         <el-table-column type="selection"></el-table-column>
@@ -75,7 +75,6 @@ export default {
       handler: function(val, oldVal) {
         this.init();
         this.data = this.tableData;
-        //改变数据源的第一次加载
         this.firstLoad();
       },
       deep: true
@@ -88,6 +87,7 @@ export default {
       this.isLoading = false;
       this.over = false;
     },
+
     firstLoad() {
       this.data = this.tableData;
       this.loadData = this.data.slice(0, this.loadNumber);
@@ -96,6 +96,7 @@ export default {
         document.querySelector(".el-table__body-wrapper").scrollTop = 0;
       } catch (e) {}
     },
+
     // handlerSelectionChange to parent
     handleSelectionChange(val) {
       //fileInfo params from the row if rootPath param in row
@@ -116,12 +117,7 @@ export default {
       }, 30);
       this.timerList.push(timer);
     },
-    //select current row
-    // selectedRow(row, event, column) {
-    //   // selected current
-    //   this.$refs.table.clearSelection();
-    //   this.$refs.table.toggleRowSelection(row);
-    // },
+
     cellClick(row, column, cell, event) {
       if (column.label) {
         // 不是checkbox cell
@@ -129,6 +125,7 @@ export default {
         this.$refs.table.toggleRowSelection(row);
       }
     },
+
     //dbclick into dir
     dbClick(row, event) {
       this.$refs.table.clearSelection();
@@ -142,11 +139,7 @@ export default {
         this.$emit("intodir", { path, row });
       }
     }
-  },
-  filters: {
-    limit(val) {
-      return val.slice(0, 100);
-    }
+
   }
 };
 </script>

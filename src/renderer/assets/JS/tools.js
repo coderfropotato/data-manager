@@ -238,7 +238,6 @@ let func = {
 
     },
     venn(data, config, wrap) {
-        console.table(data);
         var title = config.projectName || 'venn';
         var div = d3.select(wrap)
         var width = $(wrap).width()*0.6;
@@ -255,12 +254,11 @@ let func = {
             .attr('class','venn_title')
             .attr('text-anchor','middle')
             .text(title);
-            
         div.selectAll("g")
             .on("mouseover", function (d, i) {
                 venn.sortAreas(div, d);
-                tooltip.transition().duration(400).style("opacity", .9);
-                tooltip.text('size:'+d.size);
+                tooltip.transition().duration(400).style("opacity", .8);
+                tooltip.text('number:'+d.size);
                 var selection = d3.select(this).transition("tooltip").duration(400);
                 selection.select("path")
                     .style("stroke-width", 3)
