@@ -32,7 +32,7 @@
       <div class="text">
         <h5>数据来源</h5>
         <p>类别：{{fileInfo.source.category}}</p>
-        <p>数据源：<a href="javascript:;">{{fileInfo.source.source}}</a></p>
+        <p>数据源：{{fileInfo.source.source}}</p>
         <h5 class="item">属性</h5>
         <div class="attrs">
           <span>名称</span>
