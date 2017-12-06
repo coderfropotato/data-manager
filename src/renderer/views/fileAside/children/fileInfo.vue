@@ -40,17 +40,18 @@
         </div>
         <ol class="item-list">
           <!-- :class="{'edit':!module}" -->
-            <li class="edit" v-for="(val,index) in fileInfo.property" :key="index">
-              <input ref="attrs" :readonly="module" type="text" maxLength="50"  @change="updateMessage($event,index,'key')" :value="val.name"> ：
-              <input @change="updateMessage($event,index,'val')" maxLength="50"  :value="val.attr" :readonly="module" type="text">
+            <li :class="{'edit':!module}"  v-for="(val,index) in fileInfo.property" :key="index">
+              <input ref="attrs" :readonly="module" type="text" maxLength="50"  @change="updateMessage($event,index,'key')" :value="val.name" :title="val.name"> &nbsp;
+              <input :title="val.attr" @change="updateMessage($event,index,'val')" maxLength="50"  :value="val.attr" :readonly="module" type="text">
             </li>
         </ol>
+        <div @click="addAttrs" v-show="!module" class="add-attrs">
+          <i class="iconfont icon-tianjia"></i><span>添加文件属性</span>
+        </div>
+
         <!-- add attrs -->
         <h5 class="item">备注</h5>
         <textarea id="texta" :readonly="module"  :value="fileInfo.remark" @change="updateMessage($event)">></textarea>
-      </div>
-      <div @click="addAttrs" v-show="!module" class="add-attrs">
-        <i class="iconfont icon-tianjia"></i><span>添加文件属性</span>
       </div>
     </div>
     <!-- nodata -->
@@ -195,7 +196,7 @@ export default {
     }
   }
   .des {
-    margin: 22px 0;
+    margin: 22px 0 8px 0;
     display: flex;
     img {
       width: 56px;
@@ -206,6 +207,7 @@ export default {
     span {
       line-height: 56px;
       margin-left: 20px;
+      font-size: 12px;
       white-space: nowrap;
       text-overflow: ellipsis;
       overflow: hidden;
@@ -221,9 +223,12 @@ export default {
       text-align: left;
       display: flex;
       flex-direction: column;
-      margin-top: 12px;
+      margin-top: 6px;
       p {
-        font-size: 14px;
+        font-size: 12px;
+        span {
+          font-size: inherit;
+        }
       }
     }
   }
@@ -241,11 +246,12 @@ export default {
       display: flex;
       margin-bottom: 8px;
       span {
+        font-size: 12px;
         &:first-child {
-          width: 20%;
+          width: 40%;
         }
         &.last-child {
-          width: 75%;
+          width: 55%;
         }
       }
     }
@@ -265,7 +271,7 @@ export default {
         font-family: "Helvetica Neue", Helvetica, "PingFang SC",
           "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
         &:first-child {
-          width: 60px;
+          width: 50%;
         }
         &:last-child {
           flex: 1;
@@ -283,7 +289,6 @@ export default {
       outline: none;
     }
     .item-list {
-      max-height: 100px;
       overflow-y: auto;
       -webkit-user-select: element;
       user-select: element;
@@ -300,10 +305,10 @@ export default {
           border: none;
           outline: none;
           &:first-child {
-            width: 20%;
+            width: 40%;
           }
           &:last-child {
-            width: 75%;
+            width: 55%;
           }
         }
       }
@@ -312,6 +317,7 @@ export default {
   .add-attrs {
     margin-top: 20px;
     cursor: pointer;
+    color: #386cca;
     vertical-align: center;
     i {
       margin-right: 12px;
