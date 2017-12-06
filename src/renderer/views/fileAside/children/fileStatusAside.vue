@@ -52,6 +52,7 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
+import $ from 'jquery'
 
 export default {
   name: "FileStatusAside",
@@ -82,6 +83,8 @@ export default {
         if (this.treeCat.add[0].status) {
           this.$store.dispatch("setCurStatus", this.treeCat.add[0].status);
           this.$store.dispatch("setCurIndex", this.treeCat.add[0].mark);
+          // add highlight
+          $('span[id='+this.treeCat.add[0].mark+']').parent().parent().parent().addClass('is-current');
         }
       } else {
         this.$message("请先选择需要编辑的新增文件");
