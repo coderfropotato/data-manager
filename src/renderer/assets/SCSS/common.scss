@@ -445,3 +445,7 @@ body{
 .el-checkbox-button__original, .el-pagination--small .arrow.disabled, .el-table .hidden-columns, .el-table td.is-hidden>*, .el-table th.is-hidden>*, .el-table--hidden{
   visibility: visible;
 }
+.el-switch.is-checked .el-switch__core{
+  border-color: #386cca;
+  background-color:#386cca;
+}
