@@ -258,7 +258,7 @@ let func = {
             .on("mouseover", function (d, i) {
                 venn.sortAreas(div, d);
                 tooltip.transition().duration(400).style("opacity", .8);
-                tooltip.text('number:'+d.size);
+                tooltip.html(`number:${d.size}<br>elements:${d.elements.length?d.elements.join(','):null}<br>logicalNumber:${d.logicalNumber}<br>sets:${d.sets.join(',')}`);
                 var selection = d3.select(this).transition("tooltip").duration(400);
                 selection.select("path")
                     .style("stroke-width", 3)
@@ -268,8 +268,8 @@ let func = {
             })
 
             .on("mousemove", function () {
-                tooltip.style("left", (d3.event.pageX-200) + "px")
-                    .style("top", (d3.event.pageY-60) + "px");
+                tooltip.style("left", (d3.event.pageX-180) + "px")
+                    .style("top", (d3.event.pageY-40) + "px");
             })
 
             .on("mouseout", function (d, i) {

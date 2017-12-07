@@ -30,11 +30,11 @@
                       </el-form-item>
                     </el-form>
                     <el-form>
-                       <el-form-item label="任务完成后发邮件通知我">
+                       <!-- <el-form-item label="任务完成后发邮件通知我">
                         <el-checkbox-group v-model="form.email">
                           <el-checkbox></el-checkbox>
                         </el-checkbox-group>
-                      </el-form-item>
+                      </el-form-item> -->
                       <br>
                       <el-form-item>
                         <el-button type="primary" @click="sub">提交</el-button>
@@ -155,7 +155,7 @@ export default {
 }
 .venntooltip {
   position: absolute;
-  text-align: center;
+  text-align: left;
   width: auto;
   background: #333;
   color: #ddd;
