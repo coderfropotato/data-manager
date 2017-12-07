@@ -375,7 +375,8 @@ export default {
                         });
                       }
                     });
-                    _this.$electron.ipcRenderer.send("updateFilesList");
+                    // update file status
+                    // _this.$electron.ipcRenderer.send("updateFilesList");
                   } else {
                     _this.$message({ message: res.result, type: "warning" });
                   }
