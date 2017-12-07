@@ -32,17 +32,18 @@ export default {
   },
   created() {
     //默认获取文件列表
-    this.$store.dispatch("getImportTargetDisks").then(_ => {
-      //默认获取文件状态
-      this.$store
-        .dispatch("getModifiedFiles")
-        .then(_ => {
-          this.loading = false;
-        })
-        .catch(_ => {
-          this.loading = false;
-        });
-    });
+    this.$store.dispatch("getImportTargetDisks")
+      // .then(_ => {
+      //   //默认获取文件状态
+      //   this.$store
+      //     .dispatch("getModifiedFiles")
+      //     .then(_ => {
+      //       this.loading = false;
+      //     })
+      //     .catch(_ => {
+      //       this.loading = false;
+      //     });
+      // });
   },
   methods: {
     jumpToSearch(item) {
@@ -64,8 +65,8 @@ export default {
         });
       });
       // 文件历史纪录
-      this.$store.dispatch('setGlobalHistory',true);
-      this.$store.dispatch('resetTableClickHistory');
+      this.$store.dispatch("setGlobalHistory", true);
+      this.$store.dispatch("resetTableClickHistory");
     },
     addDevice() {
       this.$electron.ipcRenderer.send("addFile", {
