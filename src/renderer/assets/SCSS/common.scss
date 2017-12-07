@@ -147,6 +147,7 @@ body{
 // 表格表头文本居中
 .el-table th{
   text-align: center;
+  border-right:1px solid #ddd;
 }
 .el-table .el-table__row{
   text-align: center;
@@ -155,7 +156,7 @@ body{
   left: 3px;
 }
 .el-checkbox__inner{
-  border-radius: 2px;
+  border-radius: 4px;
 }
 //表头颜色
 .el-table__footer-wrapper thead div,
