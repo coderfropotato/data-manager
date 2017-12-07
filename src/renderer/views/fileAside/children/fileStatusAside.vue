@@ -52,7 +52,7 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
-import $ from 'jquery'
+import $ from "jquery";
 
 export default {
   name: "FileStatusAside",
@@ -60,7 +60,7 @@ export default {
     return {};
   },
   computed: {
-    ...mapGetters(["checkedData", "treeCat", "modifiedNum","treeSideBar"])
+    ...mapGetters(["checkedData", "treeCat", "modifiedNum", "treeSideBar"])
   },
   methods: {
     jumpToStatusInfo() {
@@ -83,36 +83,42 @@ export default {
         if (this.treeCat.add[0].status) {
           this.$store.dispatch("setCurStatus", this.treeCat.add[0].status);
           this.$store.dispatch("setCurIndex", this.treeCat.add[0].mark);
+          // reset highlight
+          $(".el-tree-node").removeClass("is-current");
           // add highlight
-          $('span[id='+this.treeCat.add[0].mark+']').parent().parent().parent().addClass('is-current');
+          $("span[id=" + this.treeCat.add[0].mark + "]")
+            .parent()
+            .parent()
+            .parent()
+            .addClass("is-current");
         }
       } else {
         this.$message("请先选择需要编辑的新增文件");
       }
     },
-    reciveAll(){
-      this.$store.dispatch('reciveAll')
+    reciveAll() {
+      this.$store.dispatch("reciveAll");
     },
-    submitAddFileInfo(){
-      this.$store.dispatch('submitAddFileInfo');
+    submitAddFileInfo() {
+      this.$store.dispatch("submitAddFileInfo");
     },
-    saveDelFileAttr(){
-      this.$store.dispatch('saveDelFileAttr')
+    saveDelFileAttr() {
+      this.$store.dispatch("saveDelFileAttr");
     },
-    delDelFileAttr(){
-      this.$store.dispatch('delDelFileAttr')
+    delDelFileAttr() {
+      this.$store.dispatch("delDelFileAttr");
     },
-    submitModifyFileInfo(){
-      this.$store.dispatch('submitModifyFileInfo')
+    submitModifyFileInfo() {
+      this.$store.dispatch("submitModifyFileInfo");
     },
-    saveMoveFileAttr(){
-      this.$store.dispatch('saveMoveFileAttr')
+    saveMoveFileAttr() {
+      this.$store.dispatch("saveMoveFileAttr");
     },
-    noInheritInfo(){
-      this.$store.dispatch('noInheritInfo')
+    noInheritInfo() {
+      this.$store.dispatch("noInheritInfo");
     },
-    submitTaggedFileInfo(){
-      this.$store.dispatch('submitTaggedFileInfo')
+    submitTaggedFileInfo() {
+      this.$store.dispatch("submitTaggedFileInfo");
     }
   }
 };
@@ -172,12 +178,12 @@ export default {
               background: #f74a4a;
               color: #fff;
             }
-            &.success{
+            &.success {
               color: #fff;
-              background-color:#386cca;
+              background-color: #386cca;
             }
             &:last-child {
-              margin-right:0;
+              margin-right: 0;
             }
           }
         }

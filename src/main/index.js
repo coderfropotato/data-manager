@@ -70,9 +70,9 @@ let newWin
 ipcMain.on('change-data', (event, call, data) => {
   mainWindow.webContents.send('change-data', call, data)
 })
-// ipcMain.on('updateFilesList',(event)=>{
-//   mainWindow.webContents.send('updateFilesList');
-// })
+ipcMain.on('updateFilesList',(event)=>{
+  mainWindow.webContents.send('updateFilesList');
+})
 // 打开/关闭添加文件窗口
 ipcMain.on('addFile', (event, arg) => {
   if (arg.API === 'open') {

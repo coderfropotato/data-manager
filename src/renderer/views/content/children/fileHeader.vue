@@ -11,7 +11,7 @@
     <p>
       <!-- <router-link tag="span" :to="{path:'/filescale'}">文件</router-link> -->
       <span @click="jumotoindex">文件</span>
-      <span @click="navBarJump(item,index)" v-for="(item,index) in navList" :key="index"><em>&nbsp;>&nbsp;</em>{{item.filename || item.alias}}</span>
+      <span @click="navBarJump(item,index)" v-for="(item,index) in navList" :key="index"><em>&nbsp;< &nbsp;</em>{{item.filename || item.alias}}</span>
     </p>
     </div>
     <div class="search">

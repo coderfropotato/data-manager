@@ -47,12 +47,12 @@ export default {
     );
   },
   created(){
-    // this.$electron.ipcRenderer.on('updateFilesList',()=>{
-    //   //被管理的设备添加成功后 重新获取设备列表
-    //   this.$store.dispatch('getImportTargetDisks').then(_=>{
-    //     this.$store.dispatch('getModifiedFiles')
-    //   })
-    // })
+    this.$electron.ipcRenderer.on('updateFilesList',()=>{
+      //被管理的设备添加成功后 重新获取设备列表
+      this.$store.dispatch('getImportTargetDisks').then(_=>{
+        this.$store.dispatch('getModifiedFiles')
+      })
+    })
     //请求错误监听
     bus.$on('error',(res)=>{
       this.$message({
