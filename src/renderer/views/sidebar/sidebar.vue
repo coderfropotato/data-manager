@@ -141,9 +141,9 @@ export default {
             this.$store.dispatch("resetFileInfo");
             this.$store.dispatch("setRouteStatus", "status");
             //重新获取设备列表
-            // this.$store.dispatch("getImportTargetDisks").then(_ => {
-            //   this.$store.dispatch("getModifiedFiles");
-            // });
+            this.$store.dispatch("getImportTargetDisks").then(_ => {
+              this.$store.dispatch("getModifiedFiles");
+            });
             break;
           case 4:
             this.$router.replace("/toolsIndex");

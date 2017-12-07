@@ -1,7 +1,7 @@
 <template>
 <!-- @row-click="selectedRow" @row-contextmenu="selectedRow" -->
     <div class="table-wrap">
-      <el-table  ref="table"  @row-dblclick="dbClick" @selection-change="handleSelectionChange" 
+      <el-table  ref="table" :border="true"  @row-dblclick="dbClick" @selection-change="handleSelectionChange" 
       @cell-click="cellClick"
       :height="tableHeight" :data="loadData" stripestyle="width: 100%">
         <el-table-column  type="selection"></el-table-column>

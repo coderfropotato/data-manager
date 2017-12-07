@@ -51,7 +51,7 @@
 
         <!-- add attrs -->
         <h5 class="item">备注</h5>
-        <textarea id="texta" :readonly="module"  :value="fileInfo.remark" @change="updateMessage($event)">></textarea>
+        <textarea id="texta" :readonly="module" placeholder="其他信息"  :value="fileInfo.remark" @change="updateMessage($event)">></textarea>
       </div>
     </div>
     <!-- nodata -->
@@ -287,6 +287,7 @@ export default {
       height: 88px;
       border-radius: 4px;
       outline: none;
+      font-size:12px;
     }
     .item-list {
       overflow-y: auto;
