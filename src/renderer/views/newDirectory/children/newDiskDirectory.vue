@@ -365,6 +365,7 @@ export default {
                 res => {
                   _this.fullscreenLoading = false;
                   if (res.result === "success") {
+                    _this.$electron.ipcRenderer.send("updateFilesList");
                     _this.$message({
                       message: "项目添加成功",
                       duration:1200,
@@ -376,7 +377,6 @@ export default {
                       }
                     });
                     // update file status
-                    _this.$electron.ipcRenderer.send("updateFilesList");
                   } else {
                     _this.$message({ message: res.result, type: "warning" });
                   }

@@ -4,7 +4,6 @@
     <el-tree 
       :data="treeData"
       show-checkbox
-      default-expand-all
       :expand-on-click-node="true"
       node-key="mark"
       ref="tree"
@@ -28,7 +27,7 @@ export default {
     // this.$store.dispatch("showBottom");
   },
   computed: {
-    ...mapGetters(["treeData", "curStatus", "curData"])
+    ...mapGetters(["treeData", "curStatus", "curData", "modifiedNumber"])
   },
   data() {
     return {
@@ -157,6 +156,18 @@ export default {
     bus.$on("statueSideBarClick", mark => {
       this.setCheckedKeys(mark);
     });
+  },
+  watch: {
+    modifiedNumber: function(val, oldVal) {
+      let expand;
+      val > 100 ? (expand = false) : (expand = true);
+      this.$nextTick(_ => {
+        console.log( this.$refs.tree.store._getAllNodes())
+        for (var i = 0; i < this.$refs.tree.store._getAllNodes().length; i++) {
+          this.$refs.tree.store._getAllNodes()[i].expanded = expand;
+        }
+      });
+    }
   }
 };
 </script>
