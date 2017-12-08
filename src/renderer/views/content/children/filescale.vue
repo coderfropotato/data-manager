@@ -44,6 +44,19 @@ export default {
       //       this.loading = false;
       //     });
       // });
+
+    // 连接服务器 用来接收文件状态
+    // let wsk = new WebSocket("ws://127.0.0.1:5002");
+    // wsk.onopen = function(event){
+    //   console.log("连接建立成功"+this.readyState)
+    // }
+    // wsk.onmessage = function(ev){
+    //   console.log(ev.data);
+    //   //set treedata
+    // }
+    // wsk.onerror = function(ev){
+    //   console.log(ev)
+    // }
   },
   methods: {
     jumpToSearch(item) {
