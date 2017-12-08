@@ -53,7 +53,7 @@ export const SET_CUR_INDEX = 'setCurIndex';
 export const SET_CUR_DATA = 'setCurData';
 export const REDUCE_CUR_INDEX = 'reduceCurIndex';
 export const ADD_CUR_INDEX = 'addCurIndex';
-
+export const SET_LOADINF_STATUS = 'setLoadingStatus';
 
 //bottom
 export const SET_TOTAL_COUTN = 'setTotalCount';

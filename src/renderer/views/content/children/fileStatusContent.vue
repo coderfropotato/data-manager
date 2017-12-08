@@ -1,18 +1,22 @@
 <template>
 <!-- v-loading="true" element-loading-text="拼命加载中" :highlight-current="true" -->
   <div id="file-status-root" @click="reset">
-    <el-tree 
+    <div v-show="loadingStatus" class="tips">数据加载中，请稍后...</div>
+    <div v-show="!loadingStatus" class="context">
+      <el-tree 
       :data="treeData"
       show-checkbox
       :expand-on-click-node="true"
       node-key="mark"
       ref="tree"
+      default-expand-all
       :highlight-current="true"
       @check-change = "handlerCheckChange"
       @node-click="handlerNodeClick"
       :render-content="renderContent"
       :props="defaultProps">
     </el-tree>
+    </div>
   </div>
 </template>
 
@@ -23,11 +27,14 @@ import fetchData from "@/api/getData";
 import $ from "jquery";
 export default {
   name: "fileStatus",
-  activated() {
-    // this.$store.dispatch("showBottom");
-  },
   computed: {
-    ...mapGetters(["treeData", "curStatus", "curData", "modifiedNumber"])
+    ...mapGetters([
+      "treeData",
+      "curStatus",
+      "curData",
+      "modifiedNumber",
+      "loadingStatus"
+    ])
   },
   data() {
     return {
@@ -105,6 +112,7 @@ export default {
         this.$router.push("/filestatus");
         return;
       } else if (status === 4) {
+        this.$router.push("/filestatus");
         return;
       } else {
         let rootPath = root_path;
@@ -148,32 +156,21 @@ export default {
       this.$router.push("/filestatus");
     }
   },
-  deactivated() {
-    // this.$store.dispatch("hideBottom");
-  },
   created() {
     //side bar clicked  and default select all
     bus.$on("statueSideBarClick", mark => {
       this.setCheckedKeys(mark);
     });
-  },
-  watch: {
-    modifiedNumber: function(val, oldVal) {
-      let expand;
-      val > 100 ? (expand = false) : (expand = true);
-      this.$nextTick(_ => {
-        console.log( this.$refs.tree.store._getAllNodes())
-        for (var i = 0; i < this.$refs.tree.store._getAllNodes().length; i++) {
-          this.$refs.tree.store._getAllNodes()[i].expanded = expand;
-        }
-      });
-    }
   }
 };
 </script>
 
 <style lang="scss" scoped>
 #file-status-root {
+  .tips{
+    text-align: center;
+    padding:40px 0;
+  }
   height: 100%;
   padding: 40px;
   -webkit-overflow-y: overlay;

@@ -64,15 +64,16 @@ export default {
         }).then(() => {
 
           //删除成功重新获取设备列表 路由跳转到file主页
-          this.$store.dispatch("getImportTargetDisks").then(_ => {
-            this.$store.dispatch("getModifiedFiles");
-          });
+          this.$store.dispatch("getImportTargetDisks")
+            // .then(_ => {
+            //   this.$store.dispatch("getModifiedFiles");
+            // });
 
           //删除状态
-          this.$store.dispatch("deleteSatatus", {
-            serialNumber: this.listInfo.serial_number,
-            path: this.listInfo.path
-          });
+          // this.$store.dispatch("deleteSatatus", {
+          //   serialNumber: this.listInfo.serial_number,
+          //   path: this.listInfo.path
+          // });
 
           // //reset file info && global history
           this.$store.dispatch("resetFileInfo");

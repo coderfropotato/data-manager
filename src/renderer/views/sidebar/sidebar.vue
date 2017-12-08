@@ -83,7 +83,8 @@ export default {
       "globalNavIndex",
       "history",
       "tableClickHistory",
-      "fileTableData"
+      "fileTableData",
+      "loadingStatus"
     ])
   },
   mounted() {
@@ -141,9 +142,11 @@ export default {
             this.$store.dispatch("resetFileInfo");
             this.$store.dispatch("setRouteStatus", "status");
             //重新获取设备列表
-            this.$store.dispatch("getImportTargetDisks").then(_ => {
+            if (!this.loadingStatus) {
+              // this.$store.dispatch("getImportTargetDisks").then(_ => {
               this.$store.dispatch("getModifiedFiles");
-            });
+              // });
+            }
             break;
           case 4:
             this.$router.replace("/toolsIndex");

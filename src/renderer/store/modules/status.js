@@ -31,9 +31,9 @@ function loop(arr) {
     loop(arr);
     return files;
 }
-const subParams = (type)=>{
+const subParams = (type) => {
     let dirs = [];
-    for(var i=0;i<file.state.fileList.length;i++){
+    for (var i = 0; i < file.state.fileList.length; i++) {
         let obj = {};
         obj.root_path = file.state.fileList[i].path;
         obj.serial_number = file.state.fileList[i].serial_number;
@@ -41,7 +41,7 @@ const subParams = (type)=>{
     }
     let all = getters.treeCat(state);
     let files = all[type];
-    return {files,dirs};
+    return { files, dirs };
 }
 
 const state = {
@@ -51,7 +51,8 @@ const state = {
     modifiedNumber: 0,
     curStatus: 0,
     curData: [],
-    curIndex: 0
+    curIndex: 0,
+    loadingStatus: false
 }
 
 //树的侧边栏列表 信息从treeData获取 ->getter
@@ -87,7 +88,8 @@ const getters = {
             }
         }
         return obj;
-    }
+    },
+    loadingStatus: state => state.loadingStatus,
 }
 
 const actions = {
@@ -95,7 +97,7 @@ const actions = {
     getModifiedFiles({ commit }) {
         let params = {};
         let serialNumber = [];
-        if (!file.state.fileList.length) return;
+        // if (!file.state.fileList.length) return;
         params.dirs = [];
         for (var i = 0; i < file.state.fileList.length; i++) {
             let obj = {};
@@ -103,7 +105,11 @@ const actions = {
             obj.root_path = file.state.fileList[i].path;
             params.dirs.push(obj);
         }
+        // 加载中
+        if(state.loadingStatus) return;
+        // 加载完正常返回promise
         return new Promise((resolve, reject) => {
+            commit(types.SET_LOADINF_STATUS, true);
             fetchData('getModifiedFiles', params).then((res) => {
                 let rootMarkArr = [];
                 for (var i = 0; i < res.length; i++) {
@@ -121,6 +127,9 @@ const actions = {
                 commit(types.GET_TREE_DATA, res);
                 // done
                 resolve('success');
+                commit(types.SET_LOADINF_STATUS, false);
+            }).catch(e => {
+                commit(types.SET_LOADINF_STATUS, false);
             })
         })
     },
@@ -129,11 +138,12 @@ const actions = {
     },
     deleteSatatus({ commit }, { serialNumber, path }) {
         let temp = state.treeData;
-        temp.forEach((val, index) => {
-            if (val.serialNumber === serialNumber && val.root_path === path) {
-                temp.splice(index, 1);
+        for(let i=0;i<temp.length;i++){
+            if(temp[i].serialNumber=== serialNumber && temp[i].root_path ===path){
+                temp.slice(i,1);
+                break;
             }
-        })
+        }
         commit(types.GET_TREE_DATA, temp);
         //重新设置选中数据
         let list = loop(temp);
@@ -195,7 +205,7 @@ const actions = {
             let move_files = treeCat.move;
             let tag_files = treeCat.label;
             // console.log({add_files,modify_files,del_files,move_files,tag_files});
-            fetchData('submitAllFileInfo', {add_files,modify_files,del_files,move_files,tag_files}).then(res => {
+            fetchData('submitAllFileInfo', { add_files, modify_files, del_files, move_files, tag_files }).then(res => {
                 let rootMarkArr = [];
                 for (var i = 0; i < res.length; i++) {
                     rootMarkArr.push(res[i].mark);
@@ -209,14 +219,14 @@ const actions = {
             })
         })
     },
-    
+
     /**
      * 最近新增
      * 
      * @param {any} {commit} 
      * @returns 
      */
-    submitAddFileInfo({commit}){
+    submitAddFileInfo({ commit }) {
         return new Promise((resolve, reject) => {
             let params = subParams('add');
             // console.log(params)
@@ -234,7 +244,7 @@ const actions = {
             })
         })
     },
-    
+
     /**
      * 最近删除 (差处理完毕)
      * 
@@ -277,7 +287,7 @@ const actions = {
             })
         })
     },
-    
+
     /**
      * 最近修改
      * 
@@ -369,7 +379,7 @@ const actions = {
             })
         })
     },
-    
+
 }
 
 const mutations = {
@@ -396,6 +406,9 @@ const mutations = {
     },
     [types.REDUCE_CUR_INDEX](state) {
         state.curIndex--;
+    },
+    [types.SET_LOADINF_STATUS](state,status){
+        state.loadingStatus = status;
     }
 }
 
