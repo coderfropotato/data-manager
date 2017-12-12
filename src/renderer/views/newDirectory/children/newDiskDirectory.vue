@@ -365,6 +365,7 @@ export default {
                 res => {
                   _this.fullscreenLoading = false;
                   if (res.result === "success") {
+                    // 重新获取设备列表
                     _this.$electron.ipcRenderer.send("updateFilesList");
                     _this.$message({
                       message: "项目添加成功",
