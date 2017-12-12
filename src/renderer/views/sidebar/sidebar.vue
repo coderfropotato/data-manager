@@ -36,12 +36,12 @@
             <i class="iconfont icon-sousuo"></i>
             <span>搜索</span>          
           </li>
-          <li :class="{'active':globalNavIndex===3}" @click="jump(3)">
+          <!-- <li :class="{'active':globalNavIndex===3}" @click="jump(3)">
             <i class="iconfont icon-wenjianzhuangtai"></i>
             <el-badge :value="modifiedNumber" :max="99" class="item">
               <span>文件状态</span>
             </el-badge>
-          </li>
+          </li> -->
           <li :class="{'active':globalNavIndex===4}" @click="jump(4)">
             <i class="iconfont icon-gongju"></i>
             <span>小工具</span>
