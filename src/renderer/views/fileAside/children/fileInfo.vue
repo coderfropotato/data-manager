@@ -250,7 +250,7 @@ export default {
         &:first-child {
           width: 40%;
         }
-        &.last-child {
+        &:last-child {
           width: 55%;
         }
       }
@@ -287,7 +287,7 @@ export default {
       height: 88px;
       border-radius: 4px;
       outline: none;
-      font-size:12px;
+      font-size: 12px;
     }
     .item-list {
       overflow-y: auto;
@@ -305,6 +305,7 @@ export default {
         input {
           border: none;
           outline: none;
+          font-size: 12px;
           &:first-child {
             width: 40%;
           }
