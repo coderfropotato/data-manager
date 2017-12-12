@@ -151,11 +151,15 @@ ipcMain.on('hide-window', (ev) => {
 ipcMain.on('show-window', (ev) => {
   mainWindow.maximize();
   mainWindow.setSkipTaskbar(false)
+  // 75%
+  ev.sender.send('resetLayout', 75);
 });
 //还原
-ipcMain.on('orignal-window', () => {
+ipcMain.on('orignal-window', (ev) => {
   mainWindow.unmaximize();
   mainWindow.setSkipTaskbar(false)
+  // 65%
+  ev.sender.send('resetLayout', 65);
 });
 
 app.on('activate', () => {

@@ -8,6 +8,7 @@
 </template>
 <script>
 import bus from '@/utils/bus';
+import $ from 'jquery';
 export default {
   name: "data-manager-desktop",
   data(){
@@ -61,6 +62,10 @@ export default {
          message: res+':  数据读取失败，请重试。',
          duration: 2000
        })
+    })
+    // resetLayout
+    this.$electron.ipcRenderer.on('resetLayout',(ev,num)=>{
+      $('.content-wrapper').css('width',`${num}%`)
     })
   }
 };
