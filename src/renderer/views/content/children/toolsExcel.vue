@@ -182,12 +182,10 @@ export default {
             formData.ignoreCase = this.form.ignoreCase;
             formData.isSort = this.form.isSort;
             formData.nameList = this.listArr;
-            console.log(formData);
             fetchData("filterData", formData).then(res => {
               if (res.Error) {
                 this.$message(res.Error);
               } else {
-                console.log(res);
                 this.tableData = res;
               }
             });

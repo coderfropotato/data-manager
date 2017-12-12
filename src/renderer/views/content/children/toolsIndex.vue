@@ -9,7 +9,7 @@
                     <span>简介：将表格数据绘制成一个热图。</span>
                 </div>
             </li>
-            <li @click="toExcel">
+            <!-- <li @click="toExcel">
                 <img src="../../../assets/images/excelfilter.png" alt="">
                 <div class="desc">
                     <p>表格筛选</p>
@@ -22,7 +22,7 @@
                     <p>韦恩图</p>
                     <span>简介：应用超几何检验，找出与整个基因组背景相比，在差异表达基因中显著性富集的PathWay。</span>
                 </div>
-            </li>
+            </li> -->
         </ul>
     </div>
 </template>
@@ -38,13 +38,13 @@ export default {
         this.$router.push(`./toolsDetail?type=${type}`);
       });
     },
-    toExcel(){
-      this.$router.push('./toolsExcel')
-    },
-    toVenn(){
-      // this.$message('开发中...')
-      this.$router.push('./toolsVenn?type=venn')
-    }
+    // toExcel(){
+    //   this.$router.push('./toolsExcel')
+    // },
+    // toVenn(){
+    //   // this.$message('开发中...')
+    //   this.$router.push('./toolsVenn?type=venn')
+    // }
   },
   created() {},
   activated() {
