@@ -1,10 +1,10 @@
 'use strict'
 
-import { app, BrowserWindow, ipcMain, dialog, Tray ,Menu,nativeImage } from 'electron'
+import { app, BrowserWindow, ipcMain, dialog, Tray, Menu, nativeImage } from 'electron'
 if (process.env.NODE_ENV !== 'development') {
   global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\')
 }
-let trayIcon = nativeImage.createFromPath(__dirname+'/static/icon.png');
+let trayIcon = nativeImage.createFromPath(__dirname + '/static/icon.png');
 let mainWindow
 const winURL = process.env.NODE_ENV === 'development'
   ? `http://localhost:9080/#`
@@ -20,7 +20,7 @@ function createWindow() {
     width: 1200,
     minHeight: 860,
     minWidth: 1200,
-    // frame: false,
+    frame: false,
     skipTaskbar: false,
     useContentSize: true,
     titleBarStyle: 'customButtonsOnHover',
@@ -33,7 +33,7 @@ function createWindow() {
     tray = null;
     app.quit();
   })
-  mainWindow.on('resize',(ev)=>{
+  mainWindow.on('resize', (ev) => {
     ev.sender.send('windowResize')
   })
 
@@ -47,16 +47,16 @@ function createWindow() {
     mainWindow.focus();
     mainWindow.setSkipTaskbar(false);
   });
-  tray.on('right-click', () => {
-    let contextMenu = Menu.buildFromTemplate([
-      {
-        label: '退出系统',
-        click: function () {
-          tray.destroy()
-          app.quit()
-        }
+  let contextMenu = Menu.buildFromTemplate([
+    {
+      label: '退出系统',
+      click: function () {
+        tray.destroy()
+        app.quit()
       }
-    ]);
+    }
+  ]);
+  tray.on('right-click', () => {
     tray.setContextMenu(contextMenu);
   })
 }
@@ -70,7 +70,8 @@ let newWin
 ipcMain.on('change-data', (event, call, data) => {
   mainWindow.webContents.send('change-data', call, data)
 })
-ipcMain.on('updateFilesList',(event)=>{
+// 设备添加成功 重新获取设备列表/文件状态(暂时关闭)
+ipcMain.on('updateFilesList', (event) => {
   mainWindow.webContents.send('updateFilesList');
 })
 // 打开/关闭添加文件窗口
@@ -80,7 +81,7 @@ ipcMain.on('addFile', (event, arg) => {
     newWin = new BrowserWindow({
       height: 500,
       width: 700,
-      resizable:false
+      resizable: false
     })
     newWin.setMenu(null);
     newWin.loadURL(baseURL + URL)
@@ -111,8 +112,9 @@ ipcMain.on('open-file-dialog', function (event, type, target) {
   })
 })
 // 选择文件
-ipcMain.on('selectFile',(e,ename)=>{  dialog.showOpenDialog({
-    properties:['openFile']
+ipcMain.on('selectFile', (e, ename) => {
+  dialog.showOpenDialog({
+    properties: ['openFile']
   }, function (path) {
     if (path) {
       e.sender.send(ename, path)
@@ -137,8 +139,8 @@ ipcMain.on('window-all-closed', () => {
   mainWindow.setSkipTaskbar(true)
 });
 //new window dom resize 
-ipcMain.on('resetWinSize',(ev,args)=>{
-  newWin.setSize(args[0],args[1]);
+ipcMain.on('resetWinSize', (ev, args) => {
+  newWin.setSize(args[0], args[1]);
 });
 //最小化
 ipcMain.on('hide-window', (ev) => {
@@ -188,14 +190,14 @@ const getScriptPath = () => {
 const createPyProc = () => {
   let script = getScriptPath()
   let port = '' + PY_PORT
-  
+
   // if (process.env.NODE_ENV === 'production') {
-    // dialog.showErrorBox('title', process.env.NODE_ENV + '|\n' + script)
-    pyProc = require('child_process').execFile(script, [port])
+  // dialog.showErrorBox('title', process.env.NODE_ENV + '|\n' + script)
+  pyProc = require('child_process').execFile(script, [port])
   // } else {
-    // pyProc = require('child_process').spawn('python', [script, port])
+  // pyProc = require('child_process').spawn('python', [script, port])
   // }
- 
+
   // if (pyProc != null) {
   //   console.log(pyProc)
   //   console.log('child process success on port ' + port)  // 启动失败也会打印
