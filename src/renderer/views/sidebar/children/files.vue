@@ -60,7 +60,8 @@ export default {
       }).then(() => {
         fetchData("deleteDisk", {
           serialNumber: this.listInfo.serial_number,
-          path: this.listInfo.path
+          path: this.listInfo.path,
+          alias:this.listInfo.alias
         }).then(() => {
 
           //删除成功重新获取设备列表 路由跳转到file主页
