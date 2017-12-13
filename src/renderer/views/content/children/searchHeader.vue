@@ -1,9 +1,9 @@
 <template>
   <div id="searchHeader-root">
     <div class="search-top">
-        <div class="tag-group" v-if="searchPos"><el-tag @close="curClose" :closable="true">{{`在"${searchPos}"搜索`}}</el-tag></div>
-        <div class="tag-group" v-if="searchRangeLength!==fileList.length && !searchPos"><el-tag>{{`在${searchRangeLength}个位置搜索`}}</el-tag></div>
-        <div class="tag-group"  v-if="searchRangeLength===fileList.length && !searchPos"><el-tag>{{`在全局搜索`}}</el-tag></div>
+        <div class="tag-group" v-if="searchPos"><el-tag type="gray" @close="curClose" :closable="true">{{`在"${searchPos}"搜索`}}</el-tag></div>
+        <div class="tag-group" v-if="searchRangeLength!==fileList.length && !searchPos"><el-tag type="gray">{{`在${searchRangeLength}个位置搜索`}}</el-tag></div>
+        <div class="tag-group"  v-if="searchRangeLength===fileList.length && !searchPos"><el-tag type="gray">{{`在全局搜索`}}</el-tag></div>
         <input type="text" v-model.trim="searchValue" placeholder="请输入关键词">
         <em @click="search">搜索</em>
     </div>
@@ -84,7 +84,7 @@ export default {
 
 <style lang="scss">
 #searchHeader-root {
-  padding: 24px 12px;
+  padding: 13px 12px;
   .search-top {
     .tag-group {
       top: 5px;

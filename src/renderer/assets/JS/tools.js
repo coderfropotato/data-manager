@@ -240,8 +240,8 @@ let func = {
     venn(data, config, wrap) {
         var title = config.projectName || 'venn';
         var div = d3.select(wrap)
-        var width = $(wrap).width()*0.6;
-        var height = $(wrap).height()*0.7;
+        var width = $(wrap).width() * 0.6;
+        var height = $(wrap).height() * 0.7;
         var chart = venn.VennDiagram().width(width).height(height);
         div.datum(data).call(chart);
 
@@ -250,15 +250,15 @@ let func = {
 
         div.select('svg .venn_title').remove();
         div.select('svg').append('text')
-            .attr('x',width/2).attr('y',20)
-            .attr('class','venn_title')
-            .attr('text-anchor','middle')
+            .attr('x', width / 2).attr('y', 20)
+            .attr('class', 'venn_title')
+            .attr('text-anchor', 'middle')
             .text(title);
         div.selectAll("g")
             .on("mouseover", function (d, i) {
                 venn.sortAreas(div, d);
                 tooltip.transition().duration(400).style("opacity", .8);
-                tooltip.html(`number:${d.size}<br>elements:${d.elements.length?d.elements.join(','):null}<br>logicalNumber:${d.logicalNumber}<br>sets:${d.sets.join(',')}`);
+                tooltip.html(`number:${d.size}<br>elements:${d.elements.length ? d.elements.join(',') : null}<br>logicalNumber:${d.logicalNumber}<br>sets:${d.sets.join(',')}`);
                 var selection = d3.select(this).transition("tooltip").duration(400);
                 selection.select("path")
                     .style("stroke-width", 3)
@@ -268,8 +268,8 @@ let func = {
             })
 
             .on("mousemove", function () {
-                tooltip.style("left", (d3.event.pageX-180) + "px")
-                    .style("top", (d3.event.pageY-40) + "px");
+                tooltip.style("left", (d3.event.pageX - 180) + "px")
+                    .style("top", (d3.event.pageY - 40) + "px");
             })
 
             .on("mouseout", function (d, i) {
@@ -281,10 +281,254 @@ let func = {
                     .style("stroke-opacity", 0);
             })
 
-            .on('click',function(d,i){
-                config.callback && config.callback(d,i);
+            .on('click', function (d, i) {
+                config.callback && config.callback(d, i);
             })
 
+    },
+    vennLayout() {
+        WNTOptions = {
+            chartPanelID: "div_WNT_Panel",
+            charData: [],
+            isTwoShow: false,
+            isThreeShow: false,
+            isFourShow: false,
+            isFiveShow: false,
+            titleName: [],
+            data: []
+        };
+
+        InitAreaClick = function () {
+            //初始化热点 鼠标 移上/离开 效果
+            $("#div_6_4 .pathLinkArea path").off("mouseover mouseout click");
+            $("#div_6_4 .pathLinkArea path").on("mouseover", function () {
+                $(this).attr('opacity', 0.5);
+            });
+
+            $("#div_6_4 .pathLinkArea path").on("mouseout", function () {
+                $(this).attr('opacity', 0.0);
+            });
+
+            $("#div_6_4 .pathLinkArea path").on("click", function () {
+                var $this = $(this);
+                areaIndex = $this.attr("areaindex");
+                var graphIndex = $this.attr("graphIndex");
+                GetWNTData(1);
+            });
+        }
+
+        //组间分析 数据 列表组数据
+        var controlGroupList = [];
+        //比较组目前选中数量
+        var compareGroup = [];
+        var groupKeyArray = [];
+
+        WNTOptions.charData = responseData;
+        Draw_WNT();
+
+        var WNT2 = {};
+        var WNT3 = {};
+        var WNT4 = {};
+        var WNT5 = {};
+
+        var Draw_WNT = function () {
+            //根据选中的比较组获得交叉key集合
+            groupKeyArray = GetGroupKeyArray();
+            isTwoShow = false;
+            isThreeShow = false;
+            isFourShow = false;
+            isFiveShow = false;
+            switch (compareGroup.length) {
+                case 2:
+                    isTwoShow = true;//两个园图的显示
+                    WNT2.titleName1 = compareGroup[0];//图例说明1
+                    WNT2.titleName2 = compareGroup[1];//图例说明2
+                    WNT2.A = GetWntValue(groupKeyArray[0]);//图1部分
+                    WNT2.AKey = groupKeyArray[0];
+                    WNT2.B = GetWntValue(groupKeyArray[1]);//图2部分
+                    WNT2.BKey = groupKeyArray[1];
+                    WNT2.AB = GetWntValue(groupKeyArray[2]);//图1，图2 公共部分
+                    WNT2.ABKey = groupKeyArray[2];
+                    break;
+                case 3:
+                    isThreeShow = true;
+                    WNT3.titleName1 = compareGroup[0];
+                    WNT3.titleName2 = compareGroup[1];
+                    WNT3.titleName3 = compareGroup[2];
+                    WNT3.A = GetWntValue(groupKeyArray[0]);
+                    WNT3.AKey = groupKeyArray[0];
+                    WNT3.B = GetWntValue(groupKeyArray[1]);
+                    WNT3.BKey = groupKeyArray[1];
+                    WNT3.C = GetWntValue(groupKeyArray[2]);
+                    WNT3.CKey = groupKeyArray[2];
+                    WNT3.AB = GetWntValue(groupKeyArray[3]);
+                    WNT3.ABKey = groupKeyArray[3];
+                    WNT3.AC = GetWntValue(groupKeyArray[4]);
+                    WNT3.ACKey = groupKeyArray[4];
+                    WNT3.BC = GetWntValue(groupKeyArray[5]);
+                    WNT3.BCKey = groupKeyArray[5];
+                    WNT3.ABC = GetWntValue(groupKeyArray[6]);
+                    WNT3.ABCKey = groupKeyArray[6];
+                    //$log.log(WNT3);
+                    break;
+                case 4:
+                    isFourShow = true;
+                    WNT4.titleName1 = compareGroup[0];
+                    WNT4.titleName2 = compareGroup[1];
+                    WNT4.titleName3 = compareGroup[2];
+                    WNT4.titleName4 = compareGroup[3];
+                    WNT4.A = GetWntValue(groupKeyArray[0]);
+                    WNT4.AKey = groupKeyArray[0];
+                    WNT4.B = GetWntValue(groupKeyArray[1]);
+                    WNT4.BKey = groupKeyArray[1];
+                    WNT4.C = GetWntValue(groupKeyArray[2]);
+                    WNT4.CKey = groupKeyArray[2];
+                    WNT4.D = GetWntValue(groupKeyArray[3]);
+                    WNT4.DKey = groupKeyArray[3];
+                    WNT4.AB = GetWntValue(groupKeyArray[4]);
+                    WNT4.ABKey = groupKeyArray[4];
+                    WNT4.AC = GetWntValue(groupKeyArray[5]);
+                    WNT4.ACKey = groupKeyArray[5];
+                    WNT4.AD = GetWntValue(groupKeyArray[6]);
+                    WNT4.ADKey = groupKeyArray[6];
+                    WNT4.BC = GetWntValue(groupKeyArray[7]);
+                    WNT4.BCKey = groupKeyArray[7];
+                    WNT4.BD = GetWntValue(groupKeyArray[8]);
+                    WNT4.BDKey = groupKeyArray[8];
+                    WNT4.CD = GetWntValue(groupKeyArray[9]);
+                    WNT4.CDKey = groupKeyArray[9];
+                    WNT4.ABC = GetWntValue(groupKeyArray[10]);
+                    WNT4.ABCKey = groupKeyArray[10];
+                    WNT4.ABD = GetWntValue(groupKeyArray[11]);
+                    WNT4.ABDKey = groupKeyArray[11];
+                    WNT4.ACD = GetWntValue(groupKeyArray[12]);
+                    WNT4.ACDKey = groupKeyArray[12];
+                    WNT4.BCD = GetWntValue(groupKeyArray[13]);
+                    WNT4.BCDKey = groupKeyArray[13];
+                    WNT4.ABCD = GetWntValue(groupKeyArray[14]);
+                    WNT4.ABCDKey = groupKeyArray[14];
+                    break;
+                case 5:
+                    isFiveShow = true;
+                    WNT5.titleName1 = compareGroup[0];
+                    WNT5.titleName2 = compareGroup[1];
+                    WNT5.titleName3 = compareGroup[2];
+                    WNT5.titleName4 = compareGroup[3];
+                    WNT5.titleName5 = compareGroup[4];
+                    WNT5.A = GetWntValue(groupKeyArray[0]);
+                    WNT5.AKey = groupKeyArray[0];
+                    WNT5.B = GetWntValue(groupKeyArray[1]);
+                    WNT5.BKey = groupKeyArray[1];
+                    WNT5.C = GetWntValue(groupKeyArray[2]);
+                    WNT5.CKey = groupKeyArray[2];
+                    WNT5.D = GetWntValue(groupKeyArray[3]);
+                    WNT5.DKey = groupKeyArray[3];
+                    WNT5.E = GetWntValue(groupKeyArray[4]);
+                    WNT5.EKey = groupKeyArray[4];
+                    WNT5.AB = GetWntValue(groupKeyArray[5]);
+                    WNT5.ABKey = groupKeyArray[5];
+                    WNT5.AC = GetWntValue(groupKeyArray[6]);
+                    WNT5.ACKey = groupKeyArray[6];
+                    WNT5.AD = GetWntValue(groupKeyArray[7]);
+                    WNT5.ADKey = groupKeyArray[7];
+                    WNT5.AE = GetWntValue(groupKeyArray[8]);
+                    WNT5.AEKey = groupKeyArray[8];
+                    WNT5.BC = GetWntValue(groupKeyArray[9]);
+                    WNT5.BCKey = groupKeyArray[9];
+                    WNT5.BD = GetWntValue(groupKeyArray[10]);
+                    WNT5.BDKey = groupKeyArray[10];
+                    WNT5.BE = GetWntValue(groupKeyArray[11]);
+                    WNT5.BEKey = groupKeyArray[11];
+                    WNT5.CD = GetWntValue(groupKeyArray[12]);
+                    WNT5.CDKey = groupKeyArray[12];
+                    WNT5.CE = GetWntValue(groupKeyArray[13]);
+                    WNT5.CEKey = groupKeyArray[13];
+                    WNT5.DE = GetWntValue(groupKeyArray[14]);
+                    WNT5.DEKey = groupKeyArray[14];
+                    WNT5.ABC = GetWntValue(groupKeyArray[15]);
+                    WNT5.ABCKey = groupKeyArray[15];
+                    WNT5.ABD = GetWntValue(groupKeyArray[16]);
+                    WNT5.ABDKey = groupKeyArray[16];
+                    WNT5.ABE = GetWntValue(groupKeyArray[17]);
+                    WNT5.ABEKey = groupKeyArray[17];
+                    WNT5.ACD = GetWntValue(groupKeyArray[18]);
+                    WNT5.ACDKey = groupKeyArray[18];
+                    WNT5.ACE = GetWntValue(groupKeyArray[19]);
+                    WNT5.ACEKey = groupKeyArray[19];
+                    WNT5.ADE = GetWntValue(groupKeyArray[20]);
+                    WNT5.ADEKey = groupKeyArray[20];
+                    WNT5.BCD = GetWntValue(groupKeyArray[21]);
+                    WNT5.BCDKey = groupKeyArray[21];
+                    WNT5.BCE = GetWntValue(groupKeyArray[22]);
+                    WNT5.BCEKey = groupKeyArray[22];
+                    WNT5.BDE = GetWntValue(groupKeyArray[23]);
+                    WNT5.BDEKey = groupKeyArray[23];
+                    WNT5.CDE = GetWntValue(groupKeyArray[24]);
+                    WNT5.CDEKey = groupKeyArray[24];
+                    WNT5.ABCD = GetWntValue(groupKeyArray[25]);
+                    WNT5.ABCDKey = groupKeyArray[25];
+                    WNT5.ABCE = GetWntValue(groupKeyArray[26]);
+                    WNT5.ABCEKey = groupKeyArray[26];
+                    WNT5.ABDE = GetWntValue(groupKeyArray[27]);
+                    WNT5.ABDEKey = groupKeyArray[27];
+                    WNT5.ACDE = GetWntValue(groupKeyArray[28]);
+                    WNT5.ACDEKey = groupKeyArray[28];
+                    WNT5.BCDE = GetWntValue(groupKeyArray[29]);
+                    WNT5.BCDEKey = groupKeyArray[29];
+                    WNT5.ABCDE = GetWntValue(groupKeyArray[30]);
+                    WNT5.ABCDEKey = groupKeyArray[30];
+                    break;
+            }
+        };
+
+        //根据key获取对应展示数据
+        function GetWntValue(key) {
+            var result = "";
+            for (var i = 0; i < WNTOptions.charData.length; i++) {
+                if (WNTOptions.charData[i].result.SampleNameGroup == key) {
+
+                    result = WNTOptions.charData[i].result.Count;
+                    break;
+                }
+            }
+            if (result == "") {
+                result = 0;
+            }
+            return result;
+        };
+
+        //获取每个比对组两两之间的交叉数据
+        function GetGroupKeyArray() {
+            var returnValue = [];
+            var tempStr = "";
+            for (var i = 1; i <= compareGroup.length; i++) {
+                tempStr += combine(compareGroup, i);
+            }
+            tempStr = tempStr.replace(/,/g, "∩");
+            tempStr = tempStr.substring(0, tempStr.length - 1);
+            return tempStr.split('&');
+        }
+
+        //进行指定数量的排列组合 num为数组中每一项的下标
+        function combine(arr, num) {
+            var r = "";
+            (function f(t, a, n) {
+                if (n == 0) {
+                    r += t.toString() + "&";
+                    return r;
+                }
+                for (var i = 0, l = a.length; i <= l - n; i++) {
+                    f(t.concat(a[i]), a.slice(i + 1), n - 1);
+                }
+            })([], arr, num);
+            return r;
+        }
+
+        path_OnClick = function (m) {
+            var arr = m.split(":");
+            var areaIndex = arr[0];
+            var graphIndex = arr[1];
+        };
     }
 }
 function Tools() {

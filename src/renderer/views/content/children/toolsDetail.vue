@@ -20,7 +20,7 @@
                       </el-form-item>
                       <!-- 选择文件 -->
                       <el-form-item label="选择文件" >
-                        <el-button v-if="!formData.filePath.length" @click="selectFile" type="primary" size="mini">点击选择文件</el-button>
+                        <el-button v-if="!formData.filePath.length" @click="selectFile" type="primary" size="small">点击选择文件</el-button>
                         <p @click="selectFile" :title="formData.filePath" class="selectPath" v-if="formData.filePath.length">{{formData.filePath}}</p>
                       </el-form-item>
                     </el-form>
@@ -51,7 +51,7 @@
                           <el-form>
                             <!-- 选择基因列表文件 -->
                             <el-form-item label="选择文件" >
-                              <el-button v-if="!formData.fileOptionPath.length" @click="selectFileOption" type="primary" size="mini">点击选择文件</el-button>
+                              <el-button v-if="!formData.fileOptionPath.length" @click="selectFileOption" type="primary" size="small">点击选择文件</el-button>
                               <p @click="selectFileOption" :title="formData.fileOptionPath" class="selectPath" v-if="formData.fileOptionPath.length">{{formData.fileOptionPath}}</p>
                             </el-form-item>
                           </el-form>
@@ -139,7 +139,7 @@
                       </el-form-item> -->
                       <br>
                       <el-form-item>
-                        <el-button type="primary" @click="sub">提交</el-button>
+                        <el-button class="submit" type="primary" @click="sub">提交</el-button>
                       </el-form-item>
                     </el-form>
                   </div>

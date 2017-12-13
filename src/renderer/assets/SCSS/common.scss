@@ -95,9 +95,9 @@ body{
 }
 .el-checkbox{
   .el-checkbox__inner{
-    height: 1em;
-    width: 1em;
-    font-size: 1em;
+    height: 14px;
+    width: 14px;
+    font-size: 10px;
   }
   .el-checkbox__label{
     // display: none !important;
@@ -123,7 +123,7 @@ body{
 }
 .drawWrap{
   .el-form-item{
-    margin-bottom: 12px;
+    margin-bottom: 16px;
   }
 }
 // 设置添加分类的弹出窗中的选框向右浮动，fileInfo.vue
@@ -154,9 +154,10 @@ body{
 }
 .el-checkbox__inner::after{
   left: 3px;
+  top: 0;
 }
 .el-checkbox__inner{
-  border-radius: 4px;
+  border-radius: 2px;
 }
 //表头颜色
 .el-table__footer-wrapper thead div,
@@ -203,11 +204,14 @@ body{
   left: 4px;
   top: 3px;
   position: absolute;
-  .el-tag {
-    background: #fff;
-    border: 1px solid #ccc;
-    color: #666;
-  }
+  // .el-tag {
+  //   background: #fff;
+  //   border: 1px solid #ccc;
+  //   color: #666;
+  // }
+}
+.el-tag .el-icon-close{
+  font-size: 10px;
 }
 //select font family 
 .el-select-dropdown__item  span{
@@ -290,9 +294,9 @@ body{
   .el-tabs__active-bar{
     background-color: #386cca;
   }
-  .el-checkbox__input.is-checked .el-checkbox__inner{
-    background-color: #386cca;
-    border-color: #386cca;
+  .table-wrap .el-checkbox__input.is-checked .el-checkbox__inner{
+    background: #386cca!important;
+    border-color: #386cca!important;
   }
   .el-textarea__inner:focus{
     border-color: #386cca;
@@ -317,8 +321,7 @@ body{
     height: 100%;
     .options {
       padding-right: 20px;
-      max-width: 380px;
-      width: 380px;
+      width: 440px;
       height: 100%;
       overflow-y: auto;
       .el-form {
@@ -327,10 +330,9 @@ body{
       ul {
         li {
           list-style: none;
-          border: 2px solid #ccc;
+          border: 1px solid #ccc;
           border-radius: 8px;
-          margin-bottom: 26px;
-          box-shadow: 1px 1px 10px #ccc;
+          margin-bottom: 40px;
           &:last-child {
             margin-bottom: none;
           }
@@ -374,7 +376,7 @@ body{
           background: #386cca;
           color: #fff;
           opacity: 0.5;
-          margin-right: 6px;
+          margin-right: 1px;
           cursor: pointer;
           &.active {
             opacity: 1;
@@ -449,4 +451,27 @@ body{
 .el-switch.is-checked .el-switch__core{
   border-color: #386cca;
   background-color:#386cca;
+}
+.el-input-group__append .el-button, .el-input-group__append .el-select, .el-input-group__prepend .el-button, .el-input-group__prepend .el-select{
+  display: inline-block;
+}
+.icon-line{
+  .iconfont{
+    width: 18px;
+    height: 18px;
+    margin-right: 12px;
+    vertical-align: top;
+    margin-top: -1px;
+  }
+}
+button{
+  &.submit{
+    height: 36px;
+    width:100px;
+  }
+}
+.el-textarea{
+  textarea{
+    height: 140px;
+  }
 }

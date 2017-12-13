@@ -20,7 +20,7 @@
                       </el-form-item>
                       <!-- 选择文件 -->
                       <el-form-item label="上传文件" >
-                        <el-button v-if="!form.filePath.length" @click="selectFile" type="primary" size="mini">点击选择文件</el-button>
+                        <el-button v-if="!form.filePath.length" @click="selectFile" type="primary" size="small">点击选择文件</el-button>
                         <p @click="selectFile" :title="form.filePath" class="selectPath" v-if="form.filePath.length">{{form.filePath}}</p>
                       </el-form-item>
                     </el-form>
@@ -37,7 +37,7 @@
                       </el-form-item> -->
                       <br>
                       <el-form-item>
-                        <el-button type="primary" @click="sub">提交</el-button>
+                        <el-button class="submit" type="primary" @click="sub">提交</el-button>
                       </el-form-item>
                     </el-form>
                   </div>

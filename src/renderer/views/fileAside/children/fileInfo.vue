@@ -9,7 +9,7 @@
       </ol>
       <!-- status layout end -->
       <div class="title">
-        <p>文件详情</p>
+        <p class="icon-line"><i class="iconfont icon-wenjianxiangqing"></i>文件详情</p>
         <span v-show="!module" @click="module=true">完成</span>
         <span v-show="module" @click="module=false">编辑</span>
       </div>
@@ -22,7 +22,7 @@
         <li>
           <p>文件类型：<span>{{fileInfo.fileType}}</span></p>
         </li>
-        <li v-if="!fileInfo.isdir">
+        <li v-if="! fileInfo.isdir">
           <p>文件大小：<span>{{fileInfo.basic.size | reverseSize}}</span></p>
         </li>
         <li>
@@ -30,10 +30,10 @@
         </li>
       </ul>
       <div class="text">
-        <h5>数据来源</h5>
+        <h5 class="icon-line"><i class="iconfont icon-shujulaiyuan"></i>数据来源</h5>
         <p>类别：{{fileInfo.source.category}}</p>
         <p>数据源：{{fileInfo.source.source}}</p>
-        <h5 class="item">属性</h5>
+        <h5 class="item icon-line"><i class="iconfont icon-cankaojiyinzu"></i>属性</h5>
         <div class="attrs">
           <span>名称</span>
           <span>详情</span>
@@ -50,8 +50,8 @@
         </div>
 
         <!-- add attrs -->
-        <h5 class="item">备注</h5>
-        <textarea id="texta" :readonly="module" placeholder="其他信息"  :value="fileInfo.remark" @change="updateMessage($event)">></textarea>
+        <h5 class="item icon-line"><i class="iconfont icon-beizhu"></i>备注</h5>
+        <textarea id="texta" :class="{'active':module}"  :readonly="module" placeholder="您还没有添加备注"  :value="fileInfo.remark" @change="updateMessage($event)">></textarea>
       </div>
     </div>
     <!-- nodata -->
@@ -156,7 +156,7 @@ export default {
 #fileInfo-root {
   height: 100%;
   width: 100%;
-  padding: 2em;
+  padding: 16px 2em 0;
   font-size: 14px;
   overflow-y: scroll;
   .status-bar {
@@ -182,11 +182,18 @@ export default {
   .title {
     display: flex;
     justify-content: space-between;
+    p {
+      font-size: 16px;
+      margin-top: 2px;
+    }
     span {
       color: #fff;
       background: #386cca;
       padding: 4px 12px;
       border-radius: 2px;
+      font-size: 12px;
+      width: 68px;
+      text-align: center;
       cursor: pointer;
       user-select: none;
       opacity: 1;
@@ -196,18 +203,18 @@ export default {
     }
   }
   .des {
-    margin: 22px 0 8px 0;
+    margin: 24px 0 8px 0;
     display: flex;
     img {
-      width: 56px;
-      height: 56px;
+      width: 40px;
+      height: 48px;
       display: block;
       user-select: none;
     }
     span {
-      line-height: 56px;
+      line-height: 48px;
       margin-left: 20px;
-      font-size: 12px;
+      font-size: 16px;
       white-space: nowrap;
       text-overflow: ellipsis;
       overflow: hidden;
@@ -222,10 +229,11 @@ export default {
       flex: 1;
       text-align: left;
       display: flex;
+      line-height: 1;
       flex-direction: column;
-      margin-top: 6px;
+      margin-top: 16px;
       p {
-        font-size: 12px;
+        font-size: 14px;
         span {
           font-size: inherit;
         }
@@ -233,20 +241,24 @@ export default {
     }
   }
   .text {
-    margin-top: 40px;
+    margin-top: 48px;
     h5 {
-      font-size: 14px;
-      margin-bottom: 12px;
+      font-size: 16px;
+      margin-bottom: 24px;
       font-weight: normal;
+      line-height: 1;
     }
     .item {
-      margin-top: 32px;
+      margin-top: 48px;
+      margin-bottom: 24px;
     }
     .attrs {
       display: flex;
       margin-bottom: 8px;
       span {
         font-size: 12px;
+        color: #999;
+        line-height: 1;
         &:first-child {
           width: 40%;
         }
@@ -256,18 +268,19 @@ export default {
       }
     }
     p {
-      line-height: 26px;
+      line-height: 1;
       white-space: nowrap;
       overflow: hidden;
-      font-size: 12px;
+      font-size: 14px;
       text-overflow: ellipsis;
       width: 100%;
       display: flex;
+      margin-bottom: 16px;
       input {
         outline: none;
         border: none;
         border-bottom: 1px solid #ccc;
-        font-size: 12px;
+        font-size: 14px;
         font-family: "Helvetica Neue", Helvetica, "PingFang SC",
           "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
         &:first-child {
@@ -279,15 +292,22 @@ export default {
       }
       a {
         color: #386cca;
-        font-size: 12px;
+        font-size: 14px;
       }
     }
     textarea {
       width: 100%;
-      height: 88px;
+      height: 140px;
       border-radius: 4px;
       outline: none;
-      font-size: 12px;
+      font-size: 14px;
+      background: #f5f5f5;
+      border: 1px solid #ccc;
+      padding: 6px;
+      &.active {
+        border: none;
+        outline: none;
+      }
     }
     .item-list {
       overflow-y: auto;
@@ -305,7 +325,7 @@ export default {
         input {
           border: none;
           outline: none;
-          font-size: 12px;
+          font-size: 14px;
           &:first-child {
             width: 40%;
           }
@@ -329,7 +349,13 @@ export default {
     margin-top: 40px;
     text-align: center;
     img {
-      width: 102px;
+      width: 140px;
+    }
+    p {
+      font-size: 14px;
+      color: #a6afbf;
+      line-height: 1;
+      margin-top: 24px;
     }
   }
 }

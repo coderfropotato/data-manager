@@ -3,10 +3,12 @@
         <p class="title">工具</p>
         <ul>
             <li @click="toolDetail('heatmap')">
-                <img src="../../../assets/images/heatmap.png" alt="">
-                <div class="desc">
-                    <p>热图</p>
-                    <span>简介：将表格数据绘制成一个热图。</span>
+                <div>
+                  <img src="../../../assets/images/heatmap.png" alt="">
+                  <div class="desc">
+                      <p>热图</p>
+                      <p>简介：将表格数据绘制成一个热图。</p>
+                  </div>
                 </div>
             </li>
             <!-- <li @click="toExcel">
@@ -15,14 +17,16 @@
                     <p>表格筛选</p>
                     <span>简介：从源表格包含的所有属性中，筛选出所关注样本的信息。</span>
                 </div>
-            </li>
-            <li @click="toVenn">
-                <img src="../../../assets/images/pathway.png" alt="">
-                <div class="desc">
-                    <p>韦恩图</p>
-                    <span>简介：应用超几何检验，找出与整个基因组背景相比，在差异表达基因中显著性富集的PathWay。</span>
-                </div>
             </li> -->
+            <li @click="toVenn">
+               <div>
+                  <img src="../../../assets/images/pathway.png" alt="">
+                  <div class="desc">
+                      <p>韦恩图</p>
+                      <p>简介：应用超几何检验，找出与整个基因组背景相比，在差异表达基因中显著性富集的PathWay。</p>
+                  </div>
+               </div>
+            </li>
         </ul>
     </div>
 </template>
@@ -41,10 +45,10 @@ export default {
     // toExcel(){
     //   this.$router.push('./toolsExcel')
     // },
-    // toVenn(){
-    //   // this.$message('开发中...')
-    //   this.$router.push('./toolsVenn?type=venn')
-    // }
+    toVenn() {
+      // this.$message('开发中...')
+      this.$router.push("./toolsVenn?type=venn");
+    }
   },
   created() {},
   activated() {
@@ -58,33 +62,49 @@ export default {
 
 <style lang="scss" scoped>
 #toolsIndex {
-  padding: 0 20px;
   .title {
-    padding: 14px 0;
+    padding: 14px 30px;
+    border-bottom: 1px solid #ccc;
+    height: 60px;
+    line-height: 32px;
   }
   ul {
     list-style: none;
     li {
-      padding: 12px 0;
-      display: flex;
-      cursor: pointer;
-      align-items: center;
-      border-bottom: 1px solid #ccc;
-      img {
-        width: 40px;
-        height: 40px;
-        margin-right: 14px;
+      padding: 0 30px;
+
+      &:hover {
+        background: #ebf0f9;
       }
-      .desc {
-        flex: 1;
-        p {
-          line-height: 24px;
-          &:hover {
-            color: #386cca;
-          }
+      & > div {
+        padding: 16px 0;
+        display: flex;
+        cursor: pointer;
+        align-items: center;
+        border-bottom: 1px solid #ccc;
+        img {
+          width: 50px;
+          height: 50px;
+          margin-right: 14px;
         }
-        span {
-          font-size: 12px;
+        .desc {
+          flex: 1;
+          p {
+            line-height: 24px;
+            display: inline;
+            font-size: 16px;
+            line-height: 18px;
+            &:hover {
+              color: #386cca;
+            }
+            &:first-child{
+              display: block;
+              margin-bottom: 12px;
+            }
+            &:last-child {
+              font-size: 14px;
+            }
+          }
         }
       }
     }

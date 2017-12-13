@@ -7,8 +7,8 @@
       <div class="search-wrap">
           <div class="search-top">
               <input type="text" v-model.trim="searchVal" placeholder="请输入关键词">
-              <div class="tag-group" v-if="searchRangeLength!==fileList.length"><el-tag>{{`在${searchRangeLength}个位置搜索`}}</el-tag></div>
-              <div class="tag-group"  v-if="searchRangeLength===fileList.length"><el-tag>{{`在全局搜索`}}</el-tag></div>
+              <div class="tag-group" v-if="searchRangeLength!==fileList.length"><el-tag type="gray">{{`在${searchRangeLength}个位置搜索`}}</el-tag></div>
+              <div class="tag-group"  v-if="searchRangeLength===fileList.length"><el-tag type="gray">{{`在全局搜索`}}</el-tag></div>
               <em @click="search">搜索</em>
           </div>
           <p>搜索历史记录</p>

@@ -188,6 +188,9 @@ $backgroundColor: #f7f9f9;
       i {
         margin-right: 12px;
       }
+      span{
+        font-size: 14px;
+      }
     }
   }
   .nav-menu {

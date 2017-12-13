@@ -76,9 +76,9 @@ export default {
         background-size: 16px 16px;
         background-repeat: no-repeat;
         background-position: center;
-        transition: .3s all ease;
+        transition: .1s all ease;
         cursor: pointer;
-        opacity: .4;
+        opacity: .8;
         margin-top: 3px;
         &:first-child {
           background-image: url("../assets/images/hide.png");

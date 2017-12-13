@@ -11,15 +11,15 @@
     <p>
       <!-- <router-link tag="span" :to="{path:'/filescale'}">文件</router-link> -->
       <span @click="jumotoindex">文件</span>
-      <span @click="navBarJump(item,index)" v-for="(item,index) in navList" :key="index"><em>&nbsp;< &nbsp;</em>{{item.filename || item.alias}}</span>
+      <span :class="{'active':index+1===navList.length}" @click="navBarJump(item,index)" v-for="(item,index) in navList" :key="index"><em>&nbsp;< &nbsp;</em>{{item.filename || item.alias}}</span>
     </p>
     </div>
     <div class="search">
        <el-input ref="search" size="small" placeholder="请输入关键词" v-model.trim="searchValue">
-          <el-button @click="search" slot="append" icon="search">搜索</el-button>
+          <el-button @click="search" slot="append">搜索</el-button>
       </el-input>
       <div class="tag-group">
-          <el-tag  @close="closeTag"  :closable="true">{{tag.name}}</el-tag>
+          <el-tag type="gray" @close="closeTag"  :closable="true">{{tag.name}}</el-tag>
       </div>
     </div>
   </div>
@@ -145,10 +145,13 @@ export default {
 #fileHeader-root {
   display: flex;
   padding: 0 12px;
-  height: 58px;
+  height: 60px;
   .el-input-group__append {
     background-color: #386cca !important;
+    width: 20%;
+    text-align: center;
     border: none;
+    border-radius: 0 4px 4px 0;
     .el-button {
       border-radius: 0;
       color: #fff !important;
@@ -182,16 +185,19 @@ export default {
         &:hover {
           color: #386cca;
         }
+        &.active{
+          color: #386cca;
+        }
       }
     }
-    width: 40%;
+    width: 50%;
     padding-right: 12px;
     box-sizing: border-box;
   }
   .search {
-    margin-top: 12px;
+    margin-top: 14px;
     padding-bottom: 12px;
-    width: 60%;
+    width: 50%;
     position: relative;
     .el-input__inner {
       padding-left: 100px;
