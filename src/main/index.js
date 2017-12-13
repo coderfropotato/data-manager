@@ -59,6 +59,57 @@ function createWindow() {
   tray.on('right-click', () => {
     tray.setContextMenu(contextMenu);
   })
+
+
+  /***********************************************************
+ * 生成快捷方式 grunt-electron-installer
+ **********************************************************/
+  var handleStartupEvent = function () {
+    if (process.platform !== 'win32') {
+      return false;
+    }
+
+    var squirrelCommand = process.argv[1];
+
+    switch (squirrelCommand) {
+      case '--squirrel-install':
+      case '--squirrel-updated':
+        install();
+        return true;
+      case '--squirrel-uninstall':
+        uninstall();
+        app.quit();
+        return true;
+      case '--squirrel-obsolete':
+        app.quit();
+        return true;
+    }
+    // 安装
+    function install() {
+      var cp = require('child_process');
+      var updateDotExe = path.resolve(path.dirname(process.execPath), '..', 'update.exe');
+      var target = path.basename(process.execPath);
+      var child = cp.spawn(updateDotExe, ["--createShortcut", target], { detached: true });
+      child.on('close', function (code) {
+        app.quit();
+      });
+    }
+    // 卸载
+    function uninstall() {
+      var cp = require('child_process');
+      var updateDotExe = path.resolve(path.dirname(process.execPath), '..', 'update.exe');
+      var target = path.basename(process.execPath);
+      var child = cp.spawn(updateDotExe, ["--removeShortcut", target], { detached: true });
+      child.on('close', function (code) {
+        app.quit();
+      });
+    }
+
+  };
+
+  if (handleStartupEvent()) {
+    return;
+  }
 }
 
 /*
@@ -147,26 +198,36 @@ ipcMain.on('hide-window', (ev) => {
   mainWindow.minimize();
   mainWindow.setSkipTaskbar(false)
 });
-//最大化
-ipcMain.on('show-window', (ev) => {
-  mainWindow.maximize();
+// 切换窗口大小
+ipcMain.on('change-window', (ev) => {
+  if (mainWindow.isMaximized()) {
+    mainWindow.unmaximize();
+    ev.sender.send('resetLayout', 65);
+  } else {
+    mainWindow.maximize();
+    ev.sender.send('resetLayout', 75);
+  }
   mainWindow.setSkipTaskbar(false)
-  // 75%
-  ev.sender.send('resetLayout', 75);
-});
-//还原
-ipcMain.on('orignal-window', (ev) => {
-  mainWindow.unmaximize();
-  mainWindow.setSkipTaskbar(false)
-  // 65%
-  ev.sender.send('resetLayout', 65);
-});
+})
 
 app.on('activate', () => {
   if (mainWindow === null) {
     createWindow()
   }
 })
+// 重复点击图标
+const shouldQuit = app.makeSingleInstance((commandLine, workingDirectory) => {
+  //若最小化则还原
+  if (mainWindow) {
+    if (mainWindow.isMinimized()) {
+      mainWindow.restore();
+    }
+    mainWindow.focus();
+  }
+});
+if (shouldQuit) {
+  app.quit();
+}
 
 
 /*************************************************************
