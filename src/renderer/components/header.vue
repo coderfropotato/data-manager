@@ -19,7 +19,6 @@
 export default {
   data() {
     return {
-      status: "min"
     };
   },
   methods: {
@@ -27,13 +26,7 @@ export default {
       this.$electron.ipcRenderer.send("hide-window");
     },
     zoom() {
-      if (this.status === "min") {
-        this.$electron.ipcRenderer.send("show-window");
-        this.status = "max";
-      } else {
-        this.$electron.ipcRenderer.send("orignal-window");
-        this.status = "min";
-      }
+      this.$electron.ipcRenderer.send('change-window');
     },
     close() {
       this.$electron.ipcRenderer.send("window-all-closed");
