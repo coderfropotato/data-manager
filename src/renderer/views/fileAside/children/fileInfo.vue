@@ -22,7 +22,7 @@
         <li>
           <p>文件类型：<span>{{fileInfo.fileType}}</span></p>
         </li>
-        <li>
+        <li v-if="!fileInfo.isdir">
           <p>文件大小：<span>{{fileInfo.basic.size | reverseSize}}</span></p>
         </li>
         <li>
