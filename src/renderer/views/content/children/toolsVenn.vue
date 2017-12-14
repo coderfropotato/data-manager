@@ -73,7 +73,7 @@ export default {
         //项目名称
         projectName: "venn5698c9",
         //文件路径
-        filePath: "",
+        filePath: "C:UsersAdministratorDesktopexaple_data.txt",
         // 手动数据矩阵
         arrayFile: "",
         //邮件通知
@@ -108,11 +108,69 @@ export default {
           let arrayFile = this.form.arrayFile;
           fetchData("getVenefigureDate", { filePath, arrayFile }).then(res => {
             // draw config
+            console.log(res);
             this.drawOptions.projectName = this.form.projectName;
             this.drawOptions.callback = this.callback;
             this.tools.setWrap(".venn");
-            this.tools.setType("venn");
-            this.tools.draw(res.result, this.drawOptions);
+            // this.tools.setType("venn");
+            this.tools.setType("vennStander");
+            let data = {
+              compareGroup: ["SRR1370913", "SRR1370914", "SRR1370915"],
+              data: [
+                {
+                  result: {
+                    OTUs: [],
+                    SampleNameGroup: "SRR1370913",
+                    Count: 359
+                  }
+                },
+                {
+                  result: {
+                    OTUs: [],
+                    SampleNameGroup: "SRR1370913∩SRR1370914",
+                    Count: 1454
+                  }
+                },
+                {
+                  result: {
+                    OTUs: [],
+                    SampleNameGroup: "SRR1370913∩SRR1370914∩SRR1370915",
+                    Count: 1090
+                  }
+                },
+                {
+                  result: {
+                    OTUs: [],
+                    SampleNameGroup: "SRR1370913∩SRR1370915",
+                    Count: 108
+                  }
+                },
+                {
+                  result: {
+                    OTUs: [],
+                    SampleNameGroup: "SRR1370914",
+                    Count: 426
+                  }
+                },
+                {
+                  result: {
+                    OTUs: [],
+                    SampleNameGroup: "SRR1370914∩SRR1370915",
+                    Count: 127
+                  }
+                },
+                {
+                  result: {
+                    OTUs: [],
+                    SampleNameGroup: "SRR1370915",
+                    Count: 272
+                  }
+                }
+              ]
+            };
+
+            // this.tools.draw(res.result, this.drawOptions);
+            this.tools.draw(data, this.drawOptions);
           });
         } else {
           this.$message("请填写项目名称");
@@ -120,8 +178,8 @@ export default {
       });
       return;
     },
-    callback(d,i){
-      console.log(d,i);
+    callback(d, i) {
+      console.log(d, i);
     },
     toTools() {
       this.$router.push("./toolsIndex");
@@ -148,9 +206,9 @@ export default {
 <style lang="scss">
 .venn {
   text-align: center;
-  svg{
-    width:80%;
-    height:80%;
+  svg {
+    width: 80%;
+    height: 80%;
   }
 }
 .venntooltip {
@@ -159,7 +217,7 @@ export default {
   width: auto;
   background: #333;
   color: #ddd;
-  padding:4px 8px;
+  padding: 4px 8px;
   border: 0px;
   opacity: 0;
   border-radius: 8px;
