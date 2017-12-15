@@ -49,7 +49,7 @@ venv\Scripts\pyinstaller --hidden-import=scipy._lib.messagestream --hidden-impor
 
 cd ..
 
-echo "start build back"
+echo "start build font"
 
 call npm i
 call npm rebuild zeromq --runtime=electron --target=1.6.11
