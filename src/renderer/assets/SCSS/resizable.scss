@@ -1,0 +1,50 @@
+// 整体三栏可调布局
+#index-root {
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  overflow: hidden;
+
+  // 设置高度为 100%
+  .sidebar-wrapper,
+  .content-wrapper,
+  .file-wrapper {
+    height: 100%;
+  }
+
+  // 分隔条
+  .splitter-left,
+  .splitter-right{
+    flex: 0 0 auto;
+    width: 2px;
+    height: 100%;
+    cursor: col-resize;
+    background-color: #5e7382;
+  }
+
+  // 侧边栏宽度
+  .sidebar-wrapper{
+    flex: 0 0 auto;
+    width: 300px;
+    min-width: 230px;
+    max-width: 60%;
+  }
+
+  // 内容区宽度
+  .content-wrapper{
+    flex: 0 0 auto;
+    width: 65%;
+    max-width: 80%;
+    min-width: 600px;
+  }
+
+  // flex 布局右样式
+  .right,
+  .file-wrapper{
+    display: flex;
+    flex-direction: row;
+    flex: 1 1 auto;
+    width: 100%;
+    min-width: 200px;
+  }
+}

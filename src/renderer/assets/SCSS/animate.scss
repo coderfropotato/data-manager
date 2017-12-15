@@ -1,0 +1,40 @@
+// 部分动画样式
+@keyframes slideInDown {
+  from {
+    transform: translate3d(0, -20%, 0);
+    opacity: 0;
+  }
+
+  to {
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    transform: translate3d(0, 0%, 0);
+    opacity: 1;
+  }
+
+  to {
+    transform: translate3d(0, -20%, 0);
+    opacity: 0;
+  }
+}
+
+.fade-enter-active {
+  animation: slideInDown .5s;
+}
+
+.fade-enter {
+  animation: slideInDown .5s ease;
+}
+
+.fade-leave-active {
+  animation: slideInUp .5s;
+}
+
+.fade-leave-to {
+  animation: slideInUp .5s ease;
+}
