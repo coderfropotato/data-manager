@@ -1,7 +1,21 @@
+/**
+ *  @classdesc tools.js 提供画图和图下载方法
+ *  @desc 画图
+ *  @example
+    *  @func tools.setWrap(wrap) @param {String,".wrap"} 
+    *  @func tools.setType(type) @param {String,"heatmap"} 
+    *  @func tools.draw(data,options) @param {Object,Object} data - 画图数据  options - 画图参数
+    @example
+       @func tools.setWrap(wrap) @param {String,".container"}
+       @func tools.setType(type) @param {String,"svgDownload"}
+       @func tools.download()
+ */
+
 let d3 = require('d3');
 let venn = require('venn.js');
 let $ = require('jquery');
 let func = {
+    // 画图方法
     heatmap(data, config, wrap) {
         var cluster_left = data.leftTree || null;
         var cluster_top = data.topTree || null;
@@ -900,10 +914,31 @@ let func = {
         }
     }
 }
+let downloadFunc = {
+    svgDownload(wrap,filename) {
+        var svgXml = $(wrap).find("svg:eq(0)").prop("outerHTML");
+        var image = new Image();
+        image.src = 'data:image/svg+xml;base64,' + window.btoa(unescape(encodeURIComponent(svgXml)));
+        var canvas = document.createElement('canvas'); 
+        canvas.width = $element.find("svg:eq(0)").width();
+        canvas.height = $element.find("svg:eq(0)").height();
+        var context = canvas.getContext('2d'); 
+        image.onload = function () {
+            context.drawImage(image, 0, 0);
+            var a = document.createElement('a');
+            document.body.appendChild(a);
+            a.href = canvas.toDataURL("image/png"); 
+            a.download = fileName; 
+            a.click(); 
+            a.remove();
+        }
+    }
+}
 function Tools() {
     this.type = '';
     this.wrap = '';
     this.drawFunc = func;
+    this.downloadFunc = downloadFunc;
 }
 Tools.prototype.config = function (options) {
     this.type = options.type || '';
@@ -924,7 +959,12 @@ Tools.prototype.getCurrentType = function () {
     return this.type;
 }
 Tools.prototype.draw = function (data, newConfig) {
-    this.drawFunc[this.type](data, newConfig, this.wrap);
+    var wrap = this.wrap;
+    this.drawFunc[this.type](data, newConfig, wrap);
 }
+Tools.prototype.download = function () {
+    this.downloadFunc[this.type](this.wrap);
+}
+
 
 module.exports = new Tools();
