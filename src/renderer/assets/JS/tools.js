@@ -295,24 +295,24 @@ let func = {
             data: []
         };
 
-        /* TODO
-         InitAreaClick = function () {
+
+        var InitAreaClick = function () {
             //初始化热点 鼠标 移上/离开 效果
             $("#div_6_4 .pathLinkArea path").off("mouseover mouseout click");
-            $("#div_6_4 .pathLinkArea path").on("mouseover", function () {
+            $(wrap).find(".pathLinkArea path").on("mouseover", function () {
                 $(this).attr('opacity', 0.5);
             });
 
-            $("#div_6_4 .pathLinkArea path").on("mouseout", function () {
+            $(wrap).find(".pathLinkArea path").on("mouseout", function () {
                 $(this).attr('opacity', 0.0);
             });
 
-            $("#div_6_4 .pathLinkArea path").on("click", function () {
+            $(wrap).find(".pathLinkArea path").on("click", function () {
                 var $this = $(this);
                 areaIndex = $this.attr("areaindex");
                 var graphIndex = $this.attr("graphIndex");
             });
-        }*/
+        }
 
         //组间分析 数据 列表组数据
         var controlGroupList = [];
@@ -852,7 +852,8 @@ let func = {
                         </svg>`
                     break;
             }
-            $(wrap).append(vennHtml)
+            $(wrap).append(vennHtml);
+            InitAreaClick();
         };
 
         //根据key获取对应展示数据
