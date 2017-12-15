@@ -369,7 +369,7 @@ export default {
                     _this.$electron.ipcRenderer.send("updateFilesList");
                     _this.$message({
                       message: "项目添加成功",
-                      duration:1200,
+                      duration: 1200,
                       type: "success",
                       onClose: _ => {
                         _this.$electron.ipcRenderer.send("addFile", {
@@ -527,19 +527,17 @@ export default {
   }
   .potatos-btn {
     width: 60px;
-    height: 31px;
+    height: 30.5px;
     outline: none;
     color: #fff;
     border: none;
     border-radius: 0 4px 4px 0;
-    background: #20a0ff;
+    background: #386cca;
     position: absolute;
     right: 54px;
     top: 3px;
     cursor: pointer;
     &:hover {
-      background: #4db3ff;
-      border-color: #4db3ff;
       color: #fff;
     }
   }
