@@ -1,0 +1,12 @@
+stages:
+- deploy
+deploy:
+  stage: deploy
+  script:
+    - echo "start build"
+    - .\pack.bat
+    - echo "end build"
+  only:
+    - master
+  tags:
+    - data-manager-packing
