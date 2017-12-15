@@ -28,8 +28,16 @@ const Ignore = r => require.ensure([], () => r(require('@/views/content/children
 // fileAside 的组件
 const FileInfo = r => require.ensure([], () => r(require('@/views/fileAside/children/fileInfo')), 'fileInfo')
 const FileStatusAside = r => require.ensure([], () => r(require('@/views/fileAside/children/fileStatusAside')), 'fileStatusAside')
-
+// root
+const RootDetail = r => require.ensure([], () => r(require('@/views/rootDetail')), 'rootDetail')
 const routes = [
+  {
+    path: "root",
+    name: "Root",
+    components: {
+      ContentHeader:RootDetail
+    }
+  },
   {
     path: 'files',
     name: 'Files',
@@ -104,12 +112,12 @@ const routes = [
     },
   },
   {
-    path:"filestatusinfo",
-    name:"FileStatusInfo",
-    components:{
-      default:FileStatus,
-      ContentBottom:FileStatusContent,
-      FileInfo:FileInfo
+    path: "filestatusinfo",
+    name: "FileStatusInfo",
+    components: {
+      default: FileStatus,
+      ContentBottom: FileStatusContent,
+      FileInfo: FileInfo
     }
   },
   {
@@ -127,16 +135,16 @@ const routes = [
     }
   },
   {
-    path:"toolsExcel",
-    name:"ToolsExcel",
-    components:{
+    path: "toolsExcel",
+    name: "ToolsExcel",
+    components: {
       ContentHeader: ToolsExcel
     }
   },
   {
-    path:"toolsVenn",
-    name:"ToolsVenn",
-    components:{
+    path: "toolsVenn",
+    name: "ToolsVenn",
+    components: {
       ContentHeader: ToolsVenn
     }
   },
