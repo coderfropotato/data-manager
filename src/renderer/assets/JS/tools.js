@@ -301,7 +301,6 @@ let func = {
 
     },
     vennStander(data, config, wrap) {
-        console.log(data);
         $(wrap).html('');
         WNTOptions = {
             charData: data.data,
@@ -309,9 +308,7 @@ let func = {
             data: []
         };
 
-
         var InitAreaClick = function () {
-            //初始化热点 鼠标 移上/离开 效果
             $("#div_6_4 .pathLinkArea path").off("mouseover mouseout click");
             $(wrap).find(".pathLinkArea path").on("mouseover", function () {
                 $(this).attr('opacity', 0.5);
