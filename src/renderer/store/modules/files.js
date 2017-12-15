@@ -95,9 +95,13 @@ const actions = {
   setBottomInfo({commit},valList){
     return new Promise((resolve,reject)=>{
       let size = 0;
-      valList.forEach((val,index)=>{
-        size+=val.size;
-      });
+      for(let j=0;j<valList.length;j++){
+        if(!valList[j].isdir){
+          size+=valList[j].size;
+        }else{
+          continue;
+        }
+      }
       let count = valList.length;
       if(global.state.globalRouteStatus ==='file'){
         //file
