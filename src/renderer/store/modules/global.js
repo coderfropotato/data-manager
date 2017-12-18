@@ -4,9 +4,9 @@
 import * as types from '@/store/mutation-types'
 const state = {
     // file search status database
-    globalRouteStatus:'file',
+    globalRouteStatus:'file',/* root */
     //global nav index
-    globalNavIndex:1,
+    globalNavIndex:1,/* 0 */
     // view history
     history:false
 }

@@ -47,6 +47,7 @@ export default {
       resizeWidth: true,
       resizeHeight: false
     });
+    // this.$router.push('./root')
     this.$router.push('/files?type=file')
   },
   computed: {

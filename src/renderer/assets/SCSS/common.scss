@@ -475,3 +475,7 @@ button{
     height: 140px;
   }
 }
+.el-checkbox__input.is-checked .el-checkbox__inner{
+  background-color: #386cca;
+  border-color: #386cca;
+}
