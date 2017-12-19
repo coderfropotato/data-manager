@@ -6,12 +6,12 @@
   <div id="searchIndex">
       <div class="search-wrap">
           <div class="search-top">
-              <input type="text" v-model.trim="searchVal" placeholder="请输入关键词">
+              <input type="text" v-model.trim="searchVal" @keyup.enter="search" placeholder="请输入关键词">
               <div class="tag-group" v-if="searchRangeLength!==fileList.length"><el-tag type="gray">{{`在${searchRangeLength}个位置搜索`}}</el-tag></div>
               <div class="tag-group"  v-if="searchRangeLength===fileList.length"><el-tag type="gray">{{`在全局搜索`}}</el-tag></div>
               <em @click="search">搜索</em>
           </div>
-          <p>搜索历史记录</p>
+          <p>历史搜索记录</p>
           <ul>
               <li v-for="(val,index) in searchHistory" :key="index">
                   <p @click="searchVal = val">{{val}}</p>
@@ -53,7 +53,7 @@ export default {
         }
         if (!flag) {
           this.searchHistory.unshift(this.searchVal);
-          this.searchHistory.length = 10;
+          this.searchHistory.length>10?this.searchHistory.length = 10:this.searchHistory.length=this.searchHistory.length;
         } else {
           let item = this.searchHistory.slice(index, index + 1);
           this.searchHistory.splice(index, 1);
@@ -141,6 +141,9 @@ export default {
       line-height: 40px;
       cursor: pointer;
       border-radius: 0 4px 4px 0;
+      &:hover{
+        opacity: .8;
+      }
     }
   }
   & > p {
@@ -175,7 +178,7 @@ export default {
         height: 12px;
         text-align: center;
         font-size: 12px;
-        line-height: 12px;
+        line-height: 11.5px;
         position: absolute;
         right: -4px;
         top: -6px;

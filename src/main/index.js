@@ -205,7 +205,7 @@ ipcMain.on('change-window', (ev) => {
     ev.sender.send('resetLayout', 65);
   } else {
     mainWindow.maximize();
-    ev.sender.send('resetLayout', 75);
+    ev.sender.send('resetLayout', 70);
   }
   mainWindow.setSkipTaskbar(false)
 })

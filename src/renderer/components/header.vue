@@ -3,7 +3,7 @@
       <div class="header-context">
         <div class="left">
           <!-- @click="root" -->
-          <img src="../assets/images/logo.png" alt="">
+          <img src="../assets/images/logo.png" alt="" @dragstart="drag">
           <span>数据管理系统</span>
         </div>
         <ol class="right">
@@ -22,6 +22,9 @@ export default {
     return {};
   },
   methods: {
+    drag(){
+      return false;
+    },
     root() {
       this.$router.push("./root");
       this.$store.dispatch('setGlobalNavIndex',0);
@@ -86,7 +89,8 @@ export default {
         transition: 0.1s all ease;
         cursor: pointer;
         opacity: 0.8;
-        margin-top: 3px;
+        margin-top: 22px;
+        height: 22px;
         &:first-child {
           background-image: url("../assets/images/hide.png");
         }

@@ -15,7 +15,7 @@
     </p>
     </div>
     <div class="search">
-       <el-input ref="search" size="small" placeholder="请输入关键词" v-model.trim="searchValue">
+       <el-input  class="btn-hover" ref="search" size="small" placeholder="请输入关键词"  @keyup.native.enter="search" v-model.trim="searchValue">
           <el-button @click="search" slot="append">搜索</el-button>
       </el-input>
       <div class="tag-group">
@@ -108,7 +108,11 @@ export default {
                 );
                 this.$store.dispatch("setSelected", { count: 0, size: 0 });
                 this.$store.dispatch("setRouteStatus", "search");
-                this.$store.dispatch('setSearchPos',this.navList[this.navList.length-1].filename || this.navList[this.navList.length-1].alias)
+                this.$store.dispatch(
+                  "setSearchPos",
+                  this.navList[this.navList.length - 1].filename ||
+                    this.navList[this.navList.length - 1].alias
+                );
               });
             break;
           case "在全局搜索":
@@ -152,6 +156,9 @@ export default {
     text-align: center;
     border: none;
     border-radius: 0 4px 4px 0;
+    &:hover {
+      opacity: 0.8;
+    }
     .el-button {
       border-radius: 0;
       color: #fff !important;
@@ -185,7 +192,7 @@ export default {
         &:hover {
           color: #386cca;
         }
-        &.active{
+        &.active {
           color: #386cca;
         }
       }

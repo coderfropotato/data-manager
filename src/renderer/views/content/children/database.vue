@@ -279,7 +279,7 @@ $blue: #386cca;
   padding-bottom: 40px;
   .title {
     font-size: 14px;
-    line-height: 56px;
+    line-height: 60px;
     padding-left: $pl;
     color: #48576a;     
   }
@@ -384,14 +384,18 @@ $blue: #386cca;
             border-radius: 0 22px 22px 0;
             background: #386cca;
             cursor:pointer;
+            &:hover{
+              opacity: .8;
+            }
           }
         }
       }
     }
   }
   .data-base-list {
-    padding-left: $pl;
+    padding:0 $pl;
     padding-top: 56px;
+    text-align: justify;
     ol {
       list-style: none;
       li {

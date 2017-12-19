@@ -4,8 +4,8 @@
       <el-table  ref="table"   @row-dblclick="dbClick" @selection-change="handleSelectionChange" 
       @cell-click="cellClick"
       :height="tableHeight" :data="loadData" stripestyle="width: 100%">
-        <el-table-column  type="selection"></el-table-column>
-        <el-table-column prop="isdir" label="选择">
+        <el-table-column width="40"  type="selection"></el-table-column>
+        <el-table-column width="70" prop="isdir" label="选择">
           <template scope="scope">
             <img v-if="!scope.row.isdir" src="../assets/images/single.png"/>
             <img v-else src="../assets/images/dir.png"/>
@@ -121,7 +121,6 @@ export default {
 
     cellClick(row, column, cell, event) {
       if (column.label) {
-        // 不是checkbox cell
         this.$refs.table.clearSelection();
         this.$refs.table.toggleRowSelection(row);
       }
@@ -140,7 +139,6 @@ export default {
         this.$emit("intodir", { path, row });
       }
     }
-
   }
 };
 </script>

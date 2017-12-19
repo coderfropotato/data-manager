@@ -207,7 +207,7 @@ export default {
     display: flex;
     img {
       width: 40px;
-      height: 48px;
+      height: 40px;
       display: block;
       user-select: none;
     }

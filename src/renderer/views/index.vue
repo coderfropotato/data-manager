@@ -82,6 +82,7 @@ export default {
   .sidebar-wrapper,
   .content-wrapper,
   .file-wrapper {
+    border-bottom: 1px solid #ccc;
     height: 100%;
   }
 
@@ -99,15 +100,15 @@ export default {
     flex: 0 0 auto;
     width: 200px;
     min-width: 200px;
-    max-width: 60%;
+    max-width: 20%;
   }
 
   // 内容区宽度
   .content-wrapper {
     flex: 0 0 auto;
     width: 65%;
-    max-width: 80%;
-    min-width: 600px;
+    max-width: 75%;
+    min-width:65%;
   }
 
   .content-wrapper-hide {

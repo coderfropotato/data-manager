@@ -1,11 +1,11 @@
 <template>
   <div id="directory-root">
-      <div class="title">所有文件</span><i @click="addDevice" class="iconfont icon-tianjia"></i></div>
+      <div class="title">所有文件<i @click="addDevice" class="iconfont icon-tianjia"></i></div>
       <div v-if="fileList.length" class="list">
         <ol :class="{'height-range':fileList.length>=5 && isShow}">
           <!-- icon-wodeyingpan -->
           <!-- <li @click="jumpToSearch(item.name)" v-for="(item,index) in fileList" :key="index"><i class="iconfont iconfile" :class="{'icon-wodeyingpan':item.isDisk,'icon-diannao':!item.isDisk}"></i>{{item.name}}</li> -->
-          <li @contextmenu="contextmenu($event,item)" @click="jumpToSearch(item)" v-for="(item,index) in fileList" :key="index"><i class="iconfile iconfont icon-wodeyingpan"></i>{{item.alias}}</li>
+          <li @contextmenu="contextmenu($event,item)" @click="jumpToSearch(item)" v-for="(item,index) in fileList" :key="index"><i class="iconfile iconfont " :class="{'icon-wodeyingpan':item.ismoveable,'icon-wodediannao1':!item.ismoveable && !item.isTelnet,'icon-yuancheng':item.isTelnet}"></i>{{item.alias}}</li>
         </ol>
         <p @click="isShow=true;" v-show="fileList.length>5 && !isShow">更多设备&nbsp;></p>
       </div>
@@ -149,9 +149,15 @@ export default {
     display: flex;
     justify-content: space-between;
     padding: 0 18px;
+    cursor: default;
+    vertical-align: middle;
     i {
       cursor: pointer;
       line-height: 18px;
+      margin-top: 2px;
+      &:hover{
+        color: #386cca;
+      }
     }
   }
   p {
@@ -184,7 +190,7 @@ export default {
       overflow-y: scroll;
     }
     li {
-      padding-left: 50px;
+      padding-left: 40px;
       height: 38px;
       line-height: 38px;
       text-overflow: ellipsis;
