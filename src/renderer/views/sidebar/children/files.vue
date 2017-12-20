@@ -197,6 +197,7 @@ export default {
       overflow: hidden;
       white-space: nowrap;
       cursor: pointer;
+      transition: 0.3s all ease;
       .iconfile {
         margin-right: 12px;
       }

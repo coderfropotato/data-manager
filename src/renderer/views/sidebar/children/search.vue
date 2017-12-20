@@ -67,6 +67,7 @@ export default {
 #search-root {
   .el-checkbox-group {
     padding: 10px 0;
+    transition: 0.3s all ease;
     &:hover{
       background-color:#d1dbe5;
     }

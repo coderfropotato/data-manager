@@ -127,6 +127,7 @@ export default {
       box-sizing: border-box;
       border-radius: 10px;
       opacity: 0.9;
+      transition: .3s all ease;
       &:hover {
         background: #d1dbe5;
       }
