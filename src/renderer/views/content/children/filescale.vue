@@ -130,6 +130,7 @@ export default {
     li {
       width: 120px;
       height: 120px;
+      padding: 0 12px;
       margin-bottom: 20px;
       text-align: center;
       padding-top: 10px;

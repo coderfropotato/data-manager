@@ -68,6 +68,7 @@ export default {
       this.tag.name === "在当前搜索"
         ? (this.tag.name = "在全局搜索")
         : (this.tag.name = "在当前搜索");
+      $(this.$refs.search).blur();
     },
     navBarJump(item, index) {
       let path = item.path;
