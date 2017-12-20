@@ -17,7 +17,7 @@
         </el-form-item>
         
         <el-form-item label="数据源" required>
-          <el-select v-model="basicForm.dataSource" size="small" clearable>
+          <el-select v-model="basicForm.dataSource" size="small" >
             <el-option
                 v-for="item in dataSourceOptions"
                 :key="item.value"
@@ -28,7 +28,7 @@
         </el-form-item>
         <div class="remote" v-if="basicForm.dataSource === 'remoteServer'">
           <el-form-item label="协议" prop="protocol">
-            <el-select v-model="basicForm.protocol" size="small">
+            <el-select  v-model="basicForm.protocol" size="small">
               <el-option
                   v-for="item in protocolOptions"
                   :key="item.value"

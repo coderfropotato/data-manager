@@ -98,9 +98,9 @@ export default {
   // 侧边栏宽度
   .sidebar-wrapper {
     flex: 0 0 auto;
-    width: 200px;
-    min-width: 200px;
-    max-width: 20%;
+    width: 240px;
+    min-width: 240px;
+    max-width: 25%;
     *{
       cursor: normal;
     }

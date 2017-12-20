@@ -10,6 +10,7 @@ import Header from './components/header'
 import Bottom from './components/bottom'
 import TableContent from './components/tableContent'
 import NavBar from './components/navbar'
+import EditDom from './components/edit'
 let tools = require('@/assets/JS/tools')
 Vue.prototype.tools = tools;
 Vue.config.productionTip = false
@@ -29,6 +30,7 @@ Vue.component('Header',Header)
 Vue.component('Bottom',Bottom)
 Vue.component('myTable',TableContent)
 Vue.component('myNav',NavBar)
+Vue.component('EditDom',EditDom)
 //filter
 Vue.filter('reverseSize',(val)=>{
   if(val<1024){
