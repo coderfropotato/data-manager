@@ -117,7 +117,7 @@ export default {
   .search-wrap {
     .el-tag {
       position: absolute;
-      left: 0px;
+      left: 6px;
       top: 6px;
     }
     position: relative;

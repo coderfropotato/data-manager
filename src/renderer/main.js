@@ -9,6 +9,7 @@ import store from './store'
 import Header from './components/header'
 import Bottom from './components/bottom'
 import TableContent from './components/tableContent'
+import NavBar from './components/navbar'
 let tools = require('@/assets/JS/tools')
 Vue.prototype.tools = tools;
 Vue.config.productionTip = false
@@ -27,6 +28,7 @@ if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
 Vue.component('Header',Header)
 Vue.component('Bottom',Bottom)
 Vue.component('myTable',TableContent)
+Vue.component('myNav',NavBar)
 //filter
 Vue.filter('reverseSize',(val)=>{
   if(val<1024){

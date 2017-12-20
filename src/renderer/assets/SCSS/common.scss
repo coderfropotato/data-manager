@@ -573,8 +573,7 @@ button {
 }
 
 #newDiskFile-root {
-  .el-button:focus,
-  .el-button.el-button--default:hover {
+  .btn-first:hover {
     color: #386cca;
     border-color: #386cca;
   }
@@ -592,4 +591,7 @@ button {
 }
 .el-checkbox__label{
   padding-left: 0;
+}
+.no-data{
+  color: #a6afbf;
 }

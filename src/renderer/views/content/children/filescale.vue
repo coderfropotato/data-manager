@@ -2,12 +2,14 @@
   <div id="filescale">
       <ol v-if="fileList.length">
         <li @click="jumpToSearch(item)" v-for="(item,index) in fileList" :key="index">
-          <img v-if="!item.isTelnet" src="../../../assets/images/computer.png" />
-          <img v-else src="../../../assets/images/disk.png" />
+          <img v-if="item.ismoveable" src="../../../assets/images/disk.png" />
+          <img v-else-if="item.isTelnet" src="../../../assets/images/telnet.png" />
+          <img v-else src="../../../assets/images/computer.png" />
           <p>{{item.alias}}</p>
         </li>
       </ol>
       <div v-if="!fileList.length" class="no-data">
+        <img src="../../../assets/images/nodevice.png" alt="">
         <p>您还没有添加任何设备，赶紧去<span @click="addDevice">添加</span>吧</p>
       </div>
   </div>
@@ -32,18 +34,18 @@ export default {
   },
   created() {
     //默认获取文件列表
-    this.$store.dispatch("getImportTargetDisks")
-      // .then(_ => {
-      //   //默认获取文件状态
-      //   this.$store
-      //     .dispatch("getModifiedFiles")
-      //     .then(_ => {
-      //       this.loading = false;
-      //     })
-      //     .catch(_ => {
-      //       this.loading = false;
-      //     });
-      // });
+    this.$store.dispatch("getImportTargetDisks");
+    // .then(_ => {
+    //   //默认获取文件状态
+    //   this.$store
+    //     .dispatch("getModifiedFiles")
+    //     .then(_ => {
+    //       this.loading = false;
+    //     })
+    //     .catch(_ => {
+    //       this.loading = false;
+    //     });
+    // });
 
     // 连接服务器 用来接收文件状态
     // let wsk = new WebSocket("ws://127.0.0.1:5002");
@@ -99,7 +101,15 @@ export default {
   height: 100%;
   .no-data {
     text-align: center;
-    margin-top: 200px;
+    margin-top: 172px;
+    img {
+      width: 200px;
+      height: 200px;
+    }
+    p{
+      margin-top: 24px;
+      color: #a6afbf;
+    }
     span {
       color: #386cca;
       cursor: pointer;
@@ -127,11 +137,11 @@ export default {
       box-sizing: border-box;
       border-radius: 10px;
       opacity: 0.9;
-      transition: .3s all ease;
+      transition: 0.3s all ease;
       &:hover {
         background: #d1dbe5;
       }
-      
+
       img {
         width: 60px;
         height: 60px;

@@ -1,6 +1,7 @@
 <template>
   <div id="newDiskFile-root" v-loading.lock="fullscreenLoading" element-loading-text="正在扫描磁盘文件，请稍候">
     <div class="newDiskFile-inner">
+      <my-nav @close="closeWin" @mini="miniWin" :h="46" :config="{'close':true,'mini':true,'resize':false}"></my-nav>
       <!--基本设置-->
       <el-form
           :model="basicForm"
@@ -136,7 +137,7 @@
       <div class="confirm">
         <el-row type="flex" justify="center">
           <el-col :span="12">
-            <el-button @click="resetForm">重置</el-button>
+            <el-button class="btn-first" @click="resetForm">重置</el-button>
             <el-button class="btn-hover" type="primary" @click="confirmAddDirectory">提交</el-button>
           </el-col>
         </el-row>
@@ -145,6 +146,7 @@
   </div>
 </template>
 <script>
+import navbar from "../../../components/navbar";
 import { ipcRenderer } from "electron";
 import fetchData from "../../../api/index";
 import bus from "@/utils/bus";
@@ -255,15 +257,22 @@ export default {
     basicForm: {
       handler: function(val, oldVal) {
         if (val.dataSource !== "localDisk") {
-          this.$electron.ipcRenderer.send("resetWinSize", [700, 680]);
+          this.$electron.ipcRenderer.send("resetWinSize", [650, 600]);
         } else {
-          this.$electron.ipcRenderer.send("resetWinSize", [700, 500]);
+          this.$electron.ipcRenderer.send("resetWinSize", [650, 340]);
         }
       },
       deep: true
     }
   },
+  components: ["navbar"],
   methods: {
+    closeWin(){
+      this.$electron.ipcRenderer.send('addFile',{'API':'close'});
+    },
+    miniWin(){
+      this.$electron.ipcRenderer.send('addFile',{'API':'mini'})
+    },
     // 重置表格数据
     resetForm() {
       this.$refs["basicForm"].resetFields();
@@ -472,8 +481,9 @@ export default {
   }
   // 内间距
   .newDiskFile-inner {
+    padding-top: 66px;
     width: 80%;
-    margin: 2em auto;
+    margin: 0 auto;
   }
   .el-form {
     .el-input {
@@ -537,9 +547,6 @@ export default {
     right: 54px;
     top: 3px;
     cursor: pointer;
-    &:hover {
-      color: #fff;
-    }
   }
   .path {
     .el-input__inner {

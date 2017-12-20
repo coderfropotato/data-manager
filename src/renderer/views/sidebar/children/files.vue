@@ -1,11 +1,11 @@
 <template>
   <div id="directory-root">
-      <div class="title">所有文件<i @click="addDevice" class="iconfont icon-tianjia"></i></div>
+      <div class="title">所有文件<i @click="addDevice" @mouseover="change = true;" @mouseout="change = false;" class="iconfont" :class="{'icon-tianjia':!change,'icon-tianjia-dianji':change}"></i></div>
       <div v-if="fileList.length" class="list">
         <ol :class="{'height-range':fileList.length>=5 && isShow}">
           <!-- icon-wodeyingpan -->
           <!-- <li @click="jumpToSearch(item.name)" v-for="(item,index) in fileList" :key="index"><i class="iconfont iconfile" :class="{'icon-wodeyingpan':item.isDisk,'icon-diannao':!item.isDisk}"></i>{{item.name}}</li> -->
-          <li @contextmenu="contextmenu($event,item)" @click="jumpToSearch(item)" v-for="(item,index) in fileList" :key="index"><i class="iconfile iconfont " :class="{'icon-wodeyingpan':item.ismoveable,'icon-wodediannao1':!item.ismoveable && !item.isTelnet,'icon-yuancheng':item.isTelnet}"></i>{{item.alias}}</li>
+          <li @contextmenu="contextmenu($event,item)" @click="jumpToSearch(item)" v-for="(item,index) in fileList" :key="index"><i class="iconfile iconfont " :class="{'icon-wodeyingpan':item.ismoveable,'icon-diannao':!item.ismoveable && !item.isTelnet,'icon-yuanchenglianjie':item.isTelnet}"></i>{{item.alias}}</li>
         </ol>
         <p @click="isShow=true;" v-show="fileList.length>5 && !isShow">更多设备&nbsp;></p>
       </div>
@@ -26,6 +26,7 @@ export default {
       deleteShow: false,
       isShow: false,
       selectedIndex: 0,
+      change:false,
       listInfo: {} //当前设备信息
     };
   },
@@ -155,9 +156,6 @@ export default {
       cursor: pointer;
       line-height: 18px;
       margin-top: 2px;
-      &:hover{
-        color: #386cca;
-      }
     }
   }
   p {
