@@ -55,7 +55,7 @@
         <!--选择路径-->
         <el-form-item  label="路径" prop="path">
           <el-input class="path" v-model="basicForm.path" size="small"></el-input>
-          <input class="potatos-btn" type="button" value="浏览"  @click="showPath">
+          <input class="potatos-btn btn-hover" type="button" value="浏览"  @click="showPath">
           <!-- <el-button  type="primary" size="small" @click="showPath" style="margin-left: 1.5em;">浏览</el-button> -->
         </el-form-item>
       </el-form>
@@ -137,7 +137,7 @@
         <el-row type="flex" justify="center">
           <el-col :span="12">
             <el-button @click="resetForm">重置</el-button>
-            <el-button type="primary" @click="confirmAddDirectory">提交</el-button>
+            <el-button class="btn-hover" type="primary" @click="confirmAddDirectory">提交</el-button>
           </el-col>
         </el-row>
       </div>

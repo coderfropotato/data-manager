@@ -201,8 +201,7 @@ export default {
         margin-right: 12px;
       }
       &:hover {
-        background: #386cca;
-        color: #fff;
+        background: #d1dbe5;
       }
       &.active {
         background: #386cca;

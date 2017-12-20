@@ -101,6 +101,9 @@ export default {
     width: 200px;
     min-width: 200px;
     max-width: 20%;
+    *{
+      cursor: normal;
+    }
   }
 
   // 内容区宽度
@@ -124,6 +127,7 @@ export default {
     flex: 1 1 auto;
     width: 100%;
     min-width: 200px;
+    cursor: default;
   }
 }
 </style>

@@ -15,7 +15,7 @@
     </p>
     </div>
     <div class="search">
-       <el-input  class="btn-hover" ref="search" size="small" placeholder="请输入关键词"  @keyup.native.enter="search" v-model.trim="searchValue">
+       <el-input   ref="search" size="small" placeholder="请输入关键词"  @keyup.native.enter="search" v-model.trim="searchValue">
           <el-button @click="search" slot="append">搜索</el-button>
       </el-input>
       <div class="tag-group">

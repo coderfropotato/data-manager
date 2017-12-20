@@ -128,11 +128,9 @@ export default {
       border-radius: 10px;
       opacity: 0.9;
       &:hover {
-        background: #386cca;
+        background: #d1dbe5;
       }
-      &:hover p {
-        color: #fff;
-      }
+      
       img {
         width: 60px;
         height: 60px;

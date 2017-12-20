@@ -27,8 +27,7 @@ body {
   box-sizing: border-box;
   text-decoration: none;
   -webkit-user-select: none;
-  user-select: none;
-  cursor: default;
+  user-select: none; // cursor: default;
 }
 
 a {
@@ -95,7 +94,6 @@ button {
   }
   .el-checkbox-group {
     .el-checkbox {
-      margin-bottom: 8px;
       &:after {
         content: "";
         display: block;
@@ -175,6 +173,7 @@ button {
 .el-table th {
   text-align: center;
   border-right: 1px solid #ddd;
+  cursor: pointer;
   &:nth-child(1) {
     border-right: none;
   }
@@ -255,11 +254,10 @@ button {
 .tag-group {
   left: 4px;
   top: 3px;
-  position: absolute; // .el-tag {
-  //   background: #fff;
-  //   border: 1px solid #ccc;
-  //   color: #666;
-  // }
+  position: absolute;
+  .el-tag {
+    cursor: default;
+  }
 }
 
 .el-tag .el-icon-close {
@@ -334,10 +332,6 @@ button {
         }
       }
     }
-  }
-  .el-button--primary {
-    background-color: #386cca;
-    border-color: #386cca;
   }
   .el-radio__input.is-checked .el-radio__inner {
     border-color: #386cca;
@@ -562,11 +556,40 @@ button {
   background-color: #999;
   border-color: #ccc;
 }
-.el-icon-close:before{
+
+.el-icon-close:before {
   font-size: 9px;
 }
-.user-select{
+
+.user-select {
   -webkit-user-select: text;
   user-select: text;
   cursor: text;
+}
+
+.el-button--primary {
+  background-color: #386cca;
+  border-color: #386cca;
+}
+
+#newDiskFile-root {
+  .el-button:focus,
+  .el-button.el-button--default:hover {
+    color: #386cca;
+    border-color: #386cca;
+  }
+}
+
+.el-button--primary:focus,
+.el-button--primary:hover {
+  background-color: #386cca;
+  border-color: #386cca;
+  opacity: .8;
+}
+
+.btn-hover:hover {
+  opacity: .8;
+}
+.el-checkbox__label{
+  padding-left: 0;
 }

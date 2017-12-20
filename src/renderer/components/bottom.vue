@@ -27,5 +27,6 @@ export default {
     line-height: 40px;
     padding-left: 22px;
     padding-left: 22px;
+    cursor: default;
 }
 </style>
