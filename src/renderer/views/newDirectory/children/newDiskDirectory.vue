@@ -9,9 +9,13 @@
           ref="basicForm"
           label-position="left"
           label-width="80px">
-        <el-form-item label="别名" prop="alias"> 
-          <el-input :maxlength="50" v-model.trim="basicForm.alias" size="small"></el-input>
+                  <!--选择路径-->
+        <el-form-item  label="路径" prop="path">
+          <el-input class="path" v-model="basicForm.path" size="small"></el-input>
+          <input class="potatos-btn btn-hover" type="button" value="浏览"  @click="showPath">
+          <!-- <el-button  type="primary" size="small" @click="showPath" style="margin-left: 1.5em;">浏览</el-button> -->
         </el-form-item>
+        
         <el-form-item label="数据源" required>
           <el-select v-model="basicForm.dataSource" size="small" clearable>
             <el-option
@@ -53,11 +57,8 @@
             <!-- <el-checkbox v-model="useKey" style="margin-left: 1.5em;">使用密钥</el-checkbox> -->
           </el-form-item>
         </div>
-        <!--选择路径-->
-        <el-form-item  label="路径" prop="path">
-          <el-input class="path" v-model="basicForm.path" size="small"></el-input>
-          <input class="potatos-btn btn-hover" type="button" value="浏览"  @click="showPath">
-          <!-- <el-button  type="primary" size="small" @click="showPath" style="margin-left: 1.5em;">浏览</el-button> -->
+        <el-form-item label="别名" prop="alias"> 
+          <el-input :maxlength="50" v-model.trim="basicForm.alias" size="small"></el-input>
         </el-form-item>
       </el-form>
       <!--展开高级选项按钮-->
@@ -224,13 +225,13 @@ export default {
       },
       // 表单验证规则
       rules: {
-        alias: [{ required: true, message: "请输入磁盘别名", trigger: "blur" }],
-        path: [{ required: true, message: "请选择路径", trigger: "blur" }],
+        alias: [{ required: true, message: "请输入磁盘别名", trigger: "change" }],
+        path: [{ required: true, message: "请选择路径", trigger: "change" }],
         protocol: [{ required: true, message: "请选择协议", trigger: "change" }],
-        host: [{ required: true, message: "请输入主机地址", trigger: "blur" }],
-        port: [{ required: true, message: "请输入端口", trigger: "blur" }],
-        username: [{ required: true, message: "请输入用户名", trigger: "blur" }],
-        password: [{ required: true, message: "请输入密码", trigger: "blur" }]
+        host: [{ required: true, message: "请输入主机地址", trigger: "change" }],
+        port: [{ required: true, message: "请输入端口", trigger: "change" }],
+        username: [{ required: true, message: "请输入用户名", trigger: "change" }],
+        password: [{ required: true, message: "请输入密码", trigger: "change" }]
       },
       // 记录用户选择的结果
       customChoose: [],
@@ -267,11 +268,11 @@ export default {
   },
   components: ["navbar"],
   methods: {
-    closeWin(){
-      this.$electron.ipcRenderer.send('addFile',{'API':'close'});
+    closeWin() {
+      this.$electron.ipcRenderer.send("addFile", { API: "close" });
     },
-    miniWin(){
-      this.$electron.ipcRenderer.send('addFile',{'API':'mini'})
+    miniWin() {
+      this.$electron.ipcRenderer.send("addFile", { API: "mini" });
     },
     // 重置表格数据
     resetForm() {
@@ -306,6 +307,8 @@ export default {
       ipcRenderer.on("selected-directory", (event, path) => {
         // 将返回的 path 数组转化成 string
         this.basicForm.path = path.toString();
+        let nameArr = path.toString().split('\\');
+        this.basicForm.alias =nameArr[nameArr.length-1];
       });
     },
     // 提示信息
@@ -536,7 +539,7 @@ export default {
     }
   }
   .potatos-btn {
-    width: 60px;
+    width: 58px;
     height: 30.5px;
     outline: none;
     color: #fff;

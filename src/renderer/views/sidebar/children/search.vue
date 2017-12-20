@@ -1,7 +1,6 @@
 <template>
   <div id="search-root">
       <el-checkbox v-if="fileList.length>0" :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
-      <div style="margin: 14px 0;"></div>
       <el-checkbox-group v-model="searchRange" @change="handlerCheckedChange">
         <el-checkbox v-for="(item,index) in fileList" :label="item.alias" :key="index">{{item.alias}}</el-checkbox>
       </el-checkbox-group>
@@ -68,17 +67,17 @@ export default {
   .el-checkbox-group {
     padding: 10px 0;
     transition: 0.3s all ease;
-    &:hover{
-      background-color:#d1dbe5;
-    }
     .el-checkbox {
-      padding: 0 18px;
+      padding: 9.5px 18px;
       display: block;
       width: 100%;
       padding-left: 40px;
+      &:hover {
+        background-color: #d1dbe5;
+      }
     }
   }
-  .el-checkbox{
+  .el-checkbox {
     padding: 0 18px;
   }
 

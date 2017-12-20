@@ -81,12 +81,12 @@ button {
     border-color: #20a0ff;
   }
 }
-
 #search-root {
   .el-checkbox {
     width: 100%;
     .el-checkbox__input {
       float: right;
+      margin-top: 2.5px;
     }
     .el-checkbox__label {
       float: left;

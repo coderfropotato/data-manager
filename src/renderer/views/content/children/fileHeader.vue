@@ -44,7 +44,7 @@ export default {
     let oWidth, oInner, scale;
     $(".bread-wrap")
       .on("mousemove", function(e) {
-        oWidth = $(".bread-wrap").outerWidth();
+        oWidth = $(".bread-wrap").outerWidth()-4;
         oInner = $(".breadcrumb > p").width();
         if (oInner <= oWidth) return;
         x = e.pageX - $(this).offset().left;
@@ -148,6 +148,7 @@ export default {
 
 #fileHeader-root {
   display: flex;
+  justify-content: space-between;
   padding: 0 12px;
   height: 60px;
   .el-input-group__append {
@@ -167,6 +168,7 @@ export default {
   .breadcrumb {
     overflow: hidden;
     position: relative;
+    padding-right: 80px;
     .bread-wrap {
       width: 100%;
       height: 100%;
@@ -197,7 +199,7 @@ export default {
         }
       }
     }
-    width: 50%;
+    width: 45%;
     padding-right: 12px;
     box-sizing: border-box;
   }

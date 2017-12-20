@@ -26,7 +26,7 @@ export default {
       deleteShow: false,
       isShow: false,
       selectedIndex: 0,
-      change:false,
+      change: false,
       listInfo: {} //当前设备信息
     };
   },
@@ -54,22 +54,22 @@ export default {
     del() {
       this.deleteShow = false;
       // TODO delete device
-      this.$confirm("此操作将永久删除" + this.listInfo.alias + ", 是否继续?", "提示", {
+      this.$confirm(`此操作将永久删除 " ${this.listInfo.alias} ", 是否继续?"`, "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
-      }).then(() => {
+      })
+      .then(() => {
         fetchData("deleteDisk", {
           serialNumber: this.listInfo.serial_number,
           path: this.listInfo.path,
-          alias:this.listInfo.alias
+          alias: this.listInfo.alias
         }).then(() => {
-
           //删除成功重新获取设备列表 路由跳转到file主页
-          this.$store.dispatch("getImportTargetDisks")
-            // .then(_ => {
-            //   this.$store.dispatch("getModifiedFiles");
-            // });
+          this.$store.dispatch("getImportTargetDisks");
+          // .then(_ => {
+          //   this.$store.dispatch("getModifiedFiles");
+          // });
 
           //删除状态
           // this.$store.dispatch("deleteSatatus", {
@@ -87,7 +87,9 @@ export default {
           });
           this.$router.push("/files");
         });
-      });
+      })
+      .catch(_=>{
+      })
     },
     jumpToSearch(item) {
       //编程式导航
@@ -155,7 +157,7 @@ export default {
     i {
       cursor: pointer;
       line-height: 18px;
-      margin-top: 2px;
+      margin-top: 1px;
     }
   }
   p {
