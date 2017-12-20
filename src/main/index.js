@@ -23,6 +23,7 @@ function createWindow() {
     frame: false,
     skipTaskbar: false,
     useContentSize: true,
+    show:false,
     titleBarStyle: 'customButtonsOnHover',
   })
   mainWindow.setMinimumSize(1200, 860)
@@ -36,7 +37,9 @@ function createWindow() {
   mainWindow.on('resize', (ev) => {
     ev.sender.send('windowResize')
   })
-
+  mainWindow.once('ready-to-show',_=>{
+    mainWindow.show()
+  })
   // //系统托盘图标
   let tray = new Tray(trayIcon)
   //tip
