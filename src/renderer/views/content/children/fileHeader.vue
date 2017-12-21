@@ -15,12 +15,16 @@
     </p>
     </div>
     <div class="search">
-       <el-input   ref="search" size="small" placeholder="请输入关键词"  @keyup.native.enter="search" v-model.trim="searchValue">
+       <el-input ref="search" size="small" placeholder="请输入关键词"  @keyup.native.enter="search" v-model.trim="searchValue">
+          <el-select v-model="searchType" size="small" slot="prepend" placeholder="请选择">
+            <el-option label="当前搜索" value="0"></el-option>
+            <el-option label="全局搜索" value="1"></el-option>
+          </el-select>
           <el-button @click="search" slot="append">搜索</el-button>
       </el-input>
-      <div class="tag-group">
+      <!-- <div class="tag-group">
           <el-tag type="gray" @close="closeTag"  :closable="true">{{tag.name}}</el-tag>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
@@ -33,7 +37,7 @@ export default {
   data() {
     return {
       searchValue: "",
-      tag: { name: "在当前搜索" }
+      searchType: "0"
     };
   },
   computed: {
@@ -44,7 +48,7 @@ export default {
     let oWidth, oInner, scale;
     $(".bread-wrap")
       .on("mousemove", function(e) {
-        oWidth = $(".bread-wrap").outerWidth()-4;
+        oWidth = $(".bread-wrap").outerWidth() - 4;
         oInner = $(".breadcrumb > p").width();
         if (oInner <= oWidth) return;
         x = e.pageX - $(this).offset().left;
@@ -61,15 +65,9 @@ export default {
       });
   },
   activated() {
-    this.tag.name = "在当前搜索";
+    this.searchType = "0";
   },
   methods: {
-    closeTag() {
-      this.tag.name === "在当前搜索"
-        ? (this.tag.name = "在全局搜索")
-        : (this.tag.name = "在当前搜索");
-      $(this.$refs.search).blur();
-    },
     navBarJump(item, index) {
       let path = item.path;
       this.$store.dispatch("getDirTree", { path }).then(res => {
@@ -91,14 +89,13 @@ export default {
       if (!this.searchValue) {
         this.$message("请输入关键词");
       } else {
-        switch (this.tag.name) {
-          case "在当前搜索":
+        switch (this.searchType) {
+          case "0":
             //当前搜索
             this.$store
               .dispatch("searchCurrentDisk", this.searchValue)
               .then(_ => {
                 let temp;
-                this.searchValue = "";
                 temp = this.navList[0].alias;
                 this.$router.push("/search?type=current");
                 this.$store.dispatch("setSearchRange", temp);
@@ -116,11 +113,10 @@ export default {
                 );
               });
             break;
-          case "在全局搜索":
+          case "1":
             //全局搜索
             let context = this.searchValue;
             let type = "files";
-            this.searchValue = "";
             this.$store.dispatch("searchFile", { context, type }).then(_ => {
               this.$router.push("/search?type=global");
               this.$store.dispatch("checkAllSwitch", true);
@@ -129,6 +125,7 @@ export default {
                 "setTotalCount",
                 this.searchTableData.length
               );
+              this.$store.dispatch('setSearchPos','');
               this.$store.dispatch("setSelected", { count: 0, size: 0 });
               this.$store.dispatch("setRouteStatus", "search");
             });
@@ -137,6 +134,7 @@ export default {
         this.$store.dispatch("setGlobalNavIndex", 2);
         this.$store.dispatch("resetFileInfo");
         this.$store.dispatch("setSearchValue", this.searchValue);
+        this.searchValue = '';
       }
     }
   }
@@ -210,9 +208,15 @@ export default {
     width: 50%;
     position: relative;
     .el-input__inner {
-      padding-left: 100px;
+      // padding-left: 100px;
       border: none;
       background: #f5f5f5;
+    }
+    .el-select{
+      width: 104px;
+    }
+    .el-input-group__prepend{
+      border-left: none;
     }
   }
   #scrollBar {

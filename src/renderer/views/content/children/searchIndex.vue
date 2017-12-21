@@ -7,8 +7,8 @@
       <div class="search-wrap">
           <div class="search-top">
               <input type="text" v-model.trim="searchVal" @keyup.enter="search" placeholder="请输入关键词">
-              <div class="tag-group" v-if="searchRangeLength!==fileList.length"><el-tag type="gray">{{`在${searchRangeLength}个位置搜索`}}</el-tag></div>
-              <div class="tag-group"  v-if="searchRangeLength===fileList.length"><el-tag type="gray">{{`在全局搜索`}}</el-tag></div>
+              <div class="tag-group" v-if="searchRangeLength!==fileList.length"><el-tag color="#f5f5f5" type="gray">{{`在${searchRangeLength}个位置搜索`}}</el-tag></div>
+              <div class="tag-group"  v-if="searchRangeLength===fileList.length"><el-tag color="#f5f5f5" type="gray">{{`在全局搜索`}}</el-tag></div>
               <em @click="search">搜索</em>
           </div>
           <p>历史搜索记录：</p>
@@ -28,6 +28,7 @@
 import { mapGetters } from "vuex";
 import localforage from "localforage";
 import bus from "@/utils/bus";
+import $ from "jquery";
 export default {
   data() {
     return {
@@ -38,7 +39,21 @@ export default {
   computed: {
     ...mapGetters(["searchRangeLength", "fileList"])
   },
+  watch: {
+    searchRangeLength: function() {
+      this.computedInput();
+    }
+  },
+  mounted() {
+    bus.$on("computedInput", _ => {
+      this.computedInput();
+    });
+  },
   methods: {
+    computedInput() {
+      let oW = $("#searchIndex .tag-group").width();
+      $("#searchIndex  input").css("padding-left", oW + 10 + "px");
+    },
     search() {
       if (this.searchVal) {
         let _this = this;
@@ -96,6 +111,8 @@ export default {
     this.$store.dispatch("removeRightView", false);
   },
   activated() {
+    this.computedInput();
+
     let _this = this;
     this.searchHistory = localforage.getItem("searchHistory", (err, res) => {
       if (res != null) {
@@ -105,7 +122,7 @@ export default {
         localforage.setItem("searchHistory", []);
       }
     });
-     this.$store.dispatch("removeRightView", true);
+    this.$store.dispatch("removeRightView", true);
     this.$store.dispatch("checkAllSwitch", true);
   }
 };
@@ -116,9 +133,14 @@ export default {
   height: 100%;
   .search-wrap {
     .el-tag {
-      position: absolute;
-      left: 6px;
-      top: 6px;
+      left: 0px;
+      top: 0px;
+      border: none;
+      padding: 0 10px;
+    }
+    .tag-group {
+      height: 40px;
+      line-height: 40px;
     }
     position: relative;
     width: 50%;
@@ -176,7 +198,7 @@ export default {
         border-radius: 4px;
         padding: 4px 8px;
         cursor: pointer;
-        transition: .3s all ease;
+        transition: 0.3s all ease;
         &:hover span {
           display: block;
         }

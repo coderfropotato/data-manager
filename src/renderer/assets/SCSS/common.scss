@@ -252,8 +252,8 @@ button {
 }
 
 .tag-group {
-  left: 4px;
-  top: 3px;
+  left: 0px;
+  top: 0px;
   position: absolute;
   .el-tag {
     cursor: default;
@@ -263,7 +263,9 @@ button {
 .el-tag .el-icon-close {
   font-size: 10px;
 }
-
+.el-tag{
+  color: #333;
+}
 //select font family 
 .el-select-dropdown__item span {
   font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "\5FAE\8F6F\96C5\9ED1", Arial, sans-serif
