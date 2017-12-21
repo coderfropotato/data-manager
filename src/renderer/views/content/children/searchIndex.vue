@@ -173,6 +173,7 @@ export default {
         line-height: 40px;
         cursor: pointer;
         border-radius: 0 4px 4px 0;
+        transition: .3s all ease;
         &:hover {
           opacity: 0.8;
         }

@@ -597,3 +597,13 @@ button {
 .no-data{
   color: #a6afbf;
 }
+.el-input__inner:focus{
+  border-color: #386cca;
+}
+
+.el-input__inner:hover{
+  border-color: #386cca;
+}
+.el-select .el-input__inner:focus{
+  border-color: #386cca;
+}

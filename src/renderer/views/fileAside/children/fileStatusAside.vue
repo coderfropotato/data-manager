@@ -171,6 +171,7 @@ export default {
             margin-right: 12px;
             border-radius: 4px;
             opacity: 0.8;
+            transition: .3s all ease;
             &:hover {
               opacity: 1;
             }

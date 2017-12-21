@@ -197,6 +197,7 @@ export default {
       cursor: pointer;
       user-select: none;
       opacity: 1;
+      transition: .3s all ease;
       &:hover {
         opacity: 0.8;
       }

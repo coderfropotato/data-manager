@@ -68,6 +68,7 @@ export default {
         font-size: 14px;
         line-height: 30px;
         cursor: pointer;
+        transition: .3s all ease;
         &:hover {
           opacity: 0.8;
         }

@@ -89,6 +89,7 @@ export default {
         transition: 0.1s all ease;
         cursor: pointer;
         opacity: 0.8;
+        transition: 0.3s all ease;
         margin-top: 22px;
         height: 22px;
         &:first-child {

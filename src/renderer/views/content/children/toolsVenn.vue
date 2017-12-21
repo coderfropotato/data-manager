@@ -16,7 +16,7 @@
                       <el-form-item label="项目名称" prop="projectName" :rules="[
                             { required: true, message: '项目名不能为空'}
                           ]" >
-                        <el-input type="text" :maxlength="50" v-model="form.projectName" size="small"></el-input>
+                        <el-input type="text" :maxlength="50" v-model.trim="form.projectName" size="small"></el-input>
                       </el-form-item>
                       <!-- 选择文件 -->
                       <el-form-item label="上传文件" >
@@ -73,7 +73,7 @@ export default {
         //项目名称
         projectName: "venn5698c9",
         //文件路径
-        filePath: "C:UsersAdministratorDesktopexaple_data.txt",
+        filePath: "",
         // 手动数据矩阵
         arrayFile: "",
         //邮件通知
@@ -112,71 +112,73 @@ export default {
             this.drawOptions.projectName = this.form.projectName;
             this.drawOptions.callback = this.callback;
             this.tools.setWrap(".venn");
-            // this.tools.setType("venn");
-            this.tools.setType("vennStander");
-            let data = {
-              compareGroup: ["SRR1370913", "SRR1370914", "SRR1370915"],
-              data: [
-                {
-                  result: {
-                    OTUs: [],
-                    SampleNameGroup: "SRR1370913",
-                    Count: 359
-                  }
-                },
-                {
-                  result: {
-                    OTUs: [],
-                    SampleNameGroup: "SRR1370913∩SRR1370914",
-                    Count: 1454
-                  }
-                },
-                {
-                  result: {
-                    OTUs: [],
-                    SampleNameGroup: "SRR1370913∩SRR1370914∩SRR1370915",
-                    Count: 1090
-                  }
-                },
-                {
-                  result: {
-                    OTUs: [],
-                    SampleNameGroup: "SRR1370913∩SRR1370915",
-                    Count: 108
-                  }
-                },
-                {
-                  result: {
-                    OTUs: [],
-                    SampleNameGroup: "SRR1370914",
-                    Count: 426
-                  }
-                },
-                {
-                  result: {
-                    OTUs: [],
-                    SampleNameGroup: "SRR1370914∩SRR1370915",
-                    Count: 127
-                  }
-                },
-                {
-                  result: {
-                    OTUs: [],
-                    SampleNameGroup: "SRR1370915",
-                    Count: 272
-                  }
-                }
-              ]
-            };
-
-            // this.tools.draw(res.result, this.drawOptions);
-            this.tools.draw(data, this.drawOptions);
+            this.tools.setType("venn");
+            // this.tools.setType("vennStander");
+            // let data = {
+            //   compareGroup: ["SRR1370913", "SRR1370914", "SRR1370915"],
+            //   data: [
+            //     {
+            //       result: {
+            //         OTUs: [],
+            //         SampleNameGroup: "SRR1370913",
+            //         Count: 359
+            //       }
+            //     },
+            //     {
+            //       result: {
+            //         OTUs: [],
+            //         SampleNameGroup: "SRR1370913∩SRR1370914",
+            //         Count: 1454
+            //       }
+            //     },
+            //     {
+            //       result: {
+            //         OTUs: [],
+            //         SampleNameGroup: "SRR1370913∩SRR1370914∩SRR1370915",
+            //         Count: 1090
+            //       }
+            //     },
+            //     {
+            //       result: {
+            //         OTUs: [],
+            //         SampleNameGroup: "SRR1370913∩SRR1370915",
+            //         Count: 108
+            //       }
+            //     },
+            //     {
+            //       result: {
+            //         OTUs: [],
+            //         SampleNameGroup: "SRR1370914",
+            //         Count: 426
+            //       }
+            //     },
+            //     {
+            //       result: {
+            //         OTUs: [],
+            //         SampleNameGroup: "SRR1370914∩SRR1370915",
+            //         Count: 127
+            //       }
+            //     },
+            //     {
+            //       result: {
+            //         OTUs: [],
+            //         SampleNameGroup: "SRR1370915",
+            //         Count: 272
+            //       }
+            //     }
+            //   ]
+            // };
+            if(res.result.length && typeof res.result === 'object'){
+              this.tools.draw(res.result, this.drawOptions);
+            }else{
+              this.$message('文件解析出错')
+            }
+            // this.tools.draw(data, this.drawOptions);
           });
         } else {
           this.$message("请填写项目名称");
         }
       });
-      return;
     },
     callback(d, i) {
       console.log(d, i);
