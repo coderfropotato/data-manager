@@ -66,9 +66,11 @@
                           </el-radio-group>
                        </el-form-item>
                     </el-form>
-                    <el-form label-position="top">
-                      <el-form-item label="要提取的名称清单：">
-                          <el-input type="textarea" v-model="form.list" placeholder="输入一个数据，以,结尾后输入另一个数据，以此类推。"></el-input>
+                    <el-form label-position="top" :model="form">
+                      <el-form-item label="要提取的名称清单：" prop="list" :rules="[
+                            { required: true, message: '请输入要提取的名称清单'}
+                          ]">
+                          <el-input type="textarea"  v-model.trim="form.list" placeholder="输入一个数据，以,结尾后输入另一个数据，以此类推。" ></el-input>
                       </el-form-item>
                     </el-form>
                     <el-form>
@@ -154,7 +156,7 @@ export default {
       tabList: ["预览", "说明", "例子"],
       activeIndex: 0,
       tableData: { header: [], rows: [] },
-      isMessage:false
+      isMessage: false
     };
   },
   created() {},
@@ -192,6 +194,7 @@ export default {
                 }
               });
             }
+            return;
           } else {
             let formData = {};
             formData.filePath = this.form.filePath;
