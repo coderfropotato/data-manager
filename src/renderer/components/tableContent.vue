@@ -119,7 +119,7 @@ export default {
         } else {
           this.$emit("nochecked");
         }
-      }, 30);
+      }, 260);
       this.timerList.push(timer);
     },
 
@@ -132,8 +132,6 @@ export default {
 
     //dbclick into dir
     dbClick(row, event) {
-      this.$refs.table.clearSelection();
-      this.$refs.table.toggleRowSelection(row, true);
       //isn't dir
       if (row.isdir) {
         //getting the data based on childPath

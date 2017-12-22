@@ -154,7 +154,7 @@ import bus from "@/utils/bus";
 export default {
   data() {
     return {
-      isMessage:false,
+      isMessage: false,
       fullscreenLoading: false,
       dataSourceOptions: [
         {
@@ -218,7 +218,7 @@ export default {
         // 数据源
         dataSource: "localDisk",
         // 远程服务器信息
-        protocol: "",
+        protocol: "SSH",
         host: "",
         port: "",
         username: "",
@@ -398,7 +398,7 @@ export default {
                     });
                     // update file status
                   } else {
-                    _this.$message({ message: res.result, type: "warning" });
+                    _this.$message({ message: res.Error, type: "warning" });
                   }
                 },
                 err => {
@@ -410,67 +410,6 @@ export default {
               _this.fullscreenLoading = false;
             }
           });
-          /* // 判断当前路径是否已经被管理
-          this.$store.dispatch({
-              type: "judgeNewDiskDir",
-              path: formData.path,
-              host: formData.host
-            }).then(status => {
-              // 文件夹可以被管理
-              if (status === 0) {
-                this.$store
-                  .dispatch("addNewDiskDir", directoryInfo)
-                  .then(status => {
-                    if (status) {
-                      this.$message({
-                        type: "info",
-                        message: "目录添加成功",
-                        showClose: true
-                      });
-                    }
-                    // 重新刷新数据
-                    let call = {
-                      mode: "action",
-                      API: "openFile"
-                    };
-                    ipcRenderer.send("change-data", call);
-                  });
-              }
-              // 子文件夹已被管理
-              if (status === -1) {
-                this.$confirm("存在子文件已被管理，是否放弃操作或继续（继续将删除已存在的子文件夹信息）?", "提示", {
-                  confirmButtonText: "继续",
-                  cancelButtonText: "放弃",
-                  type: "warning"
-                })
-                  .then(() => {
-                    this.$store
-                      .dispatch("addNewDiskDir", directoryInfo)
-                      .then(() => {
-                        // 重新刷新数据
-                        let call = {
-                          mode: "action",
-                          API: "openFile"
-                        };
-                        ipcRenderer.send("change-data", call);
-                      });
-                  })
-                  .catch(() => {
-                    this.$message({
-                      type: "info",
-                      message: "已放弃",
-                      showClose: true
-                    });
-                  });
-              }
-              // 父文件夹（包括本身）已被管理
-              if (status === 1) {
-                this.$confirm("此文件夹已被管理", "提示", {
-                  confirmButtonText: "确定",
-                  type: "warning"
-                });
-              }
-            }); */
         } else {
           return false;
         }
