@@ -16,7 +16,7 @@
                       <el-form-item label="项目名称" prop="projectName" :rules="[
                             { required: true, message: '项目名不能为空'}
                           ]" >
-                        <el-input type="text" :maxlength="50" v-model="formData.projectName" size="small"></el-input>
+                        <el-input type="text" :maxlength="50" v-model.trim="formData.projectName" size="small"></el-input>
                       </el-form-item>
                       <!-- 选择文件 -->
                       <el-form-item label="选择文件" >

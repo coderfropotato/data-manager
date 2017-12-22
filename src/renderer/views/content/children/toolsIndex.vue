@@ -11,13 +11,15 @@
                   </div>
                 </div>
             </li>
-            <!-- <li @click="toExcel">
-                <img src="../../../assets/images/excelfilter.png" alt="">
-                <div class="desc">
-                    <p>表格筛选</p>
-                    <span>简介：从源表格包含的所有属性中，筛选出所关注样本的信息。</span>
+            <li @click="toExcel">
+                <div>
+                  <img src="../../../assets/images/excelfilter.png" alt="">
+                  <div class="desc">
+                      <p>表格筛选</p>
+                      <span>简介：从源表格包含的所有属性中，筛选出所关注样本的信息。</span>
+                  </div>
                 </div>
-            </li> -->
+            </li>
             <li @click="toVenn">
                <div>
                   <img src="../../../assets/images/pathway.png" alt="">
@@ -42,11 +44,10 @@ export default {
         this.$router.push(`./toolsDetail?type=${type}`);
       });
     },
-    // toExcel(){
-    //   this.$router.push('./toolsExcel')
-    // },
+    toExcel() {
+      this.$router.push("./toolsExcel");
+    },
     toVenn() {
-      // this.$message('开发中...')
       this.$router.push("./toolsVenn?type=venn");
     }
   },
@@ -63,16 +64,17 @@ export default {
 <style lang="scss" scoped>
 #toolsIndex {
   .title {
-    padding: 14px 30px;
+    padding: 0 30px;
     border-bottom: 1px solid #ccc;
     height: 60px;
-    line-height: 32px;
+    line-height: 60px;
+    box-sizing: border-box;
   }
   ul {
     list-style: none;
     li {
       padding: 0 30px;
-
+      transition: 0.3s all ease;
       &:hover {
         background: #ebf0f9;
       }
@@ -97,7 +99,7 @@ export default {
             &:hover {
               color: #386cca;
             }
-            &:first-child{
+            &:first-child {
               display: block;
               margin-bottom: 12px;
             }

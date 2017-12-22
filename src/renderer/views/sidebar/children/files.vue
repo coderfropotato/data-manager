@@ -1,11 +1,14 @@
 <template>
   <div id="directory-root">
-      <div class="title">所有文件</span><i @click="addDevice" class="iconfont icon-tianjia"></i></div>
+      <div class="title">所有文件<i @click="addDevice" @mouseover="change = true;" @mouseout="change = false;" class="iconfont" :class="{'icon-tianjia':!change,'icon-tianjia-dianji':change}"></i></div>
       <div v-if="fileList.length" class="list">
         <ol :class="{'height-range':fileList.length>=5 && isShow}">
           <!-- icon-wodeyingpan -->
           <!-- <li @click="jumpToSearch(item.name)" v-for="(item,index) in fileList" :key="index"><i class="iconfont iconfile" :class="{'icon-wodeyingpan':item.isDisk,'icon-diannao':!item.isDisk}"></i>{{item.name}}</li> -->
-          <li @contextmenu="contextmenu($event,item)" @click="jumpToSearch(item)" v-for="(item,index) in fileList" :key="index"><i class="iconfile iconfont icon-wodeyingpan"></i>{{item.alias}}</li>
+          <li @contextmenu="contextmenu($event,item)" @click="jumpToSearch(item)" v-for="(item,index) in fileList" :key="index" :title="item.alias">
+            <i class="iconfile iconfont " :class="{'icon-wodeyingpan':item.ismoveable,'icon-diannao':!item.ismoveable && !item.isTelnet,'icon-yuanchenglianjie':item.isTelnet}"></i>
+            <edit-dom v-model="item.alias" @input="input"></edit-dom>
+          </li>
         </ol>
         <p @click="isShow=true;" v-show="fileList.length>5 && !isShow">更多设备&nbsp;></p>
       </div>
@@ -26,6 +29,8 @@ export default {
       deleteShow: false,
       isShow: false,
       selectedIndex: 0,
+      change: false,
+      edit:true,
       listInfo: {} //当前设备信息
     };
   },
@@ -38,6 +43,9 @@ export default {
     });
   },
   methods: {
+    input(...args){
+      console.log(args)
+    },
     addDevice() {
       this.$electron.ipcRenderer.send("addFile", {
         API: "open",
@@ -53,22 +61,22 @@ export default {
     del() {
       this.deleteShow = false;
       // TODO delete device
-      this.$confirm("此操作将永久删除" + this.listInfo.alias + ", 是否继续?", "提示", {
+      this.$confirm(`此操作将永久删除 " ${this.listInfo.alias} ", 是否继续?"`, "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
-      }).then(() => {
+      })
+      .then(() => {
         fetchData("deleteDisk", {
           serialNumber: this.listInfo.serial_number,
           path: this.listInfo.path,
-          alias:this.listInfo.alias
+          alias: this.listInfo.alias
         }).then(() => {
-
           //删除成功重新获取设备列表 路由跳转到file主页
-          this.$store.dispatch("getImportTargetDisks")
-            // .then(_ => {
-            //   this.$store.dispatch("getModifiedFiles");
-            // });
+          this.$store.dispatch("getImportTargetDisks");
+          // .then(_ => {
+          //   this.$store.dispatch("getModifiedFiles");
+          // });
 
           //删除状态
           // this.$store.dispatch("deleteSatatus", {
@@ -86,7 +94,9 @@ export default {
           });
           this.$router.push("/files");
         });
-      });
+      })
+      .catch(_=>{
+      })
     },
     jumpToSearch(item) {
       //编程式导航
@@ -149,9 +159,12 @@ export default {
     display: flex;
     justify-content: space-between;
     padding: 0 18px;
+    cursor: default;
+    vertical-align: middle;
     i {
       cursor: pointer;
       line-height: 18px;
+      margin-top: 1px;
     }
   }
   p {
@@ -184,19 +197,20 @@ export default {
       overflow-y: scroll;
     }
     li {
-      padding-left: 50px;
+      padding:0 40px;
       height: 38px;
       line-height: 38px;
       text-overflow: ellipsis;
       overflow: hidden;
       white-space: nowrap;
       cursor: pointer;
+      transition: 0.3s all ease;
+      display: flex;
       .iconfile {
         margin-right: 12px;
       }
       &:hover {
-        background: #386cca;
-        color: #fff;
+        background: #d1dbe5;
       }
       &.active {
         background: #386cca;

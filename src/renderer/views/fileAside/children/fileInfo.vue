@@ -197,6 +197,7 @@ export default {
       cursor: pointer;
       user-select: none;
       opacity: 1;
+      transition: .3s all ease;
       &:hover {
         opacity: 0.8;
       }
@@ -207,7 +208,7 @@ export default {
     display: flex;
     img {
       width: 40px;
-      height: 48px;
+      height: 40px;
       display: block;
       user-select: none;
     }

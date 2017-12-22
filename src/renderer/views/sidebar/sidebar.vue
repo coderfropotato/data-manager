@@ -175,6 +175,7 @@ $backgroundColor: #f7f9f9;
       line-height: 48px;
       padding: 6px 40px;
       cursor: pointer;
+      transition: 0.3s all ease;
       &.active {
         color: #fff;
         background: #386cca;

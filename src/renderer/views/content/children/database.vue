@@ -103,7 +103,7 @@ export default {
       this.chrRange.push(i);
     }
   },
-  activated(){
+  activated() {
     this.$store.dispatch("removeRightView", true);
   },
   deactivated() {
@@ -137,7 +137,7 @@ export default {
           width: 1300,
           height: 800,
           show: false,
-          resizable:false,
+          resizable: false,
           webPreferences: {
             nodeIntegration: false
           }
@@ -215,7 +215,7 @@ export default {
                 }
               })
             `
-          )
+          );
         });
         reportWin.on("closed", () => {
           reportWin = null;
@@ -279,12 +279,14 @@ $blue: #386cca;
   padding-bottom: 40px;
   .title {
     font-size: 14px;
-    line-height: 56px;
-    padding-left: $pl;
-    color: #48576a;     
+    box-sizing: border-box;
+    padding: 0 30px;
+    border-bottom: 1px solid #ccc;
+    height: 60px;
+    line-height: 60px;
+    box-sizing: border-box;
   }
   .data-search-wrap {
-    border-top: 1px solid #ccc;
     border-bottom: 1px solid #ccc;
     height: 300px;
     .data-search-title {
@@ -310,6 +312,7 @@ $blue: #386cca;
           margin-bottom: 16px;
           position: relative;
           cursor: pointer;
+          transition: 0.3s all ease;
           &:hover {
             opacity: 0.8;
           }
@@ -383,15 +386,20 @@ $blue: #386cca;
             right: 0;
             border-radius: 0 22px 22px 0;
             background: #386cca;
-            cursor:pointer;
+            cursor: pointer;
+            transition: 0.3s all ease;
+            &:hover {
+              opacity: 0.8;
+            }
           }
         }
       }
     }
   }
   .data-base-list {
-    padding-left: $pl;
+    padding: 0 $pl;
     padding-top: 56px;
+    text-align: justify;
     ol {
       list-style: none;
       li {

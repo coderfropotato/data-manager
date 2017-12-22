@@ -1,6 +1,6 @@
 <template>
   <div id="searchContent">
-    <my-table @nochecked="noCheck" @searchlistclicked="childSelectedChange" :tableHeight="tableheight" :tableData="searchTableData"></my-table>
+    <my-table v-if="show" @nochecked="noCheck" @searchlistclicked="childSelectedChange" :tableHeight="tableheight" :tableData="searchTableData"></my-table>
   </div>
 </template>
 <script>
@@ -10,14 +10,15 @@ export default {
   name: "fileContent",
   data() {
     return {
-      tableheight: 0
+      tableheight: 0,
+      show:true
     };
   },
   mounted() {
     let _this = this;
-    _this.tableheight = document.body.offsetHeight - 66 - 60 - 40  - 1;
+    _this.tableheight = document.body.offsetHeight - 66 - 60 - 41;
     this.$electron.ipcRenderer.on("windowResize", function() {
-      _this.tableheight = document.body.offsetHeight - 66 - 60 - 40  - 1;
+      _this.tableheight = document.body.offsetHeight - 66 - 60 - 41;
     });
   },
   computed: {
@@ -38,11 +39,12 @@ export default {
     }
   },
   activated() {
-
+    this.show = true;
     this.$store.dispatch("showBottom");
   },
   deactivated() {
     this.$store.dispatch("hideBottom");
+    this.show = false;
   }
 };
 </script>

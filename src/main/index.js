@@ -1,18 +1,26 @@
 'use strict'
 
-import { app, BrowserWindow, ipcMain, dialog, Tray, Menu, nativeImage } from 'electron'
+import {
+  app,
+  BrowserWindow,
+  ipcMain,
+  dialog,
+  Tray,
+  Menu,
+  nativeImage
+} from 'electron'
 if (process.env.NODE_ENV !== 'development') {
   global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\')
 }
 let trayIcon = nativeImage.createFromPath(__dirname + '/static/icon.png');
 let mainWindow
-const winURL = process.env.NODE_ENV === 'development'
-  ? `http://localhost:9080/#`
-  : `file://${__dirname}/index.html`
+const winURL = process.env.NODE_ENV === 'development' ?
+  `http://localhost:9080/#` :
+  `file://${__dirname}/index.html`
 
-const baseURL = process.env.NODE_ENV === 'development'
-  ? `http://localhost:9080/#`
-  : `file://${__dirname}/index.html#`
+const baseURL = process.env.NODE_ENV === 'development' ?
+  `http://localhost:9080/#` :
+  `file://${__dirname}/index.html#`
 
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -23,6 +31,7 @@ function createWindow() {
     frame: false,
     skipTaskbar: false,
     useContentSize: true,
+    show: false,
     titleBarStyle: 'customButtonsOnHover',
   })
   mainWindow.setMinimumSize(1200, 860)
@@ -36,7 +45,9 @@ function createWindow() {
   mainWindow.on('resize', (ev) => {
     ev.sender.send('windowResize')
   })
-
+  mainWindow.once('ready-to-show', _ => {
+    mainWindow.show()
+  })
   // //系统托盘图标
   let tray = new Tray(trayIcon)
   //tip
@@ -47,23 +58,21 @@ function createWindow() {
     mainWindow.focus();
     mainWindow.setSkipTaskbar(false);
   });
-  let contextMenu = Menu.buildFromTemplate([
-    {
-      label: '退出系统',
-      click: function () {
-        tray.destroy()
-        app.quit()
-      }
+  let contextMenu = Menu.buildFromTemplate([{
+    label: '退出系统',
+    click: function () {
+      tray.destroy()
+      app.quit()
     }
-  ]);
+  }]);
   tray.on('right-click', () => {
     tray.setContextMenu(contextMenu);
   })
 
 
   /***********************************************************
- * 生成快捷方式 grunt-electron-installer
- **********************************************************/
+   * 生成快捷方式 grunt-electron-installer
+   **********************************************************/
   var handleStartupEvent = function () {
     if (process.platform !== 'win32') {
       return false;
@@ -89,7 +98,9 @@ function createWindow() {
       var cp = require('child_process');
       var updateDotExe = path.resolve(path.dirname(process.execPath), '..', 'update.exe');
       var target = path.basename(process.execPath);
-      var child = cp.spawn(updateDotExe, ["--createShortcut", target], { detached: true });
+      var child = cp.spawn(updateDotExe, ["--createShortcut", target], {
+        detached: true
+      });
       child.on('close', function (code) {
         app.quit();
       });
@@ -99,7 +110,9 @@ function createWindow() {
       var cp = require('child_process');
       var updateDotExe = path.resolve(path.dirname(process.execPath), '..', 'update.exe');
       var target = path.basename(process.execPath);
-      var child = cp.spawn(updateDotExe, ["--removeShortcut", target], { detached: true });
+      var child = cp.spawn(updateDotExe, ["--removeShortcut", target], {
+        detached: true
+      });
       child.on('close', function (code) {
         app.quit();
       });
@@ -130,15 +143,22 @@ ipcMain.on('addFile', (event, arg) => {
   if (arg.API === 'open') {
     let URL = arg.URL
     newWin = new BrowserWindow({
-      height: 500,
-      width: 700,
-      resizable: false
+      height: 340,
+      width: 650,
+      resizable: false,
+      frame: false,
+      show:false
     })
     newWin.setMenu(null);
     newWin.loadURL(baseURL + URL)
+    newWin.once('ready-to-show',_=>{
+      newWin.show();
+    })
   }
   if (arg.API === 'close') {
     newWin.close()
+  } else if (arg.API === 'mini') {
+    newWin.minimize();
   }
 })
 
@@ -205,7 +225,7 @@ ipcMain.on('change-window', (ev) => {
     ev.sender.send('resetLayout', 65);
   } else {
     mainWindow.maximize();
-    ev.sender.send('resetLayout', 75);
+    ev.sender.send('resetLayout', 70);
   }
   mainWindow.setSkipTaskbar(false)
 })

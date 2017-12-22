@@ -21,11 +21,12 @@ export default {
 
 <style lang="scss" scoped>
 #bottom{
-    border-top: 1px solid #ccc;
+    // border-top: 1px solid #ccc;
     height: 40px;
     font-size: 12px;
     line-height: 40px;
     padding-left: 22px;
     padding-left: 22px;
+    cursor: default;
 }
 </style>
