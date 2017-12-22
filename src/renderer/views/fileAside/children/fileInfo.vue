@@ -26,7 +26,7 @@
           <p>文件大小：<span>{{fileInfo.basic.size | reverseSize}}</span></p>
         </li>
         <li>
-          <p>创建时间：<span>{{fileInfo.basic.ctime}}</span></p>
+          <p>创建时间：<span>{{fileInfo.basic.ctime | reverseTime}}</span></p>
         </li>
       </ul>
       <div class="text">
