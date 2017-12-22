@@ -31,8 +31,9 @@ export default {
       isShow: false,
       selectedIndex: 0,
       change: false,
-      edit:true,
-      listInfo: {} //当前设备信息
+      edit: true,
+      listInfo: {}, //当前设备信息,
+      isMessage: false
     };
   },
   computed: {
@@ -44,8 +45,8 @@ export default {
     });
   },
   methods: {
-    input(...args){
-      console.log(args)
+    input(...args) {
+      console.log(args);
     },
     addDevice() {
       this.$electron.ipcRenderer.send("addFile", {
@@ -67,37 +68,43 @@ export default {
         cancelButtonText: "取消",
         type: "warning"
       })
-      .then(() => {
-        fetchData("deleteDisk", {
-          serialNumber: this.listInfo.serial_number,
-          path: this.listInfo.path,
-          alias: this.listInfo.alias
-        }).then(() => {
-          //删除成功重新获取设备列表 路由跳转到file主页
-          this.$store.dispatch("getImportTargetDisks");
-          // .then(_ => {
-          //   this.$store.dispatch("getModifiedFiles");
-          // });
+        .then(() => {
+          fetchData("deleteDisk", {
+            serialNumber: this.listInfo.serial_number,
+            path: this.listInfo.path,
+            alias: this.listInfo.alias
+          }).then(() => {
+            //删除成功重新获取设备列表 路由跳转到file主页
+            this.$store.dispatch("getImportTargetDisks");
+            // .then(_ => {
+            //   this.$store.dispatch("getModifiedFiles");
+            // });
 
-          //删除状态
-          // this.$store.dispatch("deleteSatatus", {
-          //   serialNumber: this.listInfo.serial_number,
-          //   path: this.listInfo.path
-          // });
+            //删除状态
+            // this.$store.dispatch("deleteSatatus", {
+            //   serialNumber: this.listInfo.serial_number,
+            //   path: this.listInfo.path
+            // });
 
-          // //reset file info && global history
-          this.$store.dispatch("resetFileInfo");
-          this.$store.dispatch("setGlobalHistory", false);
+            // //reset file info && global history
+            this.$store.dispatch("resetFileInfo");
+            this.$store.dispatch("setGlobalHistory", false);
 
-          this.$message({
-            type: "success",
-            message: "删除成功!"
+            if (!this.isMessage) {
+              this.isMessage = true;
+              this.$message({
+                type: "success",
+                message: "删除成功",
+                duration: 1200,
+                onClose: _ => {
+                  this.isMessage = false;
+                }
+              });
+            }
+            this.$router.push("/files");
           });
-          this.$router.push("/files");
-        });
-      })
-      .catch(_=>{
-      })
+        })
+        .catch(_ => {});
     },
     jumpToSearch(item) {
       //编程式导航
@@ -198,7 +205,7 @@ export default {
       overflow-y: scroll;
     }
     li {
-      padding:0 40px;
+      padding: 0 40px;
       height: 38px;
       line-height: 38px;
       text-overflow: ellipsis;

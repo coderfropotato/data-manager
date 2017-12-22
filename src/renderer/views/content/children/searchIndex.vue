@@ -33,7 +33,8 @@ export default {
   data() {
     return {
       searchVal: "",
-      searchHistory: []
+      searchHistory: [],
+      isMessage: false
     };
   },
   computed: {
@@ -92,14 +93,29 @@ export default {
             this.$store.dispatch("setSearchPos", "");
           },
           err => {
-            this.$message({
-              message: "请选择一个搜索范围",
-              type: "warning"
-            });
+            if (!this.isMessage) {
+              this.isMessage = true;
+              this.$message({
+                message: "请选择一个搜索范围",
+                duration: 1200,
+                onClose: _ => {
+                  this.isMessage = false;
+                }
+              });
+            }
           }
         );
       } else {
-        this.$message("请输入关键词");
+        if (!this.isMessage) {
+          this.isMessage = true;
+          this.$message({
+            message: "请输入关键词",
+            duration: 1200,
+            onClose: _ => {
+              this.isMessage = false;
+            }
+          });
+        }
       }
     },
     deleteHis(index) {
@@ -173,7 +189,7 @@ export default {
         line-height: 40px;
         cursor: pointer;
         border-radius: 0 4px 4px 0;
-        transition: .3s all ease;
+        transition: 0.3s all ease;
         &:hover {
           opacity: 0.8;
         }

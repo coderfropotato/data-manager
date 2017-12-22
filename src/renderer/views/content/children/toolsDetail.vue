@@ -208,7 +208,8 @@ export default {
         alias: [{ required: true, message: "请输入项目名称", trigger: "blur" }]
       },
       // serverOptionsChange: true,
-      drawData: {}
+      drawData: {},
+      isMessage:false,
     };
   },
   computed: {
@@ -220,7 +221,16 @@ export default {
         if (valid) {
           // file path
           if (!this.formData.filePath) {
-            this.$message("请上传数据文件");
+            if (!this.isMessage) {
+              this.isMessage = true;
+              this.$message({
+                message: "请上传数据文件",
+                duration: 1200,
+                onClose: _ => {
+                  this.isMessage = false;
+                }
+              });
+            }
             return;
           }
           let formData = this.formData;
@@ -231,7 +241,16 @@ export default {
           // if (this.serverOptionsChange) {
           fetchData("heatMap", formData).then(res => {
             if (res.Error) {
-              this.$message(res.Error);
+              if (!this.isMessage) {
+                this.isMessage = true;
+                this.$message({
+                  message: res.Error,
+                  duration: 1200,
+                  onClose: _ => {
+                    this.isMessage = false;
+                  }
+                });
+              }
             } else {
               this.drawData = res.result;
               // draw config
@@ -249,7 +268,16 @@ export default {
           // }
           // this.initStatus();
         } else {
-          this.$message("请填写项目名称");
+          if (!this.isMessage) {
+            this.isMessage = true;
+            this.$message({
+              message: "请填写项目名称",
+              duration: 1200,
+              onClose: _ => {
+                this.isMessage = false;
+              }
+            });
+          }
         }
       });
       return;

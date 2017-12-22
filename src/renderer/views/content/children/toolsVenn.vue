@@ -88,7 +88,8 @@ export default {
       tabIndex: "0",
       rules: {
         alias: [{ required: true, message: "请输入项目名称", trigger: "blur" }]
-      }
+      },
+      isMessage:false
     };
   },
   created() {},
@@ -101,7 +102,16 @@ export default {
         if (valid) {
           // file path
           if (!this.form.filePath) {
-            this.$message("请上传数据文件");
+            if (!this.isMessage) {
+              this.isMessage = true;
+              this.$message({
+                message: "请上传数据文件",
+                duration: 1200,
+                onClose: _ => {
+                  this.isMessage = false;
+                }
+              });
+            }
             return;
           }
           let filePath = this.form.filePath;
@@ -168,15 +178,33 @@ export default {
             //     }
             //   ]
             // };
-            if(res.result.length && typeof res.result === 'object'){
+            if (res.result.length && typeof res.result === "object") {
               this.tools.draw(res.result, this.drawOptions);
-            }else{
-              this.$message('文件解析出错')
+            } else {
+              if (!this.isMessage) {
+                this.isMessage = true;
+                this.$message({
+                  message: "文件解析出错",
+                  duration: 1200,
+                  onClose: _ => {
+                    this.isMessage = false;
+                  }
+                });
+              }
             }
             // this.tools.draw(data, this.drawOptions);
           });
         } else {
-          this.$message("请填写项目名称");
+          if (!this.isMessage) {
+            this.isMessage = true;
+            this.$message({
+              message: "请填写项目名称",
+              duration: 1200,
+              onClose: _ => {
+                this.isMessage = false;
+              }
+            });
+          }
         }
       });
     },

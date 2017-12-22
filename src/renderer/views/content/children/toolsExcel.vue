@@ -153,7 +153,8 @@ export default {
       },
       tabList: ["预览", "说明", "例子"],
       activeIndex: 0,
-      tableData: { header: [], rows: [] }
+      tableData: { header: [], rows: [] },
+      isMessage:false
     };
   },
   created() {},
@@ -169,10 +170,28 @@ export default {
       this.$refs.project.validate(valid => {
         if (valid) {
           if (!this.form.filePath) {
-            this.$message("请上传数据文件");
+            if (!this.isMessage) {
+              this.isMessage = true;
+              this.$message({
+                message: "请上传数据文件",
+                duration: 1200,
+                onClose: _ => {
+                  this.isMessage = false;
+                }
+              });
+            }
             return;
           } else if (!this.form.isSort && this.form.list.length === 0) {
-            this.$message("请输入要提取的名称清单");
+            if (!this.isMessage) {
+              this.isMessage = true;
+              this.$message({
+                message: "请输入要提取的名称清单",
+                duration: 1200,
+                onClose: _ => {
+                  this.isMessage = false;
+                }
+              });
+            }
           } else {
             let formData = {};
             formData.filePath = this.form.filePath;
@@ -184,7 +203,17 @@ export default {
             formData.nameList = this.listArr;
             fetchData("filterData", formData).then(res => {
               if (res.Error) {
-                this.$message(res.Error);
+                if (!this.isMessage) {
+                  this.isMessage = true;
+                  this.$message({
+                    message: res.Error,
+                    duration: 1200,
+                    type: "error",
+                    onClose: _ => {
+                      this.isMessage = false;
+                    }
+                  });
+                }
               } else {
                 this.tableData = res;
               }
@@ -234,7 +263,7 @@ export default {
 .title {
   line-height: 60px;
 }
-.table-area{
+.table-area {
   overflow-y: auto;
 }
 table {
@@ -249,7 +278,7 @@ table {
     padding: 8px;
     border: 1px solid #ccc;
     background-color: #ffffff;
-    p{
+    p {
       max-width: 200px;
       text-overflow: ellipsis;
       overflow: hidden;

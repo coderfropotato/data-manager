@@ -154,6 +154,7 @@ import bus from "@/utils/bus";
 export default {
   data() {
     return {
+      isMessage:false,
       fullscreenLoading: false,
       dataSourceOptions: [
         {
@@ -247,11 +248,17 @@ export default {
     let _this = this;
     bus.$on("error", _ => {
       this.fullscreenLoading = false;
-      this.$message({
-        type: "error",
-        message: "数据读取失败，请重试。",
-        duration: 1000
-      });
+      if (!this.isMessage) {
+        this.isMessage = true;
+        this.$message({
+          type: "error",
+          message: "数据读取失败，请重试。",
+          duration: 1200,
+          onClose: _ => {
+            this.isMessage = false;
+          }
+        });
+      }
     });
   },
   watch: {
@@ -307,8 +314,8 @@ export default {
       ipcRenderer.on("selected-directory", (event, path) => {
         // 将返回的 path 数组转化成 string
         this.basicForm.path = path.toString();
-        let nameArr = path.toString().split('\\');
-        this.basicForm.alias =nameArr[nameArr.length-1];
+        let nameArr = path.toString().split("\\");
+        this.basicForm.alias = nameArr[nameArr.length - 1];
       });
     },
     // 提示信息
