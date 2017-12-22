@@ -17,7 +17,7 @@
         </el-form-item>
         
         <el-form-item label="数据源" required>
-          <el-select v-model="basicForm.dataSource" size="small" >
+          <el-select v-model.trim="basicForm.dataSource" size="small" >
             <el-option
                 v-for="item in dataSourceOptions"
                 :key="item.value"
@@ -28,7 +28,7 @@
         </el-form-item>
         <div class="remote" v-if="basicForm.dataSource === 'remoteServer'">
           <el-form-item label="协议" prop="protocol">
-            <el-select  v-model="basicForm.protocol" size="small">
+            <el-select  v-model.trim="basicForm.protocol" size="small">
               <el-option
                   v-for="item in protocolOptions"
                   :key="item.value"
@@ -38,21 +38,21 @@
             </el-select>
           </el-form-item>
           <el-form-item label="主机" prop="host">
-            <el-input v-model="basicForm.host" size="small">
+            <el-input v-model.trim="basicForm.host" size="small">
             </el-input>
           </el-form-item>
           <el-form-item label="端口号" prop="port">
-            <el-input v-model="basicForm.port" size="small">
+            <el-input v-model.trim="basicForm.port" size="small">
             </el-input>
           </el-form-item>
           <el-form-item label="用户名" prop="username">
             <el-col :span="24">
-              <el-input v-model="basicForm.username" size="small">
+              <el-input v-model.trim="basicForm.username" size="small">
               </el-input>
             </el-col>
           </el-form-item>
           <el-form-item label="密码" prop="password">
-            <el-input type="password" v-model="basicForm.password" size="small">
+            <el-input type="password" v-model.trim="basicForm.password" size="small">
             </el-input>
             <!-- <el-checkbox v-model="useKey" style="margin-left: 1.5em;">使用密钥</el-checkbox> -->
           </el-form-item>
@@ -72,7 +72,7 @@
           </el-col>
         </el-row>
       </div> -->
-      <!--高级选项-->
+      <!--高级选项 暂未开放-->
       <div class="advanced-options" v-if="showAdvanced">
         <div>
           <el-row :gutter="20">
