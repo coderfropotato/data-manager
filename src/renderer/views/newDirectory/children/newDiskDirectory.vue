@@ -314,7 +314,12 @@ export default {
       ipcRenderer.on("selected-directory", (event, path) => {
         // 将返回的 path 数组转化成 string
         this.basicForm.path = path.toString();
-        let nameArr = path.toString().split("\\");
+        var nameArr = "Untitled"
+        if(process.platform == "win32") {
+          nameArr = path.toString().split("\\");
+        } else {
+          nameArr = path.toString().split("/");
+        }
         this.basicForm.alias = nameArr[nameArr.length - 1];
       });
     },
