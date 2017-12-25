@@ -11,12 +11,12 @@
                 <li>
                   <p class="title">输入文件</p>
                   <div class="context">
-                    <el-form  ref="project" label-width="80px" :model="form" >
+                    <el-form  ref="project" label-width="80px" :model="validateForm" >
                       <!-- 项目名称 -->
                       <el-form-item label="项目名称" prop="projectName" :rules="[
                             { required: true, message: '项目名不能为空'}
                           ]" >
-                        <el-input type="text" :maxlength="50" v-model.trim="form.projectName" size="small"></el-input>
+                        <el-input type="text" :maxlength="50" v-model.trim="validateForm.projectName" size="small"></el-input>
                       </el-form-item>
                       <!-- 选择文件 -->
                       <el-form-item label="上传文件" >
@@ -100,7 +100,7 @@
               </ul>
               <div v-show="activeIndex==0" class="draw-area tab table-area">
                 <!-- table area -->
-                <div v-if="tableData.rows.length" class="title">{{form.projectName}}</div>
+                <div v-if="tableData.rows.length" class="title">{{validateForm.projectName}}</div>
                 <table v-if="tableData.rows.length">
                   <thead v-if="tableData.header.length">
                     <tr>
@@ -134,8 +134,10 @@ import $ from "jquery";
 export default {
   data() {
     return {
+      validateForm: {
+        projectName: "表格筛选"
+      },
       form: {
-        projectName: "表格筛选",
         filePath: "",
         // 有无表头
         hasHeader: true,

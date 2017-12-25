@@ -11,12 +11,12 @@
                 <li>
                   <p class="title">输入文件</p>
                   <div class="context">
-                    <el-form  ref="project" label-width="80px" :model="form" >
+                    <el-form  ref="project" label-width="80px" :model="validateForm" >
                       <!-- 项目名称 -->
                       <el-form-item label="项目名称" prop="projectName" :rules="[
                             { required: true, message: '项目名不能为空'}
                           ]" >
-                        <el-input type="text" :maxlength="50" v-model.trim="form.projectName" size="small"></el-input>
+                        <el-input type="text" :maxlength="50" v-model.trim="validateForm.projectName" size="small"></el-input>
                       </el-form-item>
                       <!-- 选择文件 -->
                       <el-form-item label="上传文件" >
@@ -69,15 +69,17 @@ import { mapGetters } from "vuex";
 export default {
   data() {
     return {
-      form: {
+      validateForm:{
         //项目名称
         projectName: "venn5698c9",
+      },
+      form: {
         //文件路径
         filePath: "",
         // 手动数据矩阵
         arrayFile: "",
         //邮件通知
-        email: false
+        // email: false
       },
       drawOptions: {
         projectName: ""
@@ -118,8 +120,7 @@ export default {
           let arrayFile = this.form.arrayFile;
           fetchData("getVenefigureDate", { filePath, arrayFile }).then(res => {
             // draw config
-            console.log(res);
-            this.drawOptions.projectName = this.form.projectName;
+            this.drawOptions.projectName = this.validateForm.projectName;
             this.drawOptions.callback = this.callback;
             this.tools.setWrap(".venn");
             this.tools.setType("venn");
@@ -209,7 +210,6 @@ export default {
       });
     },
     callback(d, i) {
-      console.log(d, i);
     },
     toTools() {
       this.$router.push("./toolsIndex");
