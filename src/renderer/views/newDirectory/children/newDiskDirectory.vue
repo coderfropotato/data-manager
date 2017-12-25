@@ -386,19 +386,33 @@ export default {
                   if (res.result === "success") {
                     // 重新获取设备列表
                     _this.$electron.ipcRenderer.send("updateFilesList");
-                    _this.$message({
-                      message: "项目添加成功",
-                      duration: 1200,
-                      type: "success",
-                      onClose: _ => {
-                        _this.$electron.ipcRenderer.send("addFile", {
-                          API: "close"
-                        });
-                      }
-                    });
+                    if (!_this.isMessage) {
+                      _this.isMessage = true;
+                      _this.$message({
+                        message: "项目添加成功",
+                        duration: 1200,
+                        type: "success",
+                        onClose: function() {
+                          _this.isMessage = false;
+                          _this.$electron.ipcRenderer.send("addFile", {
+                            API: "close"
+                          });
+                        }
+                      });
+                    }
                     // update file status
                   } else {
-                    _this.$message({ message: res.Error, type: "warning" });
+                    if (!_this.isMessage) {
+                      _this.isMessage = true;
+                      _this.$message({
+                        message: res.Error,
+                        duration: 1200,
+                        type: "warning",
+                        onClose: function() {
+                          _this.isMessage = false;
+                        }
+                      });
+                    }
                   }
                 },
                 err => {
@@ -406,7 +420,17 @@ export default {
                 }
               );
             } else {
-              _this.$message({ message: "文件名重复，请重试", type: "warning" });
+              if (!_this.isMessage) {
+                _this.isMessage = true;
+                _this.$message({
+                  message: "文件名重复，请重试",
+                  duration: 1200,
+                  type: "warning",
+                  onClose: function() {
+                    _this.isMessage = false;
+                  }
+                });
+              }
               _this.fullscreenLoading = false;
             }
           });
