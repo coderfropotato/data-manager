@@ -13,8 +13,6 @@ const baseURL = 'tcp://127.0.0.1'
 // 端口号
 const PORT = 4242
 const URL = baseURL + ':' + PORT
-// 设置和服务器的延时
-const outTime = 5000
 let request
 let getData = function (API, params) {
   if (API === '') {
@@ -33,19 +31,8 @@ let getData = function (API, params) {
   }
   request.send(JSON.stringify(Param))
   return new Promise((resolve, reject) => {
-    // let flag = 0;
-    // let timer = setTimeout(function(){
-    //   if (flag === 0) {
-    //     console.error('服务器无响应' + '\n API: ' + API)
-    //     bus.$emit('error',500)
-    //     flag = 0
-    //   }else{
-    //     clearTimeout(timer);
-    //   }
-    // },outTime);
+
     request.on('message', function (msg) {
-      // flag = 1
-      // clearTimeout(timer);
       let rep = JSON.parse(msg)
       if (rep.status === 200) {
         let data = rep.data;
