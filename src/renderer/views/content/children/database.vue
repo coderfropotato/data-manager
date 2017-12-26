@@ -94,7 +94,8 @@ export default {
       chr: "Chr01",
       regOne: "",
       regTwo: "",
-      url: ""
+      url: "",
+      isMessage: false
     };
   },
   mounted() {
@@ -120,12 +121,30 @@ export default {
       this.checkUrl(type, anchorClick);
       if (type === "all") {
         if (!this.searchVal.length || this.searchVal.length > 50) {
-          this.$message("请输入搜索关键字");
+          if (!this.isMessage) {
+            this.isMessage = true;
+            this.$message({
+              message: "请输入搜索关键字",
+              duration: 1200,
+              onClose: _ => {
+                this.isMessage = false;
+              }
+            });
+          }
           return;
         }
       } else if (type === "reg") {
         if (this.regOne === "" || this.regTwo === "") {
-          this.$message("请输入搜索关键字");
+          if (!this.isMessage) {
+            this.isMessage = true;
+            this.$message({
+              message: "请输入搜索关键字",
+              duration: 1200,
+              onClose: _ => {
+                this.isMessage = false;
+              }
+            });
+          }
           return;
         }
       }

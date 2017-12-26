@@ -12,7 +12,11 @@
           </template>
         </el-table-column>
         <el-table-column  sortable prop="filename" label="文件名"></el-table-column>
-        <el-table-column  sortable prop="ctime" label="创建时间"></el-table-column>
+        <el-table-column  sortable prop="ctime" label="创建时间">
+          <template scope="scope">
+            <span>{{scope.row.ctime | reverseTime}}</span>
+          </template>
+        </el-table-column>
         <el-table-column  sortable prop="size" label="文件大小">
           <template scope="scope">
             <span v-if="!scope.row.isdir">{{scope.row.size | reverseSize}}</span>
@@ -115,7 +119,7 @@ export default {
         } else {
           this.$emit("nochecked");
         }
-      }, 30);
+      }, 260);
       this.timerList.push(timer);
     },
 
@@ -128,8 +132,6 @@ export default {
 
     //dbclick into dir
     dbClick(row, event) {
-      this.$refs.table.clearSelection();
-      this.$refs.table.toggleRowSelection(row, true);
       //isn't dir
       if (row.isdir) {
         //getting the data based on childPath

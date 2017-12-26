@@ -17,7 +17,9 @@ import bus from "@/utils/bus";
 export default {
   name: "SearchHeader",
   data() {
-    return {};
+    return {
+      isMessage:false
+    };
   },
   computed: {
     searchValue: {
@@ -63,10 +65,14 @@ export default {
             this.$store.dispatch("setRouteStatus", "search");
           },
           err => {
-            this.$message({
-              message: "请选择一个搜索范围",
-              type: "warning"
-            });
+            if(!this.isMessage){
+              this.isMessage = true;
+              this.$message({
+                message: "请选择一个搜索范围",
+                duration:1200,
+                onClose:_=>{this.isMessage = false;}
+              });
+            }
           }
         );
       }

@@ -81,6 +81,7 @@ button {
     border-color: #20a0ff;
   }
 }
+
 #search-root {
   .el-checkbox {
     width: 100%;
@@ -263,9 +264,11 @@ button {
 .el-tag .el-icon-close {
   font-size: 10px;
 }
-.el-tag{
+
+.el-tag {
   color: #333;
 }
+
 //select font family 
 .el-select-dropdown__item span {
   font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "\5FAE\8F6F\96C5\9ED1", Arial, sans-serif
@@ -591,19 +594,34 @@ button {
 .btn-hover:hover {
   opacity: .8;
 }
-.el-checkbox__label{
+
+.el-checkbox__label {
   padding-left: 0;
 }
-.no-data{
+
+.no-data {
   color: #a6afbf;
 }
-.el-input__inner:focus{
+
+.el-input__inner:focus {
   border-color: #386cca;
 }
 
-.el-input__inner:hover{
+.el-input__inner:hover {
   border-color: #386cca;
 }
-.el-select .el-input__inner:focus{
+
+.el-select .el-input__inner:focus {
   border-color: #386cca;
+}
+
+.el-message-box__wrapper {
+  font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+}
+
+.el-message-box__btns {
+  button:first-child:hover,button:first-child:focus {
+    color: #386cca;
+    border-color: #386cca;
+  }
 }

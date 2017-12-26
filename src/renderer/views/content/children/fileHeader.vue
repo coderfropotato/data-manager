@@ -37,7 +37,8 @@ export default {
   data() {
     return {
       searchValue: "",
-      searchType: "0"
+      searchType: "0",
+      isMessage:false
     };
   },
   computed: {
@@ -87,7 +88,17 @@ export default {
     search() {
       // isGlobal searchRange content
       if (!this.searchValue) {
-        this.$message("请输入关键词");
+        if (!this.isMessage) {
+          this.isMessage = true;
+          this.$message({
+            showClose: true,
+            message: "请输入关键词",
+            duration:1200,
+            onClose: _ => {
+              this.isMessage = false;
+            }
+          });
+        }
       } else {
         switch (this.searchType) {
           case "0":
@@ -125,7 +136,7 @@ export default {
                 "setTotalCount",
                 this.searchTableData.length
               );
-              this.$store.dispatch('setSearchPos','');
+              this.$store.dispatch("setSearchPos", "");
               this.$store.dispatch("setSelected", { count: 0, size: 0 });
               this.$store.dispatch("setRouteStatus", "search");
             });
@@ -134,7 +145,7 @@ export default {
         this.$store.dispatch("setGlobalNavIndex", 2);
         this.$store.dispatch("resetFileInfo");
         this.$store.dispatch("setSearchValue", this.searchValue);
-        this.searchValue = '';
+        this.searchValue = "";
       }
     }
   }
@@ -156,7 +167,7 @@ export default {
     text-align: center;
     border: none;
     border-radius: 0 4px 4px 0;
-    transition: .3s all ease;
+    transition: 0.3s all ease;
     &:hover {
       opacity: 0.8;
     }
@@ -213,10 +224,10 @@ export default {
       border: none;
       background: #f5f5f5;
     }
-    .el-select{
+    .el-select {
       width: 104px;
     }
-    .el-input-group__prepend{
+    .el-input-group__prepend {
       border-left: none;
     }
   }

@@ -17,7 +17,7 @@
         </el-form-item>
         
         <el-form-item label="数据源" required>
-          <el-select v-model="basicForm.dataSource" size="small" >
+          <el-select v-model.trim="basicForm.dataSource" size="small" >
             <el-option
                 v-for="item in dataSourceOptions"
                 :key="item.value"
@@ -28,7 +28,7 @@
         </el-form-item>
         <div class="remote" v-if="basicForm.dataSource === 'remoteServer'">
           <el-form-item label="协议" prop="protocol">
-            <el-select  v-model="basicForm.protocol" size="small">
+            <el-select  v-model.trim="basicForm.protocol" size="small">
               <el-option
                   v-for="item in protocolOptions"
                   :key="item.value"
@@ -38,21 +38,21 @@
             </el-select>
           </el-form-item>
           <el-form-item label="主机" prop="host">
-            <el-input v-model="basicForm.host" size="small">
+            <el-input v-model.trim="basicForm.host" size="small">
             </el-input>
           </el-form-item>
           <el-form-item label="端口号" prop="port">
-            <el-input v-model="basicForm.port" size="small">
+            <el-input v-model.trim="basicForm.port" size="small">
             </el-input>
           </el-form-item>
           <el-form-item label="用户名" prop="username">
             <el-col :span="24">
-              <el-input v-model="basicForm.username" size="small">
+              <el-input v-model.trim="basicForm.username" size="small">
               </el-input>
             </el-col>
           </el-form-item>
           <el-form-item label="密码" prop="password">
-            <el-input type="password" v-model="basicForm.password" size="small">
+            <el-input type="password" v-model.trim="basicForm.password" size="small">
             </el-input>
             <!-- <el-checkbox v-model="useKey" style="margin-left: 1.5em;">使用密钥</el-checkbox> -->
           </el-form-item>
@@ -72,7 +72,7 @@
           </el-col>
         </el-row>
       </div> -->
-      <!--高级选项-->
+      <!--高级选项 暂未开放-->
       <div class="advanced-options" v-if="showAdvanced">
         <div>
           <el-row :gutter="20">
@@ -154,6 +154,7 @@ import bus from "@/utils/bus";
 export default {
   data() {
     return {
+      isMessage: false,
       fullscreenLoading: false,
       dataSourceOptions: [
         {
@@ -217,7 +218,7 @@ export default {
         // 数据源
         dataSource: "localDisk",
         // 远程服务器信息
-        protocol: "",
+        protocol: "SSH",
         host: "",
         port: "",
         username: "",
@@ -247,11 +248,17 @@ export default {
     let _this = this;
     bus.$on("error", _ => {
       this.fullscreenLoading = false;
-      this.$message({
-        type: "error",
-        message: "数据读取失败，请重试。",
-        duration: 1000
-      });
+      if (!this.isMessage) {
+        this.isMessage = true;
+        this.$message({
+          type: "error",
+          message: "数据读取失败，请重试。",
+          duration: 1200,
+          onClose: _ => {
+            this.isMessage = false;
+          }
+        });
+      }
     });
   },
   watch: {
@@ -307,8 +314,13 @@ export default {
       ipcRenderer.on("selected-directory", (event, path) => {
         // 将返回的 path 数组转化成 string
         this.basicForm.path = path.toString();
-        let nameArr = path.toString().split('\\');
-        this.basicForm.alias =nameArr[nameArr.length-1];
+        var nameArr = "Untitled"
+        if(process.platform == "win32") {
+          nameArr = path.toString().split("\\");
+        } else {
+          nameArr = path.toString().split("/");
+        }
+        this.basicForm.alias = nameArr[nameArr.length - 1];
       });
     },
     // 提示信息
@@ -379,19 +391,33 @@ export default {
                   if (res.result === "success") {
                     // 重新获取设备列表
                     _this.$electron.ipcRenderer.send("updateFilesList");
-                    _this.$message({
-                      message: "项目添加成功",
-                      duration: 1200,
-                      type: "success",
-                      onClose: _ => {
-                        _this.$electron.ipcRenderer.send("addFile", {
-                          API: "close"
-                        });
-                      }
-                    });
+                    if (!_this.isMessage) {
+                      _this.isMessage = true;
+                      _this.$message({
+                        message: "项目添加成功",
+                        duration: 1200,
+                        type: "success",
+                        onClose: function() {
+                          _this.isMessage = false;
+                          _this.$electron.ipcRenderer.send("addFile", {
+                            API: "close"
+                          });
+                        }
+                      });
+                    }
                     // update file status
                   } else {
-                    _this.$message({ message: res.result, type: "warning" });
+                    if (!_this.isMessage) {
+                      _this.isMessage = true;
+                      _this.$message({
+                        message: res.Error,
+                        duration: 1200,
+                        type: "warning",
+                        onClose: function() {
+                          _this.isMessage = false;
+                        }
+                      });
+                    }
                   }
                 },
                 err => {
@@ -399,71 +425,20 @@ export default {
                 }
               );
             } else {
-              _this.$message({ message: "文件名重复，请重试", type: "warning" });
+              if (!_this.isMessage) {
+                _this.isMessage = true;
+                _this.$message({
+                  message: "文件名重复，请重试",
+                  duration: 1200,
+                  type: "warning",
+                  onClose: function() {
+                    _this.isMessage = false;
+                  }
+                });
+              }
               _this.fullscreenLoading = false;
             }
           });
-          /* // 判断当前路径是否已经被管理
-          this.$store.dispatch({
-              type: "judgeNewDiskDir",
-              path: formData.path,
-              host: formData.host
-            }).then(status => {
-              // 文件夹可以被管理
-              if (status === 0) {
-                this.$store
-                  .dispatch("addNewDiskDir", directoryInfo)
-                  .then(status => {
-                    if (status) {
-                      this.$message({
-                        type: "info",
-                        message: "目录添加成功",
-                        showClose: true
-                      });
-                    }
-                    // 重新刷新数据
-                    let call = {
-                      mode: "action",
-                      API: "openFile"
-                    };
-                    ipcRenderer.send("change-data", call);
-                  });
-              }
-              // 子文件夹已被管理
-              if (status === -1) {
-                this.$confirm("存在子文件已被管理，是否放弃操作或继续（继续将删除已存在的子文件夹信息）?", "提示", {
-                  confirmButtonText: "继续",
-                  cancelButtonText: "放弃",
-                  type: "warning"
-                })
-                  .then(() => {
-                    this.$store
-                      .dispatch("addNewDiskDir", directoryInfo)
-                      .then(() => {
-                        // 重新刷新数据
-                        let call = {
-                          mode: "action",
-                          API: "openFile"
-                        };
-                        ipcRenderer.send("change-data", call);
-                      });
-                  })
-                  .catch(() => {
-                    this.$message({
-                      type: "info",
-                      message: "已放弃",
-                      showClose: true
-                    });
-                  });
-              }
-              // 父文件夹（包括本身）已被管理
-              if (status === 1) {
-                this.$confirm("此文件夹已被管理", "提示", {
-                  confirmButtonText: "确定",
-                  type: "warning"
-                });
-              }
-            }); */
         } else {
           return false;
         }

@@ -46,8 +46,17 @@ const actions = {
         let childPath = files.state.navList[files.state.navList.length-1].path;
         fetchData('searchCurrentDisk',{context,serialNumber,rootPath,childPath}).then(res=>{
             let data={},list=[];
-            commit(types.GET_SEARCH_TABLE_DATA,res);
-            resolve(res);
+            let temp = res.fileList;
+            for(let i=0;i<temp.length;i++){
+                let tmp = temp[i].basic;
+                tmp.isdir = temp[i].isdir;
+                tmp.rootPath  = temp[i].path;
+                tmp.serialNumber = temp[i].serial_number;
+                list.push(tmp);
+            }
+
+            commit(types.GET_SEARCH_TABLE_DATA,list);
+            resolve(list);
         })
       })
     },
@@ -87,6 +96,13 @@ const actions = {
             }else{
                 //console.log('searchFile'+JSON.stringify({context,searchRange,isglobal}))
                 fetchData('searchFile',{context,searchRange,isglobal}).then(res=>{
+                    let temp = res.fileList;
+                    for(let i=0;i<temp.length;i++){
+                        temp[i].rootPath = temp[i].root_path;
+                        temp[i].serialNumber = temp[i].serial_number;
+                        delete temp[i]['root_path'];
+                        delete temp[i]['serial_number'];
+                    }
                     commit(types.GET_SEARCH_TABLE_DATA,res.fileList);
                     resolve(res.fileList);
                 });

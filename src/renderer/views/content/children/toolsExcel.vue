@@ -11,12 +11,12 @@
                 <li>
                   <p class="title">输入文件</p>
                   <div class="context">
-                    <el-form  ref="project" label-width="80px" :model="form" >
+                    <el-form  ref="project" label-width="80px" :model="validateForm" >
                       <!-- 项目名称 -->
                       <el-form-item label="项目名称" prop="projectName" :rules="[
                             { required: true, message: '项目名不能为空'}
                           ]" >
-                        <el-input type="text" :maxlength="50" v-model.trim="form.projectName" size="small"></el-input>
+                        <el-input type="text" :maxlength="50" v-model.trim="validateForm.projectName" size="small"></el-input>
                       </el-form-item>
                       <!-- 选择文件 -->
                       <el-form-item label="上传文件" >
@@ -66,9 +66,11 @@
                           </el-radio-group>
                        </el-form-item>
                     </el-form>
-                    <el-form label-position="top">
-                      <el-form-item label="要提取的名称清单：">
-                          <el-input type="textarea" v-model="form.list" placeholder="输入一个数据，以,结尾后输入另一个数据，以此类推。"></el-input>
+                    <el-form label-position="top" :model="form">
+                      <el-form-item label="要提取的名称清单：" prop="list" :rules="[
+                            { required: true, message: '请输入要提取的名称清单'}
+                          ]">
+                          <el-input type="textarea"  v-model.trim="form.list" placeholder="输入一个数据，以,结尾后输入另一个数据，以此类推。" ></el-input>
                       </el-form-item>
                     </el-form>
                     <el-form>
@@ -98,7 +100,7 @@
               </ul>
               <div v-show="activeIndex==0" class="draw-area tab table-area">
                 <!-- table area -->
-                <div v-if="tableData.rows.length" class="title">{{form.projectName}}</div>
+                <div v-if="tableData.rows.length" class="title">{{validateForm.projectName}}</div>
                 <table v-if="tableData.rows.length">
                   <thead v-if="tableData.header.length">
                     <tr>
@@ -132,8 +134,10 @@ import $ from "jquery";
 export default {
   data() {
     return {
+      validateForm: {
+        projectName: "表格筛选"
+      },
       form: {
-        projectName: "表格筛选",
         filePath: "",
         // 有无表头
         hasHeader: true,
@@ -153,7 +157,8 @@ export default {
       },
       tabList: ["预览", "说明", "例子"],
       activeIndex: 0,
-      tableData: { header: [], rows: [] }
+      tableData: { header: [], rows: [] },
+      isMessage: false
     };
   },
   created() {},
@@ -169,10 +174,29 @@ export default {
       this.$refs.project.validate(valid => {
         if (valid) {
           if (!this.form.filePath) {
-            this.$message("请上传数据文件");
+            if (!this.isMessage) {
+              this.isMessage = true;
+              this.$message({
+                message: "请上传数据文件",
+                duration: 1200,
+                onClose: _ => {
+                  this.isMessage = false;
+                }
+              });
+            }
             return;
           } else if (!this.form.isSort && this.form.list.length === 0) {
-            this.$message("请输入要提取的名称清单");
+            if (!this.isMessage) {
+              this.isMessage = true;
+              this.$message({
+                message: "请输入要提取的名称清单",
+                duration: 1200,
+                onClose: _ => {
+                  this.isMessage = false;
+                }
+              });
+            }
+            return;
           } else {
             let formData = {};
             formData.filePath = this.form.filePath;
@@ -184,7 +208,17 @@ export default {
             formData.nameList = this.listArr;
             fetchData("filterData", formData).then(res => {
               if (res.Error) {
-                this.$message(res.Error);
+                if (!this.isMessage) {
+                  this.isMessage = true;
+                  this.$message({
+                    message: res.Error,
+                    duration: 1200,
+                    type: "error",
+                    onClose: _ => {
+                      this.isMessage = false;
+                    }
+                  });
+                }
               } else {
                 this.tableData = res;
               }
@@ -234,7 +268,7 @@ export default {
 .title {
   line-height: 60px;
 }
-.table-area{
+.table-area {
   overflow-y: auto;
 }
 table {
@@ -249,7 +283,7 @@ table {
     padding: 8px;
     border: 1px solid #ccc;
     background-color: #ffffff;
-    p{
+    p {
       max-width: 200px;
       text-overflow: ellipsis;
       overflow: hidden;

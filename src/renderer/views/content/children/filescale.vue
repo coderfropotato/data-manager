@@ -90,6 +90,12 @@ export default {
       });
     }
   },
+  deactivated() {
+    this.$store.dispatch("removeRightView", false);
+  },
+  activated() {
+    this.$store.dispatch("removeRightView", true);
+  },
   computed: {
     ...mapGetters(["fileList"])
   }

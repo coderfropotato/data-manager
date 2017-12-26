@@ -10,7 +10,7 @@
       <!-- status layout end -->
       <div class="title">
         <p class="icon-line"><i class="iconfont icon-wenjianxiangqing"></i>文件详情</p>
-        <span v-show="!module" @click="module=true">完成</span>
+        <span v-show="!module" @click="finish">完成</span>
         <span v-show="module" @click="module=false">编辑</span>
       </div>
       <div class="des">
@@ -26,7 +26,7 @@
           <p>文件大小：<span>{{fileInfo.basic.size | reverseSize}}</span></p>
         </li>
         <li>
-          <p>创建时间：<span>{{fileInfo.basic.ctime}}</span></p>
+          <p>创建时间：<span>{{fileInfo.basic.ctime | reverseTime}}</span></p>
         </li>
       </ul>
       <div class="text">
@@ -36,14 +36,23 @@
         <h5 class="item icon-line"><i class="iconfont icon-cankaojiyinzu"></i>属性</h5>
         <div class="attrs">
           <span>名称</span>
-          <span>详情</span>
+          <span>属性</span>
         </div>
-        <ol class="item-list">
+        <!-- edit mode false -->
+        <ol v-show="!module" class="item-list">
           <!-- :class="{'edit':!module}" -->
-            <li :class="{'edit':!module}"  v-for="(val,index) in fileInfo.property" :key="index">
-              <input ref="attrs" :readonly="module" type="text" maxLength="50"  @change="updateMessage($event,index,'key')" :value="val.name" :title="val.name"> &nbsp;
+            <li v-for="(val,index) in fileInfo.property" :key="index">
+              <input :readonly="module" type="text" maxLength="50"  @change="updateMessage($event,index,'key')" :value="val.name" :title="val.name"> 
               <input :title="val.attr" @change="updateMessage($event,index,'val')" maxLength="50"  :value="val.attr" :readonly="module" type="text">
+              <i @click="deleteAttrs(index)" class="iconfont icon-jianqu"></i>
             </li>
+        </ol>
+        <!-- mode true -->
+        <ol v-show="module" class="item-list">
+          <li v-for="(val,index) in fileInfo.property" :key="index">
+            <p :title="val.name">{{val.name}}</p>
+            <p :title="val.attr">{{val.attr}}</p>
+          </li>
         </ol>
         <div @click="addAttrs" v-show="!module" class="add-attrs">
           <i class="iconfont icon-tianjia"></i><span>添加文件属性</span>
@@ -51,7 +60,9 @@
 
         <!-- add attrs -->
         <h5 class="item icon-line"><i class="iconfont icon-beizhu"></i>备注</h5>
-        <textarea id="texta" :class="{'active':module}"  :readonly="module" placeholder="您还没有添加备注"  :value="fileInfo.remark" @change="updateMessage($event)">></textarea>
+        <div class="text-area">
+           <textarea id="texta" :class="{'active':module}"  :readonly="module" placeholder="您还没有添加备注"  :value="fileInfo.remark" @change="updateMessage($event)">></textarea>
+        </div>
       </div>
     </div>
     <!-- nodata -->
@@ -74,9 +85,9 @@ export default {
     };
   },
   created() {
-    bus.$on("saveAttrEmptyError", _ => {
-      this.$message("属性名称不能为空");
-    });
+    // bus.$on("saveAttrEmptyError", _ => {
+    //   this.$message("属性名称不能为空");
+    // });
     bus.$on("topshow", _ => {
       this.topShow = _;
     });
@@ -84,10 +95,26 @@ export default {
       this.$message("属性名不能重复");
     });
   },
+  mounted() {
+    $(document)
+      .on("mouseover", ".item-list li .iconfont", function() {
+        $(this).removeClass('icon-jianqu').addClass("icon-jianqu-dianji");
+      })
+      .on("mouseout", ".item-list li .iconfont", function() {
+        $(this).removeClass("icon-jianqu-dianji").addClass("icon-jianqu");
+      });
+  },
   computed: {
     ...mapGetters(["fileInfo", "globalRouteStatus", "curData", "curIndex"])
   },
   methods: {
+    deleteAttrs(index) {
+      this.$store.dispatch("deleteAttrs", index);
+    },
+    finish() {
+      this.module = true;
+      this.$store.dispatch("checkAttrs");
+    },
     updateMessage(e, index, type) {
       let params;
       if (!type) {
@@ -156,7 +183,7 @@ export default {
 #fileInfo-root {
   height: 100%;
   width: 100%;
-  padding: 16px 2em 0;
+  padding: 16px 0;
   font-size: 14px;
   overflow-y: scroll;
   .status-bar {
@@ -181,6 +208,7 @@ export default {
   }
   .title {
     display: flex;
+    padding: 0 30px;
     justify-content: space-between;
     p {
       font-size: 16px;
@@ -197,13 +225,14 @@ export default {
       cursor: pointer;
       user-select: none;
       opacity: 1;
-      transition: .3s all ease;
+      transition: 0.3s all ease;
       &:hover {
         opacity: 0.8;
       }
     }
   }
   .des {
+    padding: 0 30px;
     margin: 24px 0 8px 0;
     display: flex;
     img {
@@ -222,6 +251,7 @@ export default {
     }
   }
   ul {
+    padding: 0 30px;
     list-style: none;
     display: flex;
     flex-direction: column;
@@ -244,18 +274,22 @@ export default {
   .text {
     margin-top: 48px;
     h5 {
+      padding: 0 30px;
       font-size: 16px;
       margin-bottom: 24px;
       font-weight: normal;
       line-height: 1;
     }
     .item {
+      padding: 0 30px;
       margin-top: 48px;
       margin-bottom: 24px;
     }
     .attrs {
+      padding: 0 30px;
       display: flex;
       margin-bottom: 8px;
+      justify-content: space-between;
       span {
         font-size: 12px;
         color: #999;
@@ -269,6 +303,7 @@ export default {
       }
     }
     p {
+      padding: 0 30px;
       line-height: 1;
       white-space: nowrap;
       overflow: hidden;
@@ -296,18 +331,21 @@ export default {
         font-size: 14px;
       }
     }
-    textarea {
-      width: 100%;
-      height: 140px;
-      border-radius: 4px;
-      outline: none;
-      font-size: 14px;
-      background: #f5f5f5;
-      border: 1px solid #ccc;
-      padding: 6px;
-      &.active {
-        border: none;
+    .text-area {
+      padding: 0 30px;
+      textarea {
+        width: 100%;
+        height: 140px;
+        border-radius: 4px;
         outline: none;
+        font-size: 14px;
+        background: #f5f5f5;
+        border: 1px solid #ccc;
+        padding: 6px;
+        &.active {
+          border: none;
+          outline: none;
+        }
       }
     }
     .item-list {
@@ -316,17 +354,51 @@ export default {
       user-select: element;
       li {
         width: 100%;
+        list-style: none;
         display: flex;
-        margin-bottom: 8px;
-        &.edit {
-          input {
-            border: 1px solid #ccc;
-          }
+        padding: 6px 30px;
+        justify-content: space-between;
+        position: relative;
+        i {
+          width: 12px;
+          height: 12px;
+          position: absolute;
+          font-size: 12px;
+          left: 12px;
+          top: 11px;
+          z-index: 1000;
+          cursor: pointer;
+        }
+        &:hover i {
+          display: block;
         }
         input {
-          border: none;
+          border: 1px solid #ccc;
+          background-color: #f5f5f5;
+          padding: 2px;
           outline: none;
+          line-height: 18px;
           font-size: 14px;
+          border-radius: 4px;
+          &:nth-child(2) {
+            width: 55%;
+          }
+          &:first-child {
+            width: 40%;
+          }
+        }
+        p {
+          margin-bottom: 0;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          overflow: hidden;
+          font-size: 14px;
+          line-height: 18px;
+          border: 1px solid #ccc;
+          background-color: #f5f5f5;
+          padding: 2px;
+          display: block;
+          border-radius: 4px;
           &:first-child {
             width: 40%;
           }
@@ -338,6 +410,7 @@ export default {
     }
   }
   .add-attrs {
+    padding: 0 30px;
     margin-top: 20px;
     cursor: pointer;
     color: #386cca;

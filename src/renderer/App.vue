@@ -60,7 +60,7 @@ export default {
       this.$message({
          type: 'error',
          message: res+':  数据读取失败，请重试。',
-         duration: 2000
+         duration: 1200
        })
     })
     // resetLayout

@@ -196,18 +196,19 @@ app.on('ready', createWindow)
 
 //关闭app
 ipcMain.on('window-all-closed', () => {
-  dialog.showMessageBox({
-    type: "question",
-    title: "提示信息",
-    buttons: ['确定', 'cancel'],
-    message: '点击"确定"退出程序'
-  }, function (index) {
-    // if(process.platform!=='darwin')
-    if (index == 0) app.quit()
-  })
+  // dialog.showMessageBox({
+  //   type: "question",
+  //   title: "提示信息",
+  //   buttons: ['确定', 'cancel'],
+  //   message: '点击"确定"退出程序'
+  // }, function (index) {
+  //   // if(process.platform!=='darwin')
+  //   if (index == 0) app.quit()
+  // })
   //TODO: 关闭与最小化表现一致, 要加上will-quit事件？让app关闭python
   // mainWindow.minimize();
-  mainWindow.setSkipTaskbar(true)
+  mainWindow.setSkipTaskbar(true);
+  app.quit();
 });
 //new window dom resize 
 ipcMain.on('resetWinSize', (ev, args) => {

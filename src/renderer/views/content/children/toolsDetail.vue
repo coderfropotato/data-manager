@@ -11,12 +11,12 @@
                 <li>
                   <p class="title">输入文件</p>
                   <div class="context">
-                    <el-form  ref="project" label-width="80px" :model="formData" >
+                    <el-form  ref="project" label-width="80px" :model="validateForm" >
                       <!-- 项目名称 -->
                       <el-form-item label="项目名称" prop="projectName" :rules="[
-                            { required: true, message: '项目名不能为空'}
+                            { required: true, message: '项目名不能为空',trigger:'change'}
                           ]" >
-                        <el-input type="text" :maxlength="50" v-model.trim="formData.projectName" size="small"></el-input>
+                        <el-input type="text" :maxlength="50" v-model.trim="validateForm.projectName" size="small"></el-input>
                       </el-form-item>
                       <!-- 选择文件 -->
                       <el-form-item label="选择文件" >
@@ -172,9 +172,11 @@ import { mapGetters } from "vuex";
 export default {
   data() {
     return {
+      validateForm:{
+        projectName:"heatmap5698c9"
+      },
       formData: {
         //项目名称
-        projectName: "heatmap5698c9",
         //文件路径
         filePath: "",
         //用于作图的列
@@ -188,9 +190,9 @@ export default {
         //行聚类
         rowCluster: "",
         //列聚类
-        columnCluster: "true",
+        columnCluster: "true"
         //邮件通知
-        email: false
+        // email: false
       },
       drawOptions: {
         colors: ["#1a79de", "#fafcf8", "#d94335"],
@@ -204,11 +206,9 @@ export default {
       activeIndex: 0,
       tabIndex: "0",
       activeName: "text",
-      rules: {
-        alias: [{ required: true, message: "请输入项目名称", trigger: "blur" }]
-      },
       // serverOptionsChange: true,
-      drawData: {}
+      drawData: {},
+      isMessage: false
     };
   },
   computed: {
@@ -220,10 +220,20 @@ export default {
         if (valid) {
           // file path
           if (!this.formData.filePath) {
-            this.$message("请上传数据文件");
+            if (!this.isMessage) {
+              this.isMessage = true;
+              this.$message({
+                message: "请上传数据文件",
+                duration: 1200,
+                onClose: _ => {
+                  this.isMessage = false;
+                }
+              });
+            }
             return;
           }
-          let formData = this.formData;
+          var formData = this.formData;
+          delete formData["projectName"];
           // actived tab
           this.tabIndex === "0"
             ? (formData["fileOptionPath"] = "")
@@ -231,11 +241,20 @@ export default {
           // if (this.serverOptionsChange) {
           fetchData("heatMap", formData).then(res => {
             if (res.Error) {
-              this.$message(res.Error);
+              if (!this.isMessage) {
+                this.isMessage = true;
+                this.$message({
+                  message: res.Error,
+                  duration: 1200,
+                  onClose: _ => {
+                    this.isMessage = false;
+                  }
+                });
+              }
             } else {
               this.drawData = res.result;
               // draw config
-              this.drawOptions.projectName = this.formData.projectName;
+              this.drawOptions.projectName = this.validateForm.projectName;
               this.tools.setWrap("#svg_cyjjfx_clusterpic");
               this.tools.setType(this.$route.query.type);
               this.tools.draw(this.drawData, this.drawOptions);
@@ -249,7 +268,16 @@ export default {
           // }
           // this.initStatus();
         } else {
-          this.$message("请填写项目名称");
+          if (!this.isMessage) {
+            this.isMessage = true;
+            this.$message({
+              message: "请填写项目名称",
+              duration: 1200,
+              onClose: _ => {
+                this.isMessage = false;
+              }
+            });
+          }
         }
       });
       return;
