@@ -1,6 +1,6 @@
 stages:
 - deploy
-deploy:
+pack-windows:
   stage: deploy
   script:
     - echo "start build"
@@ -11,10 +11,7 @@ deploy:
   tags:
     - data-manager-packing
 
-
-stages:
-- deploy
-deploy:
+pack-mac:
   stage: deploy
   script:
     - echo "start build"
