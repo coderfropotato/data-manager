@@ -9,9 +9,6 @@ deploy:
   only:
     - master
   tags:
-<<<<<<< HEAD
-    - data-manager-packing
-=======
     - data-manager-packing
 
 
@@ -27,4 +24,3 @@ deploy:
     - master
   tags:
     - mac
->>>>>>> develop

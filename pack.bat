@@ -1,17 +1,8 @@
-<<<<<<< HEAD
-echo "enviroment require: git(添加到path中)，npm，python(32位)，virtualenv，Microsoft Visual C++ 2015 Redistributable (x86)"
-
-=======
->>>>>>> develop
 echo "start build back"
 
 RMDIR /S /Q .backend
 
-<<<<<<< HEAD
-git clone ssh://git@54.223.70.246:22/data-management/data-manager-back-end.git .backend
-=======
 git clone git@54.223.70.246:data-management/data-manager-back-end.git .backend
->>>>>>> develop
 cd .backend
 
 virtualenv venv
@@ -56,16 +47,8 @@ venv\Scripts\pyinstaller --hidden-import=scipy._lib.messagestream --hidden-impor
 
 cd ..
 
-<<<<<<< HEAD
-echo "start build font"
-
-call npm i
-call npm rebuild zeromq --runtime=electron --target=1.6.11
-call npm run build:win32
-=======
 echo "start build back"
 
 call npm i
 call npm rebuild zeromq --runtime=electron --target=1.6.11
 call npm run build:win32
->>>>>>> develop
