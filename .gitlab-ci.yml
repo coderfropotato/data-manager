@@ -8,6 +8,9 @@ pack-windows:
     - echo "end build"
   only:
     - master
+  artifacts:
+    paths:
+    - build\data-manager-desktop-win32-x64\
   tags:
     - data-manager-packing
 
@@ -15,9 +18,12 @@ pack-mac:
   stage: deploy
   script:
     - echo "start build"
-    - .\pack.sh
+    - ./pack.sh
     - echo "end build"
   only:
     - master
+  artifacts:
+    paths:
+    - build/data-manager-desktop-darwin-x64/
   tags:
     - mac
