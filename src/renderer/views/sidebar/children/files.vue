@@ -5,16 +5,21 @@
         <ol :class="{'height-range':fileList.length>=5 && isShow}">
           <!-- icon-wodeyingpan -->
           <!-- <li @click="jumpToSearch(item.name)" v-for="(item,index) in fileList" :key="index"><i class="iconfont iconfile" :class="{'icon-wodeyingpan':item.isDisk,'icon-diannao':!item.isDisk}"></i>{{item.name}}</li> -->
-          <li @contextmenu="contextmenu($event,item)" @click="jumpToSearch(item)" v-for="(item,index) in fileList" :key="index" :title="item.alias">
-            <i class="iconfile iconfont " :class="{'icon-wodeyingpan':item.ismoveable,'icon-diannao':!item.ismoveable && !item.isTelnet,'icon-yuanchenglianjie':item.isTelnet}"></i>
-            {{item.alias}}
+          <li @contextmenu="contextmenu($event,item)" @click="jumpToSearch($event,item)" v-for="(item,index) in fileList" :key="index" :title="item.alias">
+            <em class="iconfile iconfont " :class="{'icon-wodeyingpan':item.ismoveable,'icon-diannao':!item.ismoveable && !item.isTelnet,'icon-yuanchenglianjie':item.isTelnet}"></em>
+            <div class="alias">{{item.alias}}</div>
+            <i class="editDevice iconfont icon-gengduo"></i>
+            <div class="edit-wrap">
+              <p @click="rename">重命名</p>
+              <p @click="del(index)">删除</p>
+            </div>
             <!-- <edit-dom v-model="item.alias" @input="input"></edit-dom> -->
           </li>
         </ol>
         <p @click="isShow=true;" v-show="fileList.length>5 && !isShow">更多设备&nbsp;></p>
       </div>
       <p class="no-data" v-if="!fileList.length">暂无设备</p>
-      <span @click.stop="del" id="delete" ref="del" v-show="deleteShow">删除</span>
+      <!-- <span @click.stop="del" id="delete" ref="del" v-show="deleteShow">删除</span> -->
   </div>
 </template>
 
@@ -27,12 +32,10 @@ export default {
   name: "AllFiles",
   data() {
     return {
-      deleteShow: false,
       isShow: false,
       selectedIndex: 0,
       change: false,
       edit: true,
-      listInfo: {}, //当前设备信息,
       isMessage: false
     };
   },
@@ -44,6 +47,29 @@ export default {
       this.deleteShow = false;
     });
   },
+  mounted() {
+    $(document)
+      .on("mouseover", ".editDevice", function() {
+        $(this)
+          .removeClass("icon-gengduo")
+          .addClass("icon-gengduo-dianji");
+      })
+      .on("mouseout", ".editDevice", function() {
+        $(this)
+          .removeClass("icon-gengduo-dianji")
+          .addClass("icon-gengduo");
+      })
+      .on("click", ".editDevice", function(ev) {
+        $(this).addClass("icon-shouqi");
+        $(this)
+          .parent()
+          .addClass("active");
+          ev.stopPropagation();
+      }).on('click',function(){
+        $('#directory-root ol li').removeClass('active');
+      })
+
+  },
   methods: {
     input(...args) {
       console.log(args);
@@ -54,25 +80,21 @@ export default {
         URL: "/newfile/newdiskdir"
       });
     },
-    contextmenu(e, item) {
-      let top = e.target.offsetTop;
-      $("#delete").css({ left: 110, top: top + 40 });
-      this.deleteShow = true;
-      this.listInfo = item;
+    rename(){
+      console.log('rename');
     },
-    del() {
-      this.deleteShow = false;
+    del(index) {
       // TODO delete device
-      this.$confirm(`此操作将永久删除 " ${this.listInfo.alias} ", 是否继续?"`, "提示", {
+      this.$confirm(`此操作将永久删除 " ${this.fileList[index].alias} ", 是否继续?"`, "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
       })
         .then(() => {
           fetchData("deleteDisk", {
-            serialNumber: this.listInfo.serial_number,
-            path: this.listInfo.path,
-            alias: this.listInfo.alias
+            serialNumber: this.fileList[index].serial_number,
+            path: this.fileList[index].path,
+            alias: this.fileList[index].alias
           }).then(() => {
             //删除成功重新获取设备列表 路由跳转到file主页
             this.$store.dispatch("getImportTargetDisks");
@@ -106,27 +128,33 @@ export default {
         })
         .catch(_ => {});
     },
-    jumpToSearch(item) {
-      //编程式导航
-      this.$router.push(`/searchfiles?type=${item.serial_number}`);
-      //设置序列号
-      this.$store.dispatch("setSerialNumber", item.serial_number).then(res => {
-        //设置根路径
-        this.$store.dispatch("setRootPath", item.path).then(res => {
-          //获取数据
-          let serialNumber = item.serial_number;
-          this.$store.dispatch("getDirTree", { serialNumber }).then(res => {
-            //设置面包屑
-            this.$store.dispatch("setNavBar", item).then(_ => {
-              //重置fileInfo
-              this.$store.dispatch("getFileInfo");
+    jumpToSearch($event, item) {
+      if ($event.srcElement.localName !== "i") {
+        // init translate
+        $('#directory-root .list ol li').removeClass('active')
+        //编程式导航
+        this.$router.push(`/searchfiles?type=${item.serial_number}`);
+        //设置序列号
+        this.$store
+          .dispatch("setSerialNumber", item.serial_number)
+          .then(res => {
+            //设置根路径
+            this.$store.dispatch("setRootPath", item.path).then(res => {
+              //获取数据
+              let serialNumber = item.serial_number;
+              this.$store.dispatch("getDirTree", { serialNumber }).then(res => {
+                //设置面包屑
+                this.$store.dispatch("setNavBar", item).then(_ => {
+                  //重置fileInfo
+                  this.$store.dispatch("getFileInfo");
+                });
+              });
             });
           });
-        });
-      });
-      this.$store.dispatch("resetTableClickHistory");
-      // 文件有历史记录
-      this.$store.dispatch("setGlobalHistory", true);
+        this.$store.dispatch("resetTableClickHistory");
+        // 文件有历史记录
+        this.$store.dispatch("setGlobalHistory", true);
+      }
     }
   }
 };
@@ -208,12 +236,10 @@ export default {
       padding: 0 40px;
       height: 38px;
       line-height: 38px;
-      text-overflow: ellipsis;
-      overflow: hidden;
-      white-space: nowrap;
       cursor: pointer;
       transition: 0.3s all ease;
       display: flex;
+      position: relative;
       .iconfile {
         margin-right: 12px;
       }
@@ -221,8 +247,53 @@ export default {
         background: #d1dbe5;
       }
       &.active {
-        background: #386cca;
-        color: #fff;
+        transform: translateX(-138px);
+      }
+      & > .alias {
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+      }
+      .editDevice {
+        position: absolute;
+        right: 18px;
+        top: 11px;
+        width: 16px;
+        height: 16px;
+        font-size: 16px;
+        line-height: 1;
+      }
+      .edit-wrap {
+        position: absolute;
+        right: -120px;
+        top: 0;
+        height: 100%;
+        width: 120px;
+        transition: 0.3s all ease;
+        display: flex;
+        &.active {
+          display: flex;
+        }
+        p {
+          height: 100%;
+          font-size: 12px;
+          line-height: 38px;
+          color: #333;
+          padding: 0;
+          margin: 0;
+          flex: 1;
+          text-align: center;
+          color: #fff;
+          &:hover {
+            opacity: 0.8;
+          }
+          &:first-child {
+            background: #5c8ce5;
+          }
+          &:last-child {
+            background: #f74a4a;
+          }
+        }
       }
     }
   }

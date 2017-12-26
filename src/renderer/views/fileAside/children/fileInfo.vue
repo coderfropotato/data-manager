@@ -39,7 +39,7 @@
           <span>属性</span>
         </div>
         <!-- edit mode false -->
-        <ol v-if="!module" class="item-list">
+        <ol v-show="!module" class="item-list">
           <!-- :class="{'edit':!module}" -->
             <li v-for="(val,index) in fileInfo.property" :key="index">
               <input :readonly="module" type="text" maxLength="50"  @change="updateMessage($event,index,'key')" :value="val.name" :title="val.name"> 
@@ -48,7 +48,7 @@
             </li>
         </ol>
         <!-- mode true -->
-        <ol v-if="module" class="item-list">
+        <ol v-show="module" class="item-list">
           <li v-for="(val,index) in fileInfo.property" :key="index">
             <p :title="val.name">{{val.name}}</p>
             <p :title="val.attr">{{val.attr}}</p>
@@ -94,6 +94,15 @@ export default {
     bus.$on("saveAttrNameSame", _ => {
       this.$message("属性名不能重复");
     });
+  },
+  mounted() {
+    $(document)
+      .on("mouseover", ".item-list li .iconfont", function() {
+        $(this).removeClass('icon-jianqu').addClass("icon-jianqu-dianji");
+      })
+      .on("mouseout", ".item-list li .iconfont", function() {
+        $(this).removeClass("icon-jianqu-dianji").addClass("icon-jianqu");
+      });
   },
   computed: {
     ...mapGetters(["fileInfo", "globalRouteStatus", "curData", "curIndex"])
@@ -359,9 +368,6 @@ export default {
           top: 11px;
           z-index: 1000;
           cursor: pointer;
-          &:hover {
-            opacity: 0.6;
-          }
         }
         &:hover i {
           display: block;
