@@ -6,7 +6,8 @@
           <!-- icon-wodeyingpan -->
           <!-- <li @click="jumpToSearch(item.name)" v-for="(item,index) in fileList" :key="index"><i class="iconfont iconfile" :class="{'icon-wodeyingpan':item.isDisk,'icon-diannao':!item.isDisk}"></i>{{item.name}}</li> -->
           <li @contextmenu="contextmenu($event,item)" @click="jumpToSearch($event,item)" v-for="(item,index) in fileList" :key="index" :title="item.alias">
-            <em class="iconfile iconfont " :class="{'icon-wodeyingpan':item.ismoveable,'icon-diannao':!item.ismoveable && !item.isTelnet,'icon-yuanchenglianjie':item.isTelnet}"></em>
+            <!-- icon-wodeyingpan -->
+            <em class="iconfile iconfont " :class="{'icon-wodeyingpan':item.ismoveable,'icon-diannao':!item.ismoveable && !item.isTelnet,'icon-yuancheng':item.isTelnet}"></em>
             <div class="alias">{{item.alias}}</div>
             <i class="editDevice iconfont icon-gengduo"></i>
             <div class="edit-wrap">

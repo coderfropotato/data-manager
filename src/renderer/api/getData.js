@@ -8,7 +8,7 @@
 import bus from '@/utils/bus'
 
 // let zmq = require('zeromq')
-const baseURL = 'http://localhost'
+const baseURL = 'http://127.0.0.1'
 // const baseURL = 'tcp://192.168.0.217'
 // 端口号
 const PORT = 4242

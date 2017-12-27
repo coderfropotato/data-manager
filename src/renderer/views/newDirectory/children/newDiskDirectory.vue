@@ -430,7 +430,7 @@ export default {
               if (!_this.isMessage) {
                 _this.isMessage = true;
                 _this.$message({
-                  message: "文件名重复，请重试",
+                  message: res.Error,
                   duration: 1200,
                   type: "warning",
                   onClose: function() {
