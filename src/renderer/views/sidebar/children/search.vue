@@ -1,6 +1,6 @@
 <template>
   <div id="search-root">
-      <el-checkbox v-if="fileList.length>0" :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
+      <el-checkbox v-if="fileList.length>0"  v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
       <el-checkbox-group v-model="searchRange" @change="handlerCheckedChange">
         <el-checkbox v-for="(item,index) in fileList" :label="item.alias" :key="index">{{item.alias}}</el-checkbox>
       </el-checkbox-group>
@@ -12,12 +12,20 @@ import bus from "@/utils/bus";
 export default {
   data() {
     return {
-      checkAll: true
+      // checkAll: true,
       // isIndeterminate: false
     };
   },
   computed: {
     ...mapGetters(["fileList", "searchPos"]),
+    checkAll:{
+      get(){
+        return this.searchRange.length===this.fileList.length;
+      },
+      set(val){
+
+      }
+    },
     searchRange: {
       get() {
         return this.$store.state.search.searchRange;
@@ -26,18 +34,18 @@ export default {
         this.$store.dispatch("setSearchRangeList", val);
       }
     },
-    isIndeterminate: {
-      get() {
-        return this.searchRange.length !== this.fileList.length;
-      },
-      set(val) {}
-    }
+    // isIndeterminate: {
+    //   get() {
+    //     return this.searchRange.length !== this.fileList.length;
+    //   },
+    //   set(val) {}
+    // }
   },
   methods: {
     handleCheckAllChange(event) {
       let flag = event.target.checked;
       this.searchRange = flag ? this.fileList : [];
-      this.isIndeterminate = false;
+      // this.isIndeterminate = false;
       this.$store.dispatch("checkAllSwitch", flag);
       // reset searchpos
       this.$store.dispatch("setSearchPos", "");
@@ -49,8 +57,7 @@ export default {
     handlerCheckedChange(value) {
       let checkedCount = value.length;
       this.checkAll = checkedCount === this.fileList.length;
-      this.isIndeterminate =
-        checkedCount > 0 && checkedCount < this.fileList.length;
+      // this.isIndeterminate =checkedCount > 0 && checkedCount < this.fileList.length;
       this.$store.dispatch("setSearchRangeList", value);
       // reset searchpos
       this.$store.dispatch("setSearchPos", "");

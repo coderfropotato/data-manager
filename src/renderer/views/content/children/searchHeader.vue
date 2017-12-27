@@ -3,8 +3,8 @@
     <div class="search-top">
         <div class="tag-group" v-if="searchPos"><el-tag color="#f5f5f5" @close="curClose" >{{`在"${searchPos}"搜索`}}</el-tag></div>
         <div class="tag-group" v-if="searchRangeLength!==fileList.length && !searchPos"><el-tag color="#f5f5f5" type="gray">{{`在${searchRangeLength}个位置搜索`}}</el-tag></div>
-        <div class="tag-group"  v-if="searchRangeLength===fileList.length && !searchPos"><el-tag color="#f5f5f5" type="gray">{{`在全局搜索`}}</el-tag></div>
-        <input type="text" @keyup.enter="search" v-model.trim="searchValue" placeholder="请输入关键词">
+        <!-- <div class="tag-group"  v-if="searchRangeLength===fileList.length && !searchPos"><el-tag color="#f5f5f5" type="gray">{{`在全局搜索`}}</el-tag></div> -->
+        <input :class="{'active':searchRangeLength===fileList.length && !searchPos}" type="text" @keyup.enter="search" v-model.trim="searchValue" :placeholder="(searchRangeLength===fileList.length && !searchPos)?'请输入全局搜索关键词':'请输入搜索关键词'">
         <em @click="search">搜索</em>
     </div>
   </div>
@@ -32,21 +32,21 @@ export default {
     },
     ...mapGetters(["searchRangeLength", "fileList", "searchPos"])
   },
-  mounted() {
-    bus.$on("computedInput", _ => {
-      this.computedInput();
-    });
-  },
-  activated() {
-    this.computedInput();
-  },
+  // mounted() {
+  //   bus.$on("computedInput", _ => {
+  //     this.computedInput();
+  //   });
+  // },
+  // activated() {
+  //   this.computedInput();
+  // },
   methods: {
     curClose() {
       this.$store.dispatch("setSearchPos", "");
       // computed input padding
-      this.$nextTick(_ => {
-        bus.$emit("computedInput");
-      });
+      // this.$nextTick(_ => {
+      //   bus.$emit("computedInput");
+      // });
     },
     search() {
       let context = this.searchValue;
@@ -77,13 +77,13 @@ export default {
         );
       }
     },
-    computedInput() {
-      let oW = $("#searchHeader-root .tag-group").width();
-      $("#searchHeader-root .search-top input").css(
-        "padding-left",
-        oW + 10 + "px"
-      );
-    }
+    // computedInput() {
+    //   let oW = $("#searchHeader-root .tag-group").width();
+    //   $("#searchHeader-root .search-top input").css(
+    //     "padding-left",
+    //     oW + 10 + "px"
+    //   );
+    // }
   }
 };
 </script>
@@ -105,7 +105,6 @@ export default {
     }
     width: 80%;
     height: 34px;
-    background: #ccc;
     position: relative;
     margin: 0 auto;
     input {
@@ -116,6 +115,11 @@ export default {
       padding-left: 12px;
       border: none;
       background: #f5f5f5;
+      padding-left: 100px;
+      border-radius: 4px 0 0 4px;
+      &.active{
+        padding-left: 10px;
+      }
     }
     em {
       position: absolute;

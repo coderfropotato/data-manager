@@ -10,7 +10,7 @@
           label-position="left"
           label-width="80px">
                   <!--选择路径-->
-        <el-form-item  label="路径" prop="path">
+        <el-form-item class="path"  label="路径" prop="path">
           <el-input class="path" v-model="basicForm.path" size="small"></el-input>
           <input class="potatos-btn btn-hover" type="button" value="浏览"  @click="showPath">
           <!-- <el-button  type="primary" size="small" @click="showPath" style="margin-left: 1.5em;">浏览</el-button> -->
@@ -314,8 +314,8 @@ export default {
       ipcRenderer.on("selected-directory", (event, path) => {
         // 将返回的 path 数组转化成 string
         this.basicForm.path = path.toString();
-        var nameArr = "Untitled"
-        if(process.platform == "win32") {
+        var nameArr = "Untitled";
+        if (process.platform == "win32") {
           nameArr = path.toString().split("\\");
         } else {
           nameArr = path.toString().split("/");
@@ -514,16 +514,17 @@ export default {
     }
   }
   .potatos-btn {
-    width: 58px;
-    height: 30.5px;
+    width: 56px;
+    height: 30px;
     outline: none;
     color: #fff;
     border: none;
     border-radius: 0 4px 4px 0;
     background: #386cca;
     position: absolute;
-    right: 54px;
-    top: 3px;
+    right: 56px;
+    top: 4px;
+    font-size: 12px;
     cursor: pointer;
   }
   .path {

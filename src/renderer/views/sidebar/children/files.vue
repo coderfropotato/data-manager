@@ -129,7 +129,7 @@ export default {
         .catch(_ => {});
     },
     jumpToSearch($event, item) {
-      if ($event.srcElement.localName !== "i") {
+      if ($event.srcElement.localName !== "i" && $event.srcElement.localName !== "p") {
         // init translate
         $('#directory-root .list ol li').removeClass('active')
         //编程式导航

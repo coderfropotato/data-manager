@@ -209,6 +209,7 @@ export default {
   .title {
     display: flex;
     padding: 0 30px;
+    line-height: 26px;
     justify-content: space-between;
     p {
       font-size: 16px;
@@ -218,10 +219,12 @@ export default {
       color: #fff;
       background: #386cca;
       padding: 4px 12px;
-      border-radius: 2px;
+      border-radius: 4px;
       font-size: 12px;
       width: 68px;
       text-align: center;
+      height: 30px;
+      line-height: 24px;
       cursor: pointer;
       user-select: none;
       opacity: 1;
@@ -334,6 +337,7 @@ export default {
     .text-area {
       padding: 0 30px;
       textarea {
+        resize: none;
         width: 100%;
         height: 140px;
         border-radius: 4px;
@@ -410,11 +414,14 @@ export default {
     }
   }
   .add-attrs {
-    padding: 0 30px;
-    margin-top: 20px;
+    margin: 20px 30px 0 30px;
     cursor: pointer;
     color: #386cca;
+    display: inline-block;
     vertical-align: center;
+    &:hover{
+      opacity: .8;
+    }
     i {
       margin-right: 12px;
     }

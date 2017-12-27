@@ -6,16 +6,16 @@
   <div id="searchIndex">
       <div class="search-wrap">
           <div class="search-top">
-              <input type="text" v-model.trim="searchVal" @keyup.enter="search" placeholder="请输入关键词">
-              <div class="tag-group" v-if="searchRangeLength!==fileList.length"><el-tag color="#f5f5f5" type="gray">{{`在${searchRangeLength}个位置搜索`}}</el-tag></div>
-              <div class="tag-group"  v-if="searchRangeLength===fileList.length"><el-tag color="#f5f5f5" type="gray">{{`在全局搜索`}}</el-tag></div>
+              <input type="text" :class="{'active':searchRangeLength===fileList.length}" v-model.trim="searchVal" @keyup.enter="search" :placeholder="searchRangeLength===fileList.length?'请输入全局搜索关键词':'请输入搜索关键词'">
+              <div class="tag-group" v-if="searchRangeLength!==fileList.length"><el-tag  color="#f5f5f5" type="gray">{{`在${searchRangeLength}个位置搜索`}}</el-tag></div>
+              <!-- <div class="tag-group"  v-if="searchRangeLength===fileList.length"><el-tag color="#f5f5f5" type="gray">{{`在全局搜索`}}</el-tag></div> -->
               <em @click="search">搜索</em>
           </div>
-          <p>历史搜索记录：</p>
+          <p v-if="searchHistory.length">历史搜索记录：</p>
           <ul>
-              <li v-for="(val,index) in searchHistory" :key="index">
-                  <p @click="searchVal = val">{{val}}</p>
-                  <span @click="deleteHis(index)">ｘ</span>
+              <li @click="searchHis(val)" v-for="(val,index) in searchHistory" :key="index">
+                  <p >{{val}}</p>
+                  <span @click.stop="deleteHis(index)">ｘ</span>
               </li>
           </ul>
       </div>
@@ -40,21 +40,25 @@ export default {
   computed: {
     ...mapGetters(["searchRangeLength", "fileList"])
   },
-  watch: {
-    searchRangeLength: function() {
-      this.computedInput();
-    }
-  },
+  // watch: {
+  //   searchRangeLength: function() {
+  //       this.computedInput();
+  //   }
+  // },
   mounted() {
-    bus.$on("computedInput", _ => {
-      this.computedInput();
-    });
+    // bus.$on("computedInput", _ => {
+    //     this.computedInput();
+    // });
   },
   methods: {
-    computedInput() {
-      let oW = $("#searchIndex .tag-group").width();
-      $("#searchIndex  input").css("padding-left", oW + 10 + "px");
+    searchHis(his) {
+      this.searchVal = his;
+      this.search();
     },
+    // computedInput() {
+    //   let oW = $("#searchIndex .tag-group").width();
+    //   $("#searchIndex  input").css("padding-left", oW + 10 + "px");
+    // },
     search() {
       if (this.searchVal) {
         let _this = this;
@@ -127,8 +131,7 @@ export default {
     this.$store.dispatch("removeRightView", false);
   },
   activated() {
-    this.computedInput();
-
+    //   this.computedInput();
     let _this = this;
     this.searchHistory = localforage.getItem("searchHistory", (err, res) => {
       if (res != null) {
@@ -164,7 +167,6 @@ export default {
     .search-top {
       width: 100%;
       height: 40px;
-      background: #ccc;
       position: relative;
       input {
         width: 100%;
@@ -174,6 +176,11 @@ export default {
         padding-left: 100px;
         border: none;
         background: #f5f5f5;
+        transition: .3s all ease;
+        border-radius: 4px 0 0 4px;
+        &.active {
+          padding-left: 10px;
+        }
       }
       em {
         position: absolute;

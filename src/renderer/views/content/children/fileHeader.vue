@@ -14,17 +14,20 @@
       <span :class="{'active':index+1===navList.length}" @click="navBarJump(item,index)" v-for="(item,index) in navList" :key="index"><em>&nbsp;< &nbsp;</em>{{item.filename || item.alias}}</span>
     </p>
     </div>
-    <div class="search">
-       <el-input ref="search" size="small" placeholder="请输入关键词"  @keyup.native.enter="search" v-model.trim="searchValue">
-          <el-select v-model="searchType" size="small" slot="prepend" placeholder="请选择">
-            <el-option label="当前搜索" value="0"></el-option>
-            <el-option label="全局搜索" value="1"></el-option>
-          </el-select>
-          <el-button @click="search" slot="append">搜索</el-button>
-      </el-input>
-      <!-- <div class="tag-group">
-          <el-tag type="gray" @close="closeTag"  :closable="true">{{tag.name}}</el-tag>
-      </div> -->
+    <div @click.stop="cancelBubble" class="search" :class="{'active':showDom}" >
+        <el-input ref="search" size="small" :placeholder="showDom?'请输入关键词':'请输入全局搜索关键词'" @keyup.native.delete="del"  @keyup.native.enter="search" v-model.trim="searchValue">
+          <!-- <el-select v-model="searchType" size="small" slot="prepend" placeholder="请选择">
+            <el-option label="当前搜索" value=0></el-option>
+            <el-option label="全局搜索" value=1></el-option>
+          </el-select> -->
+          <!-- <div class="tag-group">
+              <el-tag type="gray" @close="closeTag"  :closable="true">{{tag.name}}</el-tag>
+          </div> -->
+        <el-button @click.stop="search" slot="append">搜索</el-button>
+        </el-input>
+        <div class="tag-group" v-if="showDom">
+          <el-tag type="gray" color="#f5f5f5">当前搜索</el-tag>
+        </div>
     </div>
   </div>
 </template>
@@ -37,16 +40,22 @@ export default {
   data() {
     return {
       searchValue: "",
-      searchType: "0",
-      isMessage:false
+      isMessage: false,
+      showDom: true,
+      count: 0
     };
   },
   computed: {
-    ...mapGetters(["navList", "searchTableData", "history"])
+    ...mapGetters(["navList", "searchTableData", "history"]),
+    searchType() {
+      //0 当前 1 全局
+      return this.showDom ? 0 : 1;
+    }
   },
   mounted() {
     let x = 0;
     let oWidth, oInner, scale;
+    let _this = this;
     $(".bread-wrap")
       .on("mousemove", function(e) {
         oWidth = $(".bread-wrap").outerWidth() - 4;
@@ -64,11 +73,22 @@ export default {
           $(".breadcrumb > p").css({ left: 0 });
         }
       });
-  },
-  activated() {
-    this.searchType = "0";
+
+    // document
+    $(document).on("click", function() {
+      _this.showDom = true;
+    });
   },
   methods: {
+    del() {
+      if (this.searchValue === "") {
+        this.count++;
+        if (this.count >= 2) this.showDom = false;
+      } else {
+        this.count = 0;
+      }
+    },
+    cancelBubble() {},
     navBarJump(item, index) {
       let path = item.path;
       this.$store.dispatch("getDirTree", { path }).then(res => {
@@ -93,7 +113,7 @@ export default {
           this.$message({
             showClose: true,
             message: "请输入关键词",
-            duration:1200,
+            duration: 1200,
             onClose: _ => {
               this.isMessage = false;
             }
@@ -101,7 +121,7 @@ export default {
         }
       } else {
         switch (this.searchType) {
-          case "0":
+          case 0:
             //当前搜索
             this.$store
               .dispatch("searchCurrentDisk", this.searchValue)
@@ -124,7 +144,7 @@ export default {
                 );
               });
             break;
-          case "1":
+          case 1:
             //全局搜索
             let context = this.searchValue;
             let type = "files";
@@ -219,8 +239,13 @@ export default {
     padding-bottom: 12px;
     width: 50%;
     position: relative;
+    &.active {
+      .el-input__inner {
+        padding-left: 76px;
+      }
+    }
     .el-input__inner {
-      // padding-left: 100px;
+      transition: 0.3s all ease;
       border: none;
       background: #f5f5f5;
     }
@@ -229,6 +254,18 @@ export default {
     }
     .el-input-group__prepend {
       border-left: none;
+    }
+    .tag-group {
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
+    .el-tag {
+      padding: 0 10px;
+      line-height: 30px;
+      font-size: 14px;
+      height: 30px;
+      border: none;
     }
   }
   #scrollBar {
