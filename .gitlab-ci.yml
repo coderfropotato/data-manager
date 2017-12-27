@@ -7,7 +7,7 @@ pack-windows:
     - .\pack.bat
     - echo "end build"
   only:
-    - master
+    - develop
   tags:
     - data-manager-packing
 
@@ -18,6 +18,6 @@ pack-mac:
     - .\pack.sh
     - echo "end build"
   only:
-    - master
+    - develop
   tags:
     - mac
