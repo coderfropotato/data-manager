@@ -38,6 +38,7 @@ pip install -i https://pypi.tuna.tsinghua.edu.cn/simple xmltodict==0.11.0
 pip install -i https://pypi.tuna.tsinghua.edu.cn/simple numpy==1.13.1
 pip install -i https://pypi.tuna.tsinghua.edu.cn/simple scipy==1.0.0
 pip install -i https://pypi.tuna.tsinghua.edu.cn/simple pandas==0.21.0
+pip install -i https://pypi.tuna.tsinghua.edu.cn/simple tornado==4.5.2
 pip install -i https://pypi.tuna.tsinghua.edu.cn/simple pyinstaller==3.3
 
 RMDIR /S /Q build\backend
