@@ -50,9 +50,9 @@ export default {
       // reset searchpos
       this.$store.dispatch("setSearchPos", "");
       // computed input padding
-      this.$nextTick(_ => {
-        bus.$emit("computedInput");
-      });
+      // this.$nextTick(_ => {
+      //   bus.$emit("computedInput");
+      // });
     },
     handlerCheckedChange(value) {
       let checkedCount = value.length;
@@ -62,9 +62,9 @@ export default {
       // reset searchpos
       this.$store.dispatch("setSearchPos", "");
       // computed input padding
-      this.$nextTick(_ => {
-        bus.$emit("computedInput");
-      });
+      // this.$nextTick(_ => {
+      //   bus.$emit("computedInput");
+      // });
     }
   }
 };
