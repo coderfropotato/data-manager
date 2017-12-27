@@ -1,5 +1,5 @@
 <template>
-  <div id="searchContent">
+  <div id="searchContent" v-loading.lock="fullscreenLoading" element-loading-text="数据加载中，请稍后...">
     <my-table v-if="show" @nochecked="noCheck" @searchlistclicked="childSelectedChange" :tableHeight="tableheight" :tableData="searchTableData"></my-table>
   </div>
 </template>
@@ -11,7 +11,8 @@ export default {
   data() {
     return {
       tableheight: 0,
-      show:true
+      show:true,
+      fullscreenLoading:true
     };
   },
   mounted() {
@@ -20,6 +21,11 @@ export default {
     this.$electron.ipcRenderer.on("windowResize", function() {
       _this.tableheight = document.body.offsetHeight - 66 - 60 - 41;
     });
+  },
+  created(){
+    bus.$on('searchTableLoading',status=>{
+      this.fullscreenLoading = status;
+    })
   },
   computed: {
     ...mapGetters(["searchTableData"])

@@ -42,23 +42,23 @@ export default {
   },
   // watch: {
   //   searchRangeLength: function() {
-  //       this.computedInput();
+  //     this.computedInput();
   //   }
   // },
-  mounted() {
-    // bus.$on("computedInput", _ => {
-    //     this.computedInput();
-    // });
-  },
+  // mounted() {
+  //   bus.$on("computedInput", _ => {
+  //     this.computedInput();
+  //   });
+  // },
   methods: {
     searchHis(his) {
       this.searchVal = his;
       this.search();
     },
-    // computedInput() {
-    //   let oW = $("#searchIndex .tag-group").width();
-    //   $("#searchIndex  input").css("padding-left", oW + 10 + "px");
-    // },
+    computedInput() {
+      let oW = $("#searchIndex .tag-group").width();
+      $("#searchIndex  input").css("padding-left", oW  + "px");
+    },
     search() {
       if (this.searchVal) {
         let _this = this;
@@ -86,12 +86,12 @@ export default {
         this.$store.dispatch("setSearchValue", this.searchVal);
         //global
         let context = this.searchVal;
+        this.$router.push("/search");
         this.$store.dispatch("searchFile", { context }).then(
           _ => {
             //console.log(_);
             this.searchVal = "";
             this.$store.dispatch("setRouteStatus", "search");
-            this.$router.push("/search");
             this.$store.dispatch("setTotalCount", _.length);
             // reset search pos
             this.$store.dispatch("setSearchPos", "");
@@ -100,7 +100,7 @@ export default {
             if (!this.isMessage) {
               this.isMessage = true;
               this.$message({
-                message: "请选择一个搜索范围",
+                message: "err",
                 duration: 1200,
                 onClose: _ => {
                   this.isMessage = false;
@@ -131,7 +131,7 @@ export default {
     this.$store.dispatch("removeRightView", false);
   },
   activated() {
-    //   this.computedInput();
+    // this.computedInput();
     let _this = this;
     this.searchHistory = localforage.getItem("searchHistory", (err, res) => {
       if (res != null) {
@@ -176,10 +176,10 @@ export default {
         padding-left: 100px;
         border: none;
         background: #f5f5f5;
-        transition: .3s all ease;
+        transition: 0.3s all ease;
         border-radius: 4px 0 0 4px;
         &.active {
-          padding-left: 10px;
+          padding-left: 10px!important;
         }
       }
       em {

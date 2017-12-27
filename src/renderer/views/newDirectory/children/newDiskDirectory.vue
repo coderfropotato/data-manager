@@ -1,8 +1,9 @@
 <template>
-  <div id="newDiskFile-root" v-loading.lock="fullscreenLoading" element-loading-text="正在扫描磁盘文件，请稍候">
+  <div id="newDiskFile-root" >
     <div class="newDiskFile-inner">
       <my-nav @close="closeWin" @mini="miniWin" :h="46" :config="{'close':true,'mini':true,'resize':false}"></my-nav>
       <!--基本设置-->
+      <div v-loading.lock="fullscreenLoading" element-loading-text="正在扫描磁盘文件，请稍候...">
       <el-form
           :model="basicForm"
           :rules="rules"
@@ -143,6 +144,7 @@
           </el-col>
         </el-row>
       </div>
+    </div>
     </div>
   </div>
 </template>

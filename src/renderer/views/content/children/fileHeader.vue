@@ -35,6 +35,7 @@
 import fetchData from "@/api/getData";
 import { mapGetters } from "vuex";
 import $ from "jquery";
+import bus from "@/utils/bus";
 export default {
   name: "fileHeader",
   data() {
@@ -120,15 +121,25 @@ export default {
           });
         }
       } else {
+        this.$store.dispatch("setGlobalNavIndex", 2);
+        this.$store.dispatch("resetFileInfo");
+        this.$store.dispatch("setSearchValue", this.searchValue);
+
         switch (this.searchType) {
           case 0:
             //当前搜索
+            this.$router.push("/search?type=current");
+            // 设置搜索label
+            this.$store.dispatch(
+              "setSearchPos",
+              this.navList[this.navList.length - 1].filename ||
+                this.navList[this.navList.length - 1].alias
+            );
             this.$store
               .dispatch("searchCurrentDisk", this.searchValue)
               .then(_ => {
                 let temp;
                 temp = this.navList[0].alias;
-                this.$router.push("/search?type=current");
                 this.$store.dispatch("setSearchRange", temp);
                 //设置bottom info
                 this.$store.dispatch(
@@ -137,34 +148,26 @@ export default {
                 );
                 this.$store.dispatch("setSelected", { count: 0, size: 0 });
                 this.$store.dispatch("setRouteStatus", "search");
-                this.$store.dispatch(
-                  "setSearchPos",
-                  this.navList[this.navList.length - 1].filename ||
-                    this.navList[this.navList.length - 1].alias
-                );
               });
             break;
           case 1:
             //全局搜索
+            this.$store.dispatch("setSearchPos", "");
+            this.$router.push("/search?type=global");
             let context = this.searchValue;
             let type = "files";
             this.$store.dispatch("searchFile", { context, type }).then(_ => {
-              this.$router.push("/search?type=global");
               this.$store.dispatch("checkAllSwitch", true);
               //设置bottom info
               this.$store.dispatch(
                 "setTotalCount",
                 this.searchTableData.length
               );
-              this.$store.dispatch("setSearchPos", "");
               this.$store.dispatch("setSelected", { count: 0, size: 0 });
               this.$store.dispatch("setRouteStatus", "search");
             });
             break;
         }
-        this.$store.dispatch("setGlobalNavIndex", 2);
-        this.$store.dispatch("resetFileInfo");
-        this.$store.dispatch("setSearchValue", this.searchValue);
         this.searchValue = "";
       }
     }
