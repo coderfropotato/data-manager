@@ -11,7 +11,7 @@
             <div class="alias">{{item.alias}}</div>
             <i class="editDevice iconfont icon-gengduo"></i>
             <div class="edit-wrap">
-              <p @click="rename">重命名</p>
+              <p @click="rename(item)">重命名</p>
               <p @click="del(index)">删除</p>
             </div>
             <!-- <edit-dom v-model="item.alias" @input="input"></edit-dom> -->
@@ -20,6 +20,17 @@
         <p @click="isShow=true;" v-show="fileList.length>5 && !isShow">更多设备&nbsp;></p>
       </div>
       <p class="no-data" v-if="!fileList.length">暂无设备</p>
+      <el-dialog
+        title="修改名称"
+        :visible.sync="dialogVisible"
+        custom-class="dialog-custom"
+        size="tiny">
+        <el-input size="small" v-model.trim="modifiedAlias"></el-input>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="dialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="saveAlias">确 定</el-button>
+        </span>
+      </el-dialog>
       <!-- <span @click.stop="del" id="delete" ref="del" v-show="deleteShow">删除</span> -->
   </div>
 </template>
@@ -37,7 +48,10 @@ export default {
       selectedIndex: 0,
       change: false,
       edit: true,
-      isMessage: false
+      isMessage: false,
+      dialogVisible: false,
+      renameItem: {},
+      modifiedAlias: ""
     };
   },
   computed: {
@@ -65,11 +79,11 @@ export default {
         $(this)
           .parent()
           .addClass("active");
-          ev.stopPropagation();
-      }).on('click',function(){
-        $('#directory-root ol li').removeClass('active');
+        ev.stopPropagation();
       })
-
+      .on("click", function() {
+        $("#directory-root ol li").removeClass("active");
+      });
   },
   methods: {
     input(...args) {
@@ -81,16 +95,64 @@ export default {
         URL: "/newfile/newdiskdir"
       });
     },
-    rename(){
-      console.log('rename');
+    rename(args) {
+      this.renameItem = args;
+      this.modifiedAlias = args.alias;
+      this.dialogVisible = true;
+    },
+    saveAlias() {
+      if (this.modifiedAlias) {
+        if (this.modifiedAlias === this.renameItem.alias) {
+          this.dialogVisible = false;
+        } else {
+          let _this = this;
+          let serialNumber = this.renameItem.serial_number;
+          let path = this.renameItem.path;
+          let newAlias = this.modifiedAlias;
+          fetchData("rename", { serialNumber, path, newAlias })
+            .then(_ => {
+              _this.dialogVisible = false;
+              let message = "";
+              if (_.result) {
+                message = "别名修改成功";
+                this.$store.dispatch("getImportTargetDisks");
+                this.$router.push("/filescale")
+                this.$store.dispatch("setGlobalHistory", false);
+              } else if (_.Error) {
+                message = _.Error;
+              } else {
+                message = "别名修改失败";
+              }
+              if (!this.isMessage) {
+                this.isMessage = true;
+                this.$message({
+                  message,
+                  duration: 1200,
+                  onClose: _ => {
+                    this.isMessage = false;
+                  }
+                });
+              }
+            })
+            .catch(_ => {
+              console.log("服务器异常");
+            });
+        }
+      } else {
+        this.modifiedAlias = this.renameItem.alias;
+      }
     },
     del(index) {
       // TODO delete device
-      this.$confirm(`此操作将永久删除 " ${this.fileList[index].alias} ", 是否继续?"`, "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      })
+      this.$confirm(
+        `此操作将永久删除 " ${this.fileList[index].alias} ", 是否继续?"`,
+        "提示",
+        {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }
+      )
         .then(() => {
           fetchData("deleteDisk", {
             serialNumber: this.fileList[index].serial_number,
@@ -130,9 +192,12 @@ export default {
         .catch(_ => {});
     },
     jumpToSearch($event, item) {
-      if ($event.srcElement.localName !== "i" && $event.srcElement.localName !== "p") {
+      if (
+        $event.srcElement.localName !== "i" &&
+        $event.srcElement.localName !== "p"
+      ) {
         // init translate
-        $('#directory-root .list ol li').removeClass('active')
+        $("#directory-root .list ol li").removeClass("active");
         //编程式导航
         this.$router.push(`/searchfiles?type=${item.serial_number}`);
         //设置序列号
@@ -175,7 +240,7 @@ export default {
   box-sizing: border-box;
   overflow-y: visible;
 
-  span {
+  & > span {
     cursor: pointer;
     width: 80px;
     height: 24px;
