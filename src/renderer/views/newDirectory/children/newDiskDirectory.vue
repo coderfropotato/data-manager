@@ -11,8 +11,8 @@
           label-position="left"
           label-width="80px">
                   <!--选择路径-->
-        <el-form-item class="path"  label="路径" prop="path">
-          <el-input class="{'path':basicForm.dataSource==='remoteServer'}" v-model="basicForm.path" size="small"></el-input>
+        <el-form-item  label="路径" prop="path">
+          <el-input :class="{'path':basicForm.dataSource!=='remoteServer'}" v-model="basicForm.path" size="small"></el-input>
           <input v-if="basicForm.dataSource!=='remoteServer'" class="potatos-btn btn-hover" type="button" value="浏览"  @click="showPath">
           <!-- <el-button  type="primary" size="small" @click="showPath" style="margin-left: 1.5em;">浏览</el-button> -->
         </el-form-item>
