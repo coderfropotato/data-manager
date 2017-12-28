@@ -154,6 +154,7 @@ export default {
       border-radius: 4px 0 0 4px;
       flex: 1;
       line-height: 40px;
+      position: static;
     }
     position: relative;
     width: 50%;
