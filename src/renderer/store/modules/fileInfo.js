@@ -124,7 +124,10 @@ const actions = {
     if(property[index]){
       property.splice(index,1);
     }
-    commit(types.SET_FILEINFO_PROPERTY,property)
+    return new Promise((resolve,reject)=>{
+      commit(types.SET_FILEINFO_PROPERTY,property);
+      resolve('success');
+    })
   },
   //保存数据之前校验key是否存在
   saveFileInfo({

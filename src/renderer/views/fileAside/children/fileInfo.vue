@@ -109,7 +109,9 @@ export default {
   },
   methods: {
     deleteAttrs(index) {
-      this.$store.dispatch("deleteAttrs", index);
+      this.$store.dispatch("deleteAttrs", index).then(_=>{
+        this.$store.dispatch('saveFileInfo');
+      })
     },
     finish() {
       this.module = true;
