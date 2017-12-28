@@ -15,7 +15,7 @@
           <ul>
               <li @click="searchHis(val)" v-for="(val,index) in searchHistory" :key="index">
                   <p >{{val}}</p>
-                  <span @click.stop="deleteHis(index)">ｘ</span>
+                  <i @click.stop="deleteHis(index)" class="iconfont icon-shanchu"></i>
               </li>
           </ul>
       </div>
@@ -57,7 +57,7 @@ export default {
     },
     computedInput() {
       let oW = $("#searchIndex .tag-group").width();
-      $("#searchIndex  input").css("padding-left", oW  + "px");
+      $("#searchIndex  input").css("padding-left", oW + "px");
     },
     search() {
       if (this.searchVal) {
@@ -179,7 +179,7 @@ export default {
         transition: 0.3s all ease;
         border-radius: 4px 0 0 4px;
         &.active {
-          padding-left: 10px!important;
+          padding-left: 10px !important;
         }
       }
       em {
@@ -223,7 +223,7 @@ export default {
         padding: 4px 8px;
         cursor: pointer;
         transition: 0.3s all ease;
-        &:hover span {
+        &:hover i {
           display: block;
         }
         &:hover p {
@@ -231,20 +231,22 @@ export default {
           cursor: pointer;
           color: #386cca;
         }
-        span {
+        i {
           display: none;
           width: 12px;
           height: 12px;
           text-align: center;
           font-size: 12px;
-          line-height: 11.5px;
           position: absolute;
           right: -4px;
           top: -6px;
-          color: #fff;
-          background: #ccc;
+          color: #999;
+          background: #fff;
           border-radius: 50%;
           cursor: pointer;
+          &:hover{
+            color: #333;
+          }
         }
       }
     }
