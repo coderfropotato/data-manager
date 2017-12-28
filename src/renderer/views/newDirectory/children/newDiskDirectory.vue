@@ -12,8 +12,8 @@
           label-width="80px">
                   <!--选择路径-->
         <el-form-item class="path"  label="路径" prop="path">
-          <el-input class="path" v-model="basicForm.path" size="small"></el-input>
-          <input class="potatos-btn btn-hover" type="button" value="浏览"  @click="showPath">
+          <el-input class="{'path':basicForm.dataSource==='remoteServer'}" v-model="basicForm.path" size="small"></el-input>
+          <input v-if="basicForm.dataSource!=='remoteServer'" class="potatos-btn btn-hover" type="button" value="浏览"  @click="showPath">
           <!-- <el-button  type="primary" size="small" @click="showPath" style="margin-left: 1.5em;">浏览</el-button> -->
         </el-form-item>
         
@@ -229,7 +229,7 @@ export default {
       // 表单验证规则
       rules: {
         alias: [{ required: true, message: "请输入磁盘别名", trigger: "change" }],
-        path: [{ required: true, message: "请选择路径", trigger: "change" }],
+        path: [{ required: true, message: "请输入路径", trigger: "change" }],
         protocol: [{ required: true, message: "请选择协议", trigger: "change" }],
         host: [{ required: true, message: "请输入主机地址", trigger: "change" }],
         port: [{ required: true, message: "请输入端口", trigger: "change" }],
