@@ -6,8 +6,8 @@
   <div id="searchIndex">
       <div class="search-wrap">
           <div class="search-top">
-              <input type="text" :class="{'active':searchRangeLength===fileList.length}" v-model.trim="searchVal" @keyup.enter="search" :placeholder="searchRangeLength===fileList.length?'请输入全局搜索关键词':'请输入搜索关键词'">
               <div class="tag-group" v-if="searchRangeLength!==fileList.length"><el-tag  color="#f5f5f5" type="gray">{{`在${searchRangeLength}个位置搜索`}}</el-tag></div>
+              <input type="text"  v-model.trim="searchVal" @keyup.enter="search" :placeholder="searchRangeLength===fileList.length?'请输入全局搜索关键词':'请输入搜索关键词'">
               <!-- <div class="tag-group"  v-if="searchRangeLength===fileList.length"><el-tag color="#f5f5f5" type="gray">{{`在全局搜索`}}</el-tag></div> -->
               <em @click="search">搜索</em>
           </div>
@@ -40,16 +40,6 @@ export default {
   computed: {
     ...mapGetters(["searchRangeLength", "fileList"])
   },
-  // watch: {
-  //   searchRangeLength: function() {
-  //     this.computedInput();
-  //   }
-  // },
-  // mounted() {
-  //   bus.$on("computedInput", _ => {
-  //     this.computedInput();
-  //   });
-  // },
   methods: {
     searchHis(his) {
       this.searchVal = his;
@@ -155,10 +145,14 @@ export default {
       left: 0px;
       top: 0px;
       border: none;
-      padding: 0 10px;
+      padding-left: 10px;
+      padding-right: 0;
     }
     .tag-group {
       height: 40px;
+      background:#f5f5f5;
+      border-radius: 4px 0 0 4px;
+      flex: 1;
       line-height: 40px;
     }
     position: relative;
@@ -168,19 +162,18 @@ export default {
       width: 100%;
       height: 40px;
       position: relative;
+      display: flex;
       input {
         width: 100%;
         height: 100%;
         outline: none;
         padding-right: 120px;
-        padding-left: 100px;
+        padding-left: 10px;
         border: none;
         background: #f5f5f5;
         transition: 0.3s all ease;
         border-radius: 4px 0 0 4px;
-        &.active {
-          padding-left: 10px !important;
-        }
+        
       }
       em {
         position: absolute;
