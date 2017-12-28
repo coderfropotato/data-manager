@@ -43,7 +43,7 @@ export default {
       searchValue: "",
       isMessage: false,
       showDom: true,
-      count: 0
+      count: 1
     };
   },
   computed: {
@@ -79,6 +79,7 @@ export default {
     $(document).on("click", function() {
       _this.showDom = true;
     });
+
   },
   methods: {
     del() {
