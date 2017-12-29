@@ -171,7 +171,6 @@ ipcMain.on('addFile', (event, arg) => {
 //new window dom resize 
 ipcMain.on('resetWinSize', (ev, args) => {
   newWin.setSize(args[0], args[1]);
-  newWin.center();
 });
 // 打开浏览本地文件的窗口
 ipcMain.on('open-file-dialog', function (event, type, target) {

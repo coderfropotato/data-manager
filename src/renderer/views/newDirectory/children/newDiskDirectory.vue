@@ -430,7 +430,7 @@ export default {
               if (!_this.isMessage) {
                 _this.isMessage = true;
                 _this.$message({
-                  message: res.Error,
+                  message: res.Error || "添加失败",
                   duration: 1200,
                   type: "warning",
                   onClose: function() {
