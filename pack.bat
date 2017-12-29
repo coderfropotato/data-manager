@@ -2,7 +2,7 @@ echo "start build back"
 
 RMDIR /S /Q .backend
 
-git clone git@54.223.70.246:data-management/data-manager-back-end.git .backend
+git clone ssh://git@54.223.70.246:22/data-management/data-manager-back-end.git .backend
 cd .backend
 git checkout with_tornado
 
