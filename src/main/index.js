@@ -130,7 +130,6 @@ function createWindow() {
  * @call{mode: '', API: ''} mode: 'action'/'mutation' API: action/mutation 中的方法
  * @data 数据
  */
-let newWin
 ipcMain.on('change-data', (event, call, data) => {
   mainWindow.webContents.send('change-data', call, data)
 })
@@ -139,29 +138,41 @@ ipcMain.on('updateFilesList', (event) => {
   mainWindow.webContents.send('updateFilesList');
 })
 // 打开/关闭添加文件窗口
+var newWin;
 ipcMain.on('addFile', (event, arg) => {
   if (arg.API === 'open') {
     let URL = arg.URL
-    newWin = new BrowserWindow({
-      height: 340,
-      width: 650,
-      resizable: false,
-      frame: false,
-      show:false
-    })
-    newWin.setMenu(null);
-    newWin.loadURL(baseURL + URL)
-    newWin.once('ready-to-show',_=>{
+    if (newWin === undefined) {
+      newWin = new BrowserWindow({
+        height: 340,
+        width: 650,
+        resizable: false,
+        frame: false,
+        show: false
+      })
+      newWin.setMenu(null);
+      newWin.loadURL(baseURL + URL)
+      newWin.once('ready-to-show', _ => {
+        newWin.show();
+      })
+    } else {
       newWin.show();
-    })
+      newWin.focus();
+    }
+
   }
   if (arg.API === 'close') {
     newWin.close()
+    newWin = undefined;
   } else if (arg.API === 'mini') {
     newWin.minimize();
   }
 })
-
+//new window dom resize 
+ipcMain.on('resetWinSize', (ev, args) => {
+  newWin.setSize(args[0], args[1]);
+  newWin.center();
+});
 // 打开浏览本地文件的窗口
 ipcMain.on('open-file-dialog', function (event, type, target) {
   // 默认只能打开单个文件夹
@@ -210,10 +221,7 @@ ipcMain.on('window-all-closed', () => {
   mainWindow.setSkipTaskbar(true);
   app.quit();
 });
-//new window dom resize 
-ipcMain.on('resetWinSize', (ev, args) => {
-  newWin.setSize(args[0], args[1]);
-});
+
 //最小化
 ipcMain.on('hide-window', (ev) => {
   mainWindow.minimize();
