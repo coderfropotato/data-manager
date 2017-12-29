@@ -6,7 +6,6 @@
  */
 // 基本配置
 import bus from '@/utils/bus'
-
 // let zmq = require('zeromq')
 const baseURL = 'http://127.0.0.1'
 // const baseURL = 'tcp://192.168.0.217'
@@ -40,10 +39,10 @@ let getData = function (API, params) {
       if (request.readyState === 4) {
         if (request.status === 200 || request.status === 304) {
           resolve(JSON.parse(request.responseText));
-        }else{
+        } else {
           reject(request.responseText)
         }
-      }
+      } 
     }
   })
 }
