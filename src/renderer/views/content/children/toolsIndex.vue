@@ -25,7 +25,7 @@
                   <img src="../../../assets/images/pathway.png" alt="">
                   <div class="desc">
                       <p>韦恩图</p>
-                      <p>简介：应用超几何检验，找出与整个基因组背景相比，在差异表达基因中显著性富集的PathWay。</p>
+                      <p>简介：用来显示数据元素重叠区域。</p>
                   </div>
                </div>
             </li>
