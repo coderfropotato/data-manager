@@ -25,7 +25,7 @@
         :visible.sync="dialogVisible"
         custom-class="dialog-custom"
         size="tiny">
-        <el-input size="small" v-model.trim="modifiedAlias"></el-input>
+        <el-input size="small" @keyup.enter.native="saveAlias" v-model.trim="modifiedAlias"></el-input>
         <span slot="footer" class="dialog-footer">
           <el-button @click="dialogVisible = false">取 消</el-button>
           <el-button type="primary" @click="saveAlias">确 定</el-button>

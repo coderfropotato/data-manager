@@ -16,7 +16,7 @@
       <div class="des">
         <img v-if="fileInfo.isdir" src="../../../assets/images/dir.png" alt=""> 
         <img v-else src="../../../assets/images/single.png" alt=""> 
-        <span>{{fileInfo.basic.filename}}</span>
+        <span :title="fileInfo.basic.filename">{{fileInfo.basic.filename}}</span>
       </div>
       <ul>
         <li>
