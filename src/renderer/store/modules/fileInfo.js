@@ -66,12 +66,16 @@ const actions = {
     //root path  获取文件详情 childPath = rootPath;
     let serialNumber = file.state.serialNumber;
     let rootPath = file.state.rootPath;
+    bus.$emit('fileInfoLoading', true);
     fetchData('getFileInfo', {
       serialNumber,
       rootPath,
       filepath
     }).then(res => {
+      bus.$emit('fileInfoLoading', false);
       commit(types.GET_FILE_INFO, res);
+    }).catch(e => {
+      bus.$emit('fileInfoLoading', false);
     })
   },
   //获取搜索列表的单个文件的文件详情
@@ -82,12 +86,16 @@ const actions = {
     let serialNumber = file.state.searchTableClickHistory[file.state.searchTableClickHistory.length - 1].serialNumber;
     let rootPath = file.state.searchTableClickHistory[file.state.searchTableClickHistory.length - 1].rootPath;
     //console.log({serialNumber,rootPath,filepath});
+    bus.$emit('fileInfoLoading', true);
     fetchData('getFileInfo', {
       serialNumber,
       rootPath,
       filepath
     }).then(res => {
+      bus.$emit('fileInfoLoading', false);
       commit(types.GET_FILE_INFO, res);
+    }).catch(e => {
+      bus.$emit('fileInfoLoading', false);
     })
   },
   //手动设置fileinfo
@@ -119,13 +127,15 @@ const actions = {
     commit(types.SET_FILEINFO_PROPERTY, attrs);
   },
   //删除属性
-  deleteAttrs({commit},index){
+  deleteAttrs({
+    commit
+  }, index) {
     let property = state.fileInfo.property;
-    if(property[index]){
-      property.splice(index,1);
+    if (property[index]) {
+      property.splice(index, 1);
     }
-    return new Promise((resolve,reject)=>{
-      commit(types.SET_FILEINFO_PROPERTY,property);
+    return new Promise((resolve, reject) => {
+      commit(types.SET_FILEINFO_PROPERTY, property);
       resolve('success');
     })
   },
@@ -221,9 +231,13 @@ const actions = {
     commit
   }) {
     return new Promise((resolve, reject) => {
+      bus.$emit('fileInfoLoading', true);
       fetchData('getFileInfo', state.bottomFileInfoParams).then(res => {
         commit(types.GET_FILE_INFO, res);
+        bus.$emit('fileInfoLoading', false);
         resolve('success');
+      }).catch(e => {
+        bus.$emit('fileInfoLoading', false);
       })
     })
   }

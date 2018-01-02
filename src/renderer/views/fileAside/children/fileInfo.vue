@@ -1,5 +1,5 @@
 <template>
-  <div id="fileInfo-root">
+  <div id="fileInfo-root" v-loading.lock="fullscreenLoading" element-loading-text="数据加载中，请稍后...">
     <div v-if="fileInfo.basic">
       <!-- status layout start-->
       <ol v-if="globalRouteStatus==='status' && topShow" class="status-bar">
@@ -81,7 +81,8 @@ export default {
   data() {
     return {
       module: true,
-      topShow: true
+      topShow: true,
+      fullscreenLoading: false
     };
   },
   created() {
@@ -94,14 +95,21 @@ export default {
     bus.$on("saveAttrNameSame", _ => {
       this.$message("属性名不能重复");
     });
+    bus.$on("fileInfoLoading", status => {
+      this.fullscreenLoading = status;
+    });
   },
   mounted() {
     $(document)
       .on("mouseover", ".item-list li .iconfont", function() {
-        $(this).removeClass('icon-jianqu').addClass("icon-jianqu-dianji");
+        $(this)
+          .removeClass("icon-jianqu")
+          .addClass("icon-jianqu-dianji");
       })
       .on("mouseout", ".item-list li .iconfont", function() {
-        $(this).removeClass("icon-jianqu-dianji").addClass("icon-jianqu");
+        $(this)
+          .removeClass("icon-jianqu-dianji")
+          .addClass("icon-jianqu");
       });
   },
   computed: {
@@ -109,9 +117,9 @@ export default {
   },
   methods: {
     deleteAttrs(index) {
-      this.$store.dispatch("deleteAttrs", index).then(_=>{
-        this.$store.dispatch('saveFileInfo');
-      })
+      this.$store.dispatch("deleteAttrs", index).then(_ => {
+        this.$store.dispatch("saveFileInfo");
+      });
     },
     finish() {
       this.module = true;
@@ -421,8 +429,8 @@ export default {
     color: #386cca;
     display: inline-block;
     vertical-align: center;
-    &:hover{
-      opacity: .8;
+    &:hover {
+      opacity: 0.8;
     }
     i {
       margin-right: 12px;

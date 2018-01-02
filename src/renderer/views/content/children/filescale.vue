@@ -112,7 +112,7 @@ export default {
       width: 200px;
       height: 200px;
     }
-    p{
+    p {
       margin-top: 24px;
       color: #a6afbf;
     }

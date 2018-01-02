@@ -1,5 +1,5 @@
 <template>
-  <div id="fileContent" v-loading="loading">
+  <div id="fileContent" v-loading.lock="fileTableLoading" element-loading-text="数据加载中，请稍后...">
     <my-table @nochecked="noChecked" @selectchange="childSelectedChange" @intodir="intoDir"  :tableHeight="tableheight" :tableData="fileTableData"></my-table>
   </div>
 </template>
@@ -10,12 +10,17 @@ export default {
   name: "fileContent",
   data() {
     return {
-      loading: false,
-      tableheight: 0
+      tableheight: 0,
+      fileTableLoading: false
     };
   },
   computed: {
     ...mapGetters(["fileTableData"])
+  },
+  created() {
+    bus.$on("fileTableLoading", status => {
+      this.fileTableLoading = status;
+    });
   },
   mounted() {
     let _this = this;

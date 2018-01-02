@@ -54,6 +54,7 @@ const actions = {
       serialNumber: params.serialNumber || state.serialNumber
     }
     return new Promise((resolve, reiect) => {
+      bus.$emit('fileTableLoading', true);
       fetchData('getDirTree', parm).then(data => {
         if (!data.fileList || !data.fileList.length) {
           commit(types.SET_TOTAL_COUTN, 0);
@@ -62,7 +63,12 @@ const actions = {
           commit(types.SET_TOTAL_COUTN, data.fileList.length);
           commit(types.SET_FILE_TABLE_dATA, data.fileList);
         }
+
+        bus.$emit('fileTableLoading', false);
         resolve('success');
+      }).catch(e => {
+        bus.$emit('fileTableLoading', false);
+        reject('error');
       })
     })
   },
