@@ -116,7 +116,7 @@ export default {
               if (_.result) {
                 message = "别名修改成功";
                 this.$store.dispatch("getImportTargetDisks");
-                this.$router.push("/filescale")
+                this.$router.push("/filescale");
                 this.$store.dispatch("setGlobalHistory", false);
               } else if (_.Error) {
                 message = _.Error;
@@ -128,6 +128,7 @@ export default {
                 this.$message({
                   message,
                   duration: 1200,
+                  type: "success",
                   onClose: _ => {
                     this.isMessage = false;
                   }
