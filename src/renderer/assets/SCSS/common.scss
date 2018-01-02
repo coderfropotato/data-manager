@@ -659,18 +659,27 @@ button {
     opacity: .8!important;
   }
 }
-.el-dialog__title{
+
+.el-dialog__title {
   font-weight: normal;
 }
-.el-button:active{
-  color:#fff;
+
+.el-button:active {
+  color: #fff;
   background-color: #386cca;
   border-color: #386cca;
 }
-.el-dialog__headerbtn:focus .el-dialog__close, .el-dialog__headerbtn:hover .el-dialog__close{
+
+.el-dialog__headerbtn:focus .el-dialog__close,
+.el-dialog__headerbtn:hover .el-dialog__close {
   color: #386cca;
 }
-.dialog-custom{
+
+.dialog-custom {
   top: 50.5%!important;
   margin-top: calc(-189px / 2);
+}
+
+.el-table::before {
+  background: none!important;
 }
