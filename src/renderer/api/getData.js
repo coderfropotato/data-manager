@@ -26,7 +26,6 @@ let getData = function (API, params) {
     request.onreadystatechange = () => {
       if (request.readyState === 4) {
         if (request.status === 200 || request.status === 304) {
-          console.log(JSON.parse(request.responseText));
           resolve(JSON.parse(request.responseText));
         } else {
           reject(request.responseText)

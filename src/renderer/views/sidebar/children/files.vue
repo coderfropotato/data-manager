@@ -17,7 +17,7 @@
             <!-- <edit-dom v-model="item.alias" @input="input"></edit-dom> -->
           </li>
         </ol>
-        <p @click="isShow=true;" v-show="fileList.length>5 && !isShow">更多设备&nbsp;></p>
+        <p @click="isShow=true;" v-show="fileList.length>5 && !isShow">更多文件&nbsp;></p>
       </div>
       <p class="no-data" v-if="!fileList.length">暂无设备</p>
       <el-dialog
@@ -76,6 +76,7 @@ export default {
       })
       .on("click", ".editDevice", function(ev) {
         $(this).addClass("icon-shouqi");
+        $('#directory-root .list li').removeClass("active");
         $(this)
           .parent()
           .addClass("active");

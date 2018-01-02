@@ -696,3 +696,7 @@ button {
 .el-table::before {
   background: none!important;
 }
+
+.el-table .choose {
+  cursor: default;
+}

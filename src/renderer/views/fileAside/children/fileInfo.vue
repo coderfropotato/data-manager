@@ -34,7 +34,7 @@
         <p>类别：{{fileInfo.source.category}}</p>
         <p>数据源：{{fileInfo.source.source}}</p>
         <h5 class="item icon-line"><i class="iconfont icon-cankaojiyinzu"></i>属性</h5>
-        <div class="attrs">
+        <div v-show="!module" class="attrs">
           <span>名称</span>
           <span>属性</span>
         </div>
@@ -408,8 +408,8 @@ export default {
           overflow: hidden;
           font-size: 14px;
           line-height: 18px;
-          border: 1px solid #ccc;
-          background-color: #f5f5f5;
+          // border: 1px solid #ccc;
+          // background-color: #f5f5f5;
           padding: 2px;
           display: block;
           border-radius: 4px;
