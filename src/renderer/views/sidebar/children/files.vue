@@ -25,7 +25,7 @@
         :visible.sync="dialogVisible"
         custom-class="dialog-custom"
         size="tiny">
-        <el-input size="small" @keyup.enter.native="saveAlias" v-model.trim="modifiedAlias"></el-input>
+        <el-input size="small" :maxlength="50" @keyup.enter.native="saveAlias" v-model.trim="modifiedAlias"></el-input>
         <span slot="footer" class="dialog-footer">
           <el-button @click="dialogVisible = false">取 消</el-button>
           <el-button type="primary" @click="saveAlias">确 定</el-button>
@@ -76,7 +76,7 @@ export default {
       })
       .on("click", ".editDevice", function(ev) {
         $(this).addClass("icon-shouqi");
-        $('#directory-root .list li').removeClass("active");
+        $("#directory-root .list li").removeClass("active");
         $(this)
           .parent()
           .addClass("active");
@@ -101,6 +101,19 @@ export default {
       this.modifiedAlias = args.alias;
       this.dialogVisible = true;
     },
+    showMessage(message, type) {
+      if (!this.isMessage) {
+        this.isMessage = true;
+        this.$message({
+          message,
+          duration: 1200,
+          type: type || "info",
+          onClose: _ => {
+            this.isMessage = false;
+          }
+        });
+      }
+    },
     saveAlias() {
       if (this.modifiedAlias) {
         if (this.modifiedAlias === this.renameItem.alias) {
@@ -112,32 +125,26 @@ export default {
           let newAlias = this.modifiedAlias;
           fetchData("rename", { serialNumber, path, newAlias })
             .then(_ => {
-              _this.dialogVisible = false;
               let message = "";
               if (_.result) {
                 message = "别名修改成功";
+                _this.dialogVisible = false;
                 this.$store.dispatch("getImportTargetDisks");
                 this.$router.push("/filescale");
                 this.$store.dispatch("setGlobalHistory", false);
+                this.showMessage(message,'success');
               } else if (_.Error) {
                 message = _.Error;
+                this.showMessage(message);
               } else {
                 message = "别名修改失败";
-              }
-              if (!this.isMessage) {
-                this.isMessage = true;
-                this.$message({
-                  message,
-                  duration: 1200,
-                  type: "success",
-                  onClose: _ => {
-                    this.isMessage = false;
-                  }
-                });
+                this.showMessage(message);
               }
             })
             .catch(_ => {
               console.log("服务器异常");
+              _this.dialogVisible = false;
+              this.showMessage(message, "error");
             });
         }
       } else {
@@ -352,6 +359,7 @@ export default {
           flex: 1;
           text-align: center;
           color: #fff;
+          transition: .3s all ease;
           &:hover {
             opacity: 0.8;
           }

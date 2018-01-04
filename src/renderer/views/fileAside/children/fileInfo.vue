@@ -61,7 +61,8 @@
         <!-- add attrs -->
         <h5 class="item icon-line"><i class="iconfont icon-beizhu"></i>备注</h5>
         <div class="text-area">
-           <textarea id="texta" :class="{'active':module}"  :readonly="module" placeholder="您还没有添加备注"  :value="fileInfo.remark" @change="updateMessage($event)">></textarea>
+          <!-- <el-input id="texta" type="textarea" :class="{'active':module}"  :readonly="module" placeholder="您还没有添加备注"  :value="fileInfo.remark" @change="updateMessage($event)" :autosize="{ minRows: 2, maxRows: 8}" :rows="5"></el-input> -->
+          <textarea id="texta" :class="{'active':module}"  :readonly="module" placeholder="您还没有添加备注"  :value="fileInfo.remark" @change="updateMessage($event)"></textarea>
         </div>
       </div>
     </div>
@@ -210,6 +211,7 @@ export default {
       color: #333;
       background: #f5f5f5;
       cursor: pointer;
+      transition: 0.3s all ease;
       &:hover {
         color: #fff;
         background: #386cca;
@@ -348,17 +350,20 @@ export default {
       padding: 0 30px;
       textarea {
         resize: none;
+        outline: none;
         width: 100%;
         height: 140px;
         border-radius: 4px;
-        outline: none;
         font-size: 14px;
         background: #f5f5f5;
         border: 1px solid #ccc;
         padding: 6px;
+        text-align: justify;
+        &:hover {
+          border-color: #999;
+        }
         &.active {
           border: none;
-          outline: none;
         }
       }
     }
@@ -382,6 +387,7 @@ export default {
           top: 11px;
           z-index: 1000;
           cursor: pointer;
+          transition: 0.3s all ease;
         }
         &:hover i {
           display: block;
@@ -394,6 +400,11 @@ export default {
           line-height: 18px;
           font-size: 14px;
           border-radius: 4px;
+          transition: 0.3s all ease;
+          &:hover {
+            border-color: #999;
+          }
+
           &:nth-child(2) {
             width: 55%;
           }
@@ -429,6 +440,7 @@ export default {
     color: #386cca;
     display: inline-block;
     vertical-align: center;
+    transition: 0.3s all ease;
     &:hover {
       opacity: 0.8;
     }

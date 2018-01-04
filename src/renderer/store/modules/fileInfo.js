@@ -156,6 +156,7 @@ const actions = {
     for (var i = 0; i < updateList.length; i++) {
       for (var j = 0; j < updateList.length; j++) {
         if (updateList[i].name === updateList[j].name && i !== j) {
+          commit(types.DELETE_FILE_ATTRS, j);
           bus.$emit('saveAttrNameSame');
           return;
         }
@@ -289,6 +290,9 @@ const mutations = {
   },
   [types.SET_FILEINFO_PROPERTY](state, arr) {
     state.fileInfo.property = arr;
+  },
+  [types.DELETE_FILE_ATTRS](state, index) {
+    state.fileInfo.property.splice(index, 1);
   }
 }
 

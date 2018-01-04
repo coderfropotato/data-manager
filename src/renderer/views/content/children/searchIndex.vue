@@ -83,6 +83,8 @@ export default {
             this.searchVal = "";
             this.$store.dispatch("setRouteStatus", "search");
             this.$store.dispatch("setTotalCount", _.length);
+            // reset selected cpuont
+            this.$store.dispatch("setSelected", { count: 0, size: 0 });
             // reset search pos
             this.$store.dispatch("setSearchPos", "");
           },
@@ -150,7 +152,7 @@ export default {
     }
     .tag-group {
       height: 40px;
-      background:#f5f5f5;
+      background: #f5f5f5;
       border-radius: 4px 0 0 4px;
       flex: 1;
       line-height: 40px;
@@ -174,7 +176,6 @@ export default {
         background: #f5f5f5;
         transition: 0.3s all ease;
         border-radius: 4px 0 0 4px;
-        
       }
       em {
         position: absolute;
@@ -238,7 +239,7 @@ export default {
           background: #fff;
           border-radius: 50%;
           cursor: pointer;
-          &:hover{
+          &:hover {
             color: #333;
           }
         }
