@@ -30,9 +30,10 @@ function createWindow() {
     minWidth: 1200,
     frame: false,
     skipTaskbar: false,
+    thickFrame:true,
     useContentSize: true,
     show: false,
-    titleBarStyle: 'customButtonsOnHover',
+    titleBarStyle: "customButtonsOnHover",
   })
   mainWindow.setMinimumSize(1200, 860)
   mainWindow.loadURL(winURL)
