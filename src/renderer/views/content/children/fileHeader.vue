@@ -25,7 +25,7 @@
           </div> -->
         <el-button @click.stop="search" slot="append">搜索</el-button>
         </el-input>
-        <div class="tag-group" v-if="showDom">
+        <div  class="tag-group" v-if="showDom">
           <el-tag type="gray" color="#f5f5f5">当前搜索</el-tag>
         </div>
     </div>
@@ -54,32 +54,32 @@ export default {
     }
   },
   mounted() {
+    function moveDom(e) {
+      oWidth = $(".bread-wrap").outerWidth()-10;
+      oInner = $(".breadcrumb > p").width()-10;
+      if (oInner <= oWidth) return;
+      x = e.pageX - $(".bread-wrap").offset().left;
+      scale = x / oWidth;
+      let pos = scale * oInner;
+      $(".breadcrumb > p").css({ left: -scale * (oInner - oWidth)+5 });
+    }
     let x = 0;
     let oWidth, oInner, scale;
     let _this = this;
     $(".bread-wrap")
-      .on("mousemove", function(e) {
-        oWidth = $(".bread-wrap").outerWidth() - 4;
-        oInner = $(".breadcrumb > p").width();
-        if (oInner <= oWidth) return;
-        x = e.pageX - $(this).offset().left;
-        scale = x / oWidth;
-        let pos = scale * oInner;
-        $(".breadcrumb > p").css({ left: -scale * (oInner - oWidth) });
-      })
+      // .on("mousemove",moveDom)
       .on("mouseleave", function() {
         if (oInner > oWidth) {
-          $(".breadcrumb > p").css({ left: -x / oWidth * (oInner - oWidth) });
+          $(".breadcrumb > p").css({ left: -x / oWidth * (oInner - oWidth)+5 });
         } else {
-          $(".breadcrumb > p").css({ left: 0 });
+          $(".breadcrumb > p").css({ left: 5 });
         }
       });
-
+    $(".breadcrumb p").on("mousemove", moveDom);
     // document
     $(document).on("click", function() {
       _this.showDom = true;
     });
-
   },
   methods: {
     del() {
@@ -218,8 +218,8 @@ export default {
       z-index: 30;
       left: 0;
       top: 0;
-      line-height: 14px;
-      margin-top: 22px;
+      line-height: 60px;
+      // margin-top: 22px;
       font-size: 14px;
       white-space: nowrap;
       -webkit-user-select: none;
