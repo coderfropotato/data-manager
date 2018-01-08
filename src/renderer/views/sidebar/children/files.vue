@@ -64,16 +64,16 @@ export default {
   },
   mounted() {
     $(document)
-      .on("mouseover", ".editDevice", function() {
-        $(this)
-          .removeClass("icon-gengduo")
-          .addClass("icon-gengduo-dianji");
-      })
-      .on("mouseout", ".editDevice", function() {
-        $(this)
-          .removeClass("icon-gengduo-dianji")
-          .addClass("icon-gengduo");
-      })
+      // .on("mouseover", ".editDevice", function() {
+      //   $(this)
+      //     .removeClass("icon-gengduo")
+      //     .addClass("icon-gengduo-dianji");
+      // })
+      // .on("mouseout", ".editDevice", function() {
+      //   $(this)
+      //     .removeClass("icon-gengduo-dianji")
+      //     .addClass("icon-gengduo");
+      // })
       .on("click", ".editDevice", function(ev) {
         $(this).addClass("icon-shouqi");
         $("#directory-root .list li").removeClass("active");
@@ -84,7 +84,13 @@ export default {
       })
       .on("click", function() {
         $("#directory-root ol li").removeClass("active");
-      });
+      })
+      .on("mouseover","#directory-root .list li",function(){
+        $(this).find('.editDevice').addClass('icon-gengduo-dianji');
+      })
+      .on("mouseout","#directory-root .list li",function(){
+        $('.editDevice').removeClass('icon-gengduo-dianji');
+      })
   },
   methods: {
     input(...args) {
