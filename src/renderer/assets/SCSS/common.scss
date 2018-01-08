@@ -413,38 +413,39 @@ button {
     .draw-content {
       flex: 1;
       margin-left: 20px;
-      border: 2px solid #ccc;
+      border: 1px solid #ccc;
+      border-radius: 4px 4px 0 0 ;
       overflow-x: auto;
       overflow-y: hidden;
+      border-top: none;
       ul {
         list-style: none;
-        &:after {
-          content: "";
-          display: block;
-          clear: both;
-        }
+        display: flex;
         li {
-          float: left;
-          width: 74px;
-          height: 24px;
+          height: 40px;
+          flex: 1;
           text-align: center;
-          line-height: 24px;
-          background: #386cca;
-          color: #fff;
-          opacity: 0.5;
-          margin-right: 1px;
+          line-height: 40px;
+          background: #fff;
+          color: #386cca;
+          border: 1px solid #386cca;
           cursor: pointer;
           &.active {
-            opacity: 1;
+            background-color: #386cca;
+            color: #fff;
+          }
+          &:nth-child(2){
+            border-left: none;
+            border-right: none;
           }
           &:last-child {
-            margin-right: 0;
+            border-radius: 0 4px 0 0;
           }
         }
       }
       .tab {
         padding: 40px;
-        height: calc(100% - 24px);
+        height: calc(100% - 40px);
         background: #fff;
       }
     }
