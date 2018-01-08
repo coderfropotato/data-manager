@@ -17,9 +17,9 @@ export default {
   },
   mounted() {
     let _this = this;
-    _this.tableheight = document.body.offsetHeight - 66 - 60 - 42;
+    _this.tableheight = document.body.offsetHeight - 66 - 60 - 44;
     this.$electron.ipcRenderer.on("windowResize", function() {
-      _this.tableheight = document.body.offsetHeight - 66 - 60 - 42;
+      _this.tableheight = document.body.offsetHeight - 66 - 60 - 44;
     });
   },
   created(){

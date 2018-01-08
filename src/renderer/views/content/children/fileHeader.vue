@@ -216,7 +216,7 @@ export default {
     p {
       position: absolute;
       z-index: 30;
-      left: 0;
+      left: 4px;
       top: 0;
       line-height: 60px;
       // margin-top: 22px;

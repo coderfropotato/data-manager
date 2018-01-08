@@ -319,6 +319,7 @@ $blue: #386cca;
       margin: 0 auto;
       height: 180px;
       display: flex;
+      padding-top: 40px;
       .data-left {
         width: 150px;
         margin-right: 46px;

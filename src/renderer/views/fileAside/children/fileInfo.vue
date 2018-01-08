@@ -10,8 +10,8 @@
       <!-- status layout end -->
       <div class="title">
         <p class="icon-line"><i class="iconfont icon-wenjianxiangqing"></i>文件详情</p>
-        <span v-show="!module" @click="finish">完成</span>
-        <span v-show="module" @click="module=false">编辑</span>
+        <!-- <span v-show="!module" @click="finish">完成</span>
+        <span v-show="module" @click="module=false">编辑</span> -->
       </div>
       <div class="des">
         <img v-if="fileInfo.isdir" src="../../../assets/images/dir.png" alt=""> 
@@ -28,41 +28,53 @@
         <li>
           <p>创建时间：<span>{{fileInfo.basic.ctime | reverseTime}}</span></p>
         </li>
+        <li class="blue">
+          <p>数据类别：<span>{{fileInfo.source.category}}</span></p>
+        </li>
+        <li class="blue">
+          <p>数据来源：<span>{{fileInfo.source.source}}</span></p>
+        </li>
       </ul>
       <div class="text">
-        <h5 class="icon-line"><i class="iconfont icon-shujulaiyuan"></i>数据来源</h5>
+        <!-- <h5 class="icon-line"><i class="iconfont icon-shujulaiyuan"></i>数据来源</h5>
         <p>类别：{{fileInfo.source.category}}</p>
-        <p>数据源：{{fileInfo.source.source}}</p>
-        <h5 class="item icon-line"><i class="iconfont icon-cankaojiyinzu"></i>属性</h5>
-        <div v-show="!module" class="attrs">
+        <p>数据源：{{fileInfo.source.source}}</p> -->
+        <h5 class="item icon-line">
+          <i class="iconfont icon-cankaojiyinzu"></i>
+          <span>属性</span>
+          <em @click="OneSave"><i class="iconfont icon-bianji"></i></em>
+        </h5>
+        <div v-show="!InputModule" class="attrs">
           <span>名称</span>
           <span>属性</span>
         </div>
         <!-- edit mode false -->
-        <ol v-show="!module" class="item-list">
+        <ol v-show="!InputModule" class="item-list">
           <!-- :class="{'edit':!module}" -->
             <li v-for="(val,index) in fileInfo.property" :key="index">
-              <input :readonly="module" type="text" maxLength="50"  @change="updateMessage($event,index,'key')" :value="val.name" :title="val.name"> 
-              <input :title="val.attr" @change="updateMessage($event,index,'val')" maxLength="50"  :value="val.attr" :readonly="module" type="text">
+              <input :readonly="InputModule" type="text" maxLength="50"  @change="updateMessage($event,index,'key')" :value="val.name" :title="val.name"> 
+              <input :title="val.attr" @change="updateMessage($event,index,'val')" maxLength="50"  :value="val.attr" :readonly="InputModule" type="text">
               <i @click="deleteAttrs(index)" class="iconfont icon-jianqu"></i>
             </li>
         </ol>
         <!-- mode true -->
-        <ol v-show="module" class="item-list">
+        <ol v-show="InputModule" class="item-list">
           <li v-for="(val,index) in fileInfo.property" :key="index">
             <p :title="val.name">{{val.name}}</p>
             <p :title="val.attr">{{val.attr}}</p>
           </li>
         </ol>
-        <div @click="addAttrs" v-show="!module" class="add-attrs">
+        <div @click="addAttrs" v-show="!InputModule" class="add-attrs">
           <i class="iconfont icon-tianjia"></i><span>添加文件属性</span>
         </div>
 
         <!-- add attrs -->
-        <h5 class="item icon-line"><i class="iconfont icon-beizhu"></i>备注</h5>
+        <h5 class="item icon-line"><i class="iconfont icon-beizhu1"></i>
+          <span>备注</span>
+          <em @click="TextAreaModule = !TextAreaModule"><i class="iconfont icon-bianji"></i></em></h5>
         <div class="text-area">
           <!-- <el-input id="texta" type="textarea" :class="{'active':module}"  :readonly="module" placeholder="您还没有添加备注"  :value="fileInfo.remark" @change="updateMessage($event)" :autosize="{ minRows: 2, maxRows: 8}" :rows="5"></el-input> -->
-          <textarea id="texta" :class="{'active':module}"  :readonly="module" placeholder="您还没有添加备注"  :value="fileInfo.remark" @change="updateMessage($event)"></textarea>
+          <textarea id="texta" :class="{'active':TextAreaModule}"  :readonly="TextAreaModule" placeholder="您还没有添加备注"  :value="fileInfo.remark" @change="updateMessage($event)"></textarea>
         </div>
       </div>
     </div>
@@ -81,9 +93,11 @@ export default {
   name: "FileInfo",
   data() {
     return {
-      module: true,
       topShow: true,
-      fullscreenLoading: false
+      fullscreenLoading: false,
+      InputModule: true,
+      TextAreaModule: true,
+      saveError: false
     };
   },
   created() {
@@ -117,14 +131,16 @@ export default {
     ...mapGetters(["fileInfo", "globalRouteStatus", "curData", "curIndex"])
   },
   methods: {
+    OneSave(){
+      if(!this.InputModule) {
+        this.$store.dispatch('checkAttrs');
+      }
+      this.InputModule = !this.InputModule;
+    },
     deleteAttrs(index) {
       this.$store.dispatch("deleteAttrs", index).then(_ => {
         this.$store.dispatch("saveFileInfo");
       });
-    },
-    finish() {
-      this.module = true;
-      this.$store.dispatch("checkAttrs");
     },
     updateMessage(e, index, type) {
       let params;
@@ -263,6 +279,8 @@ export default {
       white-space: nowrap;
       text-overflow: ellipsis;
       overflow: hidden;
+      user-select: auto;
+      cursor: text;
     }
   }
   ul {
@@ -278,6 +296,15 @@ export default {
       line-height: 1;
       flex-direction: column;
       margin-top: 16px;
+      &.blue {
+        span {
+          color: #386cca;
+          &:hover {
+            text-decoration: underline;
+            cursor: pointer;
+          }
+        }
+      }
       p {
         font-size: 14px;
         span {
@@ -293,7 +320,41 @@ export default {
       font-size: 16px;
       margin-bottom: 24px;
       font-weight: normal;
-      line-height: 1;
+      line-height: 32px;
+      &:after {
+        content: "";
+        display: block;
+        clear: both;
+      }
+      i {
+        font-size: 18px;
+        float: left;
+        height: auto;
+      }
+      span {
+        float: left;
+        font-size: 16px;
+      }
+      em {
+        float: right;
+        text-align: center;
+        line-height: 32px;
+        width: 48px;
+        height: 32px;
+        background-color: #f5f5f5;
+        border-radius: 4px;
+        cursor: pointer;
+        opacity: 0.6;
+        transition: 0.3s all ease;
+        &:hover {
+          opacity: 1;
+        }
+        i {
+          float: none;
+          margin-right: 0;
+          color: #386cca;
+        }
+      }
     }
     .item {
       padding: 0 30px;

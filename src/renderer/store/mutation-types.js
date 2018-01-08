@@ -75,7 +75,7 @@ export const ADD_FILE_INFO = 'addFileInfo';
 //重置文件详情
 export const RESET_FILE_INFO = 'resetFileInfo';
 export const DELETE_FILE_ATTRS = 'deleteFileAttrs';
-
+export const CLEAR_FILE_ATTRS = 'clearFileAttrs';
 //tools
 export const SET_TOOL_TYPE = "setToolType";
 
