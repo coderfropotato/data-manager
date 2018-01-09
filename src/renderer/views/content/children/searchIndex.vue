@@ -49,7 +49,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["searchRangeLength", "fileList"])
+    ...mapGetters(["searchRangeLength", "fileList", "searchRange"])
   },
   methods: {
     searchHis(his) {
@@ -87,32 +87,34 @@ export default {
         this.$store.dispatch("setSearchValue", this.searchVal);
         //global
         let context = this.searchVal;
-        this.$store.dispatch("searchFile", { context }).then(
-          _ => {
-            //console.log(_);
-            this.searchVal = "";
-            this.$router.push("/search");
-            this.$store.dispatch("setRouteStatus", "search");
-            this.$store.dispatch("setTotalCount", _.length);
-            // reset selected cpuont
-            this.$store.dispatch("setSelected", { count: 0, size: 0 });
-            // reset search pos
-            this.$store.dispatch("setSearchPos", "");
-          },
-          err => {
-            if (!this.isMessage) {
-              this.isMessage = true;
-              this.$message({
-                message: "请选择一个搜索范围",
-                duration: 1200,
-                type: "warning",
-                onClose: _ => {
-                  this.isMessage = false;
-                }
-              });
-            }
+        if (!this.searchRange.length) {
+          if (!this.isMessage) {
+            this.isMessage = true;
+            this.$message({
+              message: "请选择一个搜索范围",
+              duration: 1200,
+              type: "warning",
+              onClose: _ => {
+                this.isMessage = false;
+              }
+            });
           }
-        );
+        } else {
+          this.$router.push("/search");
+          this.$store.dispatch("searchFile", { context }).then(
+            _ => {
+              //console.log(_);
+              this.searchVal = "";
+              this.$store.dispatch("setRouteStatus", "search");
+              this.$store.dispatch("setTotalCount", _.length);
+              // reset selected cpuont
+              this.$store.dispatch("setSelected", { count: 0, size: 0 });
+              // reset search pos
+              this.$store.dispatch("setSearchPos", "");
+            },
+            err => {}
+          );
+        }
       } else {
         if (!this.isMessage) {
           this.isMessage = true;

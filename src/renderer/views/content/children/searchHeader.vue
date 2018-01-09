@@ -58,28 +58,31 @@ export default {
             this.$store.dispatch("setSelected", { count: 0, size: 0 });
             this.$store.dispatch("setRouteStatus", "search");
           })
-          .catch(_ => {console.log(_)});
+          .catch(_ => {
+            console.log(_);
+          });
       } else {
-        this.$store.dispatch("searchFile", { context }).then(
-          _ => {
-            //console.log(_);
-            this.searchVal = "";
-            this.$store.dispatch("setTotalCount", _.length);
-            this.$store.dispatch("setRouteStatus", "search");
-          },
-          err => {
-            if (!this.isMessage) {
-              this.isMessage = true;
-              this.$message({
-                message: "请选择一个搜索范围",
-                duration: 1200,
-                onClose: _ => {
-                  this.isMessage = false;
-                }
-              });
-            }
+        if (!this.searchRangeLength) {
+          if (!this.isMessage) {
+            this.isMessage = true;
+            this.$message({
+              message: "请选择一个搜索范围",
+              duration: 1200,
+              onClose: _ => {
+                this.isMessage = false;
+              }
+            });
           }
-        );
+        } else {
+          this.$store.dispatch("searchFile", { context }).then(
+            _ => {
+              //console.log(_);
+              this.searchVal = "";
+              this.$store.dispatch("setTotalCount", _.length);
+              this.$store.dispatch("setRouteStatus", "search");
+            }
+          );
+        }
       }
     },
     computedInput() {
@@ -99,7 +102,7 @@ export default {
       line-height: 34px;
       border: none;
       padding: 0;
-      padding-left:10px;
+      padding-left: 10px;
       max-width: 200px;
       overflow: hidden;
       text-overflow: ellipsis;

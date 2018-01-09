@@ -113,31 +113,26 @@ const actions = {
         searchRange.length === files.state.fileList.length ? isglobal = true : isglobal = false;
         return new Promise((resolve, reject) => {
             bus.$emit('searchTableLoading', true);
-            if (!searchRange.length) {
+            //console.log('searchFile'+JSON.stringify({context,searchRange,isglobal}))
+            fetchData('searchFile', {
+                context,
+                searchRange,
+                isglobal
+            }).then(res => {
+                let temp = res.fileList;
+                for (let i = 0; i < temp.length; i++) {
+                    temp[i].rootPath = temp[i].root_path;
+                    temp[i].serialNumber = temp[i].serial_number;
+                    delete temp[i]['root_path'];
+                    delete temp[i]['serial_number'];
+                }
+                commit(types.GET_SEARCH_TABLE_DATA, res.fileList);
                 bus.$emit('searchTableLoading', false);
-                reject('err');
-            } else {
-                //console.log('searchFile'+JSON.stringify({context,searchRange,isglobal}))
-                fetchData('searchFile', {
-                    context,
-                    searchRange,
-                    isglobal
-                }).then(res => {
-                    let temp = res.fileList;
-                    for (let i = 0; i < temp.length; i++) {
-                        temp[i].rootPath = temp[i].root_path;
-                        temp[i].serialNumber = temp[i].serial_number;
-                        delete temp[i]['root_path'];
-                        delete temp[i]['serial_number'];
-                    }
-                    commit(types.GET_SEARCH_TABLE_DATA, res.fileList);
-                    bus.$emit('searchTableLoading', false);
-                    resolve(res.fileList);
-                }, err => {
-                    bus.$emit('searchTableLoading', false);
-                    reject('err')
-                });
-            }
+                resolve(res.fileList);
+            }, err => {
+                bus.$emit('searchTableLoading', false);
+                reject('err')
+            });
         })
 
     },
