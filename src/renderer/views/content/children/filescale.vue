@@ -8,6 +8,10 @@
           <p>{{item.alias}}</p>
         </li>
       </ol>
+      <div class="menu">
+        <p><i class="iconfont icon-beizhu"></i>重命名</p>
+        <p><i class="iconfont icon-shanchu1"></i>删除</p>
+      </div>
       <div v-if="!fileList.length" class="no-data">
         <img src="../../../assets/images/nodevice.png" alt="">
         <p>您还没有添加任何设备，赶紧去<span @click="addDevice">添加</span>吧</p>
@@ -16,6 +20,7 @@
 </template>
 
 <script>
+import $ from "jquery";
 import { mapGetters } from "vuex";
 export default {
   data() {
@@ -31,6 +36,24 @@ export default {
         }
       ]
     };
+  },
+  mounted() {
+    $(document).on('click',function(){
+      $('.menu').fadeOut();
+    })
+    $(document)
+      .on("contextmenu", "#filescale li", function(ev) {
+        console.log(event);
+        $(".menu")
+          .css({
+            left: ev.clientX + 4 - $(".sidebar-wrapper").width() + "px",
+            top: ev.clientY + 4 - $(".header-wrap").height() + "px"
+          })
+          .fadeIn();
+      })
+      .on("mouseout", "#filescale ol", function() {
+        $(".menu").fadeOut();
+      });
   },
   created() {
     //默认获取文件列表
@@ -105,6 +128,33 @@ export default {
 <style lang="scss" scoped>
 #filescale {
   height: 100%;
+  position: relative;
+  .menu {
+    width: 84px;
+    border: 1px solid #eaeaea;
+    position: absolute;
+    display: none;
+    p {
+      font-size: 12px;
+      line-height: 34px;
+      padding: 0 10px;
+      box-sizing: border-box;
+      background-color: #fff;
+      border-bottom: 1px solid #eaeaea;
+      color: #333;
+      cursor: pointer;
+      &:last-child {
+        border-bottom: none;
+      }
+      &:hover {
+        background-color: #f5f5f5;
+      }
+      i {
+        font-size: 12px;
+        margin-right: 8px;
+      }
+    }
+  }
   .no-data {
     text-align: center;
     margin-top: 172px;
@@ -144,12 +194,24 @@ export default {
       box-sizing: border-box;
       border-radius: 10px;
       opacity: 0.9;
-      transition: 0.3s all ease;
-      &:hover {
-        background: #d1dbe5;
+      // transition: 0.3s all ease;
+      // &:hover {
+      //   border:1px solid  #d1dbe5;
+      // }
+      &:hover img {
+        background-color: #f5f5f5;
       }
-
+      // &:hover p {
+      //   color: #386cca;
+      // }
+      &:active img {
+        border:1px solid #999;
+      }
+      &:active p {
+        color: #386cca;
+      }
       img {
+        transition: 0.3s all ease;
         width: 60px;
         height: 60px;
         display: inline-block;

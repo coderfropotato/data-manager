@@ -17,7 +17,7 @@
             <!-- <edit-dom v-model="item.alias" @input="input"></edit-dom> -->
           </li>
         </ol>
-        <p @click="isShow=true;" v-show="fileList.length>5 && !isShow">更多文件&nbsp;></p>
+        <p @click="isShow=true;" v-show="fileList.length>5 && !isShow">更多文件</p>
       </div>
       <p class="no-data" v-if="!fileList.length">暂无设备</p>
       <el-dialog
@@ -133,7 +133,7 @@ export default {
             .then(_ => {
               let message = "";
               if (_.result) {
-                message = "别名修改成功";
+                message = "名称修改成功";
                 _this.dialogVisible = false;
                 this.$store.dispatch("getImportTargetDisks");
                 this.$router.push("/filescale");
@@ -143,7 +143,7 @@ export default {
                 message = _.Error;
                 this.showMessage(message);
               } else {
-                message = "别名修改失败";
+                message = "修改失败！该名称文件已存在！";
                 this.showMessage(message);
               }
             })
@@ -160,7 +160,7 @@ export default {
     del(index) {
       // TODO delete device
       this.$confirm(
-        `此操作将永久删除 " ${this.fileList[index].alias} ", 是否继续?"`,
+        `此操作将永久删除 " ${this.fileList[index].alias} ", 确定删除?"`,
         "提示",
         {
           confirmButtonText: "确定",
@@ -275,7 +275,7 @@ export default {
   .title {
     display: flex;
     justify-content: space-between;
-    padding: 0 18px;
+    padding: 0 30px 0 30px;
     cursor: default;
     vertical-align: middle;
     i {
@@ -287,7 +287,7 @@ export default {
   p {
     font-size: 12px;
     text-align: right;
-    padding-right: 12px;
+    padding-right: 30px;
     margin-top: 12px;
     cursor: pointer;
     &:hover {
@@ -314,7 +314,7 @@ export default {
       overflow-y: scroll;
     }
     li {
-      padding: 0 40px;
+      padding: 0 50px;
       height: 38px;
       line-height: 38px;
       cursor: pointer;
@@ -337,7 +337,7 @@ export default {
       }
       .editDevice {
         position: absolute;
-        right: 18px;
+        right: 30px;
         top: 11px;
         width: 16px;
         height: 16px;

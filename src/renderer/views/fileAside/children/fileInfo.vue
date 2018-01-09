@@ -42,7 +42,8 @@
         <h5 class="item icon-line">
           <i class="iconfont icon-cankaojiyinzu"></i>
           <span>属性</span>
-          <em @click="OneSave"><i class="iconfont icon-bianji"></i></em>
+          <em v-if="InputModule" @click="OneSave"><i class="iconfont icon-bianji"></i></em>
+          <em v-if="!InputModule" :class="{'active':!InputModule}" @click="InputModule = true"><span>完成</span><!-- <i class="iconfont icon-bianji"></i> --></em>
         </h5>
         <div v-show="!InputModule" class="attrs">
           <span>名称</span>
@@ -125,7 +126,15 @@ export default {
         $(this)
           .removeClass("icon-jianqu-dianji")
           .addClass("icon-jianqu");
-      });
+      })
+      .on('mouseover','.item-list li',function(){
+        $(this).find('.iconfont').show();
+        $(this).css('background-color','#f5f5f5');
+      })
+      .on('mouseout','.item-list li',function(){
+        $('.item-list li .iconfont').hide();
+        $(this).css('background-color','#fff');
+      })
   },
   computed: {
     ...mapGetters(["fileInfo", "globalRouteStatus", "curData", "curIndex"])
@@ -343,11 +352,23 @@ export default {
         height: 32px;
         background-color: #f5f5f5;
         border-radius: 4px;
-        cursor: pointer;
-        opacity: 0.6;
+        font-style: normal;
+        opacity: 1.0;
+        cursor:pointer;
         transition: 0.3s all ease;
+        &.active{
+          background-color:#386cca;
+          span{
+            color:#fff;
+          }
+        }
         &:hover {
-          opacity: 1;
+          opacity: 0.8;
+        }
+        span{
+          text-align:center;
+          float:none;
+          font-size:12px;
         }
         i {
           float: none;
@@ -465,7 +486,9 @@ export default {
           &:hover {
             border-color: #999;
           }
-
+          &:focus{
+            background-color: #fff;
+          }
           &:nth-child(2) {
             width: 55%;
           }

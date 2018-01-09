@@ -173,7 +173,7 @@ $backgroundColor: #f7f9f9;
     li {
       height: 60px;
       line-height: 48px;
-      padding: 6px 40px;
+      padding: 6px 30px;
       cursor: pointer;
       transition: 0.3s all ease;
       &.active {
@@ -190,13 +190,13 @@ $backgroundColor: #f7f9f9;
         margin-right: 12px;
       }
       span{
-        font-size: 16px;
+        font-size: 14px;
       }
     }
   }
   .nav-menu {
     overflow: hidden;
-    height: 45%;
+    // height: 45%;
     .el-menu {
       background-color: $backgroundColor;
     }
@@ -218,13 +218,13 @@ $backgroundColor: #f7f9f9;
     height: 1px;
     width: 90%;
     background-color: #ccc;
-    margin: 1em auto;
+    margin: 14px auto;
   }
 
   .middle {
     position: relative;
     width: 100%;
-    height: 48%;
+    height: calc(100% - 240px - 30px);
     overflow-y: scroll;
   }
 

@@ -100,6 +100,10 @@ export default {
       border: none;
       padding: 0;
       padding-left:10px;
+      max-width: 200px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
     .tag-group {
       position: static;

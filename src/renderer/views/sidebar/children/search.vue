@@ -75,7 +75,7 @@ export default {
     padding: 10px 0;
     transition: 0.3s all ease;
     .el-checkbox {
-      padding: 9.5px 18px;
+      padding: 9.5px 30px 9.5px 50px;
       display: block;
       width: 100%;
       padding-left: 40px;
@@ -85,7 +85,7 @@ export default {
     }
   }
   .el-checkbox {
-    padding: 0 18px;
+    padding: 0 30px;
   }
 
   .iconfile {

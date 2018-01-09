@@ -63,19 +63,22 @@ export default {
       let pos = scale * oInner;
       $(".breadcrumb > p").css({ left: -scale * (oInner - oWidth)+5 });
     }
+    function resetDom(){
+       $(".breadcrumb > p").css({ left: 5 });
+    }
     let x = 0;
     let oWidth, oInner, scale;
     let _this = this;
     $(".bread-wrap")
       // .on("mousemove",moveDom)
       .on("mouseleave", function() {
-        if (oInner > oWidth) {
-          $(".breadcrumb > p").css({ left: -x / oWidth * (oInner - oWidth)+5 });
-        } else {
+        // if (oInner > oWidth) {
+          // $(".breadcrumb > p").css({ left: -x / oWidth * (oInner - oWidth)+5 });
+        // } else {
           $(".breadcrumb > p").css({ left: 5 });
-        }
+        // }
       });
-    $(".breadcrumb p").on("mousemove", moveDom);
+    $(".breadcrumb p").on("mousemove", moveDom).on("mouseleave",resetDom);
     // document
     $(document).on("click", function() {
       _this.showDom = true;

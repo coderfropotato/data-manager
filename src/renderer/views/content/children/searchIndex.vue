@@ -19,7 +19,18 @@
               </li>
           </ul>
       </div>
-      <img class="search-img" src="../../../assets/images/search-index.png" alt="">
+      <div class="recommend">
+          <div class="title">
+            <p>推荐</p>
+            <span>以下信息根据您的兴趣推荐</span>
+          </div>
+          <div class="rec-wrap">
+            <div class="no-data"></div>
+            <img src="../../../assets/images/no-recommend.png" alt="">
+            <p>暂无文章推送,敬请期待</p>
+          </div>
+      </div>
+      <!-- <img class="search-img" src="../../../assets/images/search-index.png" alt=""> -->
   </div>
 </div>
 </template>
@@ -251,6 +262,56 @@ export default {
     position: absolute;
     bottom: 100px;
     right: 80px;
+  }
+  /*
+  <div class="recommend">
+          <div class="title">
+            <p>推荐</p>
+            <span>以下信息根据您的兴趣推荐</span>
+          </div>
+          <div class="rec-wrap">
+            <div class="no-data"></div>
+          </div>
+      </div>*/
+  .recommend{
+    width:70%;
+    margin: 0 auto;
+    .title{
+      &:after{
+        content: "";
+        display: block;
+        clear: both;
+        margin-bottom: 20px;
+      }
+      p{
+        font-size: 16px;
+        color: #333;
+        line-height: 1;
+        float: left;
+        margin-right: 30px;
+      }
+      span{
+        font-size: 12px;
+        color: #999;
+        line-height: 1;
+        margin-top: 4px;
+        float: left;
+      }
+    }
+    .rec-wrap{
+      border:1px solid #e8e8e8;
+      height: 360px;
+      text-align: center;
+      img{
+        width: 160px;
+        height: 160px;
+        margin: 82px 0 20px 0;
+      }
+      p{
+        color: #999;
+        font-size: 16px;
+      }
+    }
   }
 }
 </style>

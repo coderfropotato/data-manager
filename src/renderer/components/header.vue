@@ -99,6 +99,7 @@ export default {
           background-image: url("../assets/images/zoom.png");
         }
         &:nth-child(3) {
+          margin-right:8px; 
           background-image: url("../assets/images/close.png");
         }
         &:hover {

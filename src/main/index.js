@@ -145,8 +145,8 @@ ipcMain.on('addFile', (event, arg) => {
     let URL = arg.URL
     if (newWin === undefined) {
       newWin = new BrowserWindow({
-        height: 340,
-        width: 650,
+        height: 340,//340
+        width: 650,//650
         resizable: false,
         frame: false,
         show: false

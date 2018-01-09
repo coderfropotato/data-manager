@@ -5,7 +5,10 @@ body {
   font-size: 62.5%;
   height: 100%;
   overflow: hidden;
-  border: 1px solid #7ba8fc;
+  border-top: 1px solid #386cca;
+  border-left: 1px solid #386cca;
+  border-right: 1px solid #386cca;
+  border-bottom: 1px solid #386cca;
 }
 
 
@@ -702,4 +705,15 @@ button {
 
 .el-table .choose {
   cursor: default;
+}
+.el-button.btn-first:focus, .el-button.btn-first:hover, .el-button.btn-first:active {
+  color: #386cca;
+  border-color: #386cca;
+  background:none;
+}
+.el-textarea__inner:hover{
+  border-color: #386cca;
+}
+.el-select:hover input{
+  border-color: #386cca;
 }
