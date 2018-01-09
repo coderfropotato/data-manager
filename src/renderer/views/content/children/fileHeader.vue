@@ -152,7 +152,9 @@ export default {
                 );
                 this.$store.dispatch("setSelected", { count: 0, size: 0 });
                 this.$store.dispatch("setRouteStatus", "search");
-              });
+              }).catch((err)=>{
+                console.log(err)
+              })
             break;
           case 1:
             //全局搜索

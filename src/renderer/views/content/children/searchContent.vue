@@ -12,7 +12,7 @@ export default {
     return {
       tableheight: 0,
       show:true,
-      fullscreenLoading:true
+      fullscreenLoading:false
     };
   },
   mounted() {

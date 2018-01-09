@@ -58,7 +58,7 @@ export default {
             this.$store.dispatch("setSelected", { count: 0, size: 0 });
             this.$store.dispatch("setRouteStatus", "search");
           })
-          .catch(_ => {});
+          .catch(_ => {console.log(_)});
       } else {
         this.$store.dispatch("searchFile", { context }).then(
           _ => {

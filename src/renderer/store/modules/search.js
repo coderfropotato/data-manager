@@ -46,8 +46,8 @@ const actions = {
     searchCurrentDisk({
         commit
     }, context) {
+        bus.$emit('searchTableLoading', true);
         return new Promise((resolve, reject) => {
-            bus.$emit('searchTableLoading', true);
             let serialNumber = files.state.serialNumber;
             let rootPath = files.state.rootPath;
             let childPath = files.state.navList[files.state.navList.length - 1].path;
@@ -57,6 +57,7 @@ const actions = {
                 rootPath,
                 childPath
             }).then(res => {
+                bus.$emit('searchTableLoading', false);
                 let data = {},
                     list = [];
                 let temp = res.fileList;
@@ -68,11 +69,13 @@ const actions = {
                     list.push(tmp);
                 }
                 commit(types.GET_SEARCH_TABLE_DATA, list);
-                bus.$emit('searchTableLoading', false);
                 resolve(list);
             }, err => {
                 bus.$emit('searchTableLoading', false);
                 reject('error')
+            }).catch((err) => {
+                bus.$emit('searchTableLoading', false);
+                console.log(err);
             })
         })
     },

@@ -87,11 +87,11 @@ export default {
         this.$store.dispatch("setSearchValue", this.searchVal);
         //global
         let context = this.searchVal;
-        this.$router.push("/search");
         this.$store.dispatch("searchFile", { context }).then(
           _ => {
             //console.log(_);
             this.searchVal = "";
+            this.$router.push("/search");
             this.$store.dispatch("setRouteStatus", "search");
             this.$store.dispatch("setTotalCount", _.length);
             // reset selected cpuont
@@ -103,8 +103,9 @@ export default {
             if (!this.isMessage) {
               this.isMessage = true;
               this.$message({
-                message: "err",
+                message: "请选择一个搜索范围",
                 duration: 1200,
+                type: "warning",
                 onClose: _ => {
                   this.isMessage = false;
                 }
@@ -273,24 +274,24 @@ export default {
             <div class="no-data"></div>
           </div>
       </div>*/
-  .recommend{
-    width:70%;
+  .recommend {
+    width: 70%;
     margin: 0 auto;
-    .title{
-      &:after{
+    .title {
+      &:after {
         content: "";
         display: block;
         clear: both;
         margin-bottom: 20px;
       }
-      p{
+      p {
         font-size: 16px;
         color: #333;
         line-height: 1;
         float: left;
         margin-right: 30px;
       }
-      span{
+      span {
         font-size: 12px;
         color: #999;
         line-height: 1;
@@ -298,16 +299,16 @@ export default {
         float: left;
       }
     }
-    .rec-wrap{
-      border:1px solid #e8e8e8;
+    .rec-wrap {
+      border: 1px solid #e8e8e8;
       height: 360px;
       text-align: center;
-      img{
+      img {
         width: 160px;
         height: 160px;
         margin: 82px 0 20px 0;
       }
-      p{
+      p {
         color: #999;
         font-size: 16px;
       }
