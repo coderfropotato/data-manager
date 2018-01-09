@@ -2,10 +2,10 @@ echo "start build back"
 
 RMDIR /S /Q .backend
 
-git clone ssh://git@54.223.70.246:22/data-management/data-manager-back-end.git .backend
+git clone http://54.223.70.246:9000/data-management/data-manager-back-end.git .backend
 cd .backend
 git checkout with_tornado
-
+echo "down backend code success"
 virtualenv venv
 call .\venv\Scripts\activate.bat
 pip install -i https://pypi.tuna.tsinghua.edu.cn/simple asn1crypto==0.22.0
@@ -45,12 +45,6 @@ pip install -i https://pypi.tuna.tsinghua.edu.cn/simple pyinstaller==3.3
 RMDIR /S /Q build\backend
 RMDIR /S /Q ..\dist\backend
 
-venv\Scripts\pyinstaller --hidden-import=scipy._lib.messagestream --hidden-import=pandas._libs.tslibs.timedeltas --paths venv\Lib\site-packages\scipy\extra-dll --add-data config\*;config --distpath ..\dist -y -n backend  .\run.py
+venv\Scripts\pyinstaller --hidden-import=scipy._lib.messagestream --hidden-import=pandas._libs.tslibs.timedeltas --paths venv\Lib\site-packages\scipy\extra-dll --add-data config\*;config --add-data data\*;data --distpath ..\dist -y -n backend  .\run.py
 
 cd ..
-
-echo "start build font"
-
-call npm i
-call npm rebuild zeromq --runtime=electron --target=1.6.11
-call npm run build:win32
