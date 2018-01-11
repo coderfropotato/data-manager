@@ -158,7 +158,9 @@ const actions = {
         if (updateList[i].name === updateList[j].name && i !== j) {
           // commit(types.DELETE_FILE_ATTRS, j);
           bus.$emit('saveAttrNameSame');
-          return;
+          return new Promise((resolve,reject)=>{
+            resolve('error');
+          })
         }
       }
     }

@@ -5,7 +5,7 @@
         <ol :class="{'height-range':fileList.length>=5 && isShow}">
           <!-- icon-wodeyingpan -->
           <!-- <li @click="jumpToSearch(item.name)" v-for="(item,index) in fileList" :key="index"><i class="iconfont iconfile" :class="{'icon-wodeyingpan':item.isDisk,'icon-diannao':!item.isDisk}"></i>{{item.name}}</li> -->
-          <li @contextmenu="contextmenu($event,item)" @click="jumpToSearch($event,item)" v-for="(item,index) in fileList" :key="index" :title="item.alias">
+          <li  @click="jumpToSearch($event,item)" v-for="(item,index) in fileList" :key="index" :title="item.alias">
             <!-- icon-wodeyingpan -->
             <em class="iconfile iconfont " :class="{'icon-wodeyingpan':item.ismoveable,'icon-diannao':!item.ismoveable && !item.isTelnet,'icon-yuancheng':item.isTelnet}"></em>
             <div class="alias">{{item.alias}}</div>
@@ -64,33 +64,62 @@ export default {
   },
   mounted() {
     $(document)
-      .on("mouseover", ".editDevice", function() {
+      .on("mouseover", ".icon-gengduo", function() {
         $(this)
           .removeClass("icon-gengduo")
           .addClass("icon-gengduo-dianji");
       })
-      .on("mouseout", ".editDevice", function() {
+      .on("mouseout", ".icon-gengduo-dianji", function() {
         $(this)
           .removeClass("icon-gengduo-dianji")
           .addClass("icon-gengduo");
       })
-      .on("click", ".editDevice", function(ev) {
-        $(this).addClass("icon-shouqi");
-        $("#directory-root .list li").removeClass("active");
+      .on("click", ".icon-gengduo-dianji", function(ev) {
+        $("#directory-root ol li").removeClass("active");
         $(this)
           .parent()
           .addClass("active");
+        $("#directory-root ol li i").attr(
+          "class",
+          "editDevice iconfont icon-gengduo"
+        );
+        $(this)
+          .removeClass("icon-gengduo")
+          .addClass("icon-shouqi");
+        ev.stopPropagation();
+      })
+      .on("mouseover", ".icon-shouqi", function() {
+        $(this)
+          .removeClass("icon-shouqi")
+          .addClass("icon-shouqi-dianji");
+      })
+      .on("mouseout", ".icon-shouqi-dianji", function() {
+        $(this)
+          .removeClass("icon-shouqi-dianji")
+          .addClass("icon-shouqi");
+      })
+      .on("click", ".icon-shouqi-dianji", function(ev) {
+        $(this)
+          .parent()
+          .removeClass("active");
+        $(this).attr("class", "editDevice iconfont icon-gengduo");
         ev.stopPropagation();
       })
       .on("click", function() {
         $("#directory-root ol li").removeClass("active");
+        $("#directory-root ol li i").attr(
+          "class",
+          "editDevice iconfont icon-gengduo"
+        );
       })
-      .on("mouseover","#directory-root .list li",function(){
-        $(this).find('.editDevice').show();
+      .on("mouseover", "#directory-root .list li", function() {
+        $(this)
+          .find(".editDevice")
+          .show();
       })
-      .on("mouseout","#directory-root .list li",function(){
-        $('.editDevice').hide();
-      })
+      .on("mouseout", "#directory-root .list li", function() {
+        $(".editDevice").hide();
+      });
   },
   methods: {
     input(...args) {
@@ -138,7 +167,7 @@ export default {
                 this.$store.dispatch("getImportTargetDisks");
                 this.$router.push("/filescale");
                 this.$store.dispatch("setGlobalHistory", false);
-                this.showMessage(message,'success');
+                this.showMessage(message, "success");
               } else if (_.Error) {
                 message = _.Error;
                 this.showMessage(message);
@@ -215,7 +244,7 @@ export default {
         $("#directory-root .list ol li").removeClass("active");
         //编程式导航
         this.$router.push(`/searchfiles?type=${item.serial_number}`);
-        this.$store.dispatch("setDeviceAlias",item.alias);
+        this.$store.dispatch("setDeviceAlias", item.alias);
         //设置序列号
         this.$store
           .dispatch("setSerialNumber", item.serial_number)
@@ -367,7 +396,7 @@ export default {
           flex: 1;
           text-align: center;
           color: #fff;
-          transition: .3s all ease;
+          transition: 0.3s all ease;
           &:hover {
             opacity: 0.8;
           }

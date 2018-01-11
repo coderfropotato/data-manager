@@ -37,7 +37,7 @@
         </li>
         <li class="blue">
           <p>数据来源：</p>
-          <span :title="alias">{{fileInfo.source.source}}</span>
+          <span :title="fileInfo.source.source">{{fileInfo.source.source}}</span>
         </li>
       </ul>
       <div class="text">
@@ -162,34 +162,31 @@ export default {
       });
   },
   computed: {
-    ...mapGetters([
-      "fileInfo",
-      "globalRouteStatus",
-      "curData",
-      "curIndex",
-      "alias"
-    ])
+    ...mapGetters(["fileInfo", "globalRouteStatus", "curData", "curIndex"])
   },
   methods: {
     OneSave() {
       if (!this.InputModule) {
         this.$store.dispatch("checkAttrs");
       }
-      if (this.same) {
-        if (!this.isMessage) {
-          this.isMessage = true;
-          this.$message({
-            message: "属性名不能重复",
-            duration: 1200,
-            onClose: _ => {
-              this.isMessage = false;
-            }
-          });
+      this.$store.dispatch("saveFileInfo").then(_ => {
+        this.same=_==='error';
+        if (this.same) {
+          if (!this.isMessage) {
+            this.isMessage = true;
+            this.$message({
+              message: "属性名不能重复",
+              duration: 1200,
+              onClose: _ => {
+                this.isMessage = false;
+              }
+            });
+          }
+          this.InputModule = false;
+        } else {
+          this.InputModule = !this.InputModule;
         }
-        this.InputModule = false;
-      } else {
-        this.InputModule = !this.InputModule;
-      }
+      });
     },
     deleteAttrs(index) {
       this.$store.dispatch("deleteAttrs", index).then(_ => {
@@ -211,10 +208,10 @@ export default {
         this.$store.dispatch("saveFileInfo");
       });
     },
-    saveRemark(){
-      this.$store.dispatch('saveRemarkInfo').then(_=>{
+    saveRemark() {
+      this.$store.dispatch("saveRemarkInfo").then(_ => {
         this.TextAreaModule = true;
-      })
+      });
     },
     addAttrs() {
       //add file attrs
