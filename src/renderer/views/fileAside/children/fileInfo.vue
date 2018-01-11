@@ -82,7 +82,7 @@
         </h5>
         <div class="text-area">
           <!-- <el-input id="texta" type="textarea" :class="{'active':module}"  :readonly="module" placeholder="您还没有添加备注"  :value="fileInfo.remark" @change="updateMessage($event)" :autosize="{ minRows: 2, maxRows: 8}" :rows="5"></el-input> -->
-          <textarea id="texta" :class="{'active':TextAreaModule}"  :readonly="TextAreaModule" placeholder="您还没有添加备注"  :value="fileInfo.remark" @change="updateMessage($event)"></textarea>
+          <textarea id="texta" :class="{'active':TextAreaModule}"  :readonly="TextAreaModule" placeholder="您还没有添加备注"  :value="fileInfo.remark" @change="updateTextArea($event)"></textarea>
         </div>
       </div>
     </div>
@@ -170,7 +170,7 @@ export default {
         this.$store.dispatch("checkAttrs");
       }
       this.$store.dispatch("saveFileInfo").then(_ => {
-        this.same=_==='error';
+        this.same = _ === "error";
         if (this.same) {
           if (!this.isMessage) {
             this.isMessage = true;
@@ -206,6 +206,21 @@ export default {
       }
       this.$store.dispatch("updateMessage", params).then(res => {
         this.$store.dispatch("saveFileInfo");
+      });
+    },
+    updateTextArea(e, index, type) {
+      let params;
+      if (!type) {
+        params = e.target.value;
+      } else {
+        params = {
+          index: index,
+          type: type,
+          val: $.trim(e.target.value)
+        };
+      }
+      this.$store.dispatch("updateMessage", params).then(res => {
+        this.$store.dispatch("saveRemarkInfo");
       });
     },
     saveRemark() {

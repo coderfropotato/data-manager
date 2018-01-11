@@ -21,6 +21,7 @@
       </div>
       <div class="recommend">
           <div class="title">
+            <img src="../../../assets/images/tuijian.png" alt="">
             <p>推荐</p>
             <span>以下信息根据您的兴趣推荐</span>
           </div>
@@ -279,7 +280,14 @@ export default {
   .recommend {
     width: 70%;
     margin: 0 auto;
+
     .title {
+      img {
+        width: 16px;
+        height: 16px;
+        float: left;
+        margin-right: 8px;
+      }
       &:after {
         content: "";
         display: block;

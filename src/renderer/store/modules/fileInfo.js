@@ -249,7 +249,7 @@ const actions = {
         serialNumber,
         rootPath,
         filePath,
-        updateList
+        remark
       }
     } else if (global.state.globalRouteStatus === 'status') {
       //文件状态保存详情
@@ -264,10 +264,10 @@ const actions = {
       }
     }
     return new Promise((resolve, reject) => {
-      fetchData('updateAttribute', param).then(res => {
+      fetchData('updateRemark', param).then(res => {
         commit(types.SAVE_FILE_INFO_REMAEK, remark);
         resolve('success');
-      })
+      }).catch(err=>{})
     })
   },
   addFileInfo({
