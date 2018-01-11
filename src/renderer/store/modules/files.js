@@ -17,6 +17,8 @@ const state = {
   navList: [],
   //存序列号
   serialNumber: "",
+  //设备名称
+  deviceAlias:"",
   //表格选中的历史项，总是显示最后一个的详情
   tableClickHistory: [],
   searchTableClickHistory: [],
@@ -29,7 +31,8 @@ const getters = {
   fileTableData: state => state.fileTableData,
   navList: state => state.navList,
   tableClickHistory: state => state.tableClickHistory,
-  searchTableClickHistory: state => state.searchTableClickHistory
+  searchTableClickHistory: state => state.searchTableClickHistory,
+  alias:state=>state.deviceAlias
 }
 
 const actions = {
@@ -110,6 +113,10 @@ const actions = {
       commit(types.SET_SERIAL_NUMBER, num);
       resolve('success');
     })
+  },
+  // 设置设备名称
+  setDeviceAlias({commit},alias){
+    commit(types.SET_DEVICE_ALIAS,alias);
   },
   //set bottom info
   setBottomInfo({
@@ -199,6 +206,9 @@ const mutations = {
   // reset table click history
   [types.RESER_TABLE_CLICK_HISTORY](state) {
     state.tableClickHistory = [];
+  },
+  [types.SET_DEVICE_ALIAS](state,alias){
+    state.deviceAlias = alias;
   }
 }
 

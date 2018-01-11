@@ -20,19 +20,24 @@
       </div>
       <ul>
         <li>
-          <p>文件类型：<span>{{fileInfo.fileType}}</span></p>
+          <p>文件类型：</p>
+          <span>{{fileInfo.fileType}}</span>
         </li>
         <li v-if="! fileInfo.isdir">
-          <p>文件大小：<span>{{fileInfo.basic.size | reverseSize}}</span></p>
+          <p>文件大小：</p>
+          <span>{{fileInfo.basic.size | reverseSize}}</span>
         </li>
         <li>
-          <p>创建时间：<span>{{fileInfo.basic.ctime | reverseTime}}</span></p>
+          <p>创建时间：</p>
+          <span>{{fileInfo.basic.ctime | reverseTime}}</span>
         </li>
         <li class="blue">
-          <p>数据类别：<span>{{fileInfo.source.category}}</span></p>
+          <p>数据类别：</p>
+          <span>{{fileInfo.source.category}}</span>
         </li>
         <li class="blue">
-          <p>数据来源：<span>{{fileInfo.source.source}}</span></p>
+          <p>数据来源：</p>
+          <span :title="alias">{{alias}}</span>
         </li>
       </ul>
       <div class="text">
@@ -127,22 +132,30 @@ export default {
           .removeClass("icon-jianqu-dianji")
           .addClass("icon-jianqu");
       })
-      .on('mouseover','.item-list li',function(){
-        $(this).find('.iconfont').show();
-        $(this).css('background-color','#f5f5f5');
+      .on("mouseover", ".item-list li", function() {
+        $(this)
+          .find(".iconfont")
+          .show();
+        $(this).css("background-color", "#f5f5f5");
       })
-      .on('mouseout','.item-list li',function(){
-        $('.item-list li .iconfont').hide();
-        $(this).css('background-color','#fff');
-      })
+      .on("mouseout", ".item-list li", function() {
+        $(".item-list li .iconfont").hide();
+        $(this).css("background-color", "#fff");
+      });
   },
   computed: {
-    ...mapGetters(["fileInfo", "globalRouteStatus", "curData", "curIndex"])
+    ...mapGetters([
+      "fileInfo",
+      "globalRouteStatus",
+      "curData",
+      "curIndex",
+      "alias"
+    ])
   },
   methods: {
-    OneSave(){
-      if(!this.InputModule) {
-        this.$store.dispatch('checkAttrs');
+    OneSave() {
+      if (!this.InputModule) {
+        this.$store.dispatch("checkAttrs");
       }
       this.InputModule = !this.InputModule;
     },
@@ -303,7 +316,7 @@ export default {
       text-align: left;
       display: flex;
       line-height: 1;
-      flex-direction: column;
+      flex-direction: row;
       margin-top: 16px;
       &.blue {
         span {
@@ -315,10 +328,15 @@ export default {
         }
       }
       p {
+        // width: 70px;
         font-size: 14px;
-        span {
-          font-size: inherit;
-        }
+      }
+      span {
+        flex: 1;
+        font-size: 14px;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
       }
     }
   }
@@ -353,22 +371,22 @@ export default {
         background-color: #f5f5f5;
         border-radius: 4px;
         font-style: normal;
-        opacity: 1.0;
-        cursor:pointer;
+        opacity: 1;
+        cursor: pointer;
         transition: 0.3s all ease;
-        &.active{
-          background-color:#386cca;
-          span{
-            color:#fff;
+        &.active {
+          background-color: #386cca;
+          span {
+            color: #fff;
           }
         }
         &:hover {
           opacity: 0.8;
         }
-        span{
-          text-align:center;
-          float:none;
-          font-size:12px;
+        span {
+          text-align: center;
+          float: none;
+          font-size: 12px;
         }
         i {
           float: none;
@@ -486,7 +504,7 @@ export default {
           &:hover {
             border-color: #999;
           }
-          &:focus{
+          &:focus {
             background-color: #fff;
           }
           &:nth-child(2) {

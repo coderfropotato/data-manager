@@ -215,6 +215,7 @@ export default {
         $("#directory-root .list ol li").removeClass("active");
         //编程式导航
         this.$router.push(`/searchfiles?type=${item.serial_number}`);
+        this.$store.dispatch("setDeviceAlias",item.alias);
         //设置序列号
         this.$store
           .dispatch("setSerialNumber", item.serial_number)

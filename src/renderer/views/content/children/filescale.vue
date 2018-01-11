@@ -87,6 +87,7 @@ export default {
     jumpToSearch(item) {
       //编程式导航
       this.$router.push(`/searchfiles?type=${item.serial_number}`);
+      this.$store.dispatch("setDeviceAlias",item.alias);
       //设置序列号
       this.$store.dispatch("setSerialNumber", item.serial_number).then(res => {
         //设置根路径
