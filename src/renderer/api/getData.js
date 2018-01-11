@@ -4,6 +4,7 @@
  * 404：没有找到（传入的参数有问题）
  * 500：服务器错误（服务器处理出现问题）
  */
+import bus from "@/utils/bus";
 const baseURL = 'http://127.0.0.1'
 const PORT = 4242
 const URL = baseURL + ':' + PORT
@@ -28,6 +29,7 @@ let getData = function (API, params) {
         if (request.status === 200 || request.status === 304) {
           resolve(JSON.parse(request.responseText));
         } else {
+          bus.$emit('Error');
           reject(request.responseText)
         }
       }
