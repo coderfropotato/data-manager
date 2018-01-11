@@ -25,6 +25,7 @@ let getData = function (API, params) {
   request.send(JSON.stringify(Param.params));
   return new Promise((resolve, reject) => {
     request.onreadystatechange = () => {
+      console.log(1);
       if (request.readyState === 4) {
         if (request.status === 200 || request.status === 304) {
           resolve(JSON.parse(request.responseText));
@@ -32,8 +33,6 @@ let getData = function (API, params) {
           bus.$emit('Error');
           reject(request.responseText)
         }
-      }else{
-        bus.$emit('Error');
       }
     }
   })
