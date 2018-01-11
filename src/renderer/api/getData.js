@@ -32,6 +32,8 @@ let getData = function (API, params) {
           bus.$emit('Error');
           reject(request.responseText)
         }
+      }else{
+        bus.$emit('Error');
       }
     }
   })
