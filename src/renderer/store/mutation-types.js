@@ -87,3 +87,4 @@ export const SET_GLOBAL_HISTORY ='setGlobalHistory';
 
 
 export const SET_DEVICE_ALIAS = 'setDeviceAlias';
+export const SAVE_FILE_INFO_REMAEK = "saveFileInfoRemark";

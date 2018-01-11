@@ -56,10 +56,10 @@ export default {
         // })
     })
     //请求错误监听
-    bus.$on('error',(res)=>{
+    bus.$on('Error',_=>{
       this.$message({
          type: 'error',
-         message: res+':  数据读取失败，请重试。',
+         message: "服务器错误",
          duration: 1200
        })
     })

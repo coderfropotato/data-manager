@@ -37,7 +37,7 @@
         </li>
         <li class="blue">
           <p>数据来源：</p>
-          <span :title="alias">{{alias}}</span>
+          <span :title="alias">{{fileInfo.source.source}}</span>
         </li>
       </ul>
       <div class="text">
@@ -48,7 +48,7 @@
           <i class="iconfont icon-cankaojiyinzu"></i>
           <span>属性</span>
           <em v-if="InputModule" @click="OneSave"><i class="iconfont icon-bianji"></i></em>
-          <em v-if="!InputModule" :class="{'active':!InputModule}" @click="InputModule = true"><span>完成</span><!-- <i class="iconfont icon-bianji"></i> --></em>
+          <em v-if="!InputModule" :class="{'active':!InputModule}" @click="OneSave"><span>完成</span><!-- <i class="iconfont icon-bianji"></i> --></em>
         </h5>
         <div v-show="!InputModule" class="attrs">
           <span>名称</span>
@@ -77,7 +77,9 @@
         <!-- add attrs -->
         <h5 class="item icon-line"><i class="iconfont icon-beizhu1"></i>
           <span>备注</span>
-          <em @click="TextAreaModule = !TextAreaModule"><i class="iconfont icon-bianji"></i></em></h5>
+           <em v-if="TextAreaModule" @click="TextAreaModule = !TextAreaModule"><i class="iconfont icon-bianji"></i></em>
+          <em v-if="!TextAreaModule" :class="{'active':!TextAreaModule}" @click="saveRemark"><span>完成</span></em>
+        </h5>
         <div class="text-area">
           <!-- <el-input id="texta" type="textarea" :class="{'active':module}"  :readonly="module" placeholder="您还没有添加备注"  :value="fileInfo.remark" @change="updateMessage($event)" :autosize="{ minRows: 2, maxRows: 8}" :rows="5"></el-input> -->
           <textarea id="texta" :class="{'active':TextAreaModule}"  :readonly="TextAreaModule" placeholder="您还没有添加备注"  :value="fileInfo.remark" @change="updateMessage($event)"></textarea>
@@ -103,7 +105,10 @@ export default {
       fullscreenLoading: false,
       InputModule: true,
       TextAreaModule: true,
-      saveError: false
+      saveError: false,
+      //same
+      same: false,
+      isMessage: false
     };
   },
   created() {
@@ -114,10 +119,23 @@ export default {
       this.topShow = _;
     });
     bus.$on("saveAttrNameSame", _ => {
-      this.$message("属性名不能重复");
+      if (!this.isMessage) {
+        this.isMessage = true;
+        this.$message({
+          message: "属性名不能重复",
+          duration: 1200,
+          onClose: _ => {
+            this.isMessage = false;
+          }
+        });
+      }
+      this.same = true;
     });
     bus.$on("fileInfoLoading", status => {
       this.fullscreenLoading = status;
+    });
+    bus.$on("removeSaveAttrNameSameStatus", _ => {
+      this.same = false;
     });
   },
   mounted() {
@@ -157,7 +175,21 @@ export default {
       if (!this.InputModule) {
         this.$store.dispatch("checkAttrs");
       }
-      this.InputModule = !this.InputModule;
+      if (this.same) {
+        if (!this.isMessage) {
+          this.isMessage = true;
+          this.$message({
+            message: "属性名不能重复",
+            duration: 1200,
+            onClose: _ => {
+              this.isMessage = false;
+            }
+          });
+        }
+        this.InputModule = false;
+      } else {
+        this.InputModule = !this.InputModule;
+      }
     },
     deleteAttrs(index) {
       this.$store.dispatch("deleteAttrs", index).then(_ => {
@@ -179,10 +211,16 @@ export default {
         this.$store.dispatch("saveFileInfo");
       });
     },
+    saveRemark(){
+      this.$store.dispatch('saveRemarkInfo').then(_=>{
+        this.TextAreaModule = true;
+      })
+    },
     addAttrs() {
       //add file attrs
       this.$store.dispatch("addFileInfo");
     },
+    // fileStatus
     getPre() {
       if (this.curData[this.curIndex - 1]) {
         let mark = this.curData[this.curIndex - 1].mark;

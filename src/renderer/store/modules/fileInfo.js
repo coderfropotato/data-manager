@@ -157,17 +157,17 @@ const actions = {
       for (var j = 0; j < updateList.length; j++) {
         if (updateList[i].name === updateList[j].name && i !== j) {
           // commit(types.DELETE_FILE_ATTRS, j);
-          commit(types.DELETE_FILE_ATTRS, j);
           bus.$emit('saveAttrNameSame');
           return;
         }
       }
     }
-    let remark = {
-      name: "remark",
-      attr: state.fileInfo.remark
-    };
-    updateList.push(remark);
+    bus.$emit("removeSaveAttrNameSameStatus");
+    // let remark = {
+    //   name: "remark",
+    //   attr: state.fileInfo.remark
+    // };
+    // updateList.push(remark);
     if (global.state.globalRouteStatus === 'file') {
       //文件列表保存详情
       let serialNumber = file.state.serialNumber;
@@ -212,6 +212,58 @@ const actions = {
       fetchData('updateAttribute', param).then(res => {
         commit(types.SAVE_FILE_INFO, updateList);
         // if(global.state.globalRouteStatus === 'status')
+        resolve('success');
+      })
+    })
+  },
+  // 保存备注
+  saveRemarkInfo({
+    commit
+  }) {
+    let remark = state.fileInfo.remark
+    if (global.state.globalRouteStatus === 'file') {
+      //文件列表保存详情
+      let serialNumber = file.state.serialNumber;
+      let rootPath = file.state.rootPath;
+      let filePath;
+      //点击进入文件夹的时候 默认清除点击历史记录
+      if (file.state.tableClickHistory.length === 0) {
+        filePath = file.state.navList[file.state.navList.length - 1].path;
+      } else {
+        filePath = file.state.tableClickHistory[file.state.tableClickHistory.length - 1].path;
+      }
+      var param = {
+        serialNumber,
+        rootPath,
+        filePath,
+        remark
+      }
+    } else if (global.state.globalRouteStatus === 'search') {
+      //搜索列表保存详情
+      let serialNumber = file.state.searchTableClickHistory[file.state.searchTableClickHistory.length - 1].serialNumber;
+      let rootPath = file.state.searchTableClickHistory[file.state.searchTableClickHistory.length - 1].rootPath;
+      let filePath = file.state.searchTableClickHistory[file.state.searchTableClickHistory.length - 1].path;
+      var param = {
+        serialNumber,
+        rootPath,
+        filePath,
+        updateList
+      }
+    } else if (global.state.globalRouteStatus === 'status') {
+      //文件状态保存详情
+      let serialNumber = state.bottomFileInfoParams.serialNumber;
+      let rootPath = state.bottomFileInfoParams.rootPath;
+      let filePath = state.bottomFileInfoParams.filepath;
+      var param = {
+        serialNumber,
+        rootPath,
+        filePath,
+        remark
+      }
+    }
+    return new Promise((resolve, reject) => {
+      fetchData('updateAttribute', param).then(res => {
+        commit(types.SAVE_FILE_INFO_REMAEK, remark);
         resolve('success');
       })
     })
@@ -273,9 +325,7 @@ const mutations = {
   },
   //保存文件详情
   [types.SAVE_FILE_INFO](state, newInfo) {
-    state.fileInfo.property = newInfo.slice(0, newInfo.length - 1);
-    let temp = newInfo.slice(newInfo.length - 1);
-    state.fileInfo.remark = temp[0].attr;
+    state.fileInfo.property = newInfo;
   },
   [types.ADD_FILE_INFO](state, params) {
     state.fileInfo.property.push({
@@ -295,8 +345,11 @@ const mutations = {
   [types.DELETE_FILE_ATTRS](state, index) {
     state.fileInfo.property.splice(index, 1);
   },
-  [types.CLEAR_FILE_ATTRS](state,index){
-    state.fileInfo.property[index].name='';
+  [types.CLEAR_FILE_ATTRS](state, index) {
+    state.fileInfo.property[index].name = '';
+  },
+  [types.SAVE_FILE_INFO_REMAEK](state, remark) {
+    state.fileInfo.remark = remark;
   }
 }
 

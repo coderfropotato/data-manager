@@ -32,7 +32,7 @@ const getters = {
   navList: state => state.navList,
   tableClickHistory: state => state.tableClickHistory,
   searchTableClickHistory: state => state.searchTableClickHistory,
-  alias:state=>state.deviceAlias
+  // alias:state=>state.deviceAlias
 }
 
 const actions = {
