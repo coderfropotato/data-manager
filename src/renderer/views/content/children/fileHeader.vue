@@ -15,7 +15,7 @@
     </p>
     </div>
     <div @click.stop="cancelBubble" class="search" :class="{'active':showDom}" >
-        <el-input ref="search" size="small" :placeholder="showDom?'请输入关键词':'请输入全局搜索关键词'" @keyup.native.delete="del"  @keyup.native.enter="search" v-model.trim="searchValue">
+        <el-input ref="search" size="small" :placeholder="showDom?'请输入关键词':'请输入全局搜索关键词'" @keyup.native.delete="del"  @keyup.native.enter="search" @keyup.native="input($event)" v-model.trim="searchValue">
           <!-- <el-select v-model="searchType" size="small" slot="prepend" placeholder="请选择">
             <el-option label="当前搜索" value=0></el-option>
             <el-option label="全局搜索" value=1></el-option>
@@ -86,12 +86,15 @@ export default {
   },
   methods: {
     del() {
-      if (this.searchValue === "") {
+      if (this.searchValue === "" ) {
         this.count++;
         if (this.count >= 2) this.showDom = false;
       } else {
         this.count = 0;
       }
+    },
+    input(ev){
+      if(ev.keyCode!==8 && ev.keyCode!==13) this.count = 0;
     },
     cancelBubble() {},
     navBarJump(item, index) {

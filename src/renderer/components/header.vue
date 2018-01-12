@@ -22,13 +22,13 @@ export default {
     return {};
   },
   methods: {
-    drag(){
+    drag() {
       return false;
     },
     root() {
       this.$router.push("./root");
-      this.$store.dispatch('setGlobalNavIndex',0);
-      this.$store.dispatch('setRouteStatus','root');
+      this.$store.dispatch("setGlobalNavIndex", 0);
+      this.$store.dispatch("setRouteStatus", "root");
     },
     hide() {
       this.$electron.ipcRenderer.send("hide-window");
@@ -61,12 +61,11 @@ export default {
       display: flex;
       flex: 1;
       img {
-        width: 40px;
-        height: 40px;
+        width: 32px;
+        height: 32px;
         margin-right: 20px;
         display: block;
-        margin-top: 13px;
-        // cursor: pointer;
+        margin-top: 17px;
       }
       span {
         color: #fff;
@@ -99,7 +98,7 @@ export default {
           background-image: url("../assets/images/zoom.png");
         }
         &:nth-child(3) {
-          margin-right:8px; 
+          margin-right: 8px;
           background-image: url("../assets/images/close.png");
         }
         &:hover {

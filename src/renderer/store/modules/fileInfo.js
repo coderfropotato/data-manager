@@ -22,7 +22,7 @@ const state = {
 const getters = {
   show: state => state.show,
   removeRightView: state => state.removeRightView,
-  fileInfo: state => state.fileInfo
+  fileInfo: state => state.fileInfo,
 }
 
 const actions = {
@@ -158,7 +158,7 @@ const actions = {
         if (updateList[i].name === updateList[j].name && i !== j) {
           // commit(types.DELETE_FILE_ATTRS, j);
           bus.$emit('saveAttrNameSame');
-          return new Promise((resolve,reject)=>{
+          return new Promise((resolve, reject) => {
             resolve('error');
           })
         }
@@ -267,7 +267,7 @@ const actions = {
       fetchData('updateRemark', param).then(res => {
         commit(types.SAVE_FILE_INFO_REMAEK, remark);
         resolve('success');
-      }).catch(err=>{})
+      }).catch(err => { })
     })
   },
   addFileInfo({
@@ -312,7 +312,7 @@ const mutations = {
     state.removeRightView = status;
   },
   [types.GET_FILE_INFO](state, info) {
-    state.fileInfo = info;
+        state.fileInfo = info;
   },
   [types.RESET_FILE_INFO](state) {
     state.fileInfo = {};

@@ -19,6 +19,7 @@
         <span :title="fileInfo.basic.filename">{{fileInfo.basic.filename}}</span>
       </div>
       <ul>
+        <li v-if="fileInfo.dirCount ||fileInfo.dirCount==0">{{`${fileInfo.fileCount}个文件,${fileInfo.dirCount}个文件夹`}}</li>
         <li>
           <p>文件类型：</p>
           <span>{{fileInfo.fileType}}</span>
