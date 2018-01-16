@@ -9,6 +9,7 @@ import {
   Menu,
   nativeImage
 } from 'electron'
+import { create } from 'domain';
 if (process.env.NODE_ENV !== 'development') {
   global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\')
 }
@@ -22,6 +23,9 @@ const baseURL = process.env.NODE_ENV === 'development' ?
   `http://localhost:9080/#` :
   `file://${__dirname}/index.html#`
 
+/**
+ * 创建主窗口
+ */
 function createWindow() {
   mainWindow = new BrowserWindow({
     height: 860,
@@ -30,7 +34,7 @@ function createWindow() {
     minWidth: 1200,
     frame: false,
     skipTaskbar: false,
-    thickFrame:true,
+    thickFrame: true,
     useContentSize: true,
     show: false,
     titleBarStyle: "customButtonsOnHover",
@@ -69,7 +73,6 @@ function createWindow() {
   tray.on('right-click', () => {
     tray.setContextMenu(contextMenu);
   })
-
 
   /***********************************************************
    * 生成快捷方式 grunt-electron-installer
@@ -134,11 +137,11 @@ function createWindow() {
 ipcMain.on('change-data', (event, call, data) => {
   mainWindow.webContents.send('change-data', call, data)
 })
-// 设备添加成功 重新获取设备列表/文件状态(暂时关闭)
+/*设备添加成功 重新获取设备列表/文件状态(暂时关闭)*/
 ipcMain.on('updateFilesList', (event) => {
   mainWindow.webContents.send('updateFilesList');
 })
-// 打开/关闭添加文件窗口
+/*打开/关闭添加文件窗口*/
 var newWin;
 ipcMain.on('addFile', (event, arg) => {
   if (arg.API === 'open') {
@@ -169,23 +172,23 @@ ipcMain.on('addFile', (event, arg) => {
     newWin.minimize();
   }
 })
-//new window dom resize 
+/*新窗口改变大小hook*/
 ipcMain.on('resetWinSize', (ev, args) => {
   newWin.setSize(args[0], args[1]);
 });
-// 打开浏览本地文件的窗口
+/* 打开浏览本地文件的窗口*/
 ipcMain.on('open-file-dialog', function (event, type, target) {
-  // 默认只能打开单个文件夹
+  /* 默认只能打开单个文件夹*/
   let properties = ['openFile']
   if (type !== 'single') {
     properties.push('multiSelections')
   }
-  // 默认情况下，target 为空，打开目录
+  /* 默认情况下，target 为空，打开目录*/
   if (!target) {
     properties.push('openDirectory')
   }
   dialog.showOpenDialog({
-    // 只打开文件夹
+    /* 只打开文件夹*/
     properties
   }, function (files) {
     if (files) {
@@ -193,7 +196,7 @@ ipcMain.on('open-file-dialog', function (event, type, target) {
     }
   })
 })
-// 选择文件
+/* 选择文件*/
 ipcMain.on('selectFile', (e, ename) => {
   dialog.showOpenDialog({
     properties: ['openFile']
@@ -203,31 +206,31 @@ ipcMain.on('selectFile', (e, ename) => {
     }
   })
 })
-app.on('ready', createWindow)
 
-//关闭app
+
+/* 关闭app*/
 ipcMain.on('window-all-closed', () => {
-  // dialog.showMessageBox({
-  //   type: "question",
-  //   title: "提示信息",
-  //   buttons: ['确定', 'cancel'],
-  //   message: '点击"确定"退出程序'
-  // }, function (index) {
-  //   // if(process.platform!=='darwin')
-  //   if (index == 0) app.quit()
-  // })
-  //TODO: 关闭与最小化表现一致, 要加上will-quit事件？让app关闭python
-  // mainWindow.minimize();
+  /*dialog.showMessageBox({
+    type: "question",
+    title: "提示信息",
+    buttons: ['确定', 'cancel'],
+    message: '点击"确定"退出程序'
+  }, function (index) {
+     if(process.platform!=='darwin')
+    if (index == 0) app.quit()
+  })
+  TODO: 关闭与最小化表现一致, 要加上will-quit事件？让app关闭python
+  mainWindow.minimize();*/
   mainWindow.setSkipTaskbar(true);
   app.quit();
 });
 
-//最小化
+/*最小化*/
 ipcMain.on('hide-window', (ev) => {
   mainWindow.minimize();
   mainWindow.setSkipTaskbar(false)
 });
-// 切换窗口大小
+/* 切换窗口大小*/
 ipcMain.on('change-window', (ev) => {
   if (mainWindow.isMaximized()) {
     mainWindow.unmaximize();
@@ -239,14 +242,10 @@ ipcMain.on('change-window', (ev) => {
   mainWindow.setSkipTaskbar(false)
 })
 
-app.on('activate', () => {
-  if (mainWindow === null) {
-    createWindow()
-  }
-})
-// 重复点击图标
+
+/* 重复点击图标*/
 const shouldQuit = app.makeSingleInstance((commandLine, workingDirectory) => {
-  //若最小化则还原
+  /*若最小化则还原*/
   if (mainWindow) {
     if (mainWindow.isMinimized()) {
       mainWindow.restore();
@@ -302,7 +301,19 @@ const exitPyProc = () => {
   pyProc.kill()
   pyProc = null
   pyPort = null
-}
+} 
 
-app.on('ready', createPyProc)
+
+/**
+ * app hook
+ */
+app.on('ready', function () {
+  createPyProc();
+  createWindow();
+});
 app.on('will-quit', exitPyProc)
+app.on('activate', () => {
+  if (mainWindow === null) {
+    createWindow()
+  }
+});
