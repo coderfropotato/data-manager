@@ -1,6 +1,6 @@
 <template>
   <div id="searchContent" v-loading.lock="fullscreenLoading" element-loading-text="数据加载中，请稍后...">
-    <my-table v-if="show" @nochecked="noCheck" @searchlistclicked="childSelectedChange" :tableHeight="tableheight" :tableData="searchTableData"></my-table>
+    <my-table v-if="show" :clickHistory="searchTableClickHistory" @nochecked="noCheck" @searchlistclicked="childSelectedChange" :tableHeight="tableheight" :tableData="searchTableData"></my-table>
   </div>
 </template>
 <script>
@@ -28,7 +28,7 @@ export default {
     })
   },
   computed: {
-    ...mapGetters(["searchTableData"])
+    ...mapGetters(["searchTableData","searchTableClickHistory"])
   },
   methods: {
     //table's component selectChange event

@@ -3,7 +3,7 @@
     <div class="table-wrap">
       <el-table  ref="table"   @row-dblclick="dbClick" @selection-change="handleSelectionChange" 
       @cell-click="cellClick"
-      :height="tableHeight" :data="loadData" stripestyle="width: 100%">
+      :height="tableHeight"  :data="loadData" stripestyle="width: 100%">
         <el-table-column width="40"  type="selection"></el-table-column>
         <el-table-column class-name="choose" width="46" prop="isdir" label="选择">
           <template scope="scope">
@@ -37,6 +37,7 @@ export default {
       loadCount: 0,
       isLoading: false,
       over: false,
+      justLoading: false,
       timerList: []
     };
   },
@@ -65,9 +66,18 @@ export default {
               )
             );
             _this.$nextTick(_ => {
+              // set checked items
+              if (_this.clickHistory) {
+                _this.clickHistory.forEach((item, index) => {
+                  this.$refs.table.toggleRowSelection(item);
+                });
+              }
+              _this.justLoading = true;
               _this.isLoading = false;
-              if (_this.loadData.length === _this.data.length)
-                _this.over = true;
+              _this.over = _this.loadData.length === _this.data.length;
+              let timer = setTimeout(() => {
+                _this.justLoading = false;
+              }, 1000);
             });
           }
         },
@@ -85,7 +95,7 @@ export default {
       deep: true
     }
   },
-  props: ["tableHeight", "tableData"],
+  props: ["tableHeight", "tableData", "clickHistory"],
   methods: {
     init() {
       this.loadCount = 0;
@@ -117,7 +127,7 @@ export default {
             this.$emit("searchlistclicked", val);
           }
         } else {
-          this.$emit("nochecked");
+          if (!this.justLoading) this.$emit("nochecked");
         }
       }, 260);
       this.timerList.push(timer);

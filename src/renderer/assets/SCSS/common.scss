@@ -502,6 +502,7 @@ button {
 
 .el-table__body-wrapper {
   overflow-y: scroll!important;
+  overflow-x: hidden;
   height: calc(100% - 40px)!important;
   table {
     width: 100%!important;

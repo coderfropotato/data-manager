@@ -48,9 +48,9 @@ export default {
           isDisk: true
         }
       ],
-      isMessage:false,
+      isMessage: false,
       dialogVisible: false,
-      index:0,
+      index: 0,
       renameItem: {},
       modifiedAlias: ""
     };
@@ -89,40 +89,29 @@ export default {
     //     });
     // });
 
-    // 连接服务器 用来接收文件状态
-    // let wsk = new WebSocket("ws://127.0.0.1:5002");
-    // wsk.onopen = function(event){
-    //   console.log("连接建立成功"+this.readyState)
-    // }
-    // wsk.onmessage = function(ev){
-    //   console.log(ev.data);
-    //   //set treedata
-    // }
-    // wsk.onerror = function(ev){
-    //   console.log(ev)
-    // }
   },
   methods: {
     jumpToSearch(item) {
-      //编程式导航
       this.$router.push(`/searchfiles?type=${item.serial_number}`);
       this.$store.dispatch("setDeviceAlias", item.alias);
-      //设置序列号
-      this.$store.dispatch("setSerialNumber", item.serial_number).then(res => {
-        //设置根路径
-        this.$store.dispatch("setRootPath", item.path).then(res => {
-          //获取数据
-          let serialNumber = item.serial_number;
-          this.$store.dispatch("getDirTree", { serialNumber }).then(res => {
+      (async () => {
+        try {
+          //设置序列号
+          await this.$store.dispatch("setSerialNumber", item.serial_number);
+          //设置根路径
+          let rootPath = await this.$store.dispatch("setRootPath", item.path);
+          if (rootPath === "success") {
+            //获取数据
+            let serialNumber = item.serial_number;
+            await this.$store.dispatch("getDirTree", { serialNumber });
             //设置面包屑
-            this.$store.dispatch("setNavBar", item).then(_ => {
-              //重置fileInfo
-              this.$store.dispatch("getFileInfo");
-            });
-          });
-        });
-      });
-      // 文件历史纪录
+            await this.$store.dispatch("setNavBar", item);
+            //重置fileInfo
+            await this.$store.dispatch("getFileInfo");
+          }
+        } catch (e) {console.log(e)};
+      })();
+      // 文件历史记录
       this.$store.dispatch("setGlobalHistory", true);
       this.$store.dispatch("resetTableClickHistory");
     },
@@ -162,7 +151,7 @@ export default {
                 this.$store.dispatch("getImportTargetDisks");
                 this.$router.push("/filescale");
                 this.$store.dispatch("setGlobalHistory", false);
-                this.showMessage(message,'success');
+                this.showMessage(message, "success");
               } else if (_.Error) {
                 message = _.Error;
                 this.showMessage(message);

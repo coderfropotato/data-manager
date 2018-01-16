@@ -1,6 +1,6 @@
 <template>
   <div id="fileContent" v-loading.lock="fileTableLoading" element-loading-text="数据加载中，请稍后...">
-    <my-table @nochecked="noChecked" @selectchange="childSelectedChange" @intodir="intoDir"  :tableHeight="tableheight" :tableData="fileTableData"></my-table>
+    <my-table @nochecked="noChecked" :clickHistory="tableClickHistory" @selectchange="childSelectedChange" @intodir="intoDir"  :tableHeight="tableheight" :tableData="fileTableData"></my-table>
   </div>
 </template>
 <script>
@@ -15,7 +15,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["fileTableData"])
+    ...mapGetters(["fileTableData","tableClickHistory"])
   },
   created() {
     bus.$on("fileTableLoading", status => {
