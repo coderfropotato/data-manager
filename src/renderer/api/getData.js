@@ -26,7 +26,7 @@ let getData = function (API, params) {
   return new Promise((resolve, reject) => {
     request.onreadystatechange = () => {
       if (request.readyState === 4) {
-        if (request.status === 200 || request.status === 304) {
+        if (request.status >= 200 && request.status < 300 || request.status == 304) {
           resolve(JSON.parse(request.responseText));
         } else {
           bus.$emit('Error');

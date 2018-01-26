@@ -301,15 +301,34 @@ const exitPyProc = () => {
   pyProc.kill()
   pyProc = null
   pyPort = null
-} 
+}
 
 
 /**
  * app hook
  */
 app.on('ready', function () {
-  createPyProc();
-  createWindow();
+  let crPro = function () {
+    return new Promise((resolve, reject) => {
+      createPyProc();
+      resolve();
+    })
+  }
+
+  let crWindow = function () {
+    return new Promise((resolve, reject) => {
+      createWindow();
+      resolve();
+    })
+  }
+
+  const main = async () => {
+    try {
+      await crPro();
+      await crWindow();
+    } catch (e) { console.log(e) }
+  }
+  main();
 });
 app.on('will-quit', exitPyProc)
 app.on('activate', () => {
