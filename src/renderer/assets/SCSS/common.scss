@@ -1,14 +1,15 @@
 // 公共样式
 $blue:#386cca;
+
 html,
 body {
   font-size: 62.5%;
   height: 100%;
   overflow: hidden;
-  border-top: 1px solid #386cca;
-  border-left: 1px solid #386cca;
-  border-right: 1px solid #386cca;
-  border-bottom: 1px solid #386cca;
+  border-top: 1px solid $blue;
+  border-left: 1px solid $blue;
+  border-right: 1px solid $blue;
+  border-bottom: 1px solid $blue;
 }
 
 
@@ -83,7 +84,7 @@ button {
 .el-checkbox__input.is-focus .el-checkbox__inner {
   border-color: #bfcbd9;
   &:hover {
-    border-color: #20a0ff;
+    border-color: $blue;
   }
 }
 
@@ -228,7 +229,7 @@ button {
 .el-menu--horizontal.el-menu--dark .el-submenu .el-menu-item.is-active,
 .el-menu-item.is-active {
   color: #fff;
-  background: #386cca;
+  background: $blue;
 }
 
 .el-menu--horizontal.el-menu--dark .el-submenu .el-menu-item.is-active,
@@ -327,7 +328,7 @@ button {
     text-overflow: ellipsis;
     word-break: break-word;
     &:hover {
-      color: #386cca;
+      color: $blue;
     }
   }
   &>p {
@@ -336,44 +337,44 @@ button {
     border-bottom: 1px solid #ccc;
     span {
       &:last-child {
-        color: #386cca;
+        color: $blue;
       }
       &:first-child {
         &:hover {
-          color: #386cca;
+          color: $blue;
         }
       }
     }
   }
   .el-radio__input.is-checked .el-radio__inner {
-    border-color: #386cca;
-    background: #386cca;
+    border-color: $blue;
+    background: $blue;
   }
   .el-tabs__item.is-active {
-    color: #386cca;
+    color: $blue;
   }
   .el-tabs__active-bar {
-    background-color: #386cca;
+    background-color: $blue;
   }
   .table-wrap .el-checkbox__input.is-checked .el-checkbox__inner {
     background-color: #fff!important;
-    border-color: #386cca!important;
+    border-color: $blue!important;
   }
   .el-textarea__inner:focus {
-    border-color: #386cca;
+    border-color: $blue;
   }
   .el-select-dropdown__item {
     &.selected {
       &.hover {
-        background-color: #386cca!important;
+        background-color: $blue!important;
       }
     }
   }
   .el-select-dropdown__item.selected {
-    background-color: #386cca;
+    background-color: $blue;
   }
   .el-input__inner:focus {
-    border-color: #386cca;
+    border-color: $blue;
   }
   #tools_draw_context {
     padding: 20px;
@@ -430,11 +431,11 @@ button {
           text-align: center;
           line-height: 40px;
           background: #fff;
-          color: #386cca;
-          border: 1px solid #386cca;
+          color: $blue;
+          border: 1px solid $blue;
           cursor: pointer;
           &.active {
-            background-color: #386cca;
+            background-color: $blue;
             color: #fff;
           }
           &:nth-child(2){
@@ -479,11 +480,11 @@ button {
 }
 
 .el-select-dropdown__item.selected.hover {
-  background-color: #386cca;
+  background-color: $blue;
 }
 
 .el-select-dropdown__item.selected {
-  background-color: #386cca;
+  background-color: $blue;
 }
 
 .el-checkbox__inner:hover {
@@ -491,7 +492,7 @@ button {
 }
 
 .el-checkbox__input.isfocus .el-checkbox__inner:hover {
-  border-color: #386cca;
+  border-color: $blue;
 }
 
 .el-table__header-wrapper {
@@ -527,8 +528,8 @@ button {
 }
 
 .el-switch.is-checked .el-switch__core {
-  border-color: #386cca;
-  background-color: #386cca;
+  border-color: $blue;
+  background-color: $blue;
 }
 
 .el-input-group__append .el-button,
@@ -582,21 +583,21 @@ button {
 }
 
 .el-button--primary {
-  background-color: #386cca;
-  border-color: #386cca;
+  background-color: $blue;
+  border-color: $blue;
 }
 
 #newDiskFile-root {
   .btn-first:hover {
-    color: #386cca;
-    border-color: #386cca;
+    color: $blue;
+    border-color: $blue;
   }
 }
 
 .el-button--primary:focus,
 .el-button--primary:hover {
-  background-color: #386cca;
-  border-color: #386cca; // opacity: .8;
+  background-color: $blue;
+  border-color: $blue; // opacity: .8;
 }
 
 .btn-hover:hover {
@@ -612,21 +613,21 @@ button {
 }
 
 .el-input__inner:focus {
-  border-color: #386cca;
+  border-color: $blue;
 }
 
 .el-input__inner:hover {
-  border-color: #386cca;
+  border-color: $blue;
 }
 
 .el-select .el-input__inner:focus {
-  border-color: #386cca;
+  border-color: $blue;
 }
 
 .el-message-box {
   .el-button:active {
-    color: #386cca;
-    border-color: #386cca;
+    color: $blue;
+    border-color: $blue;
     background: none;
   }
 }
@@ -638,19 +639,19 @@ button {
 .el-message-box__btns {
   button:first-child:hover,
   button:first-child:focus {
-    color: #386cca;
-    border-color: #386cca;
+    color: $blue;
+    border-color: $blue;
   }
   .el-button--primary:hover {
-    background-color: #386cca!important;
-    border-color: #386cca;
+    background-color: $blue!important;
+    border-color: $blue;
     opacity: .8!important;
   }
 }
 
 .el-message-box__headerbtn:focus .el-message-box__close,
 .el-message-box__headerbtn:hover .el-message-box__close {
-  color: #386cca;
+  color: $blue;
 }
 
 .el-message-box__title {
@@ -664,18 +665,18 @@ button {
 
 .el-dialog {
   .el-button:active {
-    color: #386cca;
-    border-color: #386cca;
+    color: $blue;
+    border-color: $blue;
     background: none;
   }
   button:first-child:hover,
   button:first-child:focus {
-    color: #386cca;
-    border-color: #386cca;
+    color: $blue;
+    border-color: $blue;
   }
   .el-button--primary:hover {
-    background-color: #386cca!important;
-    border-color: #386cca;
+    background-color: $blue!important;
+    border-color: $blue;
     opacity: .8!important;
   }
 }
@@ -686,13 +687,13 @@ button {
 
 .el-button:active {
   color: #fff;
-  background-color: #386cca;
-  border-color: #386cca;
+  background-color: $blue;
+  border-color: $blue;
 }
 
 .el-dialog__headerbtn:focus .el-dialog__close,
 .el-dialog__headerbtn:hover .el-dialog__close {
-  color: #386cca;
+  color: $blue;
 }
 
 .dialog-custom {
@@ -708,13 +709,13 @@ button {
   cursor: default;
 }
 .el-button.btn-first:focus, .el-button.btn-first:hover, .el-button.btn-first:active {
-  color: #386cca;
-  border-color: #386cca;
+  color: $blue;
+  border-color: $blue;
   background:none;
 }
 .el-textarea__inner:hover{
-  border-color: #386cca;
+  border-color: $blue;
 }
 .el-select:hover input{
-  border-color: #386cca;
+  border-color: $blue;
 }
