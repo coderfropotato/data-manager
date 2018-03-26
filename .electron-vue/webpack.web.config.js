@@ -31,7 +31,7 @@ let webConfig = {
       {
         test: /\.js$/,
         use: 'babel-loader',
-        include: [path.resolve(__dirname, '../src/renderer')],
+        include: [ path.resolve(__dirname, '../src/renderer') ],
         exclude: /node_modules/
       },
       {
@@ -108,10 +108,7 @@ if (process.env.NODE_ENV === 'production') {
   webConfig.devtool = ''
 
   webConfig.plugins.push(
-    new BabiliWebpackPlugin({
-      removeConsole: true,
-      removeDebugger: true
-    }),
+    new BabiliWebpackPlugin(),
     new CopyWebpackPlugin([
       {
         from: path.join(__dirname, '../static'),
