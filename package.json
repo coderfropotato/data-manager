@@ -1,9 +1,9 @@
 {
   "name": "data-manager-desktop",
-  "productName": "data-manager-desktop",
+  "productName": "数据管理系统",
   "version": "1.0.0",
-  "author": "HeMang",
-  "description": "An electron-vue project",
+  "author": "Gooalgene",
+  "description": "App with data validation and many small tools(Gooalgene)",
   "license": "MIT",
   "main": "./dist/electron/main.js",
   "repository": {
@@ -11,13 +11,20 @@
     "url": "http://54.223.70.246:9000/data-management/data-manager-front-end.git"
   },
   "build": {
-    "productName": "datamanger",
-    "appId": "org.simulatedgreg.electron-vue",
+    "productName": "数据管理系统",
+    "appId": "org.datamanager.electron",
+    "copyright": "2018@Gooalgene",
     "directories": {
-      "output": "build"
+      "output": "build",
+      "buildResources": "dist"
     },
+    "nsis": {
+      "oneClick": true
+    },
+    "asar": false,
     "files": [
-      "dist/electron/**/*"
+      "dist/electron/**/*",
+      "dist/backend/**/*"
     ],
     "dmg": {
       "contents": [
@@ -46,6 +53,7 @@
   },
   "scripts": {
     "build": "node .electron-vue/build.js && electron-builder",
+    "build:all": "node .electron-vue/build.js && electron-builder -mwl",
     "build:win": "node .electron-vue/build.js && electron-builder -win",
     "build:mac": "node .electron-vue/build.js && electron-builder -mac",
     "build:linux": "node .electron-vue/build.js && electron-builder -linux",
@@ -56,7 +64,7 @@
     "package:darwin": "cross-env BUILD_TARGET=darwin node .electron-vue/package.js",
     "package:linux": "cross-env BUILD_TARGET=linux node .electron-vue/package.js",
     "package:mas": "cross-env BUILD_TARGET=mas node .electron-vue/package.js",
-    "package:win32": "cross-env BUILD_TARGET=win32 node .electron-vue/package.js",
+    "package:win": "cross-env BUILD_TARGET=win32 node .electron-vue/package.js",
     "package:clean": "cross-env BUILD_TARGET=clean node .electron-vue/package.js",
     "package:web": "cross-env BUILD_TARGET=web node .electron-vue/package.js",
     "dev": "node .electron-vue/dev-runner.js",
