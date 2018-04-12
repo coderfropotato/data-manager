@@ -40,9 +40,9 @@ function createWindow() {
     show: false,
     titleBarStyle: "customButtonsOnHover",
   })
-  mainWindow.setMinimumSize(1200, 860)
-  mainWindow.loadURL(winURL)
-  mainWindow.setMenu(null)
+  mainWindow.setMinimumSize(1200, 860);
+  mainWindow.loadURL(winURL);
+  mainWindow.setMenu(null);
   // mainWindow.webContents.openDevTools();
   mainWindow.on('closed', () => {
     mainWindow = null;
@@ -72,6 +72,7 @@ function createWindow() {
       app.quit()
     }
   }]);
+  
   tray.on('right-click', () => {
     tray.setContextMenu(contextMenu);
   })
@@ -273,9 +274,6 @@ let pyProc = null
 let pyPort = null
 
 const getScriptPath = () => {
-  // if (process.env.NODE_ENV !== 'production') {
-  //   return path.join(__dirname, 'backend', 'run.py')    // 这个路径应该请求不到，调试时后端需要手工启动
-  // }
   if (process.platform === 'win32') {
     return path.join(__dirname, '..', 'backend', 'backend.exe')
   }
