@@ -32,7 +32,7 @@ import ContentZone from "./content/content";
 import FileAside from "./fileAside/fileAside";
 import $ from "jquery";
 import "jquery-resizable-dom/src/jquery-resizable";
-import { mapState } from "vuex";
+import { mapState, mapGetters } from "vuex";
 export default {
   name: "Index",
   mounted() {
@@ -47,11 +47,15 @@ export default {
       resizeWidth: true,
       resizeHeight: false
     });
-    // this.$router.push('./root')
-    this.$router.push('/files?type=file')
+  },
+  created() {
+    if (!this.isLogin) {
+      this.$router.push("/login");
+    }
   },
   computed: {
-    ...mapState(["fileInfo",'bottom'])
+    ...mapState(["fileInfo", "bottom"]),
+    ...mapGetters(["isLogin"])
   },
   components: {
     Sidebar,
@@ -63,11 +67,11 @@ export default {
 
 <style lang='scss' >
 // 整体三栏可调布局
-#index-root{
+#index-root {
   display: flex;
   height: 100%;
   flex-direction: column;
-  .header-wrap{
+  .header-wrap {
     height: 66px;
   }
 }
@@ -101,7 +105,7 @@ export default {
     width: 240px;
     min-width: 240px;
     max-width: 25%;
-    *{
+    * {
       cursor: normal;
     }
   }
@@ -111,12 +115,12 @@ export default {
     flex: 0 0 auto;
     width: 65%;
     max-width: 75%;
-    min-width:65%;
+    min-width: 65%;
   }
 
   .content-wrapper-hide {
     flex: 0 0 auto;
-    width: 100%!important;
+    width: 100% !important;
   }
 
   // flex 布局右样式

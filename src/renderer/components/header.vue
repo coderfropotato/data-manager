@@ -2,7 +2,6 @@
   <div id="header">
       <div class="header-context">
         <div class="left">
-          <!-- @click="root" -->
           <img src="../assets/images/logo.png" alt="" @dragstart="drag">
           <span>数据管理系统</span>
         </div>
@@ -25,11 +24,11 @@ export default {
     drag() {
       return false;
     },
-    root() {
-      this.$router.push("./root");
-      this.$store.dispatch("setGlobalNavIndex", 0);
-      this.$store.dispatch("setRouteStatus", "root");
-    },
+    // root() {
+    //   this.$router.push("./root");
+    //   this.$store.dispatch("setGlobalNavIndex", 0);
+    //   this.$store.dispatch("setRouteStatus", "root");
+    // },
     hide() {
       this.$electron.ipcRenderer.send("hide-window");
     },

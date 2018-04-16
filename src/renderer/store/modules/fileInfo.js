@@ -10,7 +10,7 @@ import bus from '@/utils/bus'
 const state = {
   show: false,
   //是否移除right view
-  removeRightView: false,
+  removeRightView: true,
   //文件详情
   fileInfo: {},
   //文件状态的文件详情请求参数

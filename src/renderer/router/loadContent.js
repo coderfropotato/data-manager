@@ -29,13 +29,13 @@ const Ignore = r => require.ensure([], () => r(require('@/views/content/children
 const FileInfo = r => require.ensure([], () => r(require('@/views/fileAside/children/fileInfo')), 'fileInfo')
 const FileStatusAside = r => require.ensure([], () => r(require('@/views/fileAside/children/fileStatusAside')), 'fileStatusAside')
 // root
-const RootDetail = r => require.ensure([], () => r(require('@/views/rootDetail')), 'rootDetail')
+const DataFilter = r => require.ensure([], () => r(require('@/views/content/children/dataFilter')), 'dataFilter')
 const routes = [
   {
-    path: "root",
-    name: "Root",
+    path: "filter",
+    name: "Filter",
     components: {
-      ContentHeader:RootDetail
+      ContentHeader: DataFilter
     }
   },
   {

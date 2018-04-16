@@ -84,6 +84,7 @@ export const SET_ROUTE_STATUS = 'setRouteStatus';
 export const SET_GLOBAL_TYPE = 'setGlobalTypes';
 export const SET_GLOBAL_NAV_INDEX = 'setGlobalNavIndex';
 export const SET_GLOBAL_HISTORY ='setGlobalHistory';
+export const SET_GLOBAL_IS_LOGIN ='setGlobalIsLogin';
 
 
 export const SET_DEVICE_ALIAS = 'setDeviceAlias';

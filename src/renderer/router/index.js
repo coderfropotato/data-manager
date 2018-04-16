@@ -7,6 +7,7 @@ Vue.use(Router)
 
 // 加载根组件
 const Index = r => require.ensure([], () => r(require('@/views/index')), 'index')
+const Login = r => require.ensure([], () => r(require('@/views/login')), 'login')
 // 其他路由模块
 const routeModules = require.context('.', false, /\.js$/)
 let childrenRoutes = []
@@ -26,6 +27,13 @@ const baseRoutes = [
       default: Index
     },
     children: childrenRoutes
+  },
+  {
+    path: "/Login",
+    name: "Login",
+    components: {
+      default: Login
+    }
   },
   {
     path: '*',
