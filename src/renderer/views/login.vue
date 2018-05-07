@@ -11,8 +11,8 @@ export default {
   },
   methods: {
     jump() {
+       // this.$electron.shell.openExternal('http://www.baidu.com');return;
       this.$router.push("/files?type=file");
-      // this.$router.push("/filter");
       this.$store.dispatch("setGlobalIsLogin", true);
     }
   }
