@@ -16,8 +16,6 @@ export default {
     };
   },
   mounted() {
-    console.log(this.$get);
-    console.log(this.api.java,`/get/getdata`)
     // 禁用浏览器默认拖拽事件，防止用户拖拽的文件被打开
     document.addEventListener(
       "drop",

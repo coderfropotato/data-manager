@@ -20,7 +20,7 @@ let getRemoteData = function (URL, API, params) {
                 if (request.status >= 200 && request.status < 300 || request.status == 304) {
                     resolve(JSON.parse(request.responseText));
                 } else {
-                    bus.$emit('Error');
+                    // bus.$emit('Error');
                     reject(request.responseText)
                 }
             }
