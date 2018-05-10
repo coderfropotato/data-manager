@@ -19,7 +19,7 @@
                <el-checkbox v-model="checked">&emsp;记住密码</el-checkbox>
                <a href="javascript:;">忘记密码</a>
             </div>
-            <el-button type="primary" @click="jump">登陆</el-button>
+            <el-button type="primary" @click.native="jump">登陆</el-button>
           </div>
       </div>
       <!-- forget password -->

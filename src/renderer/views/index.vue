@@ -48,7 +48,7 @@ export default {
       resizeHeight: false
     });
   },
-  created() {
+  beforeMount() {
     if (!this.isLogin) {
       this.$router.push("/login");
     }
