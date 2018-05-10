@@ -1,5 +1,10 @@
 <template>
     <div class="login">
+      <div class="frame">
+        <div class="drag"></div>
+        <i class="fa fa-minus" @click="hide"></i>
+        <i class="fa fa-times" @click="close"></i>
+      </div>
         <!-- login -->
       <div v-if="type==1" class="box login">
           <div class="wrap">
@@ -59,7 +64,7 @@ export default {
   data() {
     return {
       checked: false,
-      type:1
+      type: 1
     };
   },
   methods: {
@@ -67,12 +72,47 @@ export default {
       // this.$electron.shell.openExternal('http://www.baidu.com');return;
       this.$router.push("/files?type=file");
       this.$store.dispatch("setGlobalIsLogin", true);
+    },
+    hide() {
+      this.$electron.ipcRenderer.send("hide-window");
+    },
+    close() {
+      this.$electron.ipcRenderer.send("window-all-closed");
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
+.frame {
+  height: 24px;
+  background-color: #fff;
+  display: flex;
+  .drag {
+    height: 24px;
+    -webkit-app-region: drag;
+    flex:1;
+  }
+  i {
+    box-sizing: border-box;
+    width: 30px;
+    height: 24px;
+    text-align: center;
+    line-height: 24px;
+    cursor: pointer;
+    opacity: .6;
+    transition: .2s all ease-in-out;
+    &:last-child{
+      margin-right: 12px;
+    }
+    &:hover{
+      opacity: 1.0;
+      transform: rotate(360deg);
+      background-color: #eee;
+    }
+  }
+  
+}
 .login {
   width: 100%;
   height: 100%;
