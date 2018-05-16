@@ -11,7 +11,8 @@ const Login = r => require.ensure([], () => r(require('@/views/login')), 'login'
 // 其他路由模块
 const routeModules = require.context('.', false, /\.js$/)
 let childrenRoutes = []
-
+console.log("其他路由模块内容为以下：")
+console.log(routeModules);
 routeModules.keys().forEach(key => {
   if (key === './index.js' || key === './newDirectory.js') {
     return

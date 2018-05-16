@@ -5,7 +5,7 @@
  * 500：服务器错误（服务器处理出现问题）
  */
 import bus from "@/utils/bus";
-const baseURL = 'http://127.0.0.1'
+const baseURL = 'http://192.168.0.104'
 const PORT = 4242
 const URL = baseURL + ':' + PORT
 let request

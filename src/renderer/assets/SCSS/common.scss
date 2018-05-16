@@ -719,3 +719,11 @@ button {
 .el-select:hover input{
   border-color: $blue;
 }
+
+// modify by jarry
+.pull-right{
+  float:right;
+}
+.pull-left{
+  float:left;
+}

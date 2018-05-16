@@ -46,6 +46,10 @@
             <i class="iconfont icon-gongju"></i>
             <span>小工具</span>
           </li>
+          <li :class="{'active':globalNavIndex===3}" @click="jump(3)">
+            <i class="iconfont icon-wenjianzhuangtai"></i>
+            <span>数据分析</span>
+          </li>
           <li :class="{'active':globalNavIndex===5}" @click="jump(5)">
             <i class="iconfont icon-shujuku"></i>
             <span>数据库</span>
@@ -105,6 +109,7 @@ export default {
   methods: {
     jump(index) {
       this.$store.dispatch("setGlobalNavIndex", index).then(_ => {
+          console.log(this.globalNavIndex);
         switch (this.globalNavIndex) {
           case 1:
             if (this.history) {
@@ -137,16 +142,22 @@ export default {
             this.$store.dispatch("checkAllSwitch", true);
             //});
             break;
-          case 3:
-            this.$router.replace("/filestatus");
-            this.$store.dispatch("resetFileInfo");
-            this.$store.dispatch("setRouteStatus", "status");
-            //重新获取设备列表
-            if (!this.loadingStatus) {
-              // this.$store.dispatch("getImportTargetDisks").then(_ => {
-              this.$store.dispatch("getModifiedFiles");
-              // });
-            }
+          // case 3:
+
+            // this.$store.dispatch("resetFileInfo");
+            // this.$store.dispatch("setRouteStatus", "status");
+            // //重新获取设备列表
+            // if (!this.loadingStatus) {
+            //   // this.$store.dispatch("getImportTargetDisks").then(_ => {
+            //   this.$store.dispatch("getModifiedFiles");
+            //   // });
+            // }
+            // break;
+            case 3:
+              // 数据分析
+            this.$router.replace("/dataAnalysis");
+            this.$store.dispatch("setRouteStatus", "analysis");
+            this.$store.dispatch("removeRightView",true);
             break;
           case 4:
             this.$router.replace("/toolsIndex");

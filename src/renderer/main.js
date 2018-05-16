@@ -16,7 +16,6 @@ Vue.prototype.tools = tools;
 Vue.config.productionTip = false
 Vue.use(ElementUI)
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'));
-
 //import global components
 Vue.component('Header', Header);
 Vue.component('Bottom', Bottom);

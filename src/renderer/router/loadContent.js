@@ -30,6 +30,11 @@ const FileInfo = r => require.ensure([], () => r(require('@/views/fileAside/chil
 const FileStatusAside = r => require.ensure([], () => r(require('@/views/fileAside/children/fileStatusAside')), 'fileStatusAside')
 // root
 const DataFilter = r => require.ensure([], () => r(require('@/views/content/children/dataFilter')), 'dataFilter')
+// modify by jarry @ 2018-5-7
+const DataAnalysis = r => require.ensure([], () => r(require('@/views/content/children/dataAnalysis')), 'DataAnalysis')
+const NewTask = r => require.ensure([], () => r(require('@/views/content/children/newTask')), 'NewTask')
+
+
 const routes = [
   {
     path: "filter",
@@ -125,6 +130,21 @@ const routes = [
     name: 'ToolsIndex',
     components: {
       ContentHeader: ToolsIndex
+    }
+  },
+    // modify by jarry
+    {
+    path: 'dataAnalysis',
+    name: 'DataAnalysis',
+    components: {
+        ContentHeader: DataAnalysis
+    }
+  },
+    {
+    path: 'newTask',
+    name: 'newTask',
+    components: {
+        ContentHeader: NewTask
     }
   },
   {

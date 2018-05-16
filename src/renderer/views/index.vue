@@ -33,6 +33,7 @@ import FileAside from "./fileAside/fileAside";
 import $ from "jquery";
 import "jquery-resizable-dom/src/jquery-resizable";
 import { mapState, mapGetters } from "vuex";
+
 export default {
   name: "Index",
   mounted() {
@@ -49,14 +50,20 @@ export default {
     });
   },
   created() {
-    if (!this.isLogin) {
-      this.$router.push("/login");
-    }
+    // if (!this.isLogin) {
+    //   this.$router.push("/login");
+    // }
+      console.log()
   },
   computed: {
     ...mapState(["fileInfo", "bottom"]),
     ...mapGetters(["isLogin"])
   },
+    mounted(){
+      console.log("fileInfo")
+      console.log(this.fileInfo);
+    },
+    // 局部注册组件
   components: {
     Sidebar,
     ContentZone,
