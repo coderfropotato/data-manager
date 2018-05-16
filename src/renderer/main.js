@@ -9,11 +9,16 @@ import Bottom from './components/bottom';
 import TableContent from './components/tableContent';
 import NavBar from './components/navbar';
 import EditDom from './components/edit';
-
+import remoteUrl from './api/config';
+import getRemoteData from './api/getRemoteData';
 
 let tools = require('@/assets/JS/tools');
 Vue.prototype.tools = tools;
-Vue.config.productionTip = false
+Vue.config.productionTip = false;
+// global api
+Vue.prototype.$get =  getRemoteData;
+Vue.prototype.api = remoteUrl;
+// use element-ui
 Vue.use(ElementUI)
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'));
 //import global components
@@ -47,7 +52,7 @@ Vue.filter('reverseTime', (val) => {
   let h = oDate.getHours();
   let mm = oDate.getMinutes();
   let s = oDate.getSeconds();
-  return y + '-' + addZero(m) + '-' + addZero(d) + ' ' + addZero(h) + ':' + addZero(mm) ;
+  return y + '-' + addZero(m) + '-' + addZero(d) + ' ' + addZero(h) + ':' + addZero(mm);
 });
 
 function addZero(m) {

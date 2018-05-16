@@ -23,35 +23,35 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-#bottom{
-    // border-top: 1px solid #ccc;
-    height: 40px;
-    font-size: 12px;
-    line-height: 40px;
-    padding-left: 22px;
-    padding-right: 22px;
-    cursor: default;
-    p{
-        display: flex;
-        justify-content: space-around;
-        span{
-            flex:1;
-            padding-right: 40px;
-        }
-        em{
-            flex:1;
-            text-align: right;
-            font-style: normal;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-            overflow: hidden;
-            span{
-                cursor: text;
-                user-select: all;
-                // color: #386cca;
-                padding:0!important;
-            }
-        }
+#bottom {
+  // border-top: 1px solid #ccc;
+  height: 40px;
+  font-size: 12px;
+  line-height: 40px;
+  padding-left: 22px;
+  padding-right: 22px;
+  cursor: default;
+  p {
+    display: flex;
+    justify-content: space-around;
+    span {
+      flex: 1;
+      padding-right: 40px;
     }
+    em {
+      flex: 1;
+      text-align: right;
+      font-style: normal;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      span {
+        cursor: text;
+        user-select: all;
+        // color: #386cca;
+        padding: 0 !important;
+      }
+    }
+  }
 }
 </style>

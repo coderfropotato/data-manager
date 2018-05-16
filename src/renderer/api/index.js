@@ -7,4 +7,4 @@ import mockData from './easy-mock'
 const simulation = false;
 let fetchData = simulation ? mockData : getData
 
-export default fetchData
+export default fetchData;

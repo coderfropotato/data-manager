@@ -49,11 +49,11 @@ export default {
       resizeHeight: false
     });
   },
-  created() {
-    // if (!this.isLogin) {
-    //   this.$router.push("/login");
-    // }
-      console.log()
+
+  beforeMount() {
+    if (!this.isLogin) {
+      this.$router.push("/login");
+    }
   },
   computed: {
     ...mapState(["fileInfo", "bottom"]),
