@@ -200,18 +200,14 @@
         },
         methods:{
             getProcesName:function (){
-                alert(this.input)
             },
             handleSizeChange(val) {
                 console.log(`每页 ${val} 条`);
-                alert(`sizeChange  每页 ${val} 条`);
             },
             handleCurrentChange(val) {
                 console.log(`当前页: ${val}`);
-                alert(`currentChange  当前页: ${val}`);
             },
             jumpNewTask(){
-                alert(8790);
                 this.$router.replace("/newTask");
             }
         }

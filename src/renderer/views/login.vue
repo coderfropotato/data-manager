@@ -50,7 +50,7 @@
               <i class="fa fa-unlock-alt"></i><input type="password" placeholder="请输入密码">
             </div>
             <div class="form-options">
-               <el-checkbox v-model="checked">&emsp;记住密码</el-checkbox>
+               <el-checkbox v-model="checked">&emsp;记住密码</el-checkbox>ju
                <a href="javascript:;">忘记密码</a>
             </div>
             <el-button type="primary" @click="jump">登陆</el-button>

@@ -72,7 +72,7 @@
 <script>
 import { ipcRenderer } from "electron";
 import bus from "@/utils/bus";
-import { mapGetters } from "vuex";
+import { mapGetters ,mapState} from "vuex";
 import $ from "jquery";
 export default {
   name: "Sidebar",
@@ -82,6 +82,7 @@ export default {
     };
   },
   computed: {
+      ...mapState(["fileInfo"]),
     ...mapGetters([
       "modifiedNumber",
       "globalNavIndex",
@@ -112,6 +113,7 @@ export default {
           console.log(this.globalNavIndex);
         switch (this.globalNavIndex) {
           case 1:
+              var statu = this.$store.getters.removeRightView;
             if (this.history) {
               this.$router.replace("/searchfiles");
               // 获取file info 或者文件夹fileinfo 设置底部信息
@@ -133,6 +135,7 @@ export default {
             //this.$store.dispatch("getImportTargetDisks");
             break;
           case 2:
+              var statu = this.$store.getters.removeRightView;
             this.$router.replace("/searchindex");
             this.$store.dispatch("resetFileInfo");
             this.$store.dispatch("setRouteStatus", "search");
@@ -157,13 +160,17 @@ export default {
               // 数据分析
             this.$router.replace("/dataAnalysis");
             this.$store.dispatch("setRouteStatus", "analysis");
+            var statu = this.$store.getters.removeRightView;
+            console.log(this.fileInfo.removeRightView);
             this.$store.dispatch("removeRightView",true);
             break;
           case 4:
+              var statu = this.$store.getters.removeRightView;
             this.$router.replace("/toolsIndex");
             this.$store.dispatch("setRouteStatus", "tools");
             break;
           case 5:
+              var statu = this.$store.getters.removeRightView;
             this.$router.replace("/database");
             this.$store.dispatch("setRouteStatus", "database");
             break;
